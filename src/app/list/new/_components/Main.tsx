@@ -135,7 +135,8 @@ export function Main({ hands }: Props) {
         </div>
       </div>
 
-      <div className="space-y-4">
+      {/* Interface */}
+      <div className="space-y-4 pb-4">
         <div className="flex gap-2">
           <Button
             variant="secondary"
