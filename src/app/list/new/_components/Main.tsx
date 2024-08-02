@@ -4,22 +4,25 @@ import { RxReset } from "react-icons/rx";
 import { PlayCard } from "@/components/PlayCard";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { addHand } from "@/utils/records";
+import { addHand, updatePeople } from "@/utils/records";
 import { TodayListView } from "./TodayListView";
 import { toast } from "sonner";
-import { PositionBadge } from "@/components/PositionBadge";
 import { NumberButtons } from "./NumberButtons";
 import { AddNumberButtons } from "./AddNumberButtons";
 import { SuitButtons } from "./SuitButtons";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { PositionButtons } from "./PositionButtons";
+import { PeopleCounter } from "./PeopleCounter";
+import { calcPosition } from "@/utils/calcPosition";
 
 type Props = {
+  people: number;
   hands: Hand[];
 };
-export function Main({ hands }: Props) {
+export function Main({ people, hands }: Props) {
   const [position, setPosition] = useState("utg-0");
-  const [hand, setHand] = useState<[string, string]>(["s-1", "s-1"]);
+  const [hand, setHand] = useState<[string, string]>(["s-1", "c-1"]);
   const [countMode, setCountMode] = useState(false);
   const [addCount, setAddCount] = useState(0);
   const [focus, setFocus] = useState<0 | 1>(0);
@@ -44,7 +47,14 @@ export function Main({ hands }: Props) {
       setPosition(value);
     }
   };
-
+  const handleIncrementPeople = async () => {
+    if (people === 10) return;
+    await updatePeople(people + 1);
+  };
+  const handleDecrementPeople = async () => {
+    if (people === 2) return;
+    await updatePeople(people - 1);
+  };
   const handleNumber = (value: number) => {
     const newHand: [string, string] = [...hand];
     const fixedValue = value > 13 ? 13 : value;
@@ -76,6 +86,7 @@ export function Main({ hands }: Props) {
           setHand(["s-1", "c-1"]);
           setFocus(0);
           setAddCount(0);
+          setPosition(calcPosition(position, people));
           toast.success("Save success!!");
         } else {
           toast.error("Save failed");
@@ -84,59 +95,27 @@ export function Main({ hands }: Props) {
     }
   };
   const handleClear = () => {
-    setHand(["s-1", "s-1"]);
+    setHand(["s-1", "c-1"]);
     setFocus(0);
     setAddCount(0);
   };
 
   return (
     <div className="flex h-full flex-col justify-between px-6 py-4">
-      <div className="space-y-4">
-        <div className="flex justify-end gap-2">
-          <PositionBadge
-            position={position.startsWith("utg") ? position : "utg-0"}
-            active={position.startsWith("utg")}
-            onClick={() => handlePosition("utg-0")}
+      <div className="space-y-8">
+        <PositionButtons position={position} onClick={handlePosition} />
+        <div className="flex items-center justify-between">
+          <PeopleCounter
+            current={people}
+            increment={handleIncrementPeople}
+            decrement={handleDecrementPeople}
           />
-          <PositionBadge
-            position="lj"
-            active={position === "lj"}
-            onClick={() => handlePosition("lj")}
-          />
-          <PositionBadge
-            position="hj"
-            active={position === "hj"}
-            onClick={() => handlePosition("hj")}
-          />
-          <PositionBadge
-            position="co"
-            active={position === "co"}
-            onClick={() => handlePosition("co")}
-          />
-          <PositionBadge
-            position="btn"
-            active={position === "btn"}
-            onClick={() => handlePosition("btn")}
-          />
-          <PositionBadge
-            position="sb"
-            active={position === "sb"}
-            onClick={() => handlePosition("sb")}
-          />
-          <PositionBadge
-            position="bb"
-            active={position === "bb"}
-            onClick={() => handlePosition("bb")}
-          />
+          <TodayListView hands={hands} />
         </div>
       </div>
 
       {/* Interface */}
       <div className="space-y-4 pb-8">
-        <div className="flex items-center justify-end">
-          <TodayListView hands={hands} />
-        </div>
-
         <div className="flex justify-center pb-8">
           <button type="button" onClick={() => setFocus(0)}>
             <PlayCard value={hand[0]} size={120} focus={focus === 0} />

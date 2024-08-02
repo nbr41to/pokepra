@@ -11,7 +11,7 @@ type Props = {
 export const PositionBadge = ({ position, active = true, onClick }: Props) => {
   return (
     <Badge
-      className="whitespace-nowrap"
+      className="h-6 cursor-pointer select-none whitespace-nowrap"
       variant={active ? "default" : "secondary"}
       onClick={onClick}
     >

@@ -4,7 +4,7 @@ import { getCookie, setCookie } from "./cookie";
 import { getDateString } from "./date";
 
 const INITIAL_RECORD_VALUE = {
-  people: 0,
+  people: 2,
   startStack: null,
   endStack: null,
   hands: [],
@@ -39,4 +39,21 @@ export const updatePeople = async (people: number) => {
   records[dateString] = record;
 
   await setCookie("records", JSON.stringify(records));
+};
+
+/* 指定した日付の記録を削除 */
+export const deleteRecord = async (date: string) => {
+  try {
+    const recordsJson = await getCookie("records");
+    const records: Records = recordsJson ? JSON.parse(recordsJson) : {};
+    delete records[date];
+
+    await setCookie("records", JSON.stringify(records));
+
+    return true;
+  } catch (error) {
+    console.error(error);
+
+    return false;
+  }
 };

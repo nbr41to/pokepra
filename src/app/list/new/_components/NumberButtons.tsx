@@ -39,7 +39,7 @@ export const NumberButtons = ({ onClick }: Props) => {
           10
         </Button>
       </div>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-4 gap-2">
         <Button className="flex-grow text-xl" onClick={() => onClick(11)}>
           J
         </Button>
@@ -48,6 +48,9 @@ export const NumberButtons = ({ onClick }: Props) => {
         </Button>
         <Button className="flex-grow text-xl" onClick={() => onClick(13)}>
           K
+        </Button>
+        <Button className="text-xl" onClick={() => onClick(1)}>
+          A
         </Button>
       </div>
     </div>

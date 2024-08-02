@@ -2,6 +2,8 @@ import { PlayCard } from "@/components/PlayCard";
 import { PositionBadge } from "@/components/PositionBadge";
 import { Badge } from "@/components/ui/badge";
 import { getCookie } from "@/utils/cookie";
+import { DeleteButton } from "./_components/DeleteButton";
+import { redirect } from "next/navigation";
 
 export default async function Page({
   params: { date },
@@ -14,8 +16,10 @@ export default async function Page({
   const records: Records = recordsJson ? JSON.parse(recordsJson) : {};
   const record = records[date];
 
+  if (!record) redirect("/list");
+
   return (
-    <div className="">
+    <div className="px-6">
       <div className="divide-y py-4">
         {record.hands.map((hand, index) => (
           <div key={index} className="flex justify-between py-2">
@@ -37,6 +41,10 @@ export default async function Page({
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="border-t py-2 text-right">
+        <DeleteButton />
       </div>
     </div>
   );

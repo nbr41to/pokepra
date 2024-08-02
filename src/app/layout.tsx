@@ -51,7 +51,10 @@ export const metadata: Metadata = {
   },
 };
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
 };
 
 export default function RootLayout({
@@ -60,7 +63,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang="ja" suppressHydrationWarning>
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
@@ -73,7 +76,7 @@ export default function RootLayout({
           <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
             <Header />
             <main className="flex-grow pt-[42px]">{children}</main>
-            <Toaster position="top-center" />
+            <Toaster position="bottom-right" />
           </div>
         </ThemeProvider>
       </body>
