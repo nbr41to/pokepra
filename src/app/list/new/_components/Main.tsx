@@ -102,7 +102,7 @@ export function Main({ people, hands }: Props) {
 
   return (
     <div className="flex h-full flex-col justify-between px-6 py-4">
-      <div className="space-y-8">
+      <div className="space-y-4">
         <PositionButtons position={position} onClick={handlePosition} />
         <div className="flex items-center justify-between">
           <PeopleCounter
@@ -116,7 +116,7 @@ export function Main({ people, hands }: Props) {
 
       {/* Interface */}
       <div className="space-y-4 pb-8">
-        <div className="flex justify-center pb-8">
+        <div className="flex justify-center py-4">
           <button type="button" onClick={() => setFocus(0)}>
             <PlayCard value={hand[0]} size={120} focus={focus === 0} />
           </button>

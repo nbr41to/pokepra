@@ -67,10 +67,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-/* pwa dark mode */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000;
-  }
-}
