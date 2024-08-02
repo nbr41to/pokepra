@@ -5,6 +5,7 @@ import { cn } from "@/utils/classNames";
 import { ThemeProvider } from "@/libs/next-themes/theme-provider";
 import { Header } from "./_header";
 import { Toaster } from "sonner";
+import { getCookie } from "@/utils/cookie";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -50,16 +51,17 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
   },
 };
-export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
-};
 // export const viewport: Viewport = {
-//   themeColor: [
-//     { media: "(prefers-color-scheme: light)", color: "white" },
-//     { media: "(prefers-color-scheme: dark)", color: "#000000" },
-//     { color: "#ffffff" },
-//   ],
+//   themeColor: "#FFFFFF",
 // };
+export const generateViewport = async (): Promise<Viewport> => {
+  const theme = await getCookie("theme");
+  console.log(theme);
+
+  return {
+    themeColor: theme === "dark" ? "#000000" : "#FFFFFF",
+  };
+};
 
 export default function RootLayout({
   children,
@@ -74,7 +76,7 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
