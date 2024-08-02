@@ -60,14 +60,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" suppressHydrationWarning>
+    <html lang="ja">
       <body
         className={cn("bg-background font-sans antialiased", fontSans.variable)}
       >
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
