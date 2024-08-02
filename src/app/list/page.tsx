@@ -22,7 +22,7 @@ export default async function Page() {
             <Link
               key={date}
               href={`/list/${date}`}
-              className="flex items-end gap-x-3 px-2 py-4 hover:bg-slate-100"
+              className="flex items-end gap-x-3 px-2 py-4 hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               <h2 className="font-bold">{date}</h2>
               <span className="text-sm">

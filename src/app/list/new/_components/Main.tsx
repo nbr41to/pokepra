@@ -3,7 +3,7 @@
 import { RxReset } from "react-icons/rx";
 import { PlayCard } from "@/components/PlayCard";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PiSpadeFill,
   PiHeartFill,
@@ -25,6 +25,17 @@ export function Main({ hands }: Props) {
   const [position, setPosition] = useState("utg-0");
   const [hand, setHand] = useState<[string, string]>(["s-1", "s-1"]);
   const [focus, setFocus] = useState<0 | 1>(0);
+
+  useEffect(() => {
+    const handleScroll = (e: Event) => {
+      e.preventDefault();
+    };
+    document.addEventListener("touchmove", handleScroll, { passive: false });
+    return () => {
+      document.removeEventListener("wheel", handleScroll);
+      document.removeEventListener("touchmove", handleScroll);
+    };
+  }, []);
 
   const handlePosition = (value: string) => {
     if (position.startsWith("utg") && value === "utg-0") {
@@ -124,19 +135,23 @@ export function Main({ hands }: Props) {
             onClick={() => handlePosition("bb")}
           />
         </div>
-
-        <div className="flex justify-center">
-          <PlayCard value={hand[0]} size={120} focus={focus === 0} />
-          <PlayCard value={hand[1]} size={120} focus={focus === 1} />
-        </div>
-
-        <div className="text-right">
-          <TodayListView hands={hands} />
-        </div>
       </div>
 
       {/* Interface */}
-      <div className="space-y-4 pb-4">
+      <div className="space-y-4 pb-8">
+        <div className="text-right">
+          <TodayListView hands={hands} />
+        </div>
+
+        <div className="flex justify-center pb-8">
+          <button type="button" onClick={() => setFocus(0)}>
+            <PlayCard value={hand[0]} size={120} focus={focus === 0} />
+          </button>
+          <button type="button" onClick={() => setFocus(1)}>
+            <PlayCard value={hand[1]} size={120} focus={focus === 1} />
+          </button>
+        </div>
+
         <div className="flex gap-2">
           <Button
             variant="secondary"
