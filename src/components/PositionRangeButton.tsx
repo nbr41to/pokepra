@@ -27,12 +27,38 @@ export const PositionRangeButton = ({ position }: Props) => {
 
         <DialogContent>
           <div>
-            <Image
-              src={`/range-${position.split("-")[0]}.png`}
-              width={500}
-              height={400}
-              alt={`range-${position}`}
-            />
+            {position === "sb" && (
+              <Image
+                src="/range-sb.png"
+                width={500}
+                height={400}
+                alt={`range-${position}`}
+              />
+            )}
+            {position.startsWith("utg") && (
+              <Image
+                src="/range-utg.png"
+                width={500}
+                height={400}
+                alt={`range-${position}`}
+              />
+            )}
+            {position === "co" && (
+              <Image
+                src="/range-co.png"
+                width={500}
+                height={400}
+                alt={`range-${position}`}
+              />
+            )}
+            {position === "btn" && (
+              <Image
+                src="/range-btn.png"
+                width={500}
+                height={400}
+                alt={`range-${position}`}
+              />
+            )}
           </div>
           <DialogDescription>Case: 6 players / 100BB</DialogDescription>
         </DialogContent>
