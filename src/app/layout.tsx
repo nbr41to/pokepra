@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
   },
 };
-export const viewport: Viewport = {
-  themeColor: "black",
-};
+// export const viewport: Viewport = {
+//   themeColor: "black",
+// };
 
 export default function RootLayout({
   children,
