@@ -1,10 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/utils/classNames";
 import { ThemeProvider } from "@/libs/next-themes/theme-provider";
-import Link from "next/link";
-import { ChangeModeButton } from "@/components/ChangeModeButton";
 import { Header } from "./_header";
 import { Toaster } from "sonner";
 
@@ -13,9 +11,47 @@ const fontSans = FontSans({
   variable: "--font-sans",
 });
 
+const APP_NAME = "pokepra";
+const APP_DEFAULT_TITLE = "pokepra";
+const APP_TITLE_TEMPLATE = "%s - pokepra";
+const APP_DESCRIPTION = "ポーカー練習じゃい";
+
 export const metadata: Metadata = {
-  title: "pokepra",
-  description: "ポーカー練習じゃい",
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+};
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({

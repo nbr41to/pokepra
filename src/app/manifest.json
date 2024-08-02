@@ -1,7 +1,6 @@
 {
   "name": "pokepra",
   "short_name": "pokepra",
-  "icons": [],
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
