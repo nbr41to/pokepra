@@ -2,6 +2,8 @@
   "name": "pokepra",
   "short_name": "pokepra",
   "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
   "display": "standalone",
   "orientation": "portrait"
 }

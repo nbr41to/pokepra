@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { getCookie } from "@/utils/cookie";
 import { DeleteButton } from "./_components/DeleteButton";
 import { redirect } from "next/navigation";
+import { PositionRangeButton } from "@/components/PositionRangeButton";
 
 export default async function Page({
   params: { date },
@@ -37,7 +38,7 @@ export default async function Page({
             </div>
 
             <div>
-              <PositionBadge position={hand.position} />
+              <PositionRangeButton position={hand.position} />
             </div>
           </div>
         ))}

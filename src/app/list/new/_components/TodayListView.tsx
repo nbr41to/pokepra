@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/sheet";
 import { FaListUl } from "react-icons/fa6";
 import { PositionBadge } from "@/components/PositionBadge";
+import { PositionRangeButton } from "@/components/PositionRangeButton";
 
 type Props = {
   hands: Hand[];
@@ -48,7 +49,7 @@ export const TodayListView = ({ hands }: Props) => {
                 </div>
 
                 <div>
-                  <PositionBadge position={hand.position} />
+                  <PositionRangeButton position={hand.position} />
                 </div>
               </div>
             ))}
