@@ -33,6 +33,7 @@ export const PositionRangeButton = ({ position }: Props) => {
               width={500}
               height={400}
               alt={`range-${position}`}
+              unoptimized
             />
           </div>
           <DialogDescription>Case: 6 players / 100BB</DialogDescription>

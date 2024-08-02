@@ -2,11 +2,7 @@
 
 import withPWAInit from "@ducanh2912/next-pwa";
 
-const nextConfig = {
-  images: {
-    unoptimized: false,
-  },
-};
+const nextConfig = {};
 
 const withPWA = withPWAInit({
   dest: "public",
