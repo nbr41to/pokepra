@@ -16,7 +16,7 @@ export const ChangeModeButton = () => {
       <Head>
         <meta
           name="theme-color"
-          content={theme === "light" ? "#ffffff" : "#000000"}
+          content={theme === "light" ? "#000000" : "#000000"}
         />
       </Head>
       <Button
