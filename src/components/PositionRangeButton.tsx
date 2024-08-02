@@ -28,7 +28,7 @@ export const PositionRangeButton = ({ position }: Props) => {
         <DialogContent>
           <div>
             <Image
-              src={`/${position.split("-")[0]}.png`}
+              src={`/range-${position.split("-")[0]}.png`}
               width={500}
               height={400}
               alt={`range-${position}`}
