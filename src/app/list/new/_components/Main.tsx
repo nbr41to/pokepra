@@ -23,7 +23,7 @@ type Props = {
 };
 export function Main({ hands }: Props) {
   const [position, setPosition] = useState("utg-0");
-  const [hand, setHand] = useState<[string, string]>(["s-1", "s-1"]);
+  const [hand, setHand] = useState<[string, string]>(["s-0", "s-0"]);
   const [focus, setFocus] = useState<0 | 1>(0);
 
   useEffect(() => {
@@ -145,10 +145,18 @@ export function Main({ hands }: Props) {
 
         <div className="flex justify-center pb-8">
           <button type="button" onClick={() => setFocus(0)}>
-            <PlayCard value={hand[0]} size={120} focus={focus === 0} />
+            <PlayCard
+              value={hand[0].split("-")[1] === "0" ? "s-1" : hand[0]}
+              size={120}
+              focus={focus === 0}
+            />
           </button>
           <button type="button" onClick={() => setFocus(1)}>
-            <PlayCard value={hand[1]} size={120} focus={focus === 1} />
+            <PlayCard
+              value={hand[1].split("-")[1] === "0" ? "s-1" : hand[1]}
+              size={120}
+              focus={focus === 1}
+            />
           </button>
         </div>
 
