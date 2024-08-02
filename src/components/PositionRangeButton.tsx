@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { PositionBadge } from "./PositionBadge";
@@ -24,11 +25,11 @@ export const PositionRangeButton = ({ position }: Props) => {
         >
           <PositionBadge position={position} />
         </DialogTrigger>
-
         <DialogContent>
+          <DialogTitle>Range</DialogTitle>
           <div>
             <Image
-              src={`/${position.split("-")[0]}.webp`}
+              src={`/range-${position.split("-")[0]}.webp`}
               width={500}
               height={400}
               alt={`range-${position}`}
