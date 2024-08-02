@@ -7,7 +7,7 @@ export default async function Page() {
   const records: Records = recordsJson ? JSON.parse(recordsJson) : {};
 
   return (
-    <div className="">
+    <div className="flex h-full flex-col">
       <div className="flex items-center justify-between p-3">
         <h2 className="font-bold">過去の記録</h2>
         <Button className="font-bold" asChild>
@@ -15,7 +15,7 @@ export default async function Page() {
         </Button>
       </div>
 
-      <div className="divide-y">
+      <div className="flex-grow divide-y">
         {Object.keys(records)
           .sort((a, b) => new Date(b).getTime() - new Date(a).getTime()) // Sort by date in descending order
           .map((date) => (
@@ -30,6 +30,12 @@ export default async function Page() {
               </span>
             </Link>
           ))}
+
+        {Object.keys(records).length === 0 && (
+          <div className="flex h-full items-center justify-center">
+            <p className="text-slate-500">記録がありません。</p>
+          </div>
+        )}
       </div>
     </div>
   );

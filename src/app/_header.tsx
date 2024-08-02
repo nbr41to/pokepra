@@ -19,7 +19,7 @@ export const Header = () => {
 
   return (
     <>
-      <header className="bg-background fixed flex w-full items-center justify-between border-b sm:max-w-sm">
+      <header className="bg-background fixed flex w-full items-center justify-between border-b px-3 sm:max-w-sm">
         <Sheet open={opened} onOpenChange={setOpened}>
           <SheetTrigger>
             <HiOutlineMenuAlt2 size={24} />
