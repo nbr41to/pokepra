@@ -50,6 +50,9 @@ export const metadata: Metadata = {
     description: APP_DESCRIPTION,
   },
 };
+export const viewport: Viewport = {
+  themeColor: "#FFFFFF",
+};
 // export const viewport: Viewport = {
 //   themeColor: [
 //     { media: "(prefers-color-scheme: light)", color: "white" },
@@ -71,7 +74,7 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem={false}
+          enableSystem
           disableTransitionOnChange
         >
           <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
