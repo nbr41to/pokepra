@@ -8,18 +8,13 @@ export default function Home() {
   console.log(list);
 
   return (
-    <div>
-      <div className="mx-auto w-fit p-6">
-        <Button className="font-bold" asChild>
-          <Link href="/list">List</Link>
-        </Button>
-      </div>
-
-      <div className="mx-auto w-fit p-6">
-        <Button className="font-bold" asChild>
-          <Link href="/list/new">New</Link>
-        </Button>
-      </div>
+    <div className="flex h-full items-center justify-center gap-4 py-6">
+      <Button className="font-bold" asChild>
+        <Link href="/list/new">記録をする</Link>
+      </Button>
+      <Button className="font-bold" asChild>
+        <Link href="/list">記録を見る</Link>
+      </Button>
     </div>
   );
 }

@@ -10,28 +10,53 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import Link from "next/link";
+import { useState } from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 
 export const Header = () => {
+  const [opened, setOpened] = useState(false);
+
   return (
     <>
-      <header className="flex items-center justify-between border-b">
-        <Sheet>
+      <header className="bg-background fixed flex w-full items-center justify-between border-b sm:max-w-sm">
+        <Sheet open={opened} onOpenChange={setOpened}>
           <SheetTrigger>
             <HiOutlineMenuAlt2 size={24} />
           </SheetTrigger>
           <SheetContent side="left">
             <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetTitle>ハンド記録ツール</SheetTitle>
               <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                これはポーカー訓練生のためのハンド記憶ツールです。初心者の頃って前のハンドをすぐに忘れてしまいますよね。そんな時に使ってください。
+              </SheetDescription>
+              <SheetDescription>
+                記録したデータは30日間保存されます。
               </SheetDescription>
             </SheetHeader>
+
+            <div className="flex justify-center gap-4 py-6">
+              <Button
+                className="font-bold"
+                asChild
+                onClick={() => setOpened(false)}
+              >
+                <Link href="/list/new">記録をする</Link>
+              </Button>
+              <Button
+                className="font-bold"
+                asChild
+                onClick={() => setOpened(false)}
+              >
+                <Link href="/list">記録を見る</Link>
+              </Button>
+            </div>
           </SheetContent>
         </Sheet>
 
-        <h1 className="font-bold">pokepra</h1>
+        <Link href="/">
+          <h1 className="font-bold">pokepra</h1>
+        </Link>
 
         <ChangeModeButton />
       </header>

@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/libs/next-themes/theme-provider";
 import Link from "next/link";
 import { ChangeModeButton } from "@/components/ChangeModeButton";
 import { Header } from "./_header";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -38,7 +39,8 @@ export default function RootLayout({
         >
           <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
             <Header />
-            <main className="flex-grow">{children}</main>
+            <main className="flex-grow pt-[42px]">{children}</main>
+            <Toaster position="top-center" />
           </div>
         </ThemeProvider>
       </body>
