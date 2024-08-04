@@ -1,32 +1,29 @@
 "use client";
 
 import { RxReset } from "react-icons/rx";
-import { PlayCard } from "@/components/PlayCard";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { addHand, updatePeople } from "@/utils/records";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { addHand } from "@/utils/records";
 import { TodayListView } from "./TodayListView";
 import { toast } from "sonner";
 import { NumberButtons } from "./NumberButtons";
-import { AddNumberButtons } from "./AddNumberButtons";
-import { SuitButtons } from "./SuitButtons";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { PositionButtons } from "./PositionButtons";
 import { PeopleCounter } from "./PeopleCounter";
 import { calcPosition } from "@/utils/calcPosition";
+import { IsSuitedButtons } from "./IsSuitedButtons";
+import { toHandString } from "@/utils/toHandString";
 
 type Props = {
-  people: number;
   hands: Hand[];
 };
-export function Main({ people, hands }: Props) {
-  const [position, setPosition] = useState("utg-0");
-  const [hand, setHand] = useState<[string, string]>(["s-1", "c-1"]);
-  const [countMode, setCountMode] = useState(false);
-  const [addCount, setAddCount] = useState(0);
-  const [focus, setFocus] = useState<0 | 1>(0);
+export function Main({ hands }: Props) {
+  const currentPeople = hands[hands.length - 1]?.people || 2;
 
+  const [position, setPosition] = useState("utg-0");
+  const [people, setPeople] = useState(currentPeople);
+  const [hand, setHand] = useState<[number, number, boolean]>([0, 0, false]);
+
+  /* スクロールイベントを抑制 */
   useEffect(() => {
     const handleScroll = (e: Event) => {
       e.preventDefault();
@@ -47,58 +44,60 @@ export function Main({ people, hands }: Props) {
       setPosition(value);
     }
   };
-  const handleIncrementPeople = async () => {
+  const handleIncrementPeople = () => {
     if (people === 10) return;
-    await updatePeople(people + 1);
+    setPeople(people + 1);
   };
-  const handleDecrementPeople = async () => {
+  const handleDecrementPeople = () => {
     if (people === 2) return;
-    await updatePeople(people - 1);
+    setPeople(people - 1);
   };
-  const handleNumber = (value: number) => {
-    const newHand: [string, string] = [...hand];
-    const fixedValue = value > 13 ? 13 : value;
-    newHand[focus] = hand[focus].replace(/-\d+/, `-${fixedValue}`);
-    setHand(newHand);
-    setAddCount(fixedValue);
-  };
-  const handleSuit = (value: string) => {
-    const prevSuit = hand[focus].split("-")[0];
-    const newHand: [string, string] = [...hand];
-    newHand[focus] = hand[focus].replace(`${prevSuit}`, value);
-    setHand(newHand);
-  };
-  const handleSubmit = async (isJoin?: boolean) => {
-    if (focus === 0) {
-      setFocus(1);
-      setAddCount(0);
-    } else if (typeof isJoin !== "undefined") {
-      {
-        const ok = await addHand({
-          position,
-          isJoin,
-          preflop: hand,
-          flop: null,
-          turn: null,
-          river: null,
-        });
-        if (ok) {
-          setHand(["s-1", "c-1"]);
-          setFocus(0);
-          setAddCount(0);
-          setPosition(calcPosition(position, people));
-          toast.success("Save success!!");
-        } else {
-          toast.error("Save failed");
-        }
+  const handleNumber = useCallback(
+    (value: number) => {
+      /* numbersの合計 */
+      if (hand[0] !== 0 && hand[1] !== 0) return;
+      if (hand[0] === 0) {
+        setHand([value, 0, hand[2]]);
+      } else {
+        setHand([hand[0], value, hand[2]]);
       }
-    }
-  };
+    },
+    [hand],
+  );
+  const handleSuited = useCallback(
+    (value: boolean) => {
+      setHand([hand[0], hand[1], value]);
+    },
+    [hand],
+  );
   const handleClear = () => {
-    setHand(["s-1", "c-1"]);
-    setFocus(0);
-    setAddCount(0);
+    setHand([0, 0, false]);
   };
+
+  const disabled = useMemo(() => hand[0] === 0 || hand[1] === 0, [hand]);
+  const handleSubmit = useCallback(
+    async (action: string) => {
+      if (disabled) return;
+
+      const ok = await addHand({
+        people,
+        position,
+        action,
+        preflop: hand,
+        flop: null,
+        turn: null,
+        river: null,
+      });
+      if (ok) {
+        setHand([0, 0, false]);
+        setPosition(calcPosition(position, people));
+        toast.success("Save success!!");
+      } else {
+        toast.error("Save failed");
+      }
+    },
+    [disabled, people, position, hand],
+  );
 
   return (
     <div className="flex h-full flex-col justify-between px-6 py-4">
@@ -116,61 +115,50 @@ export function Main({ people, hands }: Props) {
 
       {/* Interface */}
       <div className="space-y-4 pb-8">
-        <div className="flex justify-center py-4">
-          <button type="button" onClick={() => setFocus(0)}>
-            <PlayCard value={hand[0]} size={120} focus={focus === 0} />
-          </button>
-          <button type="button" onClick={() => setFocus(1)}>
-            <PlayCard value={hand[1]} size={120} focus={focus === 1} />
-          </button>
-        </div>
-
-        <SuitButtons hand={hand[focus]} onClick={handleSuit} />
-        {countMode ? (
-          <AddNumberButtons currentCount={addCount} onClick={handleNumber} />
-        ) : (
-          <NumberButtons onClick={handleNumber} />
-        )}
-
-        <div className="flex items-center justify-end gap-x-2">
-          <Label htmlFor="count-mode">Count Mode</Label>
-          <Switch
-            id="count-mode"
-            checked={countMode}
-            onClick={() => setCountMode(!countMode)}
-          />
-        </div>
-
-        <div className="flex gap-2">
-          {focus === 0 ? (
-            <Button
-              className="flex-grow"
-              variant="outline"
-              onClick={() => handleSubmit()}
-            >
-              NEXT
-            </Button>
-          ) : (
-            <>
-              <Button
-                className="flex-grow"
-                variant="outline"
-                onClick={() => handleSubmit(true)}
-              >
-                JOIN
-              </Button>
-              <Button
-                className="flex-grow"
-                variant="outline"
-                onClick={() => handleSubmit(false)}
-              >
-                FOLD
-              </Button>
-            </>
-          )}
+        <div className="flex justify-center text-9xl">{toHandString(hand)}</div>
+        <NumberButtons onClick={handleNumber} />
+        <div className="flex gap-x-2">
+          <IsSuitedButtons suited={hand[2]} onClick={handleSuited} />
           <Button variant="outline" onClick={handleClear}>
             <RxReset size={20} />
           </Button>
+        </div>
+
+        <div className="flex gap-2">
+          <>
+            <Button
+              className="flex-grow"
+              variant="outline"
+              disabled={disabled}
+              onClick={() => handleSubmit("raise")}
+            >
+              RISE
+            </Button>
+            <Button
+              className="flex-grow"
+              variant="outline"
+              disabled={disabled}
+              onClick={() => handleSubmit("call")}
+            >
+              CALL
+            </Button>
+            <Button
+              className="flex-grow"
+              variant="outline"
+              disabled={disabled}
+              onClick={() => handleSubmit("3bet")}
+            >
+              3BET
+            </Button>
+            <Button
+              className="flex-grow"
+              variant="outline"
+              disabled={disabled}
+              onClick={() => handleSubmit("fold")}
+            >
+              FOLD
+            </Button>
+          </>
         </div>
       </div>
     </div>

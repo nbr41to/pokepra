@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getCookie } from "@/utils/cookie";
 import Link from "next/link";
+import { DeleteButton } from "./_components/DeleteButton";
 
 export default async function Page() {
   const recordsJson = await getCookie("records");
@@ -31,9 +32,13 @@ export default async function Page() {
             </Link>
           ))}
 
-        {Object.keys(records).length === 0 && (
+        {Object.keys(records).length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <p className="text-slate-500">記録がありません。</p>
+          </div>
+        ) : (
+          <div className="flex items-center justify-end p-3">
+            <DeleteButton />
           </div>
         )}
       </div>

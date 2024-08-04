@@ -13,9 +13,10 @@ type Records = Record<
 >;
 
 type Hand = {
+  people: number;
   position: string;
-  isJoin: boolean;
-  preflop: [string, string];
+  action: string; // "fold" | "call" | "raise" | "3bet";
+  preflop: [number, number, boolean]; // [card1, card2, suited]
   flop: string | null;
   turn: string | null;
   river: string | null;

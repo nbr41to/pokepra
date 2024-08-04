@@ -13,8 +13,9 @@ import Image from "next/image";
 const EXISTING_RANGE_IMAGE_POSITIONS = ["utg", "co", "btn", "sb"];
 type Props = {
   position: string;
+  secondary?: boolean;
 };
-export const PositionRangeButton = ({ position }: Props) => {
+export const PositionRangeButton = ({ position, secondary = false }: Props) => {
   return (
     <>
       <Dialog>
@@ -23,7 +24,7 @@ export const PositionRangeButton = ({ position }: Props) => {
             !EXISTING_RANGE_IMAGE_POSITIONS.includes(position.split("-")[0])
           }
         >
-          <PositionBadge position={position} />
+          <PositionBadge position={position} active={!secondary} />
         </DialogTrigger>
         <DialogContent>
           <DialogTitle>Range</DialogTitle>
