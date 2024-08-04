@@ -29,18 +29,6 @@ export const addHand = async (hand: Hand) => {
   }
 };
 
-/* 人数を更新 */
-export const updatePeople = async (people: number) => {
-  const dateString = getDateString();
-  const recordsJson = await getCookie("records");
-  const records: Records = recordsJson ? JSON.parse(recordsJson) : {};
-  const record = records[dateString] || INITIAL_RECORD_VALUE;
-  record.people = people;
-  records[dateString] = record;
-
-  await setCookie("records", JSON.stringify(records));
-};
-
 /* 指定した日付の記録を削除 */
 export const deleteRecord = async (date: string) => {
   try {
