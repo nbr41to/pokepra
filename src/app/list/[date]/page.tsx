@@ -4,6 +4,7 @@ import { DeleteButton } from "./_components/DeleteButton";
 import { redirect } from "next/navigation";
 import { PositionRangeButton } from "@/components/PositionRangeButton";
 import { toHandString } from "@/utils/toHandString";
+import { Main } from "./_components/Main";
 
 export default async function Page({
   params: { date },
@@ -20,29 +21,9 @@ export default async function Page({
 
   return (
     <div className="px-6">
-      <div className="divide-y py-4">
-        {record.hands.map((hand, index) => (
-          <div key={index} className="flex justify-between py-2">
-            <div className="flex items-center">
-              <p className="w-5 font-bold">{index + 1}.</p>
-              <div>{toHandString(hand.preflop)}</div>
+      <Main hands={record.hands} />
 
-              <Badge
-                className="ml-2"
-                variant={hand.action === "fold" ? "outline" : "destructive"}
-              >
-                {hand.action}
-              </Badge>
-            </div>
-
-            <div>
-              <PositionRangeButton position={hand.position} />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="border-t py-2 text-right">
+      <div className="py-2 text-right">
         <DeleteButton />
       </div>
     </div>

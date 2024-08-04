@@ -18,6 +18,11 @@ export const toHandString = (hand: Hand["preflop"]) => {
   const orderedNumbers = [replacedHand[0], replacedHand[1]].sort(
     (a, b) => b - a,
   );
+
+  if (orderedNumbers[0] === orderedNumbers[1]) {
+    return `${toFaceCardString(orderedNumbers[0])}${toFaceCardString(orderedNumbers[1])}`;
+  }
+
   return `${toFaceCardString(orderedNumbers[0])}${toFaceCardString(orderedNumbers[1])}${
     hand[2] ? "s" : "o"
   }`;
