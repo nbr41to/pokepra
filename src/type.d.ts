@@ -5,7 +5,6 @@
 type Records = Record<
   string, // date
   {
-    people: number;
     startStack: number | null;
     endStack: number | null;
     hands: Hand[];
