@@ -113,9 +113,12 @@ export function Main({ hands }: Props) {
         </div>
       </div>
 
+      <div className="flex flex-grow items-center justify-center text-9xl">
+        {toHandString(hand)}
+      </div>
+
       {/* Interface */}
       <div className="space-y-4 pb-8">
-        <div className="flex justify-center text-9xl">{toHandString(hand)}</div>
         <NumberButtons onClick={handleNumber} />
         <div className="flex gap-x-2">
           <IsSuitedButtons suited={hand[2]} onClick={handleSuited} />
