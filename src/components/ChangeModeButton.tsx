@@ -15,6 +15,9 @@ export const ChangeModeButton = () => {
     if (isLoading) return;
     setIsLoading(true);
     setTheme(theme === "light" ? "dark" : "light");
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    const themeColor = theme === "light" ? "#000000" : "#FFFFFF";
+    metaThemeColor?.setAttribute("content", themeColor);
     await setCookie("theme", theme === "light" ? "dark" : "light");
     setIsLoading(false);
   };
@@ -23,7 +26,7 @@ export const ChangeModeButton = () => {
     <Button
       variant="ghost"
       size="icon"
-      className="hover:bg-background/0 group relative"
+      className="group relative hover:bg-background/0"
       disabled={isLoading}
       onClick={handleOnClick}
     >

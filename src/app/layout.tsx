@@ -56,7 +56,6 @@ export const metadata: Metadata = {
 // };
 export const generateViewport = async (): Promise<Viewport> => {
   const theme = await getCookie("theme");
-  console.log(theme);
 
   return {
     themeColor: theme === "dark" ? "#000000" : "#FFFFFF",
@@ -79,7 +78,7 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="bg-background mx-auto flex h-svh flex-col sm:max-w-sm">
+          <div className="mx-auto flex h-svh flex-col bg-background sm:max-w-sm">
             <Header />
             <main className="flex-grow pt-[42px]">{children}</main>
             <Toaster position="bottom-right" />
