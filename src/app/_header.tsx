@@ -13,13 +13,14 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
+import { AiOutlineExperiment } from "react-icons/ai";
 
 export const Header = () => {
   const [opened, setOpened] = useState(false);
 
   return (
     <>
-      <header className="bg-background fixed flex w-full items-center justify-between border-b px-3 sm:max-w-sm">
+      <header className="fixed flex w-full items-center justify-between border-b bg-background px-3 sm:max-w-sm">
         <Sheet open={opened} onOpenChange={setOpened}>
           <SheetTrigger>
             <HiOutlineMenuAlt2 size={24} />
@@ -49,6 +50,19 @@ export const Header = () => {
                 onClick={() => setOpened(false)}
               >
                 <Link href="/list">記録を見る</Link>
+              </Button>
+            </div>
+
+            <div className="text-right">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+                onClick={() => setOpened(false)}
+              >
+                <Link href="/nfc">
+                  <AiOutlineExperiment size={24} />
+                </Link>
               </Button>
             </div>
           </SheetContent>

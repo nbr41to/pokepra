@@ -63,10 +63,11 @@
   * {
     @apply border-border;
   }
-  html {
-    transition: none !important;
-  }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+html {
+  transition: none !important;
 }
