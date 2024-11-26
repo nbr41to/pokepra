@@ -110,10 +110,10 @@ export const Board = () => {
   }, [hand, board]);
 
   return (
-    <div className="space-y-4">
-      <div className="h-96">
+    <div className="space-y-2">
+      <div className="h-80">
         {odds && (
-          <div className="space-y-2">
+          <div className="space-y-1">
             {/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
             {odds[0].handChances.map((hand: any, i: number) => {
               const probability = (hand.count / odds[0].count) * 100;
@@ -133,7 +133,7 @@ export const Board = () => {
         )}
       </div>
 
-      <div className="h-9 text-center text-3xl font-bold">{result?.rank}</div>
+      <div className="h-8 text-center text-2xl font-bold">{result?.rank}</div>
 
       <div className="flex">
         {board.map((card) => (
@@ -155,7 +155,7 @@ export const Board = () => {
         ))}
       </div>
 
-      <div className="flex h-20 justify-center">
+      <div className="flex h-[60px] justify-center">
         {hand.map((card) => (
           <div
             key={card}
@@ -164,7 +164,7 @@ export const Board = () => {
                 "rounded bg-foreground ring-2 ring-red-500",
             )}
           >
-            <PlayCard size={80} value={card} />
+            <PlayCard size={60} value={card} />
           </div>
         ))}
       </div>
