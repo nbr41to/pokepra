@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { AiOutlineExperiment } from "react-icons/ai";
+import { FaTags } from "react-icons/fa6";
 
 export const Header = () => {
   const [opened, setOpened] = useState(false);
@@ -53,7 +54,17 @@ export const Header = () => {
               </Button>
             </div>
 
-            <div className="text-right">
+            <div className="space-x-4 text-right">
+              <Button
+                variant="outline"
+                size="icon"
+                asChild
+                onClick={() => setOpened(false)}
+              >
+                <Link href="/practice">
+                  <FaTags size={24} />
+                </Link>
+              </Button>
               <Button
                 variant="outline"
                 size="icon"

@@ -7,12 +7,13 @@ import { toHandString } from "@/utils/toHandString";
 import { Main } from "./_components/Main";
 
 export default async function Page({
-  params: { date },
+  params,
 }: {
-  params: {
+  params: Promise<{
     date: string;
-  };
+  }>;
 }) {
+  const { date } = await params;
   const recordsJson = await getCookie("records");
   const records: Records = recordsJson ? JSON.parse(recordsJson) : {};
   const record = records[date];
