@@ -15,12 +15,53 @@ import { IoReloadCircle } from "react-icons/io5";
 import { calculateEquity } from "poker-odds";
 import { Progress } from "@/components/ui/progress";
 import { IoArrowUndo } from "react-icons/io5";
+import handsEquity from "@/constants/handsEquity.json";
 
 export const Board = () => {
   const [deck, setDeck] = useState<string[]>([]);
   const [hand, setHand] = useState<string[]>([]);
   const [cpuHand, setCpuHand] = useState<string[]>([]);
   const [board, setBoard] = useState<string[]>([]);
+
+  const handString = useMemo(() => {
+    if (hand.length < 2) return "";
+    const sortedHand = hand.sort((a, b) => {
+      const aRank =
+        Number(a.split("-")[1]) === 1 ? 14 : Number(a.split("-")[1]);
+      const bRank =
+        Number(b.split("-")[1]) === 1 ? 14 : Number(b.split("-")[1]);
+      return bRank - aRank;
+    });
+    const [suit1, number1] = sortedHand[0].split("-");
+    const rank1 =
+      number1 === "1"
+        ? "A"
+        : number1 === "10"
+          ? "T"
+          : number1 === "11"
+            ? "J"
+            : number1 === "12"
+              ? "Q"
+              : number1 === "13"
+                ? "K"
+                : number1;
+
+    const [suit2, number2] = sortedHand[1].split("-");
+    const rank2 =
+      number2 === "1"
+        ? "A"
+        : number2 === "10"
+          ? "T"
+          : number2 === "11"
+            ? "J"
+            : number2 === "12"
+              ? "Q"
+              : number2 === "13"
+                ? "K"
+                : number2;
+
+    return `${rank1}${rank2}${rank1 === rank2 ? "" : suit1 === suit2 ? "s" : "o"}`;
+  }, [hand]);
 
   const start = () => {
     const shuffledDeck = shuffleCard(INITIAL_DECK);
@@ -110,7 +151,7 @@ export const Board = () => {
   }, [hand, board]);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div className="h-80">
         {odds && (
           <div className="space-y-1">
@@ -135,13 +176,12 @@ export const Board = () => {
 
       <div className="h-8 text-center text-2xl font-bold">{result?.rank}</div>
 
-      <div className="flex">
+      <div className="flex justify-around gap-x-2">
         {board.map((card) => (
           <div
             key={card}
             className={cn(
-              result?.cards.includes(card) &&
-                "rounded bg-foreground ring-2 ring-red-500",
+              result && !result?.cards.includes(card) && "brightness-50",
             )}
           >
             <PlayCard size={60} value={card} />
@@ -150,18 +190,25 @@ export const Board = () => {
         {Array.from({ length: 5 - board.length }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           <div key={i}>
-            <PlayCard size={60} back />
+            <PlayCard size={60} />
           </div>
         ))}
       </div>
 
-      <div className="flex h-[60px] justify-center">
+      <div className="flex h-[60px] items-end justify-center gap-x-3">
+        {handString && (
+          <div className="w-16 text-right">
+            <div>{handString}</div>
+            <div className="text-lg font-bold">
+              {handsEquity[handString as keyof typeof handsEquity]?.two}%
+            </div>
+          </div>
+        )}
         {hand.map((card) => (
           <div
             key={card}
             className={cn(
-              result?.cards.includes(card) &&
-                "rounded bg-foreground ring-2 ring-red-500",
+              result && !result?.cards.includes(card) && "brightness-50",
             )}
           >
             <PlayCard size={60} value={card} />
@@ -203,7 +250,7 @@ export const Board = () => {
         )}
         {hand.length === 2 && board.length > 3 && (
           <Button className="" onClick={undo}>
-            <IoArrowUndo size={24} />
+            <IoArrowUndo size={20} />
           </Button>
         )}
       </div>

@@ -1,33 +1,45 @@
 import { GiCardJoker } from "react-icons/gi";
 import { CardIcon } from "./CardIcon";
 import { cn } from "@/utils/classNames";
+import { GiSuits } from "react-icons/gi";
 
-type Open = {
-  back?: false | undefined;
-  value: string;
+type Props = {
+  value?: string;
   size?: number;
-  focus?: boolean;
+  fontSize?: number;
 };
-type Back = {
-  back: true;
-  value?: undefined;
-  size?: number;
-  focus?: boolean;
-};
-type Props = Open | Back;
 
-export const PlayCard = ({ value, back, size = 40, focus = false }: Props) => {
+export const PlayCard = ({ value, size = 40, fontSize = 16 }: Props) => {
+  const suit = value?.split("-")[0];
+  const colorClass = {
+    h: "text-red-500",
+    d: "text-orange-500",
+    s: "text-blue-500",
+    c: "text-green-500",
+  };
+  const rank = value?.split("-")[1];
+
   return (
     <div
       className={cn(
-        `size-[${size}px]`,
-        focus && "rounded-lg outline outline-2 outline-indigo-300",
+        `h-[${size}px] flex aspect-[4/5] flex-col items-center justify-evenly rounded border-4 border-double bg-slate-50`,
       )}
     >
-      {back ? (
-        <GiCardJoker size={size} />
+      {suit && rank ? (
+        <>
+          <CardIcon suit={suit} size={size / 3} />
+          <div
+            className={cn(
+              colorClass[suit as keyof typeof colorClass],
+              `text-[${fontSize}px]`,
+              "font-bold",
+            )}
+          >
+            {rank}
+          </div>
+        </>
       ) : (
-        <CardIcon size={size} value={value} />
+        <GiSuits size={size / 2} className="fill-background" />
       )}
     </div>
   );
