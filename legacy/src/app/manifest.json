@@ -1,7 +1,0 @@
-{
-  "name": "pokepra",
-  "short_name": "pokepra",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait"
-}
