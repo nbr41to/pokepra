@@ -4,13 +4,23 @@ import { RANKS, SUITS } from "@/constants/card";
 import { TIERS } from "@/constants/tiers";
 import { getHandString } from "./getResult";
 
+function getAllCards(): string[] {
+  const cards: string[] = [];
+  for (const rank of RANKS) {
+    for (const suit of SUITS) {
+      cards.push(rank + suit);
+    }
+  }
+  return cards;
+}
+
 /**
  * [A, K, Q, T, 2 ~ 9]
  * [s, h, d, c]
  * の組み合わせの2文字をランダムで返す
  * includeTies: TIERSの何番目までを含めるか (デフォルト: 0 -> 全て)
  */
-export function genHands(includeTies = 0) {
+function genHands(includeTies = 0) {
   function getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
   }
@@ -49,7 +59,7 @@ export function genHands(includeTies = 0) {
 /**
  * Boardのカードを生成
  */
-export function genBoard(cardCount: 3 | 4 | 5 = 5, usedCards: string[] = []) {
+function genBoard(cardCount: 3 | 4 | 5 = 5, usedCards: string[] = []) {
   function getRandomInt(max: number) {
     return Math.floor(Math.random() * max);
   }
@@ -68,3 +78,5 @@ export function genBoard(cardCount: 3 | 4 | 5 = 5, usedCards: string[] = []) {
 
   return board;
 }
+
+export { getAllCards, genHands, genBoard };

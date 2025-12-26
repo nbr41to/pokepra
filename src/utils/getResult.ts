@@ -1,3 +1,4 @@
+import { RANK_ORDER } from "@/constants/card";
 import { TIERS } from "@/constants/tiers";
 
 /**
@@ -19,24 +20,9 @@ function getTierIndexByPosition(position: string) {
   return positionToTierIndex[position] ?? -1;
 }
 
-const rankOrder: { [key: string]: number } = {
-  A: 14,
-  K: 13,
-  Q: 12,
-  J: 11,
-  T: 10,
-  9: 9,
-  8: 8,
-  7: 7,
-  6: 6,
-  5: 5,
-  4: 4,
-  3: 3,
-  2: 2,
-};
 function getSortedRank(hand1: string, hand2: string) {
   return [hand1[0], hand2[0]]
-    .sort((a, b) => rankOrder[b] - rankOrder[a])
+    .sort((a, b) => RANK_ORDER[b] - RANK_ORDER[a])
     .join("");
 }
 function getSuited(hand1: string, hand2: string) {

@@ -95,10 +95,12 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
     gestureRef.current = null;
   };
 
+  if (hands.length !== 2) return null;
+
   return (
     <div
       ref={containerRef}
-      className="relative flex aspect-video w-100 touch-none items-center justify-evenly rounded-md border-2 bg-orange-50 shadow-md dark:bg-orange-950/60"
+      className="relative flex aspect-video w-100 touch-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={resetGesture}

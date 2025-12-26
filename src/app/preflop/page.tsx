@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { genBoard, genHands } from "@/utils/dealer";
 import { Board } from "./_components/board";
 import { HandConfirmation } from "./_components/hand-confirmation";
@@ -8,10 +8,24 @@ import { Position } from "./_components/position";
 import { SelectAction } from "./_components/select-action";
 
 export default function Page() {
-  const hands = genHands(8);
-  const board = genBoard(3, hands);
-
+  const [hands, setHands] = useState<string[]>([]);
+  const [board, setBoard] = useState<string[]>([]);
   const [handConfirmed, setHandConfirmed] = useState(false);
+
+  useEffect(() => {
+    const newHands = genHands();
+    setHands(newHands);
+    setHandConfirmed(false);
+  }, []);
+
+  useEffect(() => {
+    if (handConfirmed) {
+      const newBoard = genBoard(3);
+      setBoard(newBoard);
+    } else {
+      setBoard([]);
+    }
+  }, [handConfirmed]);
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-between gap-y-8 p-2">
