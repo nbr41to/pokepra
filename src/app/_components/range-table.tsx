@@ -8,7 +8,7 @@ type Props = {
 export const RangeTable = ({ mark }: Props) => {
   return (
     <div className="space-y-3">
-      <div className="grid grid-cols-13 w-fit">
+      <div className="grid w-fit grid-cols-13">
         {ranks.map((_rank, rowIndex) => {
           const prefixRank = ranks[rowIndex];
           return ranks.map((rank, column) => {
@@ -24,7 +24,7 @@ export const RangeTable = ({ mark }: Props) => {
               <div
                 key={rank}
                 className={cn(
-                  "w-8 h-6 text-xs outline grid place-items-center font-bold",
+                  "grid h-6 w-8 place-items-center font-bold text-xs outline",
                   tier === 0 && "bg-blue-950",
                   tier === 1 && "bg-red-700",
                   tier === 2 && "bg-yellow-700",
@@ -43,25 +43,25 @@ export const RangeTable = ({ mark }: Props) => {
           });
         })}
       </div>
-      <div className="grid grid-cols-8 w-fit gap-2">
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-blue-950">
+      <div className="grid w-fit grid-cols-8 gap-2">
+        <div className="grid h-6 w-8 place-items-center bg-blue-950 font-bold text-xs outline">
           8 ~
         </div>
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-red-700" />
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-yellow-700" />
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-fuchsia-800">
+        <div className="grid h-6 w-8 place-items-center bg-red-700 font-bold text-xs outline" />
+        <div className="grid h-6 w-8 place-items-center bg-yellow-700 font-bold text-xs outline" />
+        <div className="grid h-6 w-8 place-items-center bg-fuchsia-800 font-bold text-xs outline">
           6,7
         </div>
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-sky-700">
+        <div className="grid h-6 w-8 place-items-center bg-sky-700 font-bold text-xs outline">
           4,5
         </div>
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-green-900">
+        <div className="grid h-6 w-8 place-items-center bg-green-900 font-bold text-xs outline">
           3
         </div>
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-purple-900">
+        <div className="grid h-6 w-8 place-items-center bg-purple-900 font-bold text-xs outline">
           BTN
         </div>
-        <div className="w-8 h-6 outline grid place-items-center text-xs font-bold bg-slate-600">
+        <div className="grid h-6 w-8 place-items-center bg-slate-600 font-bold text-xs outline">
           BB*
         </div>
       </div>

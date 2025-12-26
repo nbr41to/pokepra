@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { genHands } from "@/utils/genHands";
 import { genPosition } from "@/utils/genPosition";
 import { getHandString, getResult } from "@/utils/getResult";
 import { RangeTable } from "./range-table";
 import { Situation } from "./situation";
+import { genHands } from "@/utils/dealer";
 
 export const Answer = () => {
   const [hands, setHands] = useState<string[]>([]);

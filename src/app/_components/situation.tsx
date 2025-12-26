@@ -1,4 +1,4 @@
-import { PlayCard } from "@/components/play-hand-card";
+import { PlayCard } from "@/components/play-card";
 
 type Props = {
   hands: string[];
