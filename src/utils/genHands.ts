@@ -36,5 +36,13 @@ export function genHands() {
       ranks[getRandomInt(ranks.length)] + suits[getRandomInt(suits.length)];
   }
 
-  return [hand1, hand2];
+  // rankの大きい順に並び替え
+  const rankOrder = (rank: string) =>
+    ranks.indexOf(rank as (typeof ranks)[number]);
+
+  const handArray = [hand1, hand2].sort((a, b) => {
+    return rankOrder(a[0]) - rankOrder(b[0]);
+  });
+
+  return handArray;
 }
