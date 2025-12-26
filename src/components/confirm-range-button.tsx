@@ -21,10 +21,16 @@ export const ConfirmRangeButton = ({ mark, disabled }: Props) => {
   return (
     <Drawer direction="top">
       <DrawerTrigger asChild>
-        <Button className="rounded" size="icon-lg" disabled={disabled}>
+        <Button
+          className="rounded-full"
+          variant="outline"
+          size="icon-lg"
+          disabled={disabled}
+        >
           <Table2 size={16} />
         </Button>
       </DrawerTrigger>
+
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Preflop Range</DrawerTitle>
@@ -35,7 +41,7 @@ export const ConfirmRangeButton = ({ mark, disabled }: Props) => {
         </div>
 
         <DrawerFooter>
-          <DrawerClose>
+          <DrawerClose asChild>
             <Button variant="outline">Close</Button>
           </DrawerClose>
         </DrawerFooter>

@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import { PlayCard } from "@/components/play-card";
-import { useActionStore } from "../_utils/state";
 
-export const Board = () => {
-  const { board: cards } = useActionStore();
+type Props = {
+  cards: string[];
+};
+
+export const Board = ({ cards }: Props) => {
   const [flipProgress, setFlipProgress] = useState<number[]>(
     Array(cards.length).fill(0),
   );
@@ -71,15 +73,15 @@ const FlipCard = ({
   const rotation = 180 - clamped * 180;
 
   return (
-    <div className="relative h-22 w-16 [perspective:1200px]">
+    <div className="perspective-distant relative h-22 w-16">
       <div
-        className="relative h-full w-full transition-transform duration-300 ease-out [transform-style:preserve-3d]"
+        className="transform-3d relative h-full w-full transition-transform duration-300 ease-out"
         style={{ transform: `rotateY(${rotation}deg)` }}
       >
-        <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden]">
+        <div className="backface-hidden absolute inset-0 grid place-items-center">
           <PlayCard suit={suit} rank={rank} />
         </div>
-        <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <div className="backface-hidden absolute inset-0 grid place-items-center [transform-[rotateY(180deg)]">
           <PlayCard />
         </div>
       </div>

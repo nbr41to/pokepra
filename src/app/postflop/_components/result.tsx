@@ -14,12 +14,12 @@ export const Result = () => {
         (getResult() ? (
           <div className="flex items-center gap-2 text-green-500">
             <CheckCircle size={32} strokeWidth={2.5} />
-            <span className="font-bold text-2xl">GOOD</span>
+            <span className="text-2xl">GOOD</span>
           </div>
         ) : (
           <div className="flex items-center gap-2 text-red-500">
             <CircleX size={32} strokeWidth={2.5} />
-            <span className="font-bold text-2xl">BAD</span>
+            <span className="text-2xl">BAD</span>
           </div>
         ))}
 

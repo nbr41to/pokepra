@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { getCombos as calcCombos } from "@/utils/calcCombo";
-import { genHands } from "@/utils/dealer";
 import { getResult } from "@/utils/getResult";
 
+type Phase = "preflop" | "flop" | "turn" | "river";
+
 type State = {
+  phase: Phase;
   state: "initial" | "result";
   showedHand: boolean;
   position: number;
@@ -15,7 +17,7 @@ type State = {
 type Actions = {
   showHand: () => void;
   setPosition: () => void;
-  setHands: () => void;
+  setHands: (hands: string[]) => void;
   setBoard: (board: string[]) => void;
   setState: (state: "initial" | "result") => void;
   setAnswer: (answer: string) => void;
@@ -26,6 +28,7 @@ type Actions = {
 type Store = State & Actions;
 
 const useActionStore = create<Store>((set, get) => ({
+  phase: "preflop",
   state: "initial",
   position: 0,
   hands: [],
@@ -34,7 +37,7 @@ const useActionStore = create<Store>((set, get) => ({
   showedHand: false,
   showHand: () => set(() => ({ showedHand: true })),
   setPosition: () => set(() => ({ position: Math.floor(Math.random() * 6) })),
-  setHands: () => set(() => ({ hands: genHands(8) })),
+  setHands: (hands: string[]) => set(() => ({ hands })),
   setBoard: (board: string[]) => set(() => ({ board })),
   setState: (state: "initial" | "result") => set(() => ({ state })),
   setAnswer: (answer: string) => set(() => ({ answer })),
@@ -47,10 +50,9 @@ const useActionStore = create<Store>((set, get) => ({
   },
   getResult: () => {
     const { hands, position, answer } = get();
-    console.log(hands, position, answer);
     if (hands.length !== 2) return false;
 
-    return getResult(hands, position) === answer;
+    return getResult(hands, String(position)) === answer;
   },
 }));
 

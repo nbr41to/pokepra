@@ -20,7 +20,7 @@ export default function Home() {
           size="lg"
           asChild
         >
-          <Link href="/preflop">Flop</Link>
+          <Link href="/postflop">Postflop</Link>
         </Button>
         <Button
           className="w-60 font-montserrat"
@@ -28,7 +28,7 @@ export default function Home() {
           size="lg"
           asChild
         >
-          <Link href="/preflop">Score attack</Link>
+          <Link href="/score-attack">Score attack</Link>
         </Button>
       </div>
     </div>

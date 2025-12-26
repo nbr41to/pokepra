@@ -1,4 +1,4 @@
-import { Club, Diamond, Heart, LucideProps, Spade } from "lucide-react";
+import { Club, Diamond, Heart, type LucideProps, Spade } from "lucide-react";
 
 type Props = {
   suit: "s" | "h" | "d" | "c";

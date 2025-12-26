@@ -5,19 +5,10 @@ import { TIERS } from "@/constants/tiers";
  * `src/constants/tiers.ts`とargsのhandsとpositionから"open-raise"か"fold"を返す
  */
 
-function getTierIndexByPosition(position: string) {
-  const positionToTierIndex: { [key: string]: number } = {
-    UTG: 2,
-    B7: 3,
-    B6: 3,
-    B5: 4,
-    B4: 4,
-    B3: 5,
-    BTN: 6,
-    BB: 7,
-  };
+function getTierIndexByPosition(position: number) {
+  const positionToTierIndexes = [2, 3, 3, 4, 4, 5, 6, 7];
 
-  return positionToTierIndex[position] ?? -1;
+  return positionToTierIndexes[position] ?? -1;
 }
 
 function getSortedRank(hand1: string, hand2: string) {
@@ -36,10 +27,11 @@ function getHandString(hands: string[]) {
     : rankString + (suited ? "s" : "o");
 }
 
-function getResult(hands: string[], position: string): "open-raise" | "fold" {
+function getResult(hands: string[], position: number): "open-raise" | "fold" {
   const tierIndex = getTierIndexByPosition(position);
   const tierIndexes = Array.from({ length: tierIndex + 1 }, (_, i) => i);
   const openRaiseHands = tierIndexes.flatMap((index) => TIERS[index]);
+  console.log("openRaiseHands", openRaiseHands);
 
   const handString = getHandString(hands);
   if (openRaiseHands.includes(handString)) {

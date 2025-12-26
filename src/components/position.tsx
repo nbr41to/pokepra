@@ -21,12 +21,14 @@ export function Position({ total, playerPosition }: Props) {
         return (
           <Fragment key={index + label}>
             <div className="flex flex-col items-center">
-              <div className="h-3.75 font-bold text-[10px] text-red-500">
+              <div className="h-3.75 font-bold text-[10px] text-red-500 dark:text-red-600">
                 {isPlayer && "YOU"}
               </div>
               <div
                 className={`flex size-6 items-center justify-center rounded-full border-2 ${
-                  isPlayer ? "border-red-500 bg-red-100" : "border-gray-300"
+                  isPlayer
+                    ? "border-red-500 bg-red-100 dark:border-red-600 dark:bg-red-900"
+                    : "border-gray-300"
                 }`}
               />
               <div className="font-bold font-noto-sans-jp text-[10px]">
