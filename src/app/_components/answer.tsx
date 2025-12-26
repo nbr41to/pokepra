@@ -1,12 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { genHands } from "@/utils/genHands";
 import { genPosition } from "@/utils/genPosition";
-import { useState } from "react";
-import { Situation } from "./situation";
 import { getHandString, getResult } from "@/utils/getResult";
 import { RangeTable } from "./range-table";
+import { Situation } from "./situation";
 
 export const Answer = () => {
   const [hands, setHands] = useState<string[]>([]);
@@ -25,21 +25,21 @@ export const Answer = () => {
     hands.length !== 2 ? undefined : answer === getResult(hands, position);
 
   return (
-    <div className="flex flex-col justify-between items-center gap-y-6 w-full h-screen py-5 px-3">
+    <div className="flex h-screen w-full flex-col items-center justify-between gap-y-6 px-3 py-5">
       <div>
         {hands.length !== 0 && answer && (
           <RangeTable mark={getHandString(hands)} />
         )}
       </div>
 
-      <div className="flex flex-col items-center gap-y-6 w-full">
+      <div className="flex w-full flex-col items-center gap-y-6">
         <Situation hands={hands} position={position} />
         <div className="h-8">
           {answer && result && (
-            <p className="text-green-500 text-2xl font-bold">Correct!</p>
+            <p className="font-bold text-2xl text-green-500">Correct!</p>
           )}
           {answer && !result && (
-            <p className="text-red-500 text-2xl font-bold">Incorrect!</p>
+            <p className="font-bold text-2xl text-red-500">Incorrect!</p>
           )}
         </div>
 
@@ -48,7 +48,7 @@ export const Answer = () => {
             Next
           </Button>
         ) : (
-          <div className="flex justify-between gap-x-2 w-full">
+          <div className="flex w-full justify-between gap-x-2">
             <Button
               className="flex-1"
               variant="outline"

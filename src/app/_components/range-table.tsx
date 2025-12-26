@@ -34,7 +34,7 @@ export const RangeTable = ({ mark }: Props) => {
                   tier === 6 && "bg-purple-900",
                   tier === 7 && "bg-slate-600",
                   tier === -1 && "bg-gray-800 text-gray-500 outline-white",
-                  mark === ranksString && "border-4 border-yellow-400"
+                  mark === ranksString && "border-4 border-yellow-400",
                 )}
               >
                 {ranksString}

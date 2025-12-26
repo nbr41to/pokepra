@@ -1,6 +1,6 @@
+import { Grape } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SuitIcon } from "./suit-icon";
-import { Grape } from "lucide-react";
 
 type Props = {
   suit?: "s" | "h" | "d" | "c";
@@ -13,20 +13,21 @@ export const PlayCard = ({ suit, rank }: Props) => {
   return (
     <div
       className={cn(
-        "w-20 h-28 p-1 bg-foreground/10 border-2 border-foreground/80 rounded-md grid place-items-center",
+        "h-42 w-32 rounded-md border-2 bg-white p-1",
         suit === "s" && "text-blue-400",
         suit === "h" && "text-pink-400",
         suit === "d" && "text-orange-400",
-        suit === "c" && "text-green-400"
+        suit === "c" && "text-green-400",
+        reversed ? "grid place-items-center" : "relative",
       )}
     >
       {reversed ? (
-        <Grape size={48} strokeWidth={2.5} />
+        <Grape size={100} strokeWidth={1.5} className="text-indigo-500" />
       ) : (
-        <>
-          <SuitIcon suit={suit} size={48} strokeWidth={2.5} />
-          <span className="font-bold text-4xl">{rank}</span>
-        </>
+        <div className="absolute bottom-0 left-0 grid place-items-center p-1">
+          <SuitIcon suit={suit} size={36} strokeWidth={2.5} />
+          <span className="font-bold font-montserrat text-4xl">{rank}</span>
+        </div>
       )}
     </div>
   );
