@@ -5,9 +5,32 @@ export default function Home() {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-y-8">
       <h1 className="font-bold font-montserrat text-2xl">MY POKER</h1>
-      <Button className="font-bold font-montserrat" size="lg" asChild>
-        <Link href="/preflop">Start Practice</Link>
-      </Button>
+      <div className="flex flex-col items-center justify-center gap-y-3">
+        <Button
+          className="w-60 font-montserrat"
+          variant="outline"
+          size="lg"
+          asChild
+        >
+          <Link href="/preflop">Preflop</Link>
+        </Button>
+        <Button
+          className="w-60 font-montserrat"
+          variant="outline"
+          size="lg"
+          asChild
+        >
+          <Link href="/preflop">Flop</Link>
+        </Button>
+        <Button
+          className="w-60 font-montserrat"
+          variant="default"
+          size="lg"
+          asChild
+        >
+          <Link href="/preflop">Score attack</Link>
+        </Button>
+      </div>
     </div>
   );
 }

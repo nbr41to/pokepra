@@ -4,8 +4,7 @@ import { getHandString } from "@/utils/getResult";
 import { useActionStore } from "../_utils/state";
 
 export const Result = () => {
-  const { phase, state, hands, getResult } = useActionStore();
-  const handString = getHandString(hands);
+  const { state, hands, getResult } = useActionStore();
 
   return (
     <div className="flex items-center justify-between">
@@ -24,7 +23,12 @@ export const Result = () => {
           </div>
         ))}
 
-      <ConfirmRangeButton mark={handString} disabled={state !== "result"} />
+      {hands.length === 2 && (
+        <ConfirmRangeButton
+          mark={getHandString(hands)}
+          disabled={state !== "result"}
+        />
+      )}
     </div>
   );
 };

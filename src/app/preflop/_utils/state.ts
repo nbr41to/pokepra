@@ -50,6 +50,7 @@ const useActionStore = create<Store>((set, get) => ({
   },
   getResult: () => {
     const { hands, position, answer } = get();
+    if (hands.length !== 2) return false;
 
     return getResult(hands, String(position)) === answer;
   },
