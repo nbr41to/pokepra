@@ -13,25 +13,24 @@ export const PlayCard = ({ suit, rank }: Props) => {
   return (
     <div
       className={cn(
-        "h-42 w-32 rounded-md border-2 bg-background p-1",
-        suit === "s" && "text-blue-400",
-        suit === "h" && "text-pink-400",
-        suit === "d" && "text-orange-400",
-        suit === "c" && "text-green-400",
-        reversed ? "grid place-items-center" : "relative",
+        "grid h-22 w-16 place-items-center rounded-md border-2 bg-background p-1",
+        suit === "s" && "text-blue-400 dark:text-blue-600",
+        suit === "h" && "text-pink-400 dark:text-pink-600",
+        suit === "d" && "text-orange-400 dark:text-orange-600",
+        suit === "c" && "text-green-400 dark:text-green-600",
       )}
     >
       {reversed ? (
         <Grape
-          size={100}
+          size={54}
           strokeWidth={1.5}
           className="text-indigo-500 dark:text-indigo-900"
         />
       ) : (
-        <div className="absolute bottom-0 left-0 grid place-items-center p-1">
-          <SuitIcon suit={suit} size={36} strokeWidth={3} />
-          <span className="font-bold font-montserrat text-4xl">{rank}</span>
-        </div>
+        <>
+          <SuitIcon suit={suit} size={36} strokeWidth={2.5} />
+          <span className="font-bold font-montserrat text-3xl">{rank}</span>
+        </>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-export const TIERS = [
+const TIERS = [
   ["AA", "KK", "QQ", "AKs", "AKo"], // Tier 1
   ["JJ", "TT", "99", "AQs", "AJs", "ATs", "AQo", "KQs"], // Tier 2
   ["88", "77", "KJs", "QJs", "JTs", "AJo", "KQo"], // Tier 3
@@ -91,3 +91,5 @@ export const TIERS = [
     "87o",
   ], // BB Raise Tier
 ];
+
+export { TIERS };

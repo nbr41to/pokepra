@@ -1,15 +1,16 @@
 "use client";
 
+import { ArrowBigDownDash } from "lucide-react";
 import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-
-import { PlayCard } from "@/components/play-card";
+import { PlayHandCard } from "@/components/play-hand-card";
 
 type Props = {
   hands: string[];
+  onOpenHand: () => void;
 };
 
-export const HandConfirmation = ({ hands }: Props) => {
+export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
   const [hand1, hand2] = hands;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoCompleteThreshold = 3 / 5; // 60%
@@ -73,6 +74,7 @@ export const HandConfirmation = ({ hands }: Props) => {
     setFlipProgress(next);
     if (next >= 1) {
       setLocked(true);
+      onOpenHand();
     }
   };
 
@@ -85,6 +87,7 @@ export const HandConfirmation = ({ hands }: Props) => {
       if (flipProgress >= autoCompleteThreshold) {
         setFlipProgress(1);
         setLocked(true);
+        onOpenHand();
       } else {
         setFlipProgress(0);
       }
@@ -103,7 +106,8 @@ export const HandConfirmation = ({ hands }: Props) => {
     >
       {showGuide && (
         <div className="pointer-events-none absolute bottom-0 left-0 h-[35%] w-[35%] animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
-          <span className="absolute bottom-1 left-2 font-bold font-montserrat text-green-500 text-xs">
+          <ArrowBigDownDash className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-240 text-green-500" />
+          <span className="absolute bottom-1 left-2 font-montserrat text-green-500 text-xs">
             Swipe start
           </span>
         </div>
@@ -155,10 +159,10 @@ const FlipCard = ({
         style={{ transform: `rotateY(${rotation}deg)` }}
       >
         <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden]">
-          <PlayCard suit={suit} rank={rank} />
+          <PlayHandCard suit={suit} rank={rank} />
         </div>
         <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
-          <PlayCard />
+          <PlayHandCard />
         </div>
       </div>
     </div>
