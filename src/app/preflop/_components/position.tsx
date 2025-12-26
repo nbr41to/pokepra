@@ -1,4 +1,4 @@
-import { ArrowBigRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
 
 export function Position({ total, playerPosition }: Props) {
   return (
-    <div className="flex items-center justify-center rounded-full border px-4 py-2">
+    <div className="flex items-center justify-center gap-x-px rounded-full border px-4 py-2">
       {Array.from({ length: total }).map((_, index) => {
         let label = "";
         if (index === 0) label = "UTG";
@@ -21,11 +21,11 @@ export function Position({ total, playerPosition }: Props) {
         return (
           <Fragment key={index + label}>
             <div className="flex flex-col items-center">
-              <div className="h-[15px] font-bold text-[10px] text-red-500">
+              <div className="h-3.75 font-bold text-[10px] text-red-500">
                 {isPlayer && "YOU"}
               </div>
               <div
-                className={`mx-2 flex size-6 items-center justify-center rounded-full border-2 ${
+                className={`flex size-6 items-center justify-center rounded-full border-2 ${
                   isPlayer ? "border-red-500 bg-red-100" : "border-gray-300"
                 }`}
               />
@@ -33,7 +33,7 @@ export function Position({ total, playerPosition }: Props) {
                 {label || `+${index.toString()}`}
               </div>
             </div>
-            {index !== total - 1 && <ArrowBigRight size={16} />}
+            {index !== total - 1 && <ArrowRight size={8} />}
           </Fragment>
         );
       })}

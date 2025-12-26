@@ -3,12 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 
 import { PlayCard } from "@/components/play-card";
+import { useActionStore } from "../_utils/state";
 
-type Props = {
-  cards: string[];
-};
-
-export const Board = ({ cards }: Props) => {
+export const Board = () => {
+  const { board: cards } = useActionStore();
   const [flipProgress, setFlipProgress] = useState<number[]>(
     Array(cards.length).fill(0),
   );

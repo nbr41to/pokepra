@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { genPosition } from "@/utils/genPosition";
 import { getHandString, getResult } from "@/utils/getResult";
-import { RangeTable } from "./range-table";
+import { RangeTable } from "../../components/range-table";
 import { Situation } from "./situation";
 import { genHands } from "@/utils/dealer";
 

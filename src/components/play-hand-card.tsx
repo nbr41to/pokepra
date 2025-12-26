@@ -28,7 +28,7 @@ export const PlayHandCard = ({ suit, rank }: Props) => {
           className="text-indigo-500 dark:text-indigo-900"
         />
       ) : (
-        <div className="absolute bottom-0 left-0 grid place-items-center p-1">
+        <div className="absolute right-0 bottom-0 grid place-items-center p-1">
           <SuitIcon suit={suit} size={36} strokeWidth={3} />
           <span className="font-bold font-montserrat text-4xl">{rank}</span>
         </div>

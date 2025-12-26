@@ -16,6 +16,7 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
   const autoCompleteThreshold = 3 / 5; // 60%
   const [flipProgress, setFlipProgress] = useState(0);
   const [locked, setLocked] = useState(false);
+  const [shifted, setShifted] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const gestureRef = useRef<{ startX: number; startY: number } | null>(null);
   const guideTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -25,13 +26,15 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
     // Reset guide timer when new hands render
     setShowGuide(false);
     if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
-    guideTimerRef.current = setTimeout(() => setShowGuide(true), 3000);
+    guideTimerRef.current = setTimeout(() => setShowGuide(true), 5000);
     return () => {
       if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
     };
   }, [hands]);
 
   const hideGuide = () => {
+    // Keep guide visible until cards are opened
+    if (!locked && flipProgress < 1) return;
     if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
     setShowGuide(false);
   };
@@ -95,6 +98,14 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
     gestureRef.current = null;
   };
 
+  useEffect(() => {
+    if (locked && flipProgress >= 1) {
+      setShifted(true);
+    } else {
+      setShifted(false);
+    }
+  }, [locked, flipProgress]);
+
   if (hands.length !== 2) return null;
 
   return (
@@ -106,23 +117,29 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
       onPointerUp={resetGesture}
       onPointerCancel={resetGesture}
     >
-      {showGuide && (
-        <div className="pointer-events-none absolute bottom-0 left-0 h-[35%] w-[35%] animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
+      {!locked && showGuide && (
+        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-[35%] w-[35%] animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
           <ArrowBigDownDash className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-240 text-green-500" />
           <span className="absolute bottom-1 left-2 font-montserrat text-green-500 text-xs">
             Swipe start
           </span>
         </div>
       )}
-      <div className="relative top-1">
-        <div className="relative -left-4 rotate-5">
+      <div
+        className={`relative top-1 transform transition-transform duration-300 ${
+          shifted
+            ? "translate-x-28 translate-y-4"
+            : "translate-x-0 translate-y-0"
+        }`}
+      >
+        <div className="relative top-0 -left-8 z-10 rotate-6">
           <FlipCard
             progress={flipProgress}
             suit={hand1[1] as "s" | "h" | "d" | "c"}
             rank={hand1[0]}
           />
         </div>
-        <div className="absolute -top-1.5 left-6 -rotate-5">
+        <div className="absolute top-0 left-2 -rotate-5">
           <FlipCard
             progress={flipProgress}
             suit={hand2[1] as "s" | "h" | "d" | "c"}
@@ -155,15 +172,15 @@ const FlipCard = ({
   const rotation = 180 - mappedProgress * 180;
 
   return (
-    <div className="relative h-42 w-32 [perspective:1200px]">
+    <div className="perspective-distant relative h-42 w-32">
       <div
-        className="relative h-full w-full transition-transform duration-75 [transform-style:preserve-3d]"
+        className="transform-3d relative h-full w-full transition-transform duration-75"
         style={{ transform: `rotateY(${rotation}deg)` }}
       >
-        <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden]">
+        <div className="backface-hidden absolute inset-0 grid place-items-center">
           <PlayHandCard suit={suit} rank={rank} />
         </div>
-        <div className="absolute inset-0 grid place-items-center [backface-visibility:hidden] [transform:rotateY(180deg)]">
+        <div className="backface-hidden transform-[rotateY(180deg)] absolute inset-0 grid place-items-center">
           <PlayHandCard />
         </div>
       </div>
