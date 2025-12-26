@@ -15,7 +15,7 @@ export default function Page() {
   }, [setPosition, setHands]);
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-between gap-y-8 p-2">
+    <div className="flex h-dvh w-full flex-col items-center justify-between gap-y-8 p-2">
       <ConfirmPosition />
       <div className="space-y-2">
         <Result />

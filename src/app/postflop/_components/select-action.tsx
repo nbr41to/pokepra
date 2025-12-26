@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useActionStore } from "../_utils/state";
 
 export const SelectAction = () => {
-  const { phase, answer, setAnswer, setState } = useActionStore();
+  const { setAnswer, setState } = useActionStore();
 
   const handleSetAnswer = (answer: "open-raise" | "fold") => {
     setAnswer(answer);
@@ -16,7 +16,7 @@ export const SelectAction = () => {
         className="rounded-lg text-base shadow"
         onClick={() => handleSetAnswer("open-raise")}
       >
-        Open
+        Call
       </Button>
       <Button
         size="lg"

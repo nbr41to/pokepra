@@ -9,6 +9,7 @@ type Props = {
 };
 
 export const Board = ({ cards }: Props) => {
+  console.log(cards);
   const [flipProgress, setFlipProgress] = useState<number[]>(
     Array(cards.length).fill(0),
   );
@@ -81,7 +82,7 @@ const FlipCard = ({
         <div className="backface-hidden absolute inset-0 grid place-items-center">
           <PlayCard suit={suit} rank={rank} />
         </div>
-        <div className="backface-hidden absolute inset-0 grid place-items-center [transform-[rotateY(180deg)]">
+        <div className="backface-hidden transform-[rotateY(180deg)] absolute inset-0 grid place-items-center">
           <PlayCard />
         </div>
       </div>
