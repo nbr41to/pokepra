@@ -1,7 +1,6 @@
 "use client";
 
 import { HandConfirmation } from "@/components/hand-confirmation";
-import { genBoard } from "@/utils/dealer";
 import { useActionStore } from "../_utils/state";
 import { SelectAction } from "./select-action";
 
@@ -10,7 +9,7 @@ export const ActionArea = () => {
 
   const handleOpenHand = () => {
     showHand();
-    setBoard(genBoard(3));
+    setBoard();
   };
 
   return (
