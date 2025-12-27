@@ -9,7 +9,6 @@ type Props = {
 };
 
 export const Board = ({ cards }: Props) => {
-  console.log(cards);
   const [flipProgress, setFlipProgress] = useState<number[]>(
     Array(cards.length).fill(0),
   );

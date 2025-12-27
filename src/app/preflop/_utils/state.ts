@@ -13,7 +13,7 @@ type State = {
 };
 
 type Actions = {
-  showHand: () => void;
+  setShowedHand: (newValue: boolean) => void;
   setPosition: () => void;
   setHands: () => void;
   setBoard: (board: string[]) => void;
@@ -32,7 +32,7 @@ const useActionStore = create<Store>((set, get) => ({
   board: [],
   answer: "",
   showedHand: false,
-  showHand: () => set(() => ({ showedHand: true })),
+  setShowedHand: (newValue: boolean) => set(() => ({ showedHand: newValue })),
   setPosition: () => set(() => ({ position: Math.floor(Math.random() * 6) })),
   setHands: () => set(() => ({ hands: genHands(8) })),
   setBoard: (board: string[]) => set(() => ({ board })),

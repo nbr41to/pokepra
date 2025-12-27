@@ -31,7 +31,6 @@ function getResult(hands: string[], position: number): "open-raise" | "fold" {
   const tierIndex = getTierIndexByPosition(position);
   const tierIndexes = Array.from({ length: tierIndex + 1 }, (_, i) => i);
   const openRaiseHands = tierIndexes.flatMap((index) => TIERS[index]);
-  console.log("openRaiseHands", openRaiseHands);
 
   const handString = getHandString(hands);
   if (openRaiseHands.includes(handString)) {

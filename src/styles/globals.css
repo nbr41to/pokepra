@@ -128,6 +128,11 @@
   }
   body {
     @apply bg-background text-foreground font-montserrat;
+    overscroll-behavior: none; /* disable iOS/Safari bounce */
+  }
+
+  html {
+    overscroll-behavior: none;
   }
 }
 

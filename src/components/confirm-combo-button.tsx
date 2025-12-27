@@ -9,15 +9,21 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { RangeTable } from "./range-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PokerModules } from "./poker-modules";
 import { Button } from "./ui/button";
 
 type Props = {
-  mark?: string;
+  hand: string[];
+  board: string[];
   disabled?: boolean;
 };
 
-export const ConfirmRangeButton = ({ mark, disabled = false }: Props) => {
+export const ConfirmComboButton = ({
+  hand,
+  board,
+  disabled = false,
+}: Props) => {
   return (
     <Drawer direction="top">
       <DrawerTrigger asChild>
@@ -36,9 +42,9 @@ export const ConfirmRangeButton = ({ mark, disabled = false }: Props) => {
           <DrawerTitle>Preflop Range</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="mx-auto w-fit">
-          <RangeTable mark={mark} />
-        </div>
+        <ScrollArea className="h-120">
+          <PokerModules hand={hand} board={board} />
+        </ScrollArea>
 
         <DrawerFooter>
           <DrawerClose asChild>

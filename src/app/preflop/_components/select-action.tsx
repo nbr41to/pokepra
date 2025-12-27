@@ -3,8 +3,15 @@ import { cn } from "@/lib/utils";
 import { useActionStore } from "../_utils/state";
 
 export const SelectAction = () => {
-  const { answer, state, setPosition, setHands, setAnswer, setState, ...rest } =
-    useActionStore();
+  const {
+    answer,
+    state,
+    setPosition,
+    setHands,
+    setAnswer,
+    setState,
+    setShowedHand,
+  } = useActionStore();
 
   const handleSetAnswer = (answer: "open-raise" | "fold") => {
     setAnswer(answer);
@@ -12,13 +19,12 @@ export const SelectAction = () => {
   };
 
   const handleNext = () => {
+    setShowedHand(false);
     setAnswer("");
     setState("initial");
     setPosition();
     setHands();
   };
-
-  console.log(rest);
 
   return (
     <div className="flex w-fit gap-x-4 rounded-md border-2 border-green-400 bg-background/80 p-5 shadow-md">

@@ -25,6 +25,10 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
   useEffect(() => {
     // Reset guide timer when new hands render
     setShowGuide(false);
+    setFlipProgress(0);
+    setLocked(false);
+    setShifted(false);
+    gestureRef.current = null;
     if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
     guideTimerRef.current = setTimeout(() => setShowGuide(true), 5000);
     return () => {

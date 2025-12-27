@@ -6,10 +6,10 @@ import { useActionStore } from "../_utils/state";
 import { SelectAction } from "./select-action";
 
 export const ActionArea = () => {
-  const { hands, showedHand, showHand, setBoard } = useActionStore();
+  const { hands, showedHand, setShowedHand, setBoard } = useActionStore();
 
   const handleOpenHand = () => {
-    showHand();
+    setShowedHand(true);
     setBoard(genBoard(3));
   };
 
