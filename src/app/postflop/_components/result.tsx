@@ -5,15 +5,12 @@ import { useActionStore } from "../_utils/state";
 export const Result = () => {
   const { state, hands, board, getOdds } = useActionStore();
 
-  const odds = getOdds();
-
   return (
     <div className="flex items-center justify-between">
       <div />
-
-      {state === "result" && odds && (
+      {state === "result" && getOdds() && (
         <div className="grid grid-cols-2 gap-x-2 text-green-500">
-          {Object.values(odds[0].handChances)
+          {Object.values(getOdds()[0].handChances)
             // @ts-expect-error
             .filter((o) => o.count)
             .map((o) => (
