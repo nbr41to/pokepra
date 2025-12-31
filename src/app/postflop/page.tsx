@@ -19,7 +19,7 @@ export default function Page() {
     <div className="flex h-dvh w-full flex-col items-center justify-between gap-y-8 p-2">
       <ConfirmPosition />
       <CommunityBoard />
-      <div className="space-y-2">
+      <div className="w-full space-y-2">
         <Result />
         <ActionArea />
       </div>

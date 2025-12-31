@@ -5,6 +5,9 @@ import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { PlayHandCard } from "@/components/play-hand-card";
 
+/**
+ * Preflopのカードを確認するためのUI
+ */
 type Props = {
   hands: string[];
   onOpenHand: () => void;
@@ -115,7 +118,7 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
   return (
     <div
       ref={containerRef}
-      className="relative flex aspect-video w-100 touch-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60"
+      className="relative flex aspect-video w-full touch-none select-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={resetGesture}

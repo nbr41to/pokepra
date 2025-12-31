@@ -16,7 +16,7 @@ export const ActionArea = () => {
     <div className="relative">
       <HandConfirmation hands={hands} onOpenHand={handleOpenHand} />
       {showedHand && (
-        <div className="absolute top-5 left-5 aspect-video w-full">
+        <div className="absolute top-5 left-5 aspect-video w-[calc(100%-1.25rem)]">
           <SelectAction />
         </div>
       )}

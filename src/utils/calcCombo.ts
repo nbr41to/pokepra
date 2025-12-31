@@ -1,70 +1,36 @@
-import {
-  isFlush,
-  isFourOfAKind,
-  isFullHouse,
-  isStraight,
-  isStraightFlush,
-  isThreeOfAKind,
-} from "./calc-hand";
+import { solve } from "@/lib/poker/pokersolver";
 import { getAllCards } from "./dealer";
 
-function getCombos(board: string[]): {
-  threeOfAKind: string[][];
-  straight: string[][];
-  flush: string[][];
-  fullHouse: string[][];
-  fourOfAKind: string[][];
-  straightFlush: string[][];
-} {
+function getAllHands(excludes: string[] = []) {
+  const allCards = getAllCards().filter((card) => !excludes.includes(card));
+  const allHands: string[][] = [];
+
+  // Generate all possible 2-card combinations
+  for (let i = 0; i < allCards.length; i++) {
+    for (let j = i + 1; j < allCards.length; j++) {
+      allHands.push([allCards[i], allCards[j]]);
+    }
+  }
+
+  return allHands;
+}
+
+async function getCombos(board: string[]) {
   if (board.length < 3) {
     throw new Error("Board must have at least 3 cards");
   }
-  const allCards = getAllCards().filter((card) => !board.includes(card));
-  const allCombos: string[][] = [];
 
-  // Generate all possible 2-card combinations from the remaining cards
-  for (let i = 0; i < allCards.length; i++) {
-    for (let j = i + 1; j < allCards.length; j++) {
-      allCombos.push([allCards[i], allCards[j]]);
-    }
-  }
+  const allHands = getAllHands(board);
 
-  const threeOfAKind: string[][] = [];
-  const straight: string[][] = [];
-  const flush: string[][] = [];
-  const fullHouse: string[][] = [];
-  const fourOfAKind: string[][] = [];
-  const straightFlush: string[][] = [];
+  const solves = Promise.all(
+    allHands.map(async (hand) => {
+      const result = await solve([...board, ...hand]);
 
-  for (const combo of allCombos) {
-    if (isStraightFlush([...combo, ...board])) {
-      straightFlush.push(combo);
-    }
-    if (isFourOfAKind([...combo, ...board])) {
-      fourOfAKind.push(combo);
-    }
-    if (isFullHouse([...combo, ...board])) {
-      fullHouse.push(combo);
-    }
-    if (isFlush([...combo, ...board])) {
-      flush.push(combo);
-    }
-    if (isStraight([...combo, ...board])) {
-      straight.push(combo);
-    }
-    if (isThreeOfAKind([...combo, ...board])) {
-      threeOfAKind.push(combo);
-    }
-  }
+      return { hand, result };
+    }),
+  );
 
-  return {
-    threeOfAKind,
-    straight,
-    flush,
-    fullHouse,
-    fourOfAKind,
-    straightFlush,
-  };
+  return solves;
 }
 
-export { getCombos };
+export { getAllHands, getCombos };
