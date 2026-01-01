@@ -1,7 +1,7 @@
 const TIERS = [
-  ["AA", "KK", "QQ", "AKs", "AKo"], // Tier 1
-  ["JJ", "TT", "99", "AQs", "AJs", "ATs", "AQo", "KQs"], // Tier 2
-  ["88", "77", "KJs", "QJs", "JTs", "AJo", "KQo"], // Tier 3
+  ["AA", "KK", "QQ", "AKs", "AKo"], // Tier 1 （後ろに8人）
+  ["JJ", "TT", "99", "AQs", "AJs", "ATs", "AQo", "KQs"], // Tier 2 （後ろに8人）
+  ["88", "77", "KJs", "QJs", "JTs", "AJo", "KQo"], // Tier 3 （後ろに8人）
   [
     "66",
     "55",
@@ -19,8 +19,8 @@ const TIERS = [
     "T9s",
     "ATo",
     "KJo",
-  ], // Tier 4
-  ["44", "33", "22", "Q9s", "J9s", "T8s", "98s", "A9o", "KTo", "QJo", "JTo"], // Tier 5
+  ], // Tier 4 （後ろに6〜7人）
+  ["44", "33", "22", "Q9s", "J9s", "T8s", "98s", "A9o", "KTo", "QJo", "JTo"], // Tier 5 （後ろに4〜5人）
   [
     "K8s",
     "K7s",
@@ -45,7 +45,7 @@ const TIERS = [
     "Q9o",
     "J9o",
     "T9o",
-  ], // Tier 6
+  ], // Tier 6 （後ろに3人）
   [
     "Q5s",
     "Q4s",
@@ -60,7 +60,7 @@ const TIERS = [
     "54s",
     "A6o",
     "98o",
-  ], // Tier 7
+  ], // Tier 7 （後ろに2人）
   [
     "J5s",
     "J4s",

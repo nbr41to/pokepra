@@ -12,30 +12,51 @@ export const Board = ({ cards }: Props) => {
   const [flipProgress, setFlipProgress] = useState<number[]>(
     Array(cards.length).fill(0),
   );
+  const prevCardsRef = useRef<string[]>(cards);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const baseDelayMs = 200;
   const stepDelayMs = 220;
 
   useEffect(() => {
-    // reset progress to back
-    setFlipProgress(Array(cards.length).fill(0));
+    const prevCards = prevCardsRef.current;
+    const isSingleAppend =
+      cards.length === prevCards.length + 1 &&
+      prevCards.every((card, idx) => cards[idx] === card);
+
     // clear previous timers
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    // schedule flips left -> right
-    cards.forEach((_, index) => {
-      const timer = setTimeout(
-        () => {
-          setFlipProgress((prev) => {
-            const next = [...prev];
-            next[index] = 1;
-            return next;
-          });
-        },
-        baseDelayMs + index * stepDelayMs,
-      );
+
+    if (isSingleAppend) {
+      // 既存カードは表のまま、新規1枚だけめくる
+      setFlipProgress([...Array(prevCards.length).fill(1), 0]);
+      const timer = setTimeout(() => {
+        setFlipProgress((prev) => {
+          const next = [...prev];
+          next[prev.length - 1] = 1;
+          return next;
+        });
+      }, baseDelayMs);
       timeoutsRef.current.push(timer);
-    });
+    } else {
+      // リセットして左から順にめくる
+      setFlipProgress(Array(cards.length).fill(0));
+      cards.forEach((_, index) => {
+        const timer = setTimeout(
+          () => {
+            setFlipProgress((prev) => {
+              const next = [...prev];
+              next[index] = 1;
+              return next;
+            });
+          },
+          baseDelayMs + index * stepDelayMs,
+        );
+        timeoutsRef.current.push(timer);
+      });
+    }
+
+    prevCardsRef.current = cards;
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
       timeoutsRef.current = [];

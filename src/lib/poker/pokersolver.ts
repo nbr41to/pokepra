@@ -29,18 +29,8 @@ async function solve(cards: string[]) {
   return solve;
 }
 
-function winner(hands: { board: string[]; hands: string[][] }[]) {
-  const results: ReturnType[][] = [];
-  hands.forEach(async (item) => {
-    const handResults: ReturnType[] = [];
-    for (const hand of item.hands) {
-      const result = await solve([...item.board, ...hand]);
-      handResults.push(result);
-    }
-    results.push(handResults);
-  });
-
-  return results;
+async function winner(hands: ReturnType[]) {
+  return PokerResolver.Hand.winners(hands);
 }
 
 export { solve, winner };

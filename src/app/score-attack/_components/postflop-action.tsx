@@ -3,46 +3,48 @@ import { cn } from "@/lib/utils";
 import { useActionStore } from "../_utils/state";
 
 export const PostflopAction = () => {
-  const { answer, state, preflopAction, switchNextPhase } = useActionStore();
+  const { phase, flop, turn, river, postflopAction, switchNextPhase } =
+    useActionStore();
 
-  const handleSetAnswer = (answer: "open-raise" | "fold") => {
-    preflopAction(answer);
+  const handleSetAnswer = (answer: "commit" | "fold") => {
+    postflopAction(phase, answer);
   };
 
   const handleNext = () => {
     switchNextPhase();
   };
 
-  return (
-    <div className="flex w-fit gap-x-4 rounded-md border-2 border-green-400 bg-background/80 p-5 shadow-md">
-      <Button
-        size="lg"
-        className={cn(
-          "rounded-lg text-base shadow disabled:opacity-90",
-          answer === "open-raise" && "ring-4 ring-green-500 ring-offset-4",
-        )}
-        disabled={state === "confirm"}
-        onClick={() => handleSetAnswer("open-raise")}
-      >
-        Call
-      </Button>
-      <Button
-        size="lg"
-        variant="outline"
-        className={cn(
-          "rounded-lg text-base shadow disabled:opacity-90",
-          answer === "fold" && "ring-4 ring-green-500 ring-offset-4",
-        )}
-        disabled={state === "confirm"}
-        onClick={() => handleSetAnswer("fold")}
-      >
-        Fold
-      </Button>
+  const disabled =
+    (phase === "flop" && !!flop) ||
+    (phase === "turn" && !!turn) ||
+    (phase === "river" && !!river);
 
-      {state === "confirm" && (
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex w-fit gap-x-4 rounded-md border-2 border-green-400 bg-background/80 p-5 shadow-md">
         <Button
           size="lg"
-          className="rounded-lg text-base shadow"
+          className={cn("rounded-lg text-base shadow disabled:opacity-70")}
+          disabled={disabled}
+          onClick={() => handleSetAnswer("commit")}
+        >
+          Commit!!
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          className={cn("rounded-lg text-base shadow disabled:opacity-70")}
+          disabled={disabled}
+          onClick={() => handleSetAnswer("fold")}
+        >
+          Fold
+        </Button>
+      </div>
+
+      {disabled && (
+        <Button
+          size="lg"
+          className="w-1/2 rounded-lg text-base shadow"
           onClick={handleNext}
         >
           Next

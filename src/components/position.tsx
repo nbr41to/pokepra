@@ -16,7 +16,7 @@ export function Position({ total, playerPosition }: Props) {
         else if (index === total - 2) label = "SB";
         else if (index === total - 1) label = "BB";
 
-        const isPlayer = index === playerPosition;
+        const isPlayer = index === playerPosition - 1;
 
         return (
           <Fragment key={index + label}>

@@ -1,160 +1,332 @@
-// @ts-expect-error
-import { calculateEquity } from "poker-odds";
 import { create } from "zustand";
-import { iterateSimulations } from "@/lib/poker/simulation";
-import { getAllHands } from "@/utils/calcCombo";
-import { genBoard, genHands } from "@/utils/dealer";
-import { getResult } from "@/utils/getResult";
+import {
+  iterateSimulations,
+  iterateWinSimulations,
+} from "@/lib/poker/simulation";
+import { genBoard, genHands, getHandsByTiers } from "@/utils/dealer";
+import { genPositionNumber } from "@/utils/position";
+import { getTierIndexByPosition, judgeInRange } from "@/utils/preflop-range";
+
+const PEOPLE = 9;
+const DEFAULT_TIER = 6;
 
 type Phase = "preflop" | "flop" | "turn" | "river";
+type PreflopAction = "open-raise" | "fold";
 
+type SumilationScore = {
+  name: string;
+  count: number;
+  rank: number;
+};
 type History = {
   hand: string[];
   position: number;
   board: string[];
-  preflop: "raise" | "call" | "fold";
-  flop: number;
-  turn: number;
-  river: number;
+  preflop: PreflopAction;
+  flop: "commit" | "fold" | null;
+  turn: "commit" | "fold" | null;
+  river: "commit" | "fold" | null;
+  equity: number;
 };
 
 type State = {
+  state: "reception" | "confirmation"; // アクション待ち | 確認待ち
+
+  // game
   phase: Phase;
-  state: "initial" | "reception" | "confirm";
+  stack: number;
+  score: number;
+
   position: number;
   hand: string[];
+  showedHand: boolean;
   board: string[];
-  answer: string;
-  simulationScore: Map<string, { name: string; count: number; rank: number }>;
+
+  // action
+  preflop: PreflopAction | null;
+  flop: "commit" | "fold" | null;
+  turn: "commit" | "fold" | null;
+  river: "commit" | "fold" | null;
+
+  // score
+  simulationScores: Map<
+    string,
+    { name: string; count: number; rank: number }
+  >[];
+  simulationAverageScore: number;
+
+  // history
+  histories: History[];
 };
 
 type Actions = {
   /* 初期化 */
-  initialize: () => void;
+  reset: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   showHand: () => void;
-  preflopAction: (action: "open-raise" | "fold") => void;
+  preflopAction: (action: PreflopAction) => void;
+  postflopAction: (phase: Phase, action: "commit" | "fold") => void;
   switchNextPhase: () => void;
-  getResult: () => boolean;
-  getOdds: () => ReturnType<typeof calculateEquity>;
   startSimulation: () => Promise<any>;
+  getEquity: () => Promise<number>;
 };
 
 type Store = State & Actions;
 
 const INITIAL_STATE: State = {
-  phase: "flop",
-  state: "initial",
+  state: "reception",
+  phase: "preflop",
+  stack: 100,
+  score: 0,
   position: 0,
   hand: [],
   board: [],
-  answer: "",
-  simulationScore: new Map(),
+
+  showedHand: false,
+  preflop: null,
+  flop: null,
+  turn: null,
+  river: null,
+
+  simulationScores: [],
+  simulationAverageScore: 0,
+
+  histories: [],
 };
 
 const useActionStore = create<Store>((set, get) => ({
   /* State */
-  phase: "flop",
-  state: "initial",
-  position: 0,
-  hand: [],
-  board: [],
-  answer: "",
+  ...INITIAL_STATE,
+
   /* Action */
-  initialize: () => {
-    set(() => INITIAL_STATE);
+  reset: () => {
+    set(() => ({ ...INITIAL_STATE }));
   },
-  simulationScore: new Map(),
-  shuffleAndDeal: ({ tier = 0, people = 7 } = { tier: 0, people: 7 }) => {
-    const position = Math.floor(Math.random() * people);
+  shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
+    const tier = options?.tier ?? DEFAULT_TIER;
+    const people = options?.people ?? PEOPLE;
+
     const hand = genHands(tier);
-    set(() => ({ phase: "preflop", state: "initial", position, hand }));
+    set(() => ({
+      ...INITIAL_STATE,
+      position: genPositionNumber(people),
+      hand,
+      // INITIAL_STATE をベースにしているが、stack は維持したいので上書きせず流用
+      stack: get().stack,
+    }));
   },
   // ハンドを確認
   showHand: () => {
-    set(() => ({ state: "reception" }));
+    set(() => ({ showedHand: true }));
   },
   // プリフロップのアクション
-  preflopAction: (action: "open-raise" | "fold") => {
+  preflopAction: (action: PreflopAction) => {
+    const { position, hand, stack } = get();
+    const correct = judgeInRange(hand, position);
+    const amount = correct ? 2 : -2;
+
     if (action === "fold") {
-      const { shuffleAndDeal } = get();
-      shuffleAndDeal({ tier: 7, people: 7 });
-      return;
+      set({
+        preflop: action,
+        score: amount,
+        stack: stack + amount,
+      });
+    } else {
+      const board = genBoard(3, hand);
+      set(() => ({ phase: "flop", board, score: 0 }));
+
+      set({
+        preflop: action,
+        score: amount,
+        stack: stack + amount,
+        phase: "flop",
+        board,
+      });
     }
-    set(() => ({ state: "confirm", answer: action }));
+  },
+  postflopAction: async (phase: Phase, action: "commit" | "fold") => {
+    if (phase === "flop") {
+      set(() => ({ flop: action }));
+    } else if (phase === "turn") {
+      set(() => ({ turn: action }));
+    } else if (phase === "river") {
+      set(() => ({ river: action }));
+    }
+
+    const { stack, hand, board, getEquity } = get();
+    const M = 100; // 倍率
+    const BASE_LINE = 0.5; // 基準点
+    const equity = await getEquity();
+    const deltaScore = Math.floor((equity - BASE_LINE) * M);
+    const newStack = stack + deltaScore;
+
+    if (action === "commit") {
+      const newCard =
+        phase === "river" ? [] : [genBoard(1, [...hand, ...board])[0]];
+
+      set(() => ({
+        phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
+        board: [...board, ...newCard],
+        stack: newStack,
+        score: deltaScore,
+      }));
+    } else {
+      set(() => ({
+        score: deltaScore,
+      }));
+    }
   },
   // フェーズを進める（現在の状態を見て自動で判断）
   switchNextPhase: () => {
-    const { hand, phase, answer, shuffleAndDeal } = get();
+    const { hand, phase, preflop, flop, turn, shuffleAndDeal } = get();
     if (phase === "preflop") {
-      if (answer === "fold") {
+      if (preflop === "fold") {
+        shuffleAndDeal();
+      }
+    }
+
+    if (phase === "flop") {
+      if (flop === "fold") {
         shuffleAndDeal();
       } else {
-        // set board for flop
-        const board = genBoard(3, hand);
-        set(() => ({ phase: "flop", state: "reception", board }));
+        const { board: currentBoard } = get();
+        const newCard = genBoard(1, [...hand, ...currentBoard])[0];
+        set(() => ({
+          phase: "turn",
+          board: [...currentBoard, newCard],
+        }));
       }
-      return;
+    }
+
+    if (phase === "turn") {
+      if (turn === "fold") {
+        shuffleAndDeal();
+      } else {
+        const { board: currentBoard } = get();
+        const newCard = genBoard(1, [...hand, ...currentBoard])[0];
+        set(() => ({
+          phase: "river",
+          board: [...currentBoard, newCard],
+        }));
+      }
+    }
+
+    if (phase === "river") {
+      shuffleAndDeal();
     }
   },
-
-  // フロップのアクション
-  // ターンのボード設定
-  // ターンのアクション
-  // リバーのボード設定
-  // リバーのアクション
-  startSimulation: async () => {
+  getEquity: async () => {
+    console.log("startWinSimulation: start");
     const timeStart = performance.now();
-    console.log("startSimulation: start");
-    const { hand, board } = get();
-    const allHands = getAllHands(board);
+    const { position, hand: fixHand, board } = get();
 
-    const results = await Promise.all(
+    const allHands = getHandsByTiers(getTierIndexByPosition(position), [
+      ...board,
+      ...fixHand,
+    ]);
+
+    const ITERATIONS = 100;
+    const COUNT = allHands.length * ITERATIONS;
+
+    const simulateResults = await Promise.all(
       allHands.map(async (hand) => {
-        const result = await iterateSimulations([...board, ...hand], 100);
-        const score = result.reduce(
-          (acc, curr) => acc + curr.count * curr.rank,
-          0,
+        const result = await iterateWinSimulations(
+          [fixHand, hand],
+          board,
+          ITERATIONS,
         );
+
         return {
           hand,
           result,
-          score,
         };
       }),
     );
 
-    const totalScore = results.reduce((acc, curr) => {
-      return acc + curr.score;
-    }, 0);
-    const averageScore = totalScore / results.length;
-    console.log(
-      "startSimulation:handScore",
-      results.find((r) => r.hand[0] === hand[0] && r.hand[1] === hand[1])
-        ?.score,
+    // fixHand の勝率計算
+    let win = 0;
+    let lose = 0;
+    let tie = 0;
+
+    simulateResults.forEach(({ result }) => {
+      const fixHandResult = result.find(
+        (r) => r.hand[0] === fixHand[0] && r.hand[1] === fixHand[1],
+      );
+      if (fixHandResult) {
+        win += fixHandResult.wins;
+        lose += fixHandResult.loses;
+        tie += fixHandResult.ties;
+      }
+    });
+
+    const equity = {
+      winRate: win / COUNT,
+      loseRate: lose / COUNT,
+      tieRate: tie / COUNT,
+    };
+
+    console.log("startWinSimulation:equity", equity.winRate.toFixed(2));
+
+    const durationMs = performance.now() - timeStart;
+    console.log(`startWinSimulation: end ${durationMs.toFixed(2)}ms`);
+
+    return equity.winRate;
+  },
+
+  // hand strength をシミュレーションで計算するための試作
+  startSimulation: async () => {
+    const timeStart = performance.now();
+    console.log("startSimulation: start");
+    const { board } = get();
+    const allHands = getHandsByTiers(DEFAULT_TIER + 1, board);
+
+    const results = await Promise.all(
+      allHands.map(async (hand) => {
+        const result = await iterateSimulations([...board, ...hand], 100);
+
+        return {
+          hand,
+          result,
+        };
+      }),
     );
-    console.log("startSimulation:averageScore", averageScore);
+
+    const ranking: {
+      rank: number; // 約の強さ1〜9
+      name: string; // 約の名前
+      count: number; // その約が出た回数
+      hands: {
+        hand: string[]; // ハンド
+        count: number; // そのハンドでその約が出た回数
+      }[];
+    }[] = [];
+
+    results.forEach(({ hand, result }) => {
+      result.forEach(({ name, rank, count }) => {
+        const existing = ranking.find((r) => r.name === name);
+        if (existing) {
+          existing.count += count;
+          existing.hands.push({ hand, count });
+        } else {
+          ranking.push({
+            name,
+            rank,
+            count,
+            hands: [{ hand, count }],
+          });
+        }
+      });
+    });
+
+    ranking.sort((a, b) => b.rank - a.rank);
+
+    console.log("ranking", ranking);
 
     // console.log("startSimulation:results", results);
 
     const durationMs = performance.now() - timeStart;
     console.log(`startSimulation: end ${durationMs.toFixed(2)}ms`);
 
-    return results;
-  },
-  getResult: () => {
-    const { hand, position, answer } = get();
-    if (hand.length !== 2) return false;
-
-    return getResult(hand, position) === answer;
-  },
-  getOdds: () => {
-    const { hand, board } = get();
-    if (hand.length !== 2 || board.length < 3) {
-      return null;
-    }
-    const results = calculateEquity([hand, ["Ac", "Kd"]], board, 100); // 100 simulations
-    console.log("getOdds:results", results);
     return results;
   },
 }));

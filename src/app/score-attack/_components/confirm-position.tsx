@@ -1,5 +1,3 @@
-"use client";
-
 import { Position } from "@/components/position";
 import { useActionStore } from "../_utils/state";
 

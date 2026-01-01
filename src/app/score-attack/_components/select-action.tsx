@@ -1,10 +1,16 @@
 import { useActionStore } from "../_utils/state";
+import { PostflopAction } from "./postflop-action";
 import { PreflopAction } from "./preflop-action";
 
 export const SelectAction = () => {
-  const { phase, state } = useActionStore();
+  const { phase } = useActionStore();
 
-  if (state === "initial") return null;
-
-  return <>{phase === "preflop" && <PreflopAction />}</>;
+  return (
+    <>
+      {phase === "preflop" && <PreflopAction />}
+      {phase === "flop" && <PostflopAction />}
+      {phase === "turn" && <PostflopAction />}
+      {phase === "river" && <PostflopAction />}
+    </>
+  );
 };

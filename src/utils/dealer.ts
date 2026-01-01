@@ -1,9 +1,18 @@
-/* Handに関するutils */
-
 import { RANKS, SUITS } from "@/constants/card";
 import { TIERS } from "@/constants/tiers";
-import { getHandString } from "./getResult";
+import { getHandString } from "./preflop-range";
 
+/**
+ * 指定した数字の範囲内で乱数を生成
+ * ※ internal use only
+ */
+function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}
+
+/**
+ * すべてのカードを取得
+ */
 function getAllCards(): string[] {
   const cards: string[] = [];
   for (const rank of RANKS) {
@@ -11,7 +20,39 @@ function getAllCards(): string[] {
       cards.push(rank + suit);
     }
   }
+
   return cards;
+}
+
+/**
+ * すべてのハンドを取得
+ * @param excludes
+ */
+function getAllHands(excludes: string[] = []) {
+  const allCards = getAllCards().filter((card) => !excludes.includes(card));
+  const allHands: string[][] = [];
+
+  for (let i = 0; i < allCards.length; i++) {
+    for (let j = i + 1; j < allCards.length; j++) {
+      allHands.push([allCards[i], allCards[j]]);
+    }
+  }
+
+  return allHands;
+}
+
+/**
+ * 指定したtiers以上のハンドをすべて生成
+ * @param tiers number
+ */
+function getHandsByTiers(tiers: number, excludes: string[] = []) {
+  const allowedHands = TIERS.slice(0, tiers).flat();
+  const allHands = getAllHands(excludes);
+
+  return allHands.filter((hand) => {
+    const handString = getHandString(hand);
+    return allowedHands.includes(handString);
+  });
 }
 
 /**
@@ -21,10 +62,6 @@ function getAllCards(): string[] {
  * includeTies: TIERSの何番目までを含めるか (デフォルト: 0 -> 全て)
  */
 function genHands(includeTies = 0) {
-  function getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-
   let [hand1, hand2]: string[] = [];
 
   do {
@@ -59,11 +96,7 @@ function genHands(includeTies = 0) {
 /**
  * Boardのカードを生成
  */
-function genBoard(cardCount: 3 | 4 | 5 = 5, usedCards: string[] = []) {
-  function getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-
+function genBoard(cardCount: 1 | 3 = 3, usedCards: string[] = []) {
   const board: string[] = [];
 
   while (board.length < cardCount) {
@@ -79,4 +112,4 @@ function genBoard(cardCount: 3 | 4 | 5 = 5, usedCards: string[] = []) {
   return board;
 }
 
-export { getAllCards, genHands, genBoard };
+export { getAllCards, getAllHands, getHandsByTiers, genHands, genBoard };

@@ -1,5 +1,3 @@
-"use client";
-
 import { Board } from "@/components/board";
 import { useActionStore } from "../_utils/state";
 
