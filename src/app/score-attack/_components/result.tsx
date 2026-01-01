@@ -1,3 +1,4 @@
+import { ConfirmRangeButton } from "@/components/confirm-range-button";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
@@ -10,7 +11,7 @@ export const Result = () => {
   if (hand.length === 0 || !preflop || score === 0) return null;
 
   return (
-    <div className="flex justify-center">
+    <div className="relative flex justify-center">
       <div>
         {phase === "preflop" ? (
           judgeInRange(hand, position) ? (
@@ -20,8 +21,9 @@ export const Result = () => {
           )
         ) : (
           <span
+            key={score}
             className={cn(
-              "font-bold text-xl",
+              "inline-block origin-bottom animate-score-bounce font-bold text-xl",
               score >= 0 ? "text-green-500" : "text-red-500",
             )}
           >
@@ -30,6 +32,7 @@ export const Result = () => {
           </span>
         )}
       </div>
+      <ConfirmRangeButton className={cn("absolute right-0 bottom-0")} />
     </div>
   );
 };

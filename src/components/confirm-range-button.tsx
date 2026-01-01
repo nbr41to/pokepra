@@ -11,18 +11,24 @@ import {
 } from "@/components/ui/drawer";
 import { RangeTable } from "./range-table";
 import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 type Props = {
   mark?: string;
   disabled?: boolean;
+  className?: string;
 };
 
-export const ConfirmRangeButton = ({ mark, disabled = false }: Props) => {
+export const ConfirmRangeButton = ({
+  mark,
+  disabled = false,
+  className,
+}: Props) => {
   return (
     <Drawer direction="top">
       <DrawerTrigger asChild>
         <Button
-          className="rounded-full"
+          className={cn("rounded-full", className)}
           variant="outline"
           size="icon-lg"
           disabled={disabled}

@@ -11,7 +11,14 @@ function genPositionNumber(maxPeople: number) {
   if (maxPeople < 2 || maxPeople > 9) {
     throw new Error("genPositionNumber: maxPeopleは2~9の間で指定してください");
   }
-  return Math.floor(Math.random() * maxPeople) + 1;
+  const sbPosition = maxPeople - 1; // SB の座席は除外する
+
+  // ランダムに 1..maxPeople を選ぶ。SB が出たら再抽選して均等にする。
+  let value = Math.floor(Math.random() * maxPeople) + 1;
+  while (value === sbPosition) {
+    value = Math.floor(Math.random() * maxPeople) + 1;
+  }
+  return value;
 }
 
 /**

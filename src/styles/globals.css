@@ -147,3 +147,18 @@
 ::view-transition-new(*) {
   z-index: 1;
 }
+
+@layer utilities {
+  @keyframes score-bounce {
+    from {
+      transform: scale(2);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+
+  .animate-score-bounce {
+    animation: score-bounce 500ms ease;
+  }
+}

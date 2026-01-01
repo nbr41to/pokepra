@@ -13,7 +13,16 @@ describe("genPositionNumber", () => {
       const value = genPositionNumber(maxPeople);
       expect(value).toBeGreaterThanOrEqual(1);
       expect(value).toBeLessThanOrEqual(maxPeople);
+      expect(value).not.toBe(maxPeople - 1); // SB の座席番号は除外
     }
+  });
+
+  it("SB は再抽選されるので出現しない", () => {
+    const maxPeople = 9;
+    const samples = Array.from({ length: 500 }, () =>
+      genPositionNumber(maxPeople),
+    );
+    expect(samples).not.toContain(maxPeople - 1);
   });
 });
 

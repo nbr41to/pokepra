@@ -33,14 +33,14 @@ type State = {
   state: "reception" | "confirmation"; // アクション待ち | 確認待ち
 
   // game
-  phase: Phase;
-  stack: number;
-  score: number;
+  phase: Phase; // ストリート
+  stack: number; // 持ち点
+  score: number; // 前回のスコア変動
 
-  position: number;
-  hand: string[];
-  showedHand: boolean;
-  board: string[];
+  position: number; // ポジション番号
+  hand: string[]; // ハンド
+  showedHand: boolean; // ハンドを見たかどうか
+  board: string[]; // ボード
 
   // action
   preflop: PreflopAction | null;
@@ -65,7 +65,7 @@ type Actions = {
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
-  postflopAction: (phase: Phase, action: "commit" | "fold") => void;
+  postflopAction: (phase: Phase, action: "commit" | "fold") => Promise<void>;
   switchNextPhase: () => void;
   startSimulation: () => Promise<any>;
   getEquity: () => Promise<number>;
@@ -161,14 +161,13 @@ const useActionStore = create<Store>((set, get) => ({
     const newStack = stack + deltaScore;
 
     if (action === "commit") {
-      const newCard =
-        phase === "river" ? [] : [genBoard(1, [...hand, ...board])[0]];
+      const newCard = genBoard(1, [...hand, ...board])[0];
 
       set(() => ({
         phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
-        board: [...board, ...newCard],
         stack: newStack,
         score: deltaScore,
+        ...(phase === "river" ? {} : { board: [...board, newCard] }),
       }));
     } else {
       set(() => ({
@@ -215,7 +214,11 @@ const useActionStore = create<Store>((set, get) => ({
       shuffleAndDeal();
     }
   },
+
   getEquity: async () => {
+    // 重い処理が入るので先に Web Worker に逃がす必要がある
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     console.log("startWinSimulation: start");
     const timeStart = performance.now();
     const { position, hand: fixHand, board } = get();

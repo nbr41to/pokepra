@@ -81,6 +81,7 @@ export function StackView({ stack, className }: Props) {
       <div className="flex gap-px">
         {digits.map((digit, index) => (
           <SlotDigit
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             key={index}
             digit={digit}
             // Right to left stop: last digit has 0 delay, first digit has max delay

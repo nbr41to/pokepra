@@ -6,7 +6,6 @@ export const PreflopAction = () => {
   const { preflop, preflopAction, switchNextPhase } = useActionStore();
 
   const handleSetAnswer = (answer: "open-raise" | "fold") => {
-    console.log("handleSetAnswer");
     preflopAction(answer);
   };
 

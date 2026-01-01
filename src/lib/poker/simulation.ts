@@ -16,8 +16,7 @@ const pickRandomCards = (leavingCards: string[], count: number) => {
   }
   return pool.slice(0, count);
 };
-
-async function simulate(
+function simulate(
   boardAndHand: string[],
   leavingCards: string[],
   addCardCount: number,
@@ -26,7 +25,10 @@ async function simulate(
   return solve([...boardAndHand, ...addCards]);
 }
 
-async function iterateSimulations(boardAndHand: string[], iterations: number) {
+/**
+ * シュミレーション
+ */
+function iterateSimulations(boardAndHand: string[], iterations: number) {
   if (iterations > 10000) {
     iterations = 10000;
   }
@@ -41,7 +43,7 @@ async function iterateSimulations(boardAndHand: string[], iterations: number) {
     }
   >();
   for (let i = 0; i < iterations; i += 1) {
-    const result = await simulate(boardAndHand, leavingCards, addCardCount);
+    const result = simulate(boardAndHand, leavingCards, addCardCount);
     const current = tallyMap.get(result.name);
     if (current) {
       current.count += 1;
@@ -57,27 +59,26 @@ async function iterateSimulations(boardAndHand: string[], iterations: number) {
   return Array.from(tallyMap.values());
 }
 
-async function getWinSimulate(hands: string[], board: string[]) {
-  const addCardCount = 5 - board.length;
-  const leavingCards = getLeavingCards([...board, ...hands]);
-  const results = await Promise.all(
-    hands.map(async (hand) => {
-      return simulate([...board, hand], leavingCards, addCardCount);
-    }),
-  );
-
-  return winner(results);
-}
-
+/**
+ * 勝敗のシュミレーション
+ * @params hands 戦わせるハンド
+ * @params board
+ * @param iterations シュミレーション回数 (最大10000)
+ */
 async function iterateWinSimulations(
   hands: string[][],
   board: string[],
-  iterations: number,
+  iterations = 1000,
 ) {
+  // シュミレーション回数の上限
   if (iterations > 10000) {
     iterations = 10000;
   }
+
+  // ボードに足りない枚数
   const addCardCount = 5 - board.length;
+
+  // 結果の型
   const results: {
     hand: string[];
     wins: number;
@@ -85,14 +86,13 @@ async function iterateWinSimulations(
     ties: number;
   }[] = [];
 
+  // シュミレーション開始
   for (let i = 0; i < iterations; i += 1) {
     const leavingCards = getLeavingCards([...board, ...hands.flat()]);
-    const simulateResults = await Promise.all(
-      hands.map(async (hand) => {
-        return simulate([...board, ...hand], leavingCards, addCardCount);
-      }),
-    );
-    const winners = await winner(simulateResults);
+    const simulateResults = hands.map((hand) => {
+      return simulate([...board, ...hand], leavingCards, addCardCount);
+    });
+    const winners = winner(simulateResults);
 
     hands.forEach((hand, index) => {
       const result = results.find((r) => r.hand === hand);

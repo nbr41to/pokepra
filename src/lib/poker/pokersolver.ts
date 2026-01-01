@@ -13,24 +13,30 @@ enum HandRank {
   "Straight Flush" = 9,
   "Royal Flush" = 10,
 }
+
 type ReturnType = {
   name: keyof typeof HandRank;
   rank: HandRank;
   cards: string[];
+  // ※他にもある
 };
 
-async function solve(cards: string[]) {
-  const solve: Promise<ReturnType> = new Promise((resolve) => {
-    const hand = PokerResolver.Hand.solve(cards);
+/**
+ * カードから約を算出
+ */
+function solve(cards: string[]) {
+  const result: ReturnType = PokerResolver.Hand.solve(cards);
 
-    resolve(hand);
-  });
-
-  return solve;
+  return result;
 }
 
-async function winner(hands: ReturnType[]) {
-  return PokerResolver.Hand.winners(hands);
+/**
+ * 複数のハンドから勝敗を算出
+ */
+function winner(hands: ReturnType[]) {
+  const result: ReturnType[] = PokerResolver.Hand.winners(hands);
+
+  return result;
 }
 
 export { solve, winner };

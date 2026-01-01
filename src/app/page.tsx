@@ -6,7 +6,7 @@ export default function Home() {
     <div className="flex h-dvh w-full flex-col items-center justify-center gap-y-8">
       <h1 className="font-bold font-montserrat text-2xl">MY POKER</h1>
       <div className="flex flex-col items-center justify-center gap-y-3">
-        <Button
+        {/* <Button
           className="w-60 font-montserrat"
           variant="outline"
           size="lg"
@@ -21,7 +21,7 @@ export default function Home() {
           asChild
         >
           <Link href="/postflop">Postflop</Link>
-        </Button>
+        </Button> */}
         <Button
           className="w-60 font-montserrat"
           variant="default"

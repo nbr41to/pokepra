@@ -9,7 +9,7 @@ export const ActionArea = () => {
     <div className="relative">
       <HandConfirmation hands={hand} onOpenHand={showHand} />
       {showedHand && (
-        <div className="absolute top-0 left-0 aspect-video w-full p-5">
+        <div className="absolute top-0 left-0 h-full w-full p-5">
           <SelectAction />
         </div>
       )}
