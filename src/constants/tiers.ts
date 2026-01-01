@@ -85,6 +85,7 @@ const TIERS = [
     "K6o",
     "K5o",
     "Q8o",
+    "Q7o",
     "J8o",
     "T8o",
     "97o",

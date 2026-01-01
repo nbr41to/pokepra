@@ -2,19 +2,22 @@ import { ConfirmRangeButton } from "@/components/confirm-range-button";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
-import { judgeInRange } from "@/utils/preflop-range";
+import { getHandString, judgeInRange } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 
 export const Result = () => {
-  const { phase, position, hand, score, preflop } = useActionStore();
+  const { phase, position, hand, score, preflop, flop } = useActionStore();
 
   if (hand.length === 0 || !preflop || score === 0) return null;
+
+  const inRange = judgeInRange(hand, position);
+  const correct = preflop === "open-raise" ? inRange : !inRange;
 
   return (
     <div className="relative flex justify-center">
       <div>
-        {phase === "preflop" ? (
-          judgeInRange(hand, position) ? (
+        {preflop && !flop ? (
+          correct ? (
             <ResultGood delta={score} />
           ) : (
             <ResultBad delta={score} />
@@ -32,7 +35,13 @@ export const Result = () => {
           </span>
         )}
       </div>
-      <ConfirmRangeButton className={cn("absolute right-0 bottom-0")} />
+      <ConfirmRangeButton
+        className={cn(
+          "absolute right-0 bottom-0",
+          (flop || (phase === "preflop" && preflop !== "fold")) && "hidden",
+        )}
+        mark={getHandString(hand)}
+      />
     </div>
   );
 };

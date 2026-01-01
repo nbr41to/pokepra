@@ -122,7 +122,8 @@ const useActionStore = create<Store>((set, get) => ({
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
     const { position, hand, stack } = get();
-    const correct = judgeInRange(hand, position);
+    const inRange = judgeInRange(hand, position);
+    const correct = action === "open-raise" ? inRange : !inRange;
     const amount = correct ? 2 : -2;
 
     if (action === "fold") {

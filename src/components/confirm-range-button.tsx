@@ -9,9 +9,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { cn } from "@/lib/utils";
 import { RangeTable } from "./range-table";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
 
 type Props = {
   mark?: string;
@@ -40,12 +40,13 @@ export const ConfirmRangeButton = ({
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Preflop Range</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerDescription>
+            Confirm your selected hand range below.
+          </DrawerDescription>
         </DrawerHeader>
-        <div className="mx-auto w-fit">
+        <div className="mx-auto w-fit px-1">
           <RangeTable mark={mark} />
         </div>
-
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline">Close</Button>
