@@ -58,6 +58,7 @@ export const ConfirmRanking = ({ hand, board }: Props) => {
 
     (async () => {
       setLoading(true);
+      await new Promise((resolve) => setTimeout(resolve, 200)); // アニメーション用のフレーム確保
       const results = await getPokerRanking({ board, hand });
       resultCache.clear();
       resultCache.set(boardKey, results);
@@ -127,12 +128,13 @@ export const ConfirmRanking = ({ hand, board }: Props) => {
   );
 };
 
-async function getPokerRanking(situation: {
+async function getPokerRanking({
+  hand,
+  board,
+}: {
   hand: string[];
   board: string[];
 }): Promise<RankingResult[]> {
-  const { hand, board } = situation;
-
   const timeStart = performance.now(); // 計測開始
 
   const allHands = getHandsByTiers(5, [...board, ...hand]);
