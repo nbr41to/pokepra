@@ -20,7 +20,6 @@ type Props = {
 
 export const HandRankingList = ({ hand: myHand, results, onScroll }: Props) => {
   useEffect(() => {
-    console.log("HandRankingList rendered");
     onScroll();
   }, [onScroll]);
 
@@ -72,12 +71,12 @@ export const HandRankingList = ({ hand: myHand, results, onScroll }: Props) => {
                   return (
                     <div
                       key={name}
-                      className="relative z-10 flex h-fit w-18 justify-between gap-x-2 rounded-xs border px-1 py-px text-xs"
+                      className="relative z-10 flex h-fit w-18 justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-xs"
                     >
                       <div>{getShortHandName(name)}</div>
                       <div>{percentage}%</div>
                       <div
-                        className={`${colorClass} absolute top-0 left-0 -z-10 h-full rounded-l-xs`}
+                        className={`${colorClass} absolute top-0 left-0 -z-10 h-full`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>

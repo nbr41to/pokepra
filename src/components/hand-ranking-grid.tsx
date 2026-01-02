@@ -75,12 +75,12 @@ export const HandRankingGrid = ({ hand: myHand, results, onScroll }: Props) => {
                   return (
                     <div
                       key={name}
-                      className="relative z-10 flex h-fit w-14 justify-between gap-x-2 rounded-xs border px-1 py-px text-xs"
+                      className="relative z-10 flex h-fit w-14 justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-[10px]/[1]"
                     >
                       <div>{getShortHandName(name)}</div>
                       <div>{percentage}%</div>
                       <div
-                        className={`${colorClass} absolute top-0 left-0 -z-10 h-full rounded-l-xs`}
+                        className={`${colorClass} absolute top-0 left-0 -z-10 h-full`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>

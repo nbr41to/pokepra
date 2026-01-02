@@ -26,7 +26,13 @@ export const ConfirmRangeButton = ({
 }: Props) => {
   return (
     <Drawer direction="top">
-      <DrawerTrigger asChild>
+      <DrawerTrigger
+        asChild
+        onClick={(e) => {
+          // Blocked aria-hidden on an element の警告回避
+          e.currentTarget.blur();
+        }}
+      >
         <Button
           className={cn("rounded-full", className)}
           variant="outline"

@@ -12,26 +12,27 @@ import { HandRankingGrid } from "./hand-ranking-grid";
 import { HandRankingList } from "./hand-ranking-list";
 import { Button } from "./ui/button";
 
+type RankingResult = {
+  hand: string[];
+  score: number;
+  iterate: number;
+  result: {
+    name: string;
+    rank: number;
+    count: number;
+  }[];
+};
+
+const resultCache = new Map<string, RankingResult[]>();
+
 type Props = {
   hand: string[];
   board: string[];
-  className?: string;
 };
 
-export const ConfirmRanking = ({ hand, board, className }: Props) => {
+export const ConfirmRanking = ({ hand, board }: Props) => {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<
-    {
-      hand: string[];
-      score: number;
-      iterate: number;
-      result: {
-        name: string;
-        rank: number;
-        count: number;
-      }[];
-    }[]
-  >([]);
+  const [results, setResults] = useState<RankingResult[]>([]);
 
   const scrollToMyHand = (smooth = false) => {
     const element = document.getElementById(hand.join(","));
@@ -45,30 +46,43 @@ export const ConfirmRanking = ({ hand, board, className }: Props) => {
 
   useEffect(() => {
     const runSimulation = async () => {
+      const boardKey = board.join(",");
+      const cached = resultCache.get(boardKey);
+      if (cached) {
+        setResults(cached);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
-      const results = await simulate({ board });
+      const results = await simulate({ board, hand });
+      resultCache.clear();
+      resultCache.set(boardKey, results);
       setResults(results);
       setLoading(false);
     };
 
     runSimulation();
-  }, [board]);
+  }, [board, hand]);
 
   if (loading) return <ConfirmRankingSkeleton />;
 
   return (
     <>
       <Tabs defaultValue="list" className="px-1">
-        <TabsList className="mb-1 ml-auto">
-          <TabsTrigger value="list">
-            <List />
-            List
-          </TabsTrigger>
-          <TabsTrigger value="grid">
-            <Grid />
-            Grid
-          </TabsTrigger>
-        </TabsList>
+        <div className="mb-1 flex items-end justify-between">
+          <span>{results.length} hands</span>
+          <TabsList>
+            <TabsTrigger value="list">
+              <List />
+              List
+            </TabsTrigger>
+            <TabsTrigger value="grid">
+              <Grid />
+              Grid
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="list">
           <ScrollArea className="relative h-[70dvh]">
@@ -112,18 +126,24 @@ export const ConfirmRanking = ({ hand, board, className }: Props) => {
   );
 };
 
-const simulate = async ({ board }: { board: string[] }) => {
+const simulate = async ({
+  board,
+  hand,
+}: {
+  board: string[];
+  hand: string[];
+}) => {
   // 重い処理が入るので先に Web Worker に逃がす必要がある
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   const timeStart = performance.now();
   console.log("startSimulation: start");
 
-  const allHands = getHandsByTiers(5, board);
+  const allHands = getHandsByTiers(5, [...board, ...hand]);
 
   const ITERATE_COUNT = 1000;
 
-  const results = allHands.map((hand) => {
+  const results = [hand, ...allHands].map((hand) => {
     const result = iterateSimulations([...board, ...hand], ITERATE_COUNT);
     const score = result.reduce((acc, cur) => acc + cur.count * cur.rank, 0);
 
