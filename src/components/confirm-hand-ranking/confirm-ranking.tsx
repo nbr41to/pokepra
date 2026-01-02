@@ -23,6 +23,8 @@ type RankingResult = {
   }[];
 };
 
+const resultCache = new Map<string, RankingResult[]>();
+
 type Props = {
   hand: string[];
   board: string[];
@@ -43,9 +45,19 @@ export const ConfirmRanking = ({ hand, board }: Props) => {
   };
 
   useEffect(() => {
+    const boardKey = board.join(",");
+    const cached = resultCache.get(boardKey);
+    if (cached) {
+      setResults(cached);
+      setLoading(false);
+      return;
+    }
+
     (async () => {
       setLoading(true);
       const results = await getPokerRanking({ board, hand });
+      resultCache.clear();
+      resultCache.set(boardKey, results);
       setResults(results);
       setLoading(false);
     })();
