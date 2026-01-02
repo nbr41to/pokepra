@@ -2,16 +2,16 @@
 
 import { GalleryVertical, Grid, List, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { getPokerRanking } from "@/app/score-attack/_actions/get-hand-ranking";
 import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { iterateSimulations } from "@/lib/poker/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
+import { Button } from "../ui/button";
 import { ConfirmRankingSkeleton } from "./confirm-ranking.skeleton";
 import { HandRankingGrid } from "./hand-ranking-grid";
 import { HandRankingList } from "./hand-ranking-list";
-import { Button } from "./ui/button";
 
+// TODO: app/に依存しているのをやめたい
 type RankingResult = {
   hand: string[];
   score: number;
@@ -22,8 +22,6 @@ type RankingResult = {
     count: number;
   }[];
 };
-
-const resultCache = new Map<string, RankingResult[]>();
 
 type Props = {
   hand: string[];
@@ -45,24 +43,12 @@ export const ConfirmRanking = ({ hand, board }: Props) => {
   };
 
   useEffect(() => {
-    const runSimulation = async () => {
-      const boardKey = board.join(",");
-      const cached = resultCache.get(boardKey);
-      if (cached) {
-        setResults(cached);
-        setLoading(false);
-        return;
-      }
-
+    (async () => {
       setLoading(true);
-      const results = await simulate({ board, hand });
-      resultCache.clear();
-      resultCache.set(boardKey, results);
+      const results = await getPokerRanking({ board, hand });
       setResults(results);
       setLoading(false);
-    };
-
-    runSimulation();
+    })();
   }, [board, hand]);
 
   if (loading) return <ConfirmRankingSkeleton />;
@@ -124,39 +110,4 @@ export const ConfirmRanking = ({ hand, board }: Props) => {
       </DrawerFooter>
     </>
   );
-};
-
-const simulate = async ({
-  board,
-  hand,
-}: {
-  board: string[];
-  hand: string[];
-}) => {
-  // 重い処理が入るので先に Web Worker に逃がす必要がある
-  await new Promise((resolve) => setTimeout(resolve, 0));
-
-  const timeStart = performance.now();
-  console.log("startSimulation: start");
-
-  const allHands = getHandsByTiers(5, [...board, ...hand]);
-
-  const ITERATE_COUNT = 1000;
-
-  const results = [hand, ...allHands].map((hand) => {
-    const result = iterateSimulations([...board, ...hand], ITERATE_COUNT);
-    const score = result.reduce((acc, cur) => acc + cur.count * cur.rank, 0);
-
-    return {
-      hand,
-      score,
-      iterate: ITERATE_COUNT,
-      result,
-    };
-  });
-
-  const durationMs = performance.now() - timeStart;
-  console.log(`startSimulation: end ${durationMs.toFixed(2)}ms`);
-
-  return results;
 };

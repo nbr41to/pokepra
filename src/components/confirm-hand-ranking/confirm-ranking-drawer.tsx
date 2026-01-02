@@ -10,8 +10,9 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
+import { PlayCard } from "../play-card";
+import { Button } from "../ui/button";
 import { ConfirmRanking } from "./confirm-ranking";
-import { Button } from "./ui/button";
 
 type Props = {
   hand: string[];
@@ -20,7 +21,7 @@ type Props = {
   className?: string;
 };
 
-export const ConfirmRankingButton = ({
+export const ConfirmRankingDrawer = ({
   hand,
   board,
   disabled = false,
@@ -47,10 +48,23 @@ export const ConfirmRankingButton = ({
 
       <DrawerContent className="max-h-[95dvh]! px-1 pb-4">
         <DrawerHeader>
-          <DrawerTitle>Hands Ranking</DrawerTitle>
-          <DrawerDescription>
-            Simulated hand rankings based on the current board.
-          </DrawerDescription>
+          <DrawerTitle>Hand Ranking</DrawerTitle>
+          <div className="flex items-center gap-x-4 py-1">
+            <div className="flex gap-x-1">
+              {board.map((card) => (
+                <PlayCard
+                  key={card}
+                  className="w-8"
+                  size="sm"
+                  suit={card[1] as "s" | "h" | "d" | "c"}
+                  rank={card[0]}
+                />
+              ))}
+            </div>
+            <DrawerDescription>
+              Simulated hand rankings based on the current board.
+            </DrawerDescription>
+          </div>
         </DrawerHeader>
 
         <ConfirmRanking hand={hand} board={board} />

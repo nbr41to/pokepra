@@ -1,16 +1,29 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getEquity } from "../_actions/get-equity";
 import { useActionStore } from "../_utils/state";
 
 export const PostflopAction = () => {
   const [loading, setLoading] = useState(false);
-  const { phase, flop, turn, river, postflopAction, switchNextPhase } =
-    useActionStore();
+  const {
+    phase,
+    position,
+    board,
+    hand,
+    flop,
+    turn,
+    river,
+    postflopAction,
+    switchNextPhase,
+  } = useActionStore();
 
   const handleSetAnswer = async (answer: "commit" | "fold") => {
     setLoading(true);
-    await postflopAction(phase, answer);
+    const equity = await getEquity({ position, hand, board });
+    postflopAction(phase, answer, equity);
     setLoading(false);
   };
 

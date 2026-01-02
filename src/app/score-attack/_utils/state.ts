@@ -1,11 +1,7 @@
 import { create } from "zustand";
-import {
-  iterateSimulations,
-  iterateWinSimulations,
-} from "@/lib/poker/simulation";
-import { genBoard, genHands, getHandsByTiers } from "@/utils/dealer";
+import { genBoard, genHands } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
-import { getTierIndexByPosition, judgeInRange } from "@/utils/preflop-range";
+import { judgeInRange } from "@/utils/preflop-range";
 
 const PEOPLE = 9;
 const DEFAULT_TIER = 6;
@@ -13,11 +9,6 @@ const DEFAULT_TIER = 6;
 type Phase = "preflop" | "flop" | "turn" | "river";
 type PreflopAction = "open-raise" | "fold";
 
-type SumilationScore = {
-  name: string;
-  count: number;
-  rank: number;
-};
 type History = {
   hand: string[];
   position: number;
@@ -48,27 +39,21 @@ type State = {
   turn: "commit" | "fold" | null;
   river: "commit" | "fold" | null;
 
-  // score
-  simulationScores: Map<
-    string,
-    { name: string; count: number; rank: number }
-  >[];
-  simulationAverageScore: number;
-
   // history
   histories: History[];
 };
 
 type Actions = {
-  /* 初期化 */
   reset: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
-  postflopAction: (phase: Phase, action: "commit" | "fold") => Promise<void>;
+  postflopAction: (
+    phase: Phase,
+    action: "commit" | "fold",
+    equity: number,
+  ) => void;
   switchNextPhase: () => void;
-  startSimulation: () => Promise<any>;
-  getEquity: () => Promise<number>;
 };
 
 type Store = State & Actions;
@@ -87,9 +72,6 @@ const INITIAL_STATE: State = {
   flop: null,
   turn: null,
   river: null,
-
-  simulationScores: [],
-  simulationAverageScore: 0,
 
   histories: [],
 };
@@ -143,7 +125,7 @@ const useActionStore = create<Store>((set, get) => ({
       });
     }
   },
-  postflopAction: async (phase: Phase, action: "commit" | "fold") => {
+  postflopAction: (phase: Phase, action: "commit" | "fold", equity: number) => {
     if (phase === "flop") {
       set(() => ({ flop: action }));
     } else if (phase === "turn") {
@@ -152,10 +134,9 @@ const useActionStore = create<Store>((set, get) => ({
       set(() => ({ river: action }));
     }
 
-    const { stack, hand, board, getEquity } = get();
+    const { stack, hand, board } = get();
     const M = 100; // 倍率
     const BASE_LINE = 0.5; // 基準点
-    const equity = await getEquity();
     const deltaScore = Math.floor((equity - BASE_LINE) * M);
     const newStack = stack + deltaScore;
 
@@ -212,126 +193,6 @@ const useActionStore = create<Store>((set, get) => ({
     if (phase === "river") {
       shuffleAndDeal();
     }
-  },
-
-  getEquity: async () => {
-    // 重い処理が入るので先に Web Worker に逃がす必要がある
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    console.log("startWinSimulation: start");
-    const timeStart = performance.now();
-    const { position, hand: fixHand, board } = get();
-
-    const allHands = getHandsByTiers(getTierIndexByPosition(position), [
-      ...board,
-      ...fixHand,
-    ]);
-
-    const ITERATIONS = 100;
-    const COUNT = allHands.length * ITERATIONS;
-
-    const simulateResults = await Promise.all(
-      allHands.map(async (hand) => {
-        const result = await iterateWinSimulations(
-          [fixHand, hand],
-          board,
-          ITERATIONS,
-        );
-
-        return {
-          hand,
-          result,
-        };
-      }),
-    );
-
-    // fixHand の勝率計算
-    let win = 0;
-    let lose = 0;
-    let tie = 0;
-
-    simulateResults.forEach(({ result }) => {
-      const fixHandResult = result.find(
-        (r) => r.hand[0] === fixHand[0] && r.hand[1] === fixHand[1],
-      );
-      if (fixHandResult) {
-        win += fixHandResult.wins;
-        lose += fixHandResult.loses;
-        tie += fixHandResult.ties;
-      }
-    });
-
-    const equity = {
-      winRate: win / COUNT,
-      loseRate: lose / COUNT,
-      tieRate: tie / COUNT,
-    };
-
-    console.log("startWinSimulation:equity", equity.winRate.toFixed(2));
-
-    const durationMs = performance.now() - timeStart;
-    console.log(`startWinSimulation: end ${durationMs.toFixed(2)}ms`);
-
-    return equity.winRate;
-  },
-
-  // hand strength をシミュレーションで計算するための試作
-  startSimulation: async () => {
-    // 重い処理が入るので先に Web Worker に逃がす必要がある
-    await new Promise((resolve) => setTimeout(resolve, 0));
-
-    const timeStart = performance.now();
-    console.log("startSimulation: start");
-
-    const { board } = get();
-    const allHands = getHandsByTiers(DEFAULT_TIER + 1, board);
-
-    const results = allHands.map((hand) => {
-      const result = iterateSimulations([...board, ...hand], 100);
-
-      return {
-        hand,
-        result,
-      };
-    });
-
-    const ranking: {
-      rank: number; // 約の強さ1〜9
-      name: string; // 約の名前
-      count: number; // その約が出た回数
-      hands: {
-        hand: string[]; // ハンド
-        count: number; // そのハンドでその約が出た回数
-      }[];
-    }[] = [];
-
-    results.forEach(({ hand, result }) => {
-      result.forEach(({ name, rank, count }) => {
-        const existing = ranking.find((r) => r.name === name);
-        if (existing) {
-          existing.count += count;
-          existing.hands.push({ hand, count });
-        } else {
-          ranking.push({
-            name,
-            rank,
-            count,
-            hands: [{ hand, count }],
-          });
-        }
-      });
-    });
-
-    ranking.sort((a, b) => b.rank - a.rank);
-
-    console.log("ranking", ranking);
-
-    // console.log("startSimulation:results", results);
-
-    const durationMs = performance.now() - timeStart;
-    console.log(`startSimulation: end ${durationMs.toFixed(2)}ms`);
-
-    return results;
   },
 }));
 

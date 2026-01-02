@@ -1,5 +1,5 @@
-import { ConfirmRangeButton } from "@/components/confirm-range-button";
-import { ConfirmRankingButton } from "@/components/confirm-ranking-button";
+import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-range-drawer";
+import { ConfirmRankingDrawer } from "@/components/confirm-hand-ranking/confirm-ranking-drawer";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
@@ -39,12 +39,12 @@ export const Result = () => {
         )}
       </div>
       <div className="absolute right-0 bottom-0 flex items-center gap-2">
-        <ConfirmRankingButton
+        <ConfirmRankingDrawer
           className={cn(board.length < 3 && "hidden")}
           hand={hand}
           board={board}
         />
-        <ConfirmRangeButton
+        <ConfirmRangeDrawer
           className={cn(
             (flop || (phase === "preflop" && preflop !== "fold")) && "hidden",
           )}

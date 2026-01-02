@@ -1,4 +1,5 @@
 import { Table2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
 import { RangeTable } from "./range-table";
-import { Button } from "./ui/button";
 
 type Props = {
   mark?: string;
@@ -19,7 +19,7 @@ type Props = {
   className?: string;
 };
 
-export const ConfirmRangeButton = ({
+export const ConfirmRangeDrawer = ({
   mark,
   disabled = false,
   className,
