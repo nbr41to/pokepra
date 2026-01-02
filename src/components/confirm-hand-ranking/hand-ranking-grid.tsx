@@ -55,7 +55,9 @@ export const HandRankingGrid = ({ hand: myHand, results, onScroll }: Props) => {
                   size="sm"
                 />
               </div>
-              <div className="text-center font-bold">{score}</div>
+              <div className="text-center font-bold">
+                {(score * 100).toFixed(2)}
+              </div>
             </div>
 
             <div className="space-y-1">

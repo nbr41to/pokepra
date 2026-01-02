@@ -1,0 +1,1185 @@
+[
+  {
+    "rank": 1,
+    "hand": "AA",
+    "player2": 85.3,
+    "player6": 49.2,
+    "player10": 31.1
+  },
+  {
+    "rank": 2,
+    "hand": "KK",
+    "player2": 82.4,
+    "player6": 43.0,
+    "player10": 26.1
+  },
+  {
+    "rank": 3,
+    "hand": "QQ",
+    "player2": 79.9,
+    "player6": 37.9,
+    "player10": 22.2
+  },
+  {
+    "rank": 4,
+    "hand": "JJ",
+    "player2": 77.5,
+    "player6": 33.6,
+    "player10": 19.3
+  },
+  {
+    "rank": 5,
+    "hand": "TT",
+    "player2": 75.1,
+    "player6": 30.0,
+    "player10": 17.2
+  },
+  {
+    "rank": 6,
+    "hand": "99",
+    "player2": 72.1,
+    "player6": 26.6,
+    "player10": 15.6
+  },
+  {
+    "rank": 7,
+    "hand": "88",
+    "player2": 69.1,
+    "player6": 24.0,
+    "player10": 14.4
+  },
+  {
+    "rank": 8,
+    "hand": "AKs",
+    "player2": 67.0,
+    "player6": 31.1,
+    "player10": 20.7
+  },
+  {
+    "rank": 9,
+    "hand": "77",
+    "player2": 66.2,
+    "player6": 21.9,
+    "player10": 13.7
+  },
+  {
+    "rank": 10,
+    "hand": "AQs",
+    "player2": 66.1,
+    "player6": 29.4,
+    "player10": 19.3
+  },
+  {
+    "rank": 11,
+    "hand": "AKo",
+    "player2": 65.4,
+    "player6": 27.9,
+    "player10": 17.2
+  },
+  {
+    "rank": 12,
+    "hand": "AJs",
+    "player2": 65.4,
+    "player6": 27.8,
+    "player10": 18.1
+  },
+  {
+    "rank": 13,
+    "hand": "ATs",
+    "player2": 64.7,
+    "player6": 26.7,
+    "player10": 17.3
+  },
+  {
+    "rank": 14,
+    "hand": "Aqo",
+    "player2": 64.5,
+    "player6": 25.9,
+    "player10": 15.5
+  },
+  {
+    "rank": 15,
+    "hand": "AJo",
+    "player2": 63.6,
+    "player6": 24.4,
+    "player10": 14.3
+  },
+  {
+    "rank": 16,
+    "hand": "KQs",
+    "player2": 63.4,
+    "player6": 28.3,
+    "player10": 18.6
+  },
+  {
+    "rank": 17,
+    "hand": "66",
+    "player2": 63.3,
+    "player6": 20.1,
+    "player10": 13.1
+  },
+  {
+    "rank": 18,
+    "hand": "A9s",
+    "player2": 63.0,
+    "player6": 24.2,
+    "player10": 15.4
+  },
+  {
+    "rank": 19,
+    "hand": "ATo",
+    "player2": 62.9,
+    "player6": 23.1,
+    "player10": 13.4
+  },
+  {
+    "rank": 20,
+    "hand": "KJs",
+    "player2": 62.6,
+    "player6": 26.9,
+    "player10": 17.6
+  },
+  {
+    "rank": 21,
+    "hand": "A8s",
+    "player2": 62.1,
+    "player6": 23.3,
+    "player10": 14.8
+  },
+  {
+    "rank": 22,
+    "hand": "KTs",
+    "player2": 61.9,
+    "player6": 25.8,
+    "player10": 16.9
+  },
+  {
+    "rank": 23,
+    "hand": "KQo",
+    "player2": 61.4,
+    "player6": 25.1,
+    "player10": 15.1
+  },
+  {
+    "rank": 24,
+    "hand": "A7s",
+    "player2": 61.1,
+    "player6": 22.5,
+    "player10": 14.3
+  },
+  {
+    "rank": 25,
+    "hand": "A9o",
+    "player2": 60.9,
+    "player6": 20.3,
+    "player10": 11.2
+  },
+  {
+    "rank": 26,
+    "hand": "KJo",
+    "player2": 60.6,
+    "player6": 23.5,
+    "player10": 13.9
+  },
+  {
+    "rank": 27,
+    "hand": "QJs",
+    "player2": 60.3,
+    "player6": 26.1,
+    "player10": 17.1
+  },
+  {
+    "rank": 28,
+    "hand": "55",
+    "player2": 60.3,
+    "player6": 18.5,
+    "player10": 12.3
+  },
+  {
+    "rank": 29,
+    "hand": "A8o",
+    "player2": 60.1,
+    "player6": 19.4,
+    "player10": 10.6
+  },
+  {
+    "rank": 30,
+    "hand": "A6s",
+    "player2": 60.0,
+    "player6": 21.7,
+    "player10": 14.0
+  },
+  {
+    "rank": 31,
+    "hand": "K9s",
+    "player2": 60.0,
+    "player6": 23.2,
+    "player10": 14.8
+  },
+  {
+    "rank": 32,
+    "hand": "A5s",
+    "player2": 59.9,
+    "player6": 22.2,
+    "player10": 14.5
+  },
+  {
+    "rank": 33,
+    "hand": "KTo",
+    "player2": 59.9,
+    "player6": 22.3,
+    "player10": 13.1
+  },
+  {
+    "rank": 34,
+    "hand": "QTs",
+    "player2": 59.5,
+    "player6": 25.2,
+    "player10": 16.6
+  },
+  {
+    "rank": 35,
+    "hand": "A7o",
+    "player2": 59.1,
+    "player6": 18.4,
+    "player10": 10.1
+  },
+  {
+    "rank": 36,
+    "hand": "A4s",
+    "player2": 58.9,
+    "player6": 21.6,
+    "player10": 14.2
+  },
+  {
+    "rank": 37,
+    "hand": "K8s",
+    "player2": 58.5,
+    "player6": 21.3,
+    "player10": 13.5
+  },
+  {
+    "rank": 38,
+    "hand": "QJo",
+    "player2": 58.2,
+    "player6": 22.9,
+    "player10": 13.7
+  },
+  {
+    "rank": 39,
+    "hand": "A3s",
+    "player2": 58.0,
+    "player6": 21.0,
+    "player10": 13.9
+  },
+  {
+    "rank": 40,
+    "hand": "K9o",
+    "player2": 58.0,
+    "player6": 19.5,
+    "player10": 10.8
+  },
+  {
+    "rank": 41,
+    "hand": "Q9s",
+    "player2": 57.9,
+    "player6": 22.5,
+    "player10": 14.5
+  },
+  {
+    "rank": 42,
+    "hand": "A6o",
+    "player2": 57.8,
+    "player6": 17.5,
+    "player10": 9.6
+  },
+  {
+    "rank": 43,
+    "hand": "K7s",
+    "player2": 57.8,
+    "player6": 20.8,
+    "player10": 13.2
+  },
+  {
+    "rank": 44,
+    "hand": "A5o",
+    "player2": 57.7,
+    "player6": 18.0,
+    "player10": 10.1
+  },
+  {
+    "rank": 45,
+    "hand": "JTs",
+    "player2": 57.5,
+    "player6": 24.7,
+    "player10": 16.5
+  },
+  {
+    "rank": 46,
+    "hand": "QTo",
+    "player2": 57.4,
+    "player6": 21.6,
+    "player10": 12.9
+  },
+  {
+    "rank": 47,
+    "hand": "A2s",
+    "player2": 57.0,
+    "player6": 20.4,
+    "player10": 13.4
+  },
+  {
+    "rank": 48,
+    "hand": "44",
+    "player2": 57.0,
+    "player6": 17.3,
+    "player10": 12.1
+  },
+  {
+    "rank": 49,
+    "hand": "K6s",
+    "player2": 56.8,
+    "player6": 20.1,
+    "player10": 12.8
+  },
+  {
+    "rank": 50,
+    "hand": "A4o",
+    "player2": 56.4,
+    "player6": 17.3,
+    "player10": 9.8
+  },
+  {
+    "rank": 51,
+    "hand": "K8o",
+    "player2": 56.3,
+    "player6": 17.4,
+    "player10": 9.4
+  },
+  {
+    "rank": 52,
+    "hand": "Q8s",
+    "player2": 56.2,
+    "player6": 20.7,
+    "player10": 13.2
+  },
+  {
+    "rank": 53,
+    "hand": "K5s",
+    "player2": 55.8,
+    "player6": 19.5,
+    "player10": 12.5
+  },
+  {
+    "rank": 54,
+    "hand": "J9s",
+    "player2": 55.8,
+    "player6": 22.4,
+    "player10": 14.6
+  },
+  {
+    "rank": 55,
+    "hand": "A3o",
+    "player2": 55.6,
+    "player6": 16.7,
+    "player10": 9.5
+  },
+  {
+    "rank": 56,
+    "hand": "Q9o",
+    "player2": 55.5,
+    "player6": 19.0,
+    "player10": 10.7
+  },
+  {
+    "rank": 57,
+    "hand": "K7o",
+    "player2": 55.4,
+    "player6": 16.7,
+    "player10": 9.0
+  },
+  {
+    "rank": 58,
+    "hand": "JTo",
+    "player2": 55.4,
+    "player6": 21.5,
+    "player10": 13.1
+  },
+  {
+    "rank": 59,
+    "hand": "K4s",
+    "player2": 54.7,
+    "player6": 19.0,
+    "player10": 12.3
+  },
+  {
+    "rank": 60,
+    "hand": "A2o",
+    "player2": 54.6,
+    "player6": 16.1,
+    "player10": 9.1
+  },
+  {
+    "rank": 61,
+    "hand": "Q7s",
+    "player2": 54.5,
+    "player6": 19.2,
+    "player10": 12.1
+  },
+  {
+    "rank": 62,
+    "hand": "K6o",
+    "player2": 54.3,
+    "player6": 16.0,
+    "player10": 8.6
+  },
+  {
+    "rank": 63,
+    "hand": "T9s",
+    "player2": 54.3,
+    "player6": 22.5,
+    "player10": 14.9
+  },
+  {
+    "rank": 64,
+    "hand": "J8s",
+    "player2": 54.2,
+    "player6": 20.5,
+    "player10": 13.2
+  },
+  {
+    "rank": 65,
+    "hand": "K3s",
+    "player2": 53.8,
+    "player6": 18.4,
+    "player10": 12.1
+  },
+  {
+    "rank": 66,
+    "hand": "Q8o",
+    "player2": 53.8,
+    "player6": 16.9,
+    "player10": 9.2
+  },
+  {
+    "rank": 67,
+    "hand": "Q6s",
+    "player2": 53.8,
+    "player6": 18.5,
+    "player10": 11.7
+  },
+  {
+    "rank": 68,
+    "hand": "33",
+    "player2": 53.7,
+    "player6": 16.2,
+    "player10": 12.0
+  },
+  {
+    "rank": 69,
+    "hand": "J9o",
+    "player2": 53.4,
+    "player6": 18.7,
+    "player10": 10.8
+  },
+  {
+    "rank": 70,
+    "hand": "K5o",
+    "player2": 53.3,
+    "player6": 15.4,
+    "player10": 8.3
+  },
+  {
+    "rank": 71,
+    "hand": "K2s",
+    "player2": 52.9,
+    "player6": 18.1,
+    "player10": 11.9
+  },
+  {
+    "rank": 72,
+    "hand": "Q5s",
+    "player2": 52.9,
+    "player6": 18.1,
+    "player10": 11.6
+  },
+  {
+    "rank": 73,
+    "hand": "T8s",
+    "player2": 52.6,
+    "player6": 20.6,
+    "player10": 13.6
+  },
+  {
+    "rank": 74,
+    "hand": "J7s",
+    "player2": 52.4,
+    "player6": 18.9,
+    "player10": 12.0
+  },
+  {
+    "rank": 75,
+    "hand": "K4o",
+    "player2": 52.1,
+    "player6": 14.7,
+    "player10": 8.0
+  },
+  {
+    "rank": 76,
+    "hand": "Q7o",
+    "player2": 51.9,
+    "player6": 15.1,
+    "player10": 8.0
+  },
+  {
+    "rank": 77,
+    "hand": "Q4s",
+    "player2": 51.7,
+    "player6": 17.6,
+    "player10": 11.3
+  },
+  {
+    "rank": 78,
+    "hand": "J8o",
+    "player2": 51.7,
+    "player6": 16.8,
+    "player10": 9.5
+  },
+  {
+    "rank": 79,
+    "hand": "T9o",
+    "player2": 51.7,
+    "player6": 18.9,
+    "player10": 11.3
+  },
+  {
+    "rank": 80,
+    "hand": "K3o",
+    "player2": 51.2,
+    "player6": 14.2,
+    "player10": 7.8
+  },
+  {
+    "rank": 81,
+    "hand": "Q6o",
+    "player2": 51.1,
+    "player6": 14.4,
+    "player10": 7.6
+  },
+  {
+    "rank": 82,
+    "hand": "98s",
+    "player2": 51.1,
+    "player6": 20.2,
+    "player10": 13.4
+  },
+  {
+    "rank": 83,
+    "hand": "T7s",
+    "player2": 51.0,
+    "player6": 19.0,
+    "player10": 12.4
+  },
+  {
+    "rank": 84,
+    "hand": "J6s",
+    "player2": 50.8,
+    "player6": 17.4,
+    "player10": 11.1
+  },
+  {
+    "rank": 85,
+    "hand": "Q3s",
+    "player2": 50.7,
+    "player6": 17.0,
+    "player10": 11.1
+  },
+  {
+    "rank": 86,
+    "hand": "22",
+    "player2": 50.3,
+    "player6": 15.5,
+    "player10": 12.0
+  },
+  {
+    "rank": 87,
+    "hand": "K2o",
+    "player2": 50.2,
+    "player6": 13.7,
+    "player10": 7.6
+  },
+  {
+    "rank": 88,
+    "hand": "Q5o",
+    "player2": 50.2,
+    "player6": 13.9,
+    "player10": 7.4
+  },
+  {
+    "rank": 89,
+    "hand": "J5s",
+    "player2": 50.0,
+    "player6": 17.0,
+    "player10": 10.8
+  },
+  {
+    "rank": 90,
+    "hand": "T8o",
+    "player2": 50.0,
+    "player6": 16.9,
+    "player10": 9.9
+  },
+  {
+    "rank": 91,
+    "hand": "Q2s",
+    "player2": 49.9,
+    "player6": 16.6,
+    "player10": 10.9
+  },
+  {
+    "rank": 92,
+    "hand": "J7o",
+    "player2": 49.9,
+    "player6": 14.9,
+    "player10": 8.1
+  },
+  {
+    "rank": 93,
+    "hand": "97s",
+    "player2": 49.5,
+    "player6": 18.9,
+    "player10": 12.5
+  },
+  {
+    "rank": 94,
+    "hand": "T6s",
+    "player2": 49.2,
+    "player6": 17.4,
+    "player10": 11.2
+  },
+  {
+    "rank": 95,
+    "hand": "Q4o",
+    "player2": 49.0,
+    "player6": 13.3,
+    "player10": 7.1
+  },
+  {
+    "rank": 96,
+    "hand": "J4s",
+    "player2": 49.0,
+    "player6": 16.4,
+    "player10": 10.6
+  },
+  {
+    "rank": 97,
+    "hand": "98o",
+    "player2": 48.4,
+    "player6": 16.6,
+    "player10": 9.9
+  },
+  {
+    "rank": 98,
+    "hand": "T7o",
+    "player2": 48.2,
+    "player6": 15.1,
+    "player10": 8.6
+  },
+  {
+    "rank": 99,
+    "hand": "87s",
+    "player2": 48.2,
+    "player6": 18.9,
+    "player10": 12.7
+  },
+  {
+    "rank": 100,
+    "hand": "Q3o",
+    "player2": 47.9,
+    "player6": 12.8,
+    "player10": 6.9
+  },
+  {
+    "rank": 101,
+    "hand": "J6o",
+    "player2": 47.9,
+    "player6": 13.2,
+    "player10": 7.0
+  },
+  {
+    "rank": 102,
+    "hand": "J3s",
+    "player2": 47.9,
+    "player6": 16.0,
+    "player10": 10.4
+  },
+  {
+    "rank": 103,
+    "hand": "96s",
+    "player2": 47.7,
+    "player6": 17.4,
+    "player10": 11.4
+  },
+  {
+    "rank": 104,
+    "hand": "T5s",
+    "player2": 47.2,
+    "player6": 16.0,
+    "player10": 10.2
+  },
+  {
+    "rank": 105,
+    "hand": "J5o",
+    "player2": 47.1,
+    "player6": 12.8,
+    "player10": 6.7
+  },
+  {
+    "rank": 106,
+    "hand": "J2s",
+    "player2": 47.1,
+    "player6": 15.6,
+    "player10": 10.2
+  },
+  {
+    "rank": 107,
+    "hand": "Q2o",
+    "player2": 47.0,
+    "player6": 12.3,
+    "player10": 6.8
+  },
+  {
+    "rank": 108,
+    "hand": "97o",
+    "player2": 46.7,
+    "player6": 15.1,
+    "player10": 8.8
+  },
+  {
+    "rank": 109,
+    "hand": "86s",
+    "player2": 46.5,
+    "player6": 17.6,
+    "player10": 11.9
+  },
+  {
+    "rank": 110,
+    "hand": "T4s",
+    "player2": 46.4,
+    "player6": 15.6,
+    "player10": 10.0
+  },
+  {
+    "rank": 111,
+    "hand": "T6o",
+    "player2": 46.3,
+    "player6": 13.4,
+    "player10": 7.3
+  },
+  {
+    "rank": 112,
+    "hand": "J4o",
+    "player2": 46.1,
+    "player6": 12.3,
+    "player10": 6.5
+  },
+  {
+    "rank": 113,
+    "hand": "95s",
+    "player2": 45.9,
+    "player6": 16.0,
+    "player10": 10.3
+  },
+  {
+    "rank": 114,
+    "hand": "76s",
+    "player2": 45.7,
+    "player6": 18.0,
+    "player10": 12.3
+  },
+  {
+    "rank": 115,
+    "hand": "T3s",
+    "player2": 45.5,
+    "player6": 15.1,
+    "player10": 9.8
+  },
+  {
+    "rank": 116,
+    "hand": "87o",
+    "player2": 45.5,
+    "player6": 15.4,
+    "player10": 9.3
+  },
+  {
+    "rank": 117,
+    "hand": "J3o",
+    "player2": 45.0,
+    "player6": 11.7,
+    "player10": 6.3
+  },
+  {
+    "rank": 118,
+    "hand": "96o",
+    "player2": 44.9,
+    "player6": 13.5,
+    "player10": 7.8
+  },
+  {
+    "rank": 119,
+    "hand": "85s",
+    "player2": 44.8,
+    "player6": 16.3,
+    "player10": 10.9
+  },
+  {
+    "rank": 120,
+    "hand": "T2s",
+    "player2": 44.7,
+    "player6": 14.8,
+    "player10": 9.7
+  },
+  {
+    "rank": 121,
+    "hand": "T5o",
+    "player2": 44.2,
+    "player6": 11.9,
+    "player10": 6.4
+  },
+  {
+    "rank": 122,
+    "hand": "J2o",
+    "player2": 44.0,
+    "player6": 11.3,
+    "player10": 6.2
+  },
+  {
+    "rank": 123,
+    "hand": "94s",
+    "player2": 43.8,
+    "player6": 14.6,
+    "player10": 9.4
+  },
+  {
+    "rank": 124,
+    "hand": "75s",
+    "player2": 43.8,
+    "player6": 16.7,
+    "player10": 11.4
+  },
+  {
+    "rank": 125,
+    "hand": "86o",
+    "player2": 43.6,
+    "player6": 13.9,
+    "player10": 8.3
+  },
+  {
+    "rank": 126,
+    "hand": "T4o",
+    "player2": 43.4,
+    "player6": 11.5,
+    "player10": 6.2
+  },
+  {
+    "rank": 127,
+    "hand": "93s",
+    "player2": 43.2,
+    "player6": 14.3,
+    "player10": 9.2
+  },
+  {
+    "rank": 128,
+    "hand": "65s",
+    "player2": 43.2,
+    "player6": 17.0,
+    "player10": 11.9
+  },
+  {
+    "rank": 129,
+    "hand": "95o",
+    "player2": 42.9,
+    "player6": 12.0,
+    "player10": 6.6
+  },
+  {
+    "rank": 130,
+    "hand": "84s",
+    "player2": 42.7,
+    "player6": 14.8,
+    "player10": 9.8
+  },
+  {
+    "rank": 131,
+    "hand": "76o",
+    "player2": 42.7,
+    "player6": 14.2,
+    "player10": 8.8
+  },
+  {
+    "rank": 132,
+    "hand": "T3o",
+    "player2": 42.4,
+    "player6": 11.0,
+    "player10": 6.0
+  },
+  {
+    "rank": 133,
+    "hand": "92s",
+    "player2": 42.3,
+    "player6": 13.9,
+    "player10": 9.1
+  },
+  {
+    "rank": 134,
+    "hand": "74s",
+    "player2": 41.8,
+    "player6": 15.3,
+    "player10": 10.4
+  },
+  {
+    "rank": 135,
+    "hand": "85o",
+    "player2": 41.7,
+    "player6": 12.4,
+    "player10": 7.3
+  },
+  {
+    "rank": 136,
+    "hand": "T2o",
+    "player2": 41.5,
+    "player6": 10.6,
+    "player10": 5.8
+  },
+  {
+    "rank": 137,
+    "hand": "64s",
+    "player2": 41.4,
+    "player6": 15.9,
+    "player10": 11.1
+  },
+  {
+    "rank": 138,
+    "hand": "54s",
+    "player2": 41.1,
+    "player6": 16.5,
+    "player10": 11.7
+  },
+  {
+    "rank": 139,
+    "hand": "83s",
+    "player2": 40.8,
+    "player6": 13.6,
+    "player10": 8.9
+  },
+  {
+    "rank": 140,
+    "hand": "75o",
+    "player2": 40.8,
+    "player6": 12.8,
+    "player10": 7.9
+  },
+  {
+    "rank": 141,
+    "hand": "94o",
+    "player2": 40.7,
+    "player6": 10.5,
+    "player10": 5.6
+  },
+  {
+    "rank": 142,
+    "hand": "82s",
+    "player2": 40.3,
+    "player6": 13.3,
+    "player10": 8.8
+  },
+  {
+    "rank": 143,
+    "hand": "65o",
+    "player2": 40.1,
+    "player6": 13.3,
+    "player10": 8.5
+  },
+  {
+    "rank": 144,
+    "hand": "73s",
+    "player2": 40.0,
+    "player6": 14.0,
+    "player10": 9.3
+  },
+  {
+    "rank": 145,
+    "hand": "93o",
+    "player2": 39.9,
+    "player6": 10.1,
+    "player10": 5.4
+  },
+  {
+    "rank": 146,
+    "hand": "84o",
+    "player2": 39.6,
+    "player6": 10.8,
+    "player10": 6.1
+  },
+  {
+    "rank": 147,
+    "hand": "63s",
+    "player2": 39.4,
+    "player6": 14.5,
+    "player10": 10.0
+  },
+  {
+    "rank": 148,
+    "hand": "53s",
+    "player2": 39.3,
+    "player6": 15.2,
+    "player10": 10.8
+  },
+  {
+    "rank": 149,
+    "hand": "92o",
+    "player2": 38.9,
+    "player6": 9.6,
+    "player10": 5.2
+  },
+  {
+    "rank": 150,
+    "hand": "74o",
+    "player2": 38.6,
+    "player6": 11.4,
+    "player10": 6.8
+  },
+  {
+    "rank": 151,
+    "hand": "72s",
+    "player2": 38.1,
+    "player6": 12.8,
+    "player10": 8.5
+  },
+  {
+    "rank": 152,
+    "hand": "64o",
+    "player2": 38.0,
+    "player6": 12.0,
+    "player10": 7.6
+  },
+  {
+    "rank": 153,
+    "hand": "43s",
+    "player2": 38.0,
+    "player6": 14.7,
+    "player10": 10.3
+  },
+  {
+    "rank": 154,
+    "hand": "54o",
+    "player2": 37.9,
+    "player6": 12.6,
+    "player10": 8.2
+  },
+  {
+    "rank": 155,
+    "hand": "83o",
+    "player2": 37.5,
+    "player6": 9.5,
+    "player10": 5.1
+  },
+  {
+    "rank": 156,
+    "hand": "62s",
+    "player2": 37.5,
+    "player6": 13.3,
+    "player10": 9.1
+  },
+  {
+    "rank": 157,
+    "hand": "52s",
+    "player2": 37.5,
+    "player6": 14.0,
+    "player10": 9.8
+  },
+  {
+    "rank": 158,
+    "hand": "82o",
+    "player2": 36.8,
+    "player6": 9.1,
+    "player10": 4.9
+  },
+  {
+    "rank": 159,
+    "hand": "73o",
+    "player2": 36.6,
+    "player6": 9.9,
+    "player10": 5.7
+  },
+  {
+    "rank": 160,
+    "hand": "42s",
+    "player2": 36.3,
+    "player6": 13.7,
+    "player10": 9.6
+  },
+  {
+    "rank": 161,
+    "hand": "63o",
+    "player2": 35.9,
+    "player6": 10.6,
+    "player10": 6.5
+  },
+  {
+    "rank": 162,
+    "hand": "53o",
+    "player2": 35.8,
+    "player6": 11.4,
+    "player10": 7.3
+  },
+  {
+    "rank": 163,
+    "hand": "32s",
+    "player2": 35.1,
+    "player6": 13.0,
+    "player10": 9.2
+  },
+  {
+    "rank": 164,
+    "hand": "72o",
+    "player2": 34.6,
+    "player6": 8.6,
+    "player10": 4.8
+  },
+  {
+    "rank": 165,
+    "hand": "43o",
+    "player2": 34.4,
+    "player6": 10.7,
+    "player10": 6.8
+  },
+  {
+    "rank": 166,
+    "hand": "62o",
+    "player2": 34.0,
+    "player6": 9.1,
+    "player10": 5.4
+  },
+  {
+    "rank": 167,
+    "hand": "52o",
+    "player2": 33.9,
+    "player6": 10.0,
+    "player10": 6.2
+  },
+  {
+    "rank": 168,
+    "hand": "42o",
+    "player2": 32.5,
+    "player6": 9.5,
+    "player10": 6.0
+  },
+  {
+    "rank": 169,
+    "hand": "32o",
+    "player2": 31.2,
+    "player6": 8.9,
+    "player10": 5.6
+  }
+]

@@ -52,7 +52,9 @@ export const HandRankingList = ({ hand: myHand, results, onScroll }: Props) => {
                 size="sm"
               />
             </div>
-            <div className="text-center font-bold">{score}</div>
+            <div className="text-center font-bold">
+              {(score * 100).toFixed(2)}
+            </div>
 
             <div className="flex h-full flex-wrap gap-1 pl-2">
               {result

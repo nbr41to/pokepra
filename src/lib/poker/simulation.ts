@@ -65,7 +65,7 @@ function iterateSimulations(boardAndHand: string[], iterations: number) {
  * @params board
  * @param iterations シュミレーション回数 (最大10000)
  */
-async function iterateWinSimulations(
+function iterateWinSimulations(
   hands: string[][],
   board: string[],
   iterations = 1000,
