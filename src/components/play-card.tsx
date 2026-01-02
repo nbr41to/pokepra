@@ -6,9 +6,10 @@ type Props = {
   suit?: "s" | "h" | "d" | "c";
   rank?: string;
   size?: "sm" | "md";
+  className?: string;
 };
 
-export const PlayCard = ({ suit, rank, size = "md" }: Props) => {
+export const PlayCard = ({ suit, rank, size = "md", className }: Props) => {
   const reversed = !suit || !rank;
 
   const cardSizeClass =
@@ -28,6 +29,7 @@ export const PlayCard = ({ suit, rank, size = "md" }: Props) => {
         suit === "h" && "text-pink-400 dark:text-pink-600",
         suit === "d" && "text-orange-400 dark:text-orange-600",
         suit === "c" && "text-green-400 dark:text-green-600",
+        className,
       )}
     >
       {reversed ? (

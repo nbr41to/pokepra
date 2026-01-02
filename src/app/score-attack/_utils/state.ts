@@ -129,7 +129,6 @@ const useActionStore = create<Store>((set, get) => ({
     if (action === "fold") {
       set({
         preflop: action,
-        score: amount,
         stack: stack + amount,
       });
     } else {
@@ -138,7 +137,6 @@ const useActionStore = create<Store>((set, get) => ({
 
       set({
         preflop: action,
-        score: amount,
         stack: stack + amount,
         phase: "flop",
         board,
@@ -279,21 +277,23 @@ const useActionStore = create<Store>((set, get) => ({
 
   // hand strength をシミュレーションで計算するための試作
   startSimulation: async () => {
+    // 重い処理が入るので先に Web Worker に逃がす必要がある
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
     const timeStart = performance.now();
     console.log("startSimulation: start");
+
     const { board } = get();
     const allHands = getHandsByTiers(DEFAULT_TIER + 1, board);
 
-    const results = await Promise.all(
-      allHands.map(async (hand) => {
-        const result = await iterateSimulations([...board, ...hand], 100);
+    const results = allHands.map((hand) => {
+      const result = iterateSimulations([...board, ...hand], 100);
 
-        return {
-          hand,
-          result,
-        };
-      }),
-    );
+      return {
+        hand,
+        result,
+      };
+    });
 
     const ranking: {
       rank: number; // 約の強さ1〜9
