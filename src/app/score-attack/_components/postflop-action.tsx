@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { iterateWinSimulations } from "@/lib/poker/simulation";
-import { cn } from "@/lib/utils";
 import { getHandsByTiers } from "@/utils/dealer";
 import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
@@ -31,22 +30,21 @@ export const PostflopAction = ({ onAction }: Props) => {
     (phase === "river" && !!river);
 
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div className="flex w-fit gap-x-4 rounded-md border-2 border-green-400 bg-background/80 p-5 shadow-md">
-        <Button
-          size="lg"
-          className={cn("rounded-lg text-base shadow")}
-          disabled={disabled || loading}
-          onClick={handleOnAction}
-        >
-          Commit
-        </Button>
-      </div>
+    <div className="flex h-full flex-col justify-between p-5">
+      <Button
+        size="lg"
+        variant="outline"
+        className="h-16 rounded-lg text-base shadow"
+        disabled={disabled || loading}
+        onClick={handleOnAction}
+      >
+        Commit
+      </Button>
 
       {!loading && disabled && (
         <Button
           size="lg"
-          className="w-1/2 rounded-lg text-base shadow"
+          className="w-full rounded-lg text-base shadow"
           onClick={handleNext}
         >
           Next

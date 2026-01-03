@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useActionStore } from "../_utils/state";
 
 export const PreflopAction = () => {
@@ -10,20 +9,16 @@ export const PreflopAction = () => {
   };
 
   return (
-    <div className="flex h-full flex-col justify-between">
-      <div className="flex w-fit gap-x-4 rounded-md border-2 border-green-400 bg-background/80 p-5 shadow-md">
-        <Button
-          size="lg"
-          className={cn(
-            "rounded-lg text-base shadow disabled:opacity-70",
-            preflop === "open-raise" && "ring-4 ring-green-500 ring-offset-4",
-          )}
-          disabled={!!preflop}
-          onClick={() => preflopAction("open-raise")}
-        >
-          Open
-        </Button>
-      </div>
+    <div className="flex h-full flex-col justify-between p-5">
+      <Button
+        size="lg"
+        variant="outline"
+        className="h-16 rounded-lg text-base shadow"
+        disabled={!!preflop}
+        onClick={() => preflopAction("open-raise")}
+      >
+        Open
+      </Button>
 
       {!!preflop && (
         <Button

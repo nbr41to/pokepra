@@ -205,7 +205,7 @@ export const HandConfirmation = ({ hands, onOpenHand, onFold }: Props) => {
         </div>
       </div>
       {folded && (
-        <div className="absolute right-4 bottom-3 rounded-full border bg-gray-100 px-8 py-1 opacity-80">
+        <div className="absolute right-4 bottom-3 rounded-full border bg-background/30 px-8 py-1 text-foreground/70">
           Fold
         </div>
       )}

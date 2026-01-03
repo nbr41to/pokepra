@@ -39,7 +39,7 @@ export const ActionArea = () => {
         onFold={handleFoldAction}
       />
       {showedHand && (
-        <div className="absolute top-6 left-0 h-full w-1/2 p-5">
+        <div className="absolute top-0 left-0 h-full w-1/2 pt-6">
           <SelectAction onAction={handleOnPostflopAction} />
         </div>
       )}
