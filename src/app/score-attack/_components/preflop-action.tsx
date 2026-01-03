@@ -5,10 +5,6 @@ import { useActionStore } from "../_utils/state";
 export const PreflopAction = () => {
   const { preflop, preflopAction, switchNextPhase } = useActionStore();
 
-  const handleSetAnswer = (answer: "open-raise" | "fold") => {
-    preflopAction(answer);
-  };
-
   const handleNext = () => {
     switchNextPhase();
   };
@@ -23,28 +19,17 @@ export const PreflopAction = () => {
             preflop === "open-raise" && "ring-4 ring-green-500 ring-offset-4",
           )}
           disabled={!!preflop}
-          onClick={() => handleSetAnswer("open-raise")}
+          onClick={() => preflopAction("open-raise")}
         >
           Open
-        </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          className={cn(
-            "rounded-lg text-base shadow disabled:opacity-70",
-            preflop === "fold" && "ring-4 ring-green-500 ring-offset-4",
-          )}
-          disabled={!!preflop}
-          onClick={() => handleSetAnswer("fold")}
-        >
-          Fold
         </Button>
       </div>
 
       {!!preflop && (
         <Button
           size="lg"
-          className="w-1/2 rounded-lg text-base shadow"
+          className="z-10 w-full rounded-lg text-base shadow"
+          // z-10 は safari で ボタンが表示されなくなる問題の対応
           onClick={handleNext}
         >
           Next

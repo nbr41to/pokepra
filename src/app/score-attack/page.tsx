@@ -5,7 +5,7 @@ import { StackView } from "@/components/stack-view";
 import { ActionArea } from "./_components/action-area";
 import { CommunityBoard } from "./_components/community-board";
 import { ConfirmPosition } from "./_components/confirm-position";
-import { Result } from "./_components/result";
+import { ResultArea } from "./_components/result-area";
 import { useActionStore } from "./_utils/state";
 
 export default function Page() {
@@ -18,14 +18,14 @@ export default function Page() {
   }, [shuffleAndDeal, reset]);
 
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-between gap-y-8 p-2">
+    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-8 p-2 pb-10">
+      <CommunityBoard />
       <div className="flex flex-col items-end space-y-1">
         <ConfirmPosition />
         <StackView stack={stack} />
       </div>
-      <CommunityBoard />
       <div className="w-full space-y-2">
-        <Result />
+        <ResultArea />
         <ActionArea />
       </div>
     </div>

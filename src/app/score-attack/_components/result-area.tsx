@@ -6,17 +6,17 @@ import { cn } from "@/lib/utils";
 import { getHandString, judgeInRange } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 
-export const Result = () => {
+export const ResultArea = () => {
   const { phase, position, hand, board, score, preflop, flop } =
     useActionStore();
 
-  if (hand.length === 0 || !preflop) return null;
+  if (hand.length === 0 || !preflop) return <div className="h-12" />;
 
   const inRange = judgeInRange(hand, position);
   const correct = preflop === "open-raise" ? inRange : !inRange;
 
   return (
-    <div className="relative flex justify-center">
+    <div className="relative flex h-12 items-end justify-between pl-12">
       <div>
         {preflop && !flop ? (
           correct ? (

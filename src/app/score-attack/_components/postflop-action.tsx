@@ -8,25 +8,16 @@ import { getHandsByTiers } from "@/utils/dealer";
 import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 
-export const PostflopAction = () => {
+type Props = {
+  onAction: (answer: "commit" | "fold") => Promise<void>;
+};
+export const PostflopAction = ({ onAction }: Props) => {
   const [loading, setLoading] = useState(false);
-  const {
-    phase,
-    position,
-    board,
-    hand,
-    flop,
-    turn,
-    river,
-    postflopAction,
-    switchNextPhase,
-  } = useActionStore();
+  const { phase, flop, turn, river, switchNextPhase } = useActionStore();
 
-  const handleSetAnswer = async (answer: "commit" | "fold") => {
+  const handleOnAction = async () => {
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 200)); // アニメーション用のフレーム確保
-    const equity = await getEquity({ position, hand, board });
-    postflopAction(phase, answer, equity);
+    onAction("commit");
     setLoading(false);
   };
 
@@ -46,18 +37,9 @@ export const PostflopAction = () => {
           size="lg"
           className={cn("rounded-lg text-base shadow")}
           disabled={disabled || loading}
-          onClick={() => handleSetAnswer("commit")}
+          onClick={handleOnAction}
         >
           Commit
-        </Button>
-        <Button
-          size="lg"
-          variant="outline"
-          className={cn("rounded-lg text-base shadow")}
-          disabled={disabled || loading}
-          onClick={() => handleSetAnswer("fold")}
-        >
-          Fold
         </Button>
       </div>
 

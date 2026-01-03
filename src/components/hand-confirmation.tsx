@@ -11,17 +11,24 @@ import { PlayHandCard } from "@/components/play-hand-card";
 type Props = {
   hands: string[];
   onOpenHand: () => void;
+  onFold: () => void;
 };
 
-export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
+export const HandConfirmation = ({ hands, onOpenHand, onFold }: Props) => {
   const [hand1, hand2] = hands;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoCompleteThreshold = 3 / 5; // 60%
   const [flipProgress, setFlipProgress] = useState(0);
   const [locked, setLocked] = useState(false);
   const [shifted, setShifted] = useState(false);
+  const [folded, setFolded] = useState(false);
+  const [foldLift, setFoldLift] = useState(0);
   const [showGuide, setShowGuide] = useState(false);
-  const gestureRef = useRef<{ startX: number; startY: number } | null>(null);
+  const gestureRef = useRef<{
+    startX: number;
+    startY: number;
+    type: "flip" | "fold";
+  } | null>(null);
   const guideTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -31,6 +38,8 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
     setFlipProgress(0);
     setLocked(false);
     setShifted(false);
+    setFolded(false);
+    setFoldLift(0);
     gestureRef.current = null;
     if (guideTimerRef.current) clearTimeout(guideTimerRef.current);
     guideTimerRef.current = setTimeout(() => setShowGuide(true), 5000);
@@ -51,7 +60,7 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
     hideGuide();
-    if (locked || event.pointerType !== "touch") return;
+    if (event.pointerType !== "touch") return;
 
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -59,32 +68,65 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
+    // Allow fold gesture only after cards are opened
+    if (locked && flipProgress >= 1 && !folded) {
+      const foldZoneWidth = rect.width * 0.35;
+      const foldZoneHeight = rect.height * 0.35;
+      const isInFoldZone =
+        x >= rect.width - foldZoneWidth && y >= rect.height - foldZoneHeight;
+
+      if (isInFoldZone) {
+        gestureRef.current = { startX: x, startY: y, type: "fold" };
+        containerRef.current?.setPointerCapture(event.pointerId);
+      }
+      return;
+    }
+
+    if (locked) return;
+
     const startZoneWidth = rect.width * 0.35;
     const startZoneHeight = rect.height * 0.35;
     const isInStartZone =
       x <= startZoneWidth && y >= rect.height - startZoneHeight;
     if (!isInStartZone) return;
 
-    gestureRef.current = { startX: x, startY: y };
+    gestureRef.current = { startX: x, startY: y, type: "flip" };
     containerRef.current?.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
     hideGuide();
-    if (locked || !gestureRef.current) return;
+    if (!gestureRef.current) return;
+    if (gestureRef.current.type === "flip" && locked) return;
 
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
 
-    const x = event.clientX - rect.left;
-    const deltaX = x - gestureRef.current.startX;
-    const requiredDistance = rect.width * 0.6;
+    if (gestureRef.current.type === "flip") {
+      const x = event.clientX - rect.left;
+      const deltaX = x - gestureRef.current.startX;
+      const requiredDistance = rect.width * 0.6;
 
-    const next = clamp(deltaX / requiredDistance, 0, 1);
-    setFlipProgress(next);
-    if (next >= 1) {
-      setLocked(true);
-      onOpenHand();
+      const next = clamp(deltaX / requiredDistance, 0, 1);
+      setFlipProgress(next);
+      if (next >= 1) {
+        setLocked(true);
+        onOpenHand();
+      }
+      return;
+    }
+
+    const y = event.clientY - rect.top;
+    const deltaY = gestureRef.current.startY - y;
+    const requiredLift = rect.height * 0.3;
+    const lift = clamp(deltaY, 0, requiredLift);
+    setFoldLift(lift);
+    if (deltaY >= requiredLift && !folded) {
+      setFolded(true);
+      setFoldLift(requiredLift);
+      onFold();
+      containerRef.current?.releasePointerCapture(event.pointerId);
+      gestureRef.current = null;
     }
   };
 
@@ -93,6 +135,12 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
       containerRef.current?.releasePointerCapture(event.pointerId);
     }
     hideGuide();
+    if (gestureRef.current?.type === "fold") {
+      if (!folded) setFoldLift(0);
+      gestureRef.current = null;
+      return;
+    }
+
     if (!locked) {
       if (flipProgress >= autoCompleteThreshold) {
         setFlipProgress(1);
@@ -114,6 +162,9 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
   }, [locked, flipProgress]);
 
   if (hands.length !== 2) return null;
+  const shiftTransform = shifted
+    ? "translateX(7rem) translateY(1rem)"
+    : "translateX(0) translateY(0)";
 
   return (
     <div
@@ -133,11 +184,10 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
         </div>
       )}
       <div
-        className={`relative top-1 transform transition-transform duration-300 ${
-          shifted
-            ? "translate-x-28 translate-y-4"
-            : "translate-x-0 translate-y-0"
-        }`}
+        className="relative top-1 transform transition-transform duration-200"
+        style={{
+          transform: `${shiftTransform} translateY(${-foldLift}px)`,
+        }}
       >
         <div className="relative top-0 -left-8 z-10 rotate-6">
           <FlipCard
@@ -154,6 +204,11 @@ export const HandConfirmation = ({ hands, onOpenHand }: Props) => {
           />
         </div>
       </div>
+      {folded && (
+        <div className="absolute right-4 bottom-3 rounded-full border bg-gray-100 px-8 py-1 opacity-80">
+          Fold
+        </div>
+      )}
     </div>
   );
 };
