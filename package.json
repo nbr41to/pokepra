@@ -7,14 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "build:wasm": "cd rust-wasm && rustup target add wasm32-unknown-unknown && cargo build --release --target wasm32-unknown-unknown && mkdir -p ../public/wasm && cp target/wasm32-unknown-unknown/release/rust_wasm_demo.wasm ../public/wasm/rust_wasm_bg.wasm"
   },
   "dependencies": {
     "@agonyz/poker-odds-calculator": "^0.1.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-menubar": "^1.1.16",
+    "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",

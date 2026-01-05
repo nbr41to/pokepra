@@ -61,7 +61,7 @@ function getHandsByTiers(tiers: number, excludes: string[] = []) {
  * の組み合わせの2文字をランダムで返す
  * includeTies: TIERSの何番目までを含めるか (デフォルト: 0 -> 全て)
  */
-function genHands(includeTies = 0) {
+function genHands(includeTies = 0, excludes: string[] = []) {
   let [hand1, hand2]: string[] = [];
 
   do {
@@ -76,10 +76,13 @@ function genHands(includeTies = 0) {
         RANKS[getRandomInt(RANKS.length)] + SUITS[getRandomInt(SUITS.length)];
     }
   } while (
-    includeTies !== 0 &&
-    !TIERS.slice(0, includeTies - 1)
-      .flat()
-      .includes(getHandString([hand1, hand2]))
+    hand1 === hand2 ||
+    (includeTies !== 0 &&
+      !TIERS.slice(0, includeTies - 1)
+        .flat()
+        .includes(getHandString([hand1, hand2]))) ||
+    excludes.includes(hand1) ||
+    excludes.includes(hand2)
   ); // includeTiesが指定されている場合、該当するtierに含まれるまで繰り返す
 
   // rankの大きい順に並び替え
