@@ -102,7 +102,7 @@ export const InputCardPalette = ({
                 .trim(),
             );
           }
-          return grouped.filter(Boolean).join(`${handSeparator} `).trim();
+          return grouped.filter(Boolean).join(`${handSeparator}`).trim();
         } else {
           return updated.join(separator).trim();
         }
@@ -123,7 +123,10 @@ export const InputCardPalette = ({
   };
 
   return (
-    <div className="flex justify-center gap-x-1 p-2" id="input-card-palette">
+    <div
+      className="flex w-full justify-center gap-x-1 p-2"
+      id="input-card-palette"
+    >
       <div className="flex flex-col gap-y-1">
         {SUITS.map((suit) => (
           <InputSuitButton

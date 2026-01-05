@@ -451,10 +451,16 @@ async function simulateVsListWithRanks({
     .map((h) => h.trim())
     .filter(Boolean);
 
+  const zeroResults = labels.reduce((acc, label) => {
+    acc[label] = 0;
+    return acc;
+  }, {} as RankResults);
+
   const data: CombinedEntry[] = [];
   let heroWinsTotal = 0;
   let heroTiesTotal = 0;
   let heroPlaysTotal = 0;
+  let oppWinsTotal = 0;
   for (let i = 0; i < records; i += 1) {
     const base = i * 14;
     const card1 = decodeCard(out[base]);
@@ -472,6 +478,7 @@ async function simulateVsListWithRanks({
     }, {} as RankResults);
 
     const oppWins = Math.max(0, plays - heroWins - ties);
+    oppWinsTotal += oppWins;
     data.push({
       hand: handList[i] ?? `${card1} ${card2}`,
       count: plays,
@@ -480,6 +487,46 @@ async function simulateVsListWithRanks({
       results: resultsObject,
     });
   }
+
+  // derive hero wins from totals to avoid drift
+  heroWinsTotal = Math.max(
+    0,
+    heroPlaysTotal - oppWinsTotal - heroTiesTotal,
+  );
+
+  // best-effort hero rank distribution (separate rank sim, scaled to total plays)
+  let heroResults: RankResults = zeroResults;
+  try {
+    const rankSim = await simulateRankDistribution({
+      hands: hero,
+      board,
+      trials,
+      seed,
+      wasmUrl,
+    });
+    if (rankSim[0]) {
+      const multiplier = compareCount || 1;
+      heroResults = labels.reduce((acc, label) => {
+        acc[label] = (rankSim[0].results[label] ?? 0) * multiplier;
+        return acc;
+      }, {} as RankResults);
+    }
+  } catch {
+    // ignore and keep zeroResults
+  }
+
+  // add hero aggregate entry
+  data.push({
+    hand: hero.trim(),
+    count: heroPlaysTotal,
+    win: heroWinsTotal,
+    tie: heroTiesTotal,
+    results: heroResults,
+  });
+
+  data.sort(
+    (a, b) => (b.win + b.tie / 2) / b.count - (a.win + a.tie / 2) / a.count,
+  );
 
   const equity =
     heroPlaysTotal === 0

@@ -1,14 +1,16 @@
 "use client";
 
 import { ListX } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { Combo } from "@/components/combo";
 import { InputCardPalette } from "@/components/input-card-palette";
 import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import { getHandsByTiers } from "@/utils/dealer";
 
 export default function Page() {
   const [target, setTarget] = useState<null | "hero" | "board" | "compare">(
@@ -56,6 +58,24 @@ export default function Page() {
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // palette外クリックで閉じる
+  useEffect(() => {
+    if (!target) return;
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      const palette = document.getElementById("input-card-palette");
+      if (!palette) return;
+      const targetNode = e.target as Node | null;
+      if (targetNode && palette.contains(targetNode)) return;
+      setTarget(null);
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick);
+    };
+  }, [target]);
+
   const runSimulation = async () => {
     setTarget(null);
     setError(null);
@@ -93,7 +113,7 @@ export default function Page() {
               className={cn(
                 "flex h-16 w-full flex-wrap items-center gap-1 rounded-md border px-4 py-2",
                 target === "hero" &&
-                  "bg-green-200 ring-2 ring-green-400 ring-offset-2",
+                  "bg-green-200 ring-2 ring-green-400 ring-offset-2 ring-offset-background dark:bg-green-900 dark:ring-green-600",
               )}
               onClick={() => setTarget("hero")}
             >
@@ -126,7 +146,7 @@ export default function Page() {
               className={cn(
                 "flex h-16 w-full flex-wrap items-center gap-1 rounded-md border px-4 py-2",
                 target === "board" &&
-                  "bg-green-200 ring-2 ring-green-400 ring-offset-2",
+                  "bg-green-200 ring-2 ring-green-400 ring-offset-2 ring-offset-background dark:bg-green-900 dark:ring-green-600",
               )}
               onClick={() => {
                 setTarget("board");
@@ -155,13 +175,13 @@ export default function Page() {
         </div>
         <div className="space-y-3">
           <Label>compare</Label>
-          <div className="flex items-center gap-x-1">
+          <div className="relative flex items-center gap-x-1">
             <button
               type="button"
               className={cn(
-                "flex h-16 w-full flex-wrap items-center gap-1 rounded-md border px-4 py-2",
+                "flex h-16 w-full items-center gap-1 overflow-x-scroll rounded-md border px-4 py-2",
                 target === "compare" &&
-                  "bg-green-200 ring-2 ring-green-400 ring-offset-2",
+                  "bg-green-200 ring-2 ring-green-400 ring-offset-2 ring-offset-background dark:bg-green-900 dark:ring-green-600",
               )}
               onClick={() => {
                 setTarget("compare");
@@ -176,13 +196,14 @@ export default function Page() {
                         rank={card[0]}
                         suit={card[1] as "c" | "d" | "h" | "s"}
                         size="sm"
-                        className="w-8"
+                        className="w-8 shrink-0"
                       />
                     ))}
                     <span
                       className={cn(
                         "grid h-full place-content-end",
-                        hand.length === i + 1 && "hidden",
+                        compare.split(";").length === i + 1 && "hidden",
+                        hand.split(" ").length % 2 && "hidden",
                       )}
                     >
                       ,
@@ -200,6 +221,11 @@ export default function Page() {
             >
               <ListX size={32} />
             </Button>
+            {compare && (
+              <div className="absolute right-14 -bottom-6 text-xs">
+                ({compare.split("; ").length})
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -223,6 +249,20 @@ export default function Page() {
       >
         set test values
       </Button>
+      <Button
+        className="w-40"
+        size="lg"
+        onClick={() => {
+          const allHands = getHandsByTiers(6, [
+            ...hero.split(" "),
+            ...board.split(" "),
+          ]);
+          const newCompare = allHands.join("; ").replaceAll(",", " ");
+          setCompare(newCompare);
+        }}
+      >
+        hand range of btn
+      </Button>
 
       {error && (
         <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
@@ -231,31 +271,62 @@ export default function Page() {
       )}
 
       {result && (
-        <ScrollArea className="grow">
-          <div>{(result.equity * 100).toFixed(2)}%</div>
-          {result.data.map(({ hand, win, tie, count, results }) => {
+        <div className="space-y-1">
+          <div>{result.data.length} combos</div>
+          {result.data.map(({ hand, win, tie, count, results }, index) => {
             const equity = ((win + tie / 2) / count) * 100;
 
             return (
-              <div key={hand} className="mt-4">
-                <div>
-                  {equity.toFixed(2)}% ({win} Wins, {tie} Ties, {count} Plays)
+              <div
+                key={hand}
+                className={cn(
+                  "px-2 py-1",
+                  result.hand === hand && "bg-orange-200 dark:bg-orange-900",
+                )}
+              >
+                <div className="flex items-center gap-x-4">
+                  <div>
+                    {index + 1}.
+                    <span className="text-xs">
+                      ({(((index + 1) / result.data.length) * 100).toFixed(1)}%)
+                    </span>
+                  </div>
+                  <Combo hand={hand.split(" ")} />
+                  <div className="text-lg/[1]">
+                    {equity.toFixed(2)}%
+                    <br />
+                    <p className="text-sm">
+                      (win: {win}, tie: {tie}, lose: {count - win - tie})
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mb-2 font-bold">Hand: {hand}</div>
-                <div className="flex flex-wrap gap-4">
-                  {Object.keys(results).map((handName) => {
+                <div className="flex flex-wrap gap-1">
+                  {Object.keys(results).map((name) => {
                     const probability = (
-                      (results[handName as keyof typeof results] / count) *
+                      (results[name as keyof typeof results] / count) *
                       100
-                    ).toFixed(2);
+                    ).toFixed(1);
+                    const colorClass =
+                      Number(probability) >= 80
+                        ? "bg-green-600 dark:bg-green-950"
+                        : Number(probability) >= 60
+                          ? "bg-green-500 dark:bg-green-900"
+                          : Number(probability) >= 40
+                            ? "bg-green-400 dark:bg-green-800"
+                            : "bg-green-200 dark:bg-green-700";
 
                     return (
                       <div
-                        key={handName}
-                        className="rounded-md border border-border/60 bg-background/60 p-3 shadow-sm"
+                        key={name}
+                        className="relative z-10 flex h-fit w-18 justify-between gap-x-2 overflow-hidden rounded-xs border bg-background px-1 py-px text-xs"
                       >
-                        {handName}: {probability}%
+                        <div>{getShortHandName(name)}</div>
+                        <div>{probability}%</div>
+                        <div
+                          className={`${colorClass} absolute top-0 left-0 -z-10 h-full`}
+                          style={{ width: `${probability}%` }}
+                        />
                       </div>
                     );
                   })}
@@ -263,7 +334,7 @@ export default function Page() {
               </div>
             );
           })}
-        </ScrollArea>
+        </div>
       )}
 
       {target && (
