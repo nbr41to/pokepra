@@ -71,6 +71,15 @@ describe("ディーラー関連ユーティリティ", () => {
     }
   });
 
+  it("genHands は excludes に含まれるカードを返さない", () => {
+    const excludes = ["As", "Kd"];
+    for (let i = 0; i < 200; i += 1) {
+      const hand = genHands(0, excludes);
+      expect(hand).not.toContain(excludes[0]);
+      expect(hand).not.toContain(excludes[1]);
+    }
+  });
+
   it("getHandsByTiers は指定Tierまでのハンドのみ返す", () => {
     const tierCount = 1;
     const allowed = new Set(TIERS.slice(0, tierCount).flat());

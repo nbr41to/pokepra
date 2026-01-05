@@ -46,6 +46,8 @@ function getShortHandName(handName: string) {
   switch (handName) {
     case "High Card":
       return "HC";
+    case "One Pair":
+      return "1P";
     case "Pair":
       return "1P";
     case "Two Pair":
