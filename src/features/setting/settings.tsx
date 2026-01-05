@@ -21,12 +21,17 @@ export const Setting = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent side="bottom" className="ml-2">
+      <DropdownMenuContent side="bottom" className="mr-2">
+        <DropdownMenuLabel className="text-xs opacity-60">
+          Menu
+        </DropdownMenuLabel>
         <DropdownMenuItem asChild>
-          <Link href="/">Go to Home</Link>
+          <Link href="/">Back to Home</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuLabel>My Settings</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-xs opacity-60">
+          My Settings
+        </DropdownMenuLabel>
         <DropdownMenuGroup>
           <SwitchMode />
         </DropdownMenuGroup>

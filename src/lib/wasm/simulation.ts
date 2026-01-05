@@ -4,18 +4,6 @@ const HEAP_START = 1024; // simple bump allocator starting offset
 
 type WasmExports = {
   memory: WebAssembly.Memory;
-  simulate_vs_list: (
-    heroPtr: number,
-    heroLen: number,
-    boardPtr: number,
-    boardLen: number,
-    comparePtr: number,
-    compareLen: number,
-    trials: number,
-    seed: bigint,
-    outPtr: number,
-    outLen: number,
-  ) => number;
   simulate_vs_list_with_ranks?: (
     heroPtr: number,
     heroLen: number,
@@ -28,32 +16,9 @@ type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
-  simulate_rank_distribution?: (
-    handsPtr: number,
-    handsLen: number,
-    boardPtr: number,
-    boardLen: number,
-    trials: number,
-    seed: bigint,
-    outPtr: number,
-    outLen: number,
-  ) => number;
 };
 
-type WasmOpponentResult = {
-  hand: string;
-  wins: number; // opponent wins
-  ties: number;
-  plays: number;
-};
-
-type WasmSimPayload = {
-  equity: number;
-  hero: { wins: number; ties: number; plays: number };
-  results: WasmOpponentResult[];
-};
-
-export type RankResults = {
+type RankResults = {
   "High Card": number;
   "One Pair": number;
   "Two Pair": number;
@@ -65,13 +30,7 @@ export type RankResults = {
   "Straight Flush": number;
 };
 
-export type RankPayload = {
-  hand: string;
-  count: number;
-  results: RankResults;
-}[];
-
-export type CombinedEntry = {
+type CombinedEntry = {
   hand: string;
   count: number;
   win: number;
@@ -79,8 +38,8 @@ export type CombinedEntry = {
   results: RankResults;
 };
 
-export type CombinedPayload = {
-  hand: string; // hero hand
+type CombinedPayload = {
+  hand: string;
   equity: number;
   data: CombinedEntry[];
 };
@@ -122,232 +81,6 @@ function ensureCapacity(memory: WebAssembly.Memory, needed: number) {
   const extra = needed - current;
   const pages = Math.ceil(extra / PAGE_SIZE);
   memory.grow(pages);
-}
-
-async function simulateVsList({
-  hero,
-  board,
-  compare,
-  trials,
-  seed = 123456789n,
-  wasmUrl = DEFAULT_WASM_URL,
-}: {
-  hero: string;
-  board: string;
-  compare: string;
-  trials: number;
-  seed?: bigint;
-  wasmUrl?: string;
-}): Promise<WasmSimPayload> {
-  const { exports, memory } = await loadWasm(wasmUrl);
-
-  // Simple bump allocator per call
-  let heap = HEAP_START;
-  const viewU8 = () => new Uint8Array(memory.buffer);
-  const align4 = () => {
-    const mod = heap & 3;
-    if (mod !== 0) {
-      heap += 4 - mod;
-    }
-  };
-  const writeString = (text: string) => {
-    const bytes = encoder.encode(text);
-    const ptr = heap;
-    heap += bytes.length;
-    ensureCapacity(memory, heap);
-    viewU8().set(bytes, ptr);
-    return { ptr, len: bytes.length };
-  };
-
-  // Inputs
-  const heroBuf = writeString(hero.trim());
-  const boardBuf = writeString(board.trim());
-  const compareBuf = writeString(compare.trim());
-
-  const compareCount = compare
-    .split(";")
-    .map((h) => h.trim())
-    .filter(Boolean).length;
-  if (compareCount === 0) {
-    throw new Error("No compare hands provided");
-  }
-
-  const outLen = (compareCount + 1) * 5; // +1 hero aggregate
-  align4();
-  const outPtr = heap;
-  heap += outLen * 4;
-  ensureCapacity(memory, heap);
-
-  const rc = exports.simulate_vs_list(
-    heroBuf.ptr,
-    heroBuf.len,
-    boardBuf.ptr,
-    boardBuf.len,
-    compareBuf.ptr,
-    compareBuf.len,
-    trials,
-    seed,
-    outPtr,
-    outLen,
-  );
-
-  if (rc < 0) {
-    throw new Error(`simulate_vs_list failed with code ${rc}`);
-  }
-
-  const records = rc;
-  if (records === 0) {
-    throw new Error("No records returned from WASM");
-  }
-
-  const out = new Uint32Array(memory.buffer, outPtr, records * 5);
-  const heroIdx = records - 1;
-
-  const heroTotal = {
-    wins: out[heroIdx * 5 + 2],
-    ties: out[heroIdx * 5 + 3],
-    plays: out[heroIdx * 5 + 4],
-  };
-
-  const decodeCard = (v: number) => {
-    if (v === 0xffffffff) return "??";
-    const rank = v >> 2;
-    const suit = v & 0b11;
-    const rankChar = "23456789TJQKA"[rank] ?? "?";
-    const suitChar = ["s", "h", "d", "c"][suit] ?? "?";
-    return `${rankChar}${suitChar}`;
-  };
-
-  const results: WasmOpponentResult[] = Array.from(
-    { length: records - 1 },
-    (_, i) => {
-      const base = i * 5;
-      const heroWins = out[base + 2];
-      const ties = out[base + 3];
-      const plays = out[base + 4];
-      const oppWins = Math.max(0, plays - heroWins - ties);
-      return {
-        hand: `${decodeCard(out[base])} ${decodeCard(out[base + 1])}`,
-        wins: oppWins,
-        ties,
-        plays,
-      };
-    },
-  );
-
-  const equity =
-    heroTotal.plays === 0
-      ? 0
-      : (heroTotal.wins + heroTotal.ties * 0.5) / heroTotal.plays;
-
-  return {
-    equity,
-    hero: heroTotal,
-    results,
-  };
-}
-
-async function simulateRankDistribution({
-  hands,
-  board,
-  trials,
-  seed = 123456789n,
-  wasmUrl = DEFAULT_WASM_URL,
-}: {
-  hands: string;
-  board: string;
-  trials: number;
-  seed?: bigint;
-  wasmUrl?: string;
-}): Promise<RankPayload> {
-  const { exports, memory } = await loadWasm(wasmUrl);
-  if (typeof exports.simulate_rank_distribution !== "function") {
-    throw new Error("WASM export 'simulate_rank_distribution' not found");
-  }
-
-  let heap = HEAP_START;
-  const viewU8 = () => new Uint8Array(memory.buffer);
-  const align4 = () => {
-    const mod = heap & 3;
-    if (mod !== 0) {
-      heap += 4 - mod;
-    }
-  };
-  const writeString = (text: string) => {
-    const bytes = encoder.encode(text);
-    const ptr = heap;
-    heap += bytes.length;
-    ensureCapacity(memory, heap);
-    viewU8().set(bytes, ptr);
-    return { ptr, len: bytes.length };
-  };
-
-  const handsBuf = writeString(hands.trim());
-  const boardBuf = writeString(board.trim());
-
-  const handCount = hands
-    .split(";")
-    .map((h) => h.trim())
-    .filter(Boolean).length;
-  if (handCount === 0) {
-    throw new Error("No hands provided");
-  }
-
-  const outLen = handCount * 9;
-  align4();
-  const outPtr = heap;
-  heap += outLen * 4;
-  ensureCapacity(memory, heap);
-
-  const rc = exports.simulate_rank_distribution(
-    handsBuf.ptr,
-    handsBuf.len,
-    boardBuf.ptr,
-    boardBuf.len,
-    trials,
-    seed,
-    outPtr,
-    outLen,
-  );
-  if (rc !== 0) {
-    throw new Error(`simulate_rank_distribution failed with code ${rc}`);
-  }
-
-  const out = new Uint32Array(memory.buffer, outPtr, outLen);
-  const labels: (keyof RankResults)[] = [
-    "High Card",
-    "One Pair",
-    "Two Pair",
-    "Three of a Kind",
-    "Straight",
-    "Flush",
-    "Full House",
-    "Four of a Kind",
-    "Straight Flush",
-  ];
-
-  const handList = hands
-    .split(";")
-    .map((h) => h.trim())
-    .filter(Boolean);
-
-  const result: RankPayload = [];
-  for (let i = 0; i < handCount; i += 1) {
-    const base = i * 9;
-    const counts = Array.from(out.slice(base, base + 9));
-    const count = counts.reduce((a, b) => a + b, 0);
-    const resultsObject = labels.reduce((acc, label, idx) => {
-      acc[label] = counts[idx] ?? 0;
-      return acc;
-    }, {} as RankResults);
-    result.push({
-      hand: handList[i] ?? "",
-      count,
-      results: resultsObject,
-    });
-  }
-
-  return result;
 }
 
 async function simulateVsListWithRanks({
@@ -399,7 +132,7 @@ async function simulateVsListWithRanks({
     throw new Error("No compare hands provided");
   }
 
-  const outLen = compareCount * 14; // per record: 2 cards + wins + ties + plays + 9 ranks
+  const outLen = (compareCount + 1) * 14; // opponents + hero aggregate
   align4();
   const outPtr = heap;
   heap += outLen * 4;
@@ -451,87 +184,59 @@ async function simulateVsListWithRanks({
     .map((h) => h.trim())
     .filter(Boolean);
 
-  const zeroResults = labels.reduce((acc, label) => {
-    acc[label] = 0;
-    return acc;
-  }, {} as RankResults);
-
   const data: CombinedEntry[] = [];
-  let heroWinsTotal = 0;
-  let heroTiesTotal = 0;
-  let heroPlaysTotal = 0;
-  let oppWinsTotal = 0;
+  let heroEntry: CombinedEntry | null = null;
+
   for (let i = 0; i < records; i += 1) {
     const base = i * 14;
-    const card1 = decodeCard(out[base]);
-    const card2 = decodeCard(out[base + 1]);
+    const raw1 = out[base];
+    const raw2 = out[base + 1];
+    const card1 = decodeCard(raw1);
+    const card2 = decodeCard(raw2);
     const heroWins = out[base + 2];
     const ties = out[base + 3];
     const plays = out[base + 4];
-    heroWinsTotal += heroWins;
-    heroTiesTotal += ties;
-    heroPlaysTotal += plays;
     const rankCounts = Array.from(out.slice(base + 5, base + 14));
     const resultsObject = labels.reduce((acc, label, idx) => {
       acc[label] = rankCounts[idx] ?? 0;
       return acc;
     }, {} as RankResults);
 
-    const oppWins = Math.max(0, plays - heroWins - ties);
-    oppWinsTotal += oppWins;
-    data.push({
-      hand: handList[i] ?? `${card1} ${card2}`,
-      count: plays,
-      win: oppWins,
-      tie: ties,
-      results: resultsObject,
-    });
-  }
-
-  // derive hero wins from totals to avoid drift
-  heroWinsTotal = Math.max(
-    0,
-    heroPlaysTotal - oppWinsTotal - heroTiesTotal,
-  );
-
-  // best-effort hero rank distribution (separate rank sim, scaled to total plays)
-  let heroResults: RankResults = zeroResults;
-  try {
-    const rankSim = await simulateRankDistribution({
-      hands: hero,
-      board,
-      trials,
-      seed,
-      wasmUrl,
-    });
-    if (rankSim[0]) {
-      const multiplier = compareCount || 1;
-      heroResults = labels.reduce((acc, label) => {
-        acc[label] = (rankSim[0].results[label] ?? 0) * multiplier;
-        return acc;
-      }, {} as RankResults);
+    const isHero = raw1 === 0xffffffff && raw2 === 0xffffffff;
+    if (isHero) {
+      heroEntry = {
+        hand: hero.trim(),
+        count: plays,
+        win: heroWins,
+        tie: ties,
+        results: resultsObject,
+      };
+    } else {
+      const oppWins = Math.max(0, plays - heroWins - ties);
+      data.push({
+        hand: handList[i] ?? `${card1} ${card2}`,
+        count: plays,
+        win: oppWins,
+        tie: ties,
+        results: resultsObject,
+      });
     }
-  } catch {
-    // ignore and keep zeroResults
   }
 
-  // add hero aggregate entry
-  data.push({
-    hand: hero.trim(),
-    count: heroPlaysTotal,
-    win: heroWinsTotal,
-    tie: heroTiesTotal,
-    results: heroResults,
-  });
+  if (!heroEntry) {
+    throw new Error("Hero aggregate record missing from WASM output");
+  }
+
+  data.push(heroEntry);
 
   data.sort(
     (a, b) => (b.win + b.tie / 2) / b.count - (a.win + a.tie / 2) / a.count,
   );
 
   const equity =
-    heroPlaysTotal === 0
+    heroEntry.count === 0
       ? 0
-      : (heroWinsTotal + heroTiesTotal * 0.5) / heroPlaysTotal;
+      : (heroEntry.win + heroEntry.tie * 0.5) / heroEntry.count;
 
   return {
     hand: hero.trim(),
@@ -540,5 +245,5 @@ async function simulateVsListWithRanks({
   };
 }
 
-export type { WasmOpponentResult, WasmSimPayload };
-export { simulateVsList, simulateRankDistribution, simulateVsListWithRanks };
+export { simulateVsListWithRanks };
+export type { CombinedPayload };

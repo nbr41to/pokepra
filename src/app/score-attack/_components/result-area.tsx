@@ -41,6 +41,7 @@ export const ResultArea = () => {
       <div className="absolute right-0 bottom-0 flex items-center gap-2">
         <ConfirmRankingDrawer
           className={cn(board.length < 3 && "hidden")}
+          position={position}
           hand={hand}
           board={board}
         />

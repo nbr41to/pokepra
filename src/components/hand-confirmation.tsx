@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowBigDownDash } from "lucide-react";
+import { ArrowBigUpDash } from "lucide-react";
 import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { PlayHandCard } from "@/components/play-hand-card";
@@ -11,10 +11,16 @@ import { PlayHandCard } from "@/components/play-hand-card";
 type Props = {
   hands: string[];
   onOpenHand: () => void;
+  disabledFold?: boolean;
   onFold: () => void;
 };
 
-export const HandConfirmation = ({ hands, onOpenHand, onFold }: Props) => {
+export const HandConfirmation = ({
+  hands,
+  onOpenHand,
+  disabledFold = false, // TODO: fold機能を無効化するオプション
+  onFold,
+}: Props) => {
   const [hand1, hand2] = hands;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoCompleteThreshold = 3 / 5; // 60%
@@ -84,8 +90,8 @@ export const HandConfirmation = ({ hands, onOpenHand, onFold }: Props) => {
 
     if (locked) return;
 
-    const startZoneWidth = rect.width * 0.35;
-    const startZoneHeight = rect.height * 0.35;
+    const startZoneWidth = rect.width * 0.6;
+    const startZoneHeight = rect.height * 0.6;
     const isInStartZone =
       x <= startZoneWidth && y >= rect.height - startZoneHeight;
     if (!isInStartZone) return;
@@ -176,13 +182,22 @@ export const HandConfirmation = ({ hands, onOpenHand, onFold }: Props) => {
       onPointerCancel={resetGesture}
     >
       {!locked && showGuide && (
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-[35%] w-[35%] animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
-          <ArrowBigDownDash className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-240 text-green-500" />
-          <span className="absolute bottom-1 left-2 font-montserrat text-green-500 text-xs">
+        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-1/2 w-1/2 animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
+          <ArrowBigUpDash
+            size={40}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-240 text-green-500"
+          />
+          <span className="absolute bottom-1 left-2 font-montserrat text-green-500 text-sm">
             Swipe start
           </span>
         </div>
       )}
+      {/* {locked && !disabledFold && (
+        <div className="pointer-events-none absolute top-16 right-20 z-10 flex h-16 flex-col justify-center gap-y-2">
+          <span className="text-gray-400 text-sm">Fold</span>
+          <ArrowBigUpDash size={32} className="animate-bounce text-gray-400" />
+        </div>
+      )} */}
       <div
         className="relative top-1 transform transition-transform duration-200"
         style={{

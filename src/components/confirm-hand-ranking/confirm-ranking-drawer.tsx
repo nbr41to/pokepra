@@ -1,6 +1,7 @@
 "use client";
 
 import { Crown } from "lucide-react";
+import { Suspense } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -10,13 +11,18 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import { getHandsByTiers } from "@/utils/dealer";
+import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { PlayCard } from "../play-card";
 import { Button } from "../ui/button";
 import { ConfirmRanking } from "./confirm-ranking";
+import { ConfirmRankingSkeleton } from "./confirm-ranking.skeleton";
 
 type Props = {
   hand: string[];
   board: string[];
+  position: number;
   disabled?: boolean;
   className?: string;
 };
@@ -24,9 +30,22 @@ type Props = {
 export const ConfirmRankingDrawer = ({
   hand,
   board,
+  position,
   disabled = false,
   className,
 }: Props) => {
+  const equityRanksPromise = simulateVsListWithRanks({
+    hero: hand.join(" "),
+    board: board.join(" "),
+    compare: getHandsByTiers(getTierIndexByPosition(position), [
+      ...hand,
+      ...board,
+    ])
+      .join("; ")
+      .replaceAll(",", " "),
+    trials: 10,
+  });
+
   return (
     <Drawer direction="top">
       <DrawerTrigger
@@ -67,7 +86,9 @@ export const ConfirmRankingDrawer = ({
           </div>
         </DrawerHeader>
 
-        <ConfirmRanking hand={hand} board={board} />
+        <Suspense fallback={<ConfirmRankingSkeleton />}>
+          <ConfirmRanking promise={equityRanksPromise} />
+        </Suspense>
       </DrawerContent>
     </Drawer>
   );

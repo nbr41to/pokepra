@@ -295,86 +295,6 @@ fn shuffle_slice(deck: &mut [Card], rng: &mut Lcg64) {
   }
 }
 
-pub fn simulate_equity(
-  hands_str: &str,
-  board_str: &str,
-  trials: u32,
-  seed: u64,
-) -> Result<Vec<(u32, u32)>, String> {
-  let hands = parse_hands(hands_str).ok_or("failed to parse hands")?;
-  let board = parse_board(board_str).ok_or("failed to parse board")?;
-  if board.len() > 5 {
-    return Err("board must be <=5 cards".into());
-  }
-
-  let mut used = Vec::new();
-  for h in &hands {
-    used.push(h[0]);
-    used.push(h[1]);
-  }
-  used.extend(board.iter().copied());
-  // dedup check
-  {
-    let mut seen = Vec::new();
-    for c in &used {
-      if seen.iter().any(|x: &Card| x.rank == c.rank && x.suit == c.suit) {
-        return Err("duplicate cards detected".into());
-      }
-      seen.push(*c);
-    }
-  }
-
-  let mut wins = vec![0u32; hands.len()];
-  let mut ties = vec![0u32; hands.len()];
-
-  let mut rng = Lcg64::new(seed);
-  for _ in 0..trials.max(1) {
-    let mut deck = build_deck(&used);
-    shuffle_slice(&mut deck, &mut rng);
-
-    let mut full_board = board.clone();
-    for i in 0..(5 - board.len()) {
-      full_board.push(deck[i]);
-    }
-
-    let mut scores = Vec::with_capacity(hands.len());
-    for hand in &hands {
-      let mut cards = Vec::with_capacity(7);
-      cards.extend_from_slice(hand);
-      cards.extend_from_slice(&full_board);
-      let score = best_of(&cards);
-      scores.push(score);
-    }
-
-    // determine winner(s)
-    let mut best = scores[0].encoded;
-    for s in &scores[1..] {
-      if s.encoded > best {
-        best = s.encoded;
-      }
-    }
-    let mut winners = Vec::new();
-    for (i, s) in scores.iter().enumerate() {
-      if s.encoded == best {
-        winners.push(i);
-      }
-    }
-    if winners.len() == 1 {
-      wins[winners[0]] += 1;
-    } else {
-      for w in winners {
-        ties[w] += 1;
-      }
-    }
-  }
-
-  Ok(wins.into_iter().zip(ties.into_iter()).collect())
-}
-
-pub fn compare_scores(a: u32, b: u32) -> Ordering {
-  a.cmp(&b)
-}
-
 fn encode_card(c: Card) -> u32 {
   ((c.rank as u32) << 2) | (c.suit as u32)
 }
@@ -384,260 +304,6 @@ fn decode_hand_pair(hand: &[Card; 2]) -> (u32, u32) {
     core::cmp::min(encode_card(hand[0]), encode_card(hand[1])),
     core::cmp::max(encode_card(hand[0]), encode_card(hand[1])),
   )
-}
-
-/// Hero vs random opponent sampling:
-/// - hero_hand: 2 cards string
-/// - board: 0-5 cards
-/// - trials: number of simulations
-/// Returns Vec of (opponent_card1, opponent_card2, wins, ties, plays)
-pub fn simulate_vs_random_opponents(
-  hero_hand_str: &str,
-  board_str: &str,
-  trials: u32,
-  seed: u64,
-) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
-  let hero_tokens: Vec<String> = if hero_hand_str.contains(' ') {
-    hero_hand_str
-      .split_whitespace()
-      .map(|s| s.to_string())
-      .collect()
-  } else {
-    hero_hand_str
-      .as_bytes()
-      .chunks(2)
-      .map(|c| String::from_utf8_lossy(c).to_string())
-      .collect()
-  };
-  if hero_tokens.len() != 2 {
-    return Err("hero hand must have 2 cards".into());
-  }
-  let hero_hand = [
-    parse_card(&hero_tokens[0]).ok_or("failed to parse hero card1")?,
-    parse_card(&hero_tokens[1]).ok_or("failed to parse hero card2")?,
-  ];
-
-  let board = parse_board(board_str).ok_or("failed to parse board")?;
-  if board.len() > 5 {
-    return Err("board must be <=5 cards".into());
-  }
-
-  let mut used = Vec::new();
-  used.push(hero_hand[0]);
-  used.push(hero_hand[1]);
-  used.extend(board.iter().copied());
-  {
-    let mut seen = Vec::new();
-    for c in &used {
-      if seen.iter().any(|x: &Card| x.rank == c.rank && x.suit == c.suit) {
-        return Err("duplicate cards detected".into());
-      }
-      seen.push(*c);
-    }
-  }
-
-  let mut rng = Lcg64::new(seed);
-  let mut stats: HashMap<(u32, u32), (u32, u32, u32)> = HashMap::new(); // key -> (wins, ties, plays)
-
-  for _ in 0..trials.max(1) {
-    let mut deck = build_deck(&used);
-    shuffle_slice(&mut deck, &mut rng);
-
-    // opponent hand: first two cards
-    let opp_hand = [deck[0], deck[1]];
-    let key = decode_hand_pair(&opp_hand);
-
-    // fill board to 5
-    let mut full_board = board.clone();
-    let needed = 5 - board.len();
-    for i in 0..needed {
-      full_board.push(deck[2 + i]);
-    }
-
-    // evaluate hero
-    let mut hero_cards = Vec::with_capacity(7);
-    hero_cards.extend_from_slice(&hero_hand);
-    hero_cards.extend_from_slice(&full_board);
-    let hero_score = best_of(&hero_cards);
-
-    // evaluate opp
-    let mut opp_cards = Vec::with_capacity(7);
-    opp_cards.extend_from_slice(&opp_hand);
-    opp_cards.extend_from_slice(&full_board);
-    let opp_score = best_of(&opp_cards);
-
-    let entry = stats.entry(key).or_insert((0, 0, 0));
-    entry.2 += 1; // plays
-    match hero_score.encoded.cmp(&opp_score.encoded) {
-      Ordering::Greater => entry.0 += 1, // hero win
-      Ordering::Equal => entry.1 += 1,   // tie
-      Ordering::Less => {}
-    }
-  }
-
-  let mut out = Vec::with_capacity(stats.len());
-  for (k, v) in stats {
-    out.push((k.0, k.1, v.0, v.1, v.2));
-  }
-  Ok(out)
-}
-
-/// Hero vs provided opponent list (heads-up vs each), board may be partial, Monte Carlo over missing board cards.
-/// Returns Vec of (oppC1, oppC2, hero_wins, ties, plays).
-pub fn simulate_vs_list(
-  hero_hand_str: &str,
-  board_str: &str,
-  compare_list: &str,
-  trials: u32,
-  seed: u64,
-) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
-  let hero_tokens: Vec<String> = if hero_hand_str.contains(' ') {
-    hero_hand_str
-      .split_whitespace()
-      .map(|s| s.to_string())
-      .collect()
-  } else {
-    hero_hand_str
-      .as_bytes()
-      .chunks(2)
-      .map(|c| String::from_utf8_lossy(c).to_string())
-      .collect()
-  };
-  if hero_tokens.len() != 2 {
-    return Err("hero hand must have 2 cards".into());
-  }
-  let hero_hand = [
-    parse_card(&hero_tokens[0]).ok_or("failed to parse hero card1")?,
-    parse_card(&hero_tokens[1]).ok_or("failed to parse hero card2")?,
-  ];
-
-  let board = parse_board(board_str).ok_or("failed to parse board")?;
-  if board.len() > 5 {
-    return Err("board must be <=5 cards".into());
-  }
-
-  // parse compare hands
-  let mut opponents: Vec<[Card; 2]> = Vec::new();
-  for raw in compare_list.split(';') {
-    if raw.trim().is_empty() {
-      continue;
-    }
-    let tokens: Vec<String> = if raw.contains(' ') {
-      raw.split_whitespace().map(|s| s.to_string()).collect()
-    } else {
-      raw.as_bytes()
-        .chunks(2)
-        .map(|c| String::from_utf8_lossy(c).to_string())
-        .collect()
-    };
-    if tokens.len() != 2 {
-      return Err("each compare hand must have 2 cards".into());
-    }
-    let c1 = parse_card(&tokens[0]).ok_or("failed to parse compare card1")?;
-    let c2 = parse_card(&tokens[1]).ok_or("failed to parse compare card2")?;
-    opponents.push([c1, c2]);
-  }
-  if opponents.is_empty() {
-    return Err("no compare hands provided".into());
-  }
-
-  // collect used cards (hero + board + opponents) and check duplicates
-  // hero + board duplicates are not allowed
-  {
-    let mut seen = Vec::new();
-    let mut check = Vec::new();
-    check.push(hero_hand[0]);
-    check.push(hero_hand[1]);
-    check.extend(board.iter().copied());
-    for c in &check {
-      if seen.iter().any(|x: &Card| x.rank == c.rank && x.suit == c.suit) {
-        return Err("duplicate cards detected in hero/board".into());
-      }
-      seen.push(*c);
-    }
-  }
-
-  // Ensure each opponent hand has 2 distinct cards and none overlap hero/board.
-  let mut hero_board_set: Vec<Card> = {
-    let mut v = Vec::new();
-    v.push(hero_hand[0]);
-    v.push(hero_hand[1]);
-    v.extend(board.iter().copied());
-    v
-  };
-  for opp in &opponents {
-    if opp[0].rank == opp[1].rank && opp[0].suit == opp[1].suit {
-      return Err("duplicate cards inside opponent hand".into());
-    }
-    for c in opp {
-      if hero_board_set
-        .iter()
-        .any(|x| x.rank == c.rank && x.suit == c.suit)
-      {
-        return Err("opponent hand overlaps hero/board".into());
-      }
-    }
-  }
-
-  // prepare output stats
-  let mut stats: Vec<(u32, u32, u32, u32, u32)> =
-    vec![(0, 0, 0, 0, 0); opponents.len()];
-  let opp_encoded: Vec<(u32, u32)> = opponents.iter().map(|h| decode_hand_pair(h)).collect();
-
-  let missing_board_base = 5usize.saturating_sub(board.len());
-  let mut rng = Lcg64::new(seed);
-
-  for (idx, opp) in opponents.iter().enumerate() {
-    // Deck exclusion specific to this opponent
-    let mut exclude = hero_board_set.clone();
-    exclude.push(opp[0]);
-    exclude.push(opp[1]);
-
-    let remaining_cards = 52usize.saturating_sub(exclude.len());
-    if remaining_cards < missing_board_base {
-      return Err("not enough cards to complete board".into());
-    }
-
-    let mut wins = 0u32;
-    let mut ties = 0u32;
-    let mut plays = 0u32;
-
-    for _ in 0..trials.max(1) {
-      let mut deck = build_deck(&exclude);
-      shuffle_slice(&mut deck, &mut rng);
-
-      let mut full_board = board.clone();
-      for i in 0..missing_board_base {
-        full_board.push(deck[i]);
-      }
-
-      let mut hero_cards = Vec::with_capacity(7);
-      hero_cards.extend_from_slice(&hero_hand);
-      hero_cards.extend_from_slice(&full_board);
-      let hero_score = best_of(&hero_cards);
-
-      let mut opp_cards = Vec::with_capacity(7);
-      opp_cards.extend_from_slice(opp);
-      opp_cards.extend_from_slice(&full_board);
-      let opp_score = best_of(&opp_cards);
-
-      plays += 1;
-      match hero_score.encoded.cmp(&opp_score.encoded) {
-        Ordering::Greater => wins += 1,
-        Ordering::Equal => ties += 1,
-        Ordering::Less => {}
-      }
-    }
-
-    let entry = &mut stats[idx];
-    entry.0 = opp_encoded[idx].0;
-    entry.1 = opp_encoded[idx].1;
-    entry.2 = wins;
-    entry.3 = ties;
-    entry.4 = plays;
-  }
-
-  Ok(stats)
 }
 
 /// Hero vs provided opponent list, returning wins/ties and rank distribution per opponent.
@@ -741,6 +407,10 @@ pub fn simulate_vs_list_with_ranks(
   let mut rng = Lcg64::new(seed);
   let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
     vec![(0, 0, 0, 0, 0, [0u32; 9]); opponents.len()];
+  let mut hero_rank_counts = [0u32; 9];
+  let mut hero_wins_total = 0u32;
+  let mut hero_ties_total = 0u32;
+  let mut hero_plays_total = 0u32;
 
   let opp_encoded: Vec<(u32, u32)> = opponents.iter().map(|h| decode_hand_pair(h)).collect();
 
@@ -797,7 +467,56 @@ pub fn simulate_vs_list_with_ranks(
     stats[idx].3 = ties;
     stats[idx].4 = plays;
     stats[idx].5 = rank_counts;
+
+    hero_wins_total = hero_wins_total.saturating_add(wins);
+    hero_ties_total = hero_ties_total.saturating_add(ties);
+    hero_plays_total = hero_plays_total.saturating_add(plays);
   }
+
+  // hero rank distribution (deck excludes hero + board only)
+  for _ in 0..trials.max(1) {
+    let mut exclude = board.clone();
+    exclude.push(hero_hand[0]);
+    exclude.push(hero_hand[1]);
+    let remaining_cards = 52usize.saturating_sub(exclude.len());
+    if remaining_cards < missing_board {
+      return Err("not enough cards to complete board".into());
+    }
+    let mut deck = build_deck(&exclude);
+    shuffle_slice(&mut deck, &mut rng);
+
+    let mut full_board = board.clone();
+    for i in 0..missing_board {
+      full_board.push(deck[i]);
+    }
+
+    let mut hero_cards = Vec::with_capacity(7);
+    hero_cards.extend_from_slice(&hero_hand);
+    hero_cards.extend_from_slice(&full_board);
+    let hero_score = best_of(&hero_cards);
+    let r_idx = hero_score.rank as usize;
+    if r_idx < 9 {
+      hero_rank_counts[r_idx] += 1;
+    }
+  }
+
+  // scale hero rank counts to match total plays (per opponent)
+  let multiplier = opponents.len() as u32;
+  if multiplier > 1 {
+    for r in &mut hero_rank_counts {
+      *r = r.saturating_mul(multiplier);
+    }
+  }
+
+  // append hero aggregate record with sentinel cards = u32::MAX
+  stats.push((
+    u32::MAX,
+    u32::MAX,
+    hero_wins_total,
+    hero_ties_total,
+    hero_plays_total,
+    hero_rank_counts,
+  ));
 
   Ok(stats)
 }
