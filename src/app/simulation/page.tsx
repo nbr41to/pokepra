@@ -121,13 +121,7 @@ export default function Page() {
                 hero
                   .split(" ")
                   .map((card) => (
-                    <PlayCard
-                      key={card}
-                      rank={card[0]}
-                      suit={card[1] as "c" | "d" | "h" | "s"}
-                      size="sm"
-                      className="w-8"
-                    />
+                    <PlayCard key={card} rs={card} size="sm" className="w-8" />
                   ))
               ) : (
                 <div className="text-sm">Select Hero Hand</div>
@@ -156,13 +150,7 @@ export default function Page() {
                 board
                   .split(" ")
                   .map((card) => (
-                    <PlayCard
-                      key={card}
-                      rank={card[0]}
-                      suit={card[1] as "c" | "d" | "h" | "s"}
-                      size="sm"
-                      className="w-8"
-                    />
+                    <PlayCard key={card} rs={card} size="sm" className="w-8" />
                   ))
               ) : (
                 <div className="text-sm">Select board Cards</div>
@@ -193,8 +181,7 @@ export default function Page() {
                     {hand.split(" ").map((card) => (
                       <PlayCard
                         key={card}
-                        rank={card[0]}
-                        suit={card[1] as "c" | "d" | "h" | "s"}
+                        rs={card}
                         size="sm"
                         className="w-8 shrink-0"
                       />

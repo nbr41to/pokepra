@@ -2,11 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useActionStore } from "../_utils/state";
 
 export const PreflopAction = () => {
-  const { preflop, preflopAction, switchNextPhase } = useActionStore();
-
-  const handleNext = () => {
-    switchNextPhase();
-  };
+  const { preflop, preflopAction, shuffleAndDeal } = useActionStore();
 
   return (
     <div className="flex h-full flex-col justify-between p-5">
@@ -25,7 +21,7 @@ export const PreflopAction = () => {
           size="lg"
           className="z-10 w-full rounded-lg text-base shadow"
           // z-10 は safari で ボタンが表示されなくなる問題の対応
-          onClick={handleNext}
+          onClick={() => shuffleAndDeal()}
         >
           Next
         </Button>

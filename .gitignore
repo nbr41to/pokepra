@@ -42,3 +42,5 @@ next-env.d.ts
 
 # rust
 rust-wasm/target
+*storybook.log
+storybook-static

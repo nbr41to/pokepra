@@ -71,13 +71,7 @@ export const ConfirmRankingDrawer = ({
           <div className="flex items-center gap-x-4 py-1">
             <div className="flex gap-x-1">
               {board.map((card) => (
-                <PlayCard
-                  key={card}
-                  className="w-8"
-                  size="sm"
-                  suit={card[1] as "s" | "h" | "d" | "c"}
-                  rank={card[0]}
-                />
+                <PlayCard key={card} className="w-8" size="sm" rs={card} />
               ))}
             </div>
             <DrawerDescription>

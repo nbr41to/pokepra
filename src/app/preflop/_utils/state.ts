@@ -45,7 +45,6 @@ type Actions = {
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
-  switchNextPhase: () => void;
 };
 
 type Store = State & Actions;
@@ -76,11 +75,11 @@ const useActionStore = create<Store>((set, get) => ({
   shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
     const { stack } = get();
     const people = options?.people ?? PEOPLE;
-    const position = genPositionNumber(people);
+    const position = genPositionNumber(people - 1);
 
     const playerHand = genHands(0);
     const otherPlayersHands: string[][] = [];
-    for (let i = 1; i < people - position; i++) {
+    for (let i = 1; i < people - position + 1; i++) {
       const hands = genHands(0, [...playerHand, ...otherPlayersHands.flat()]);
       otherPlayersHands.push(hands);
     }
@@ -91,6 +90,7 @@ const useActionStore = create<Store>((set, get) => ({
       hand: playerHand,
       otherPlayersHands,
       stack,
+      preflop: null,
     }));
   },
   // ハンドを確認
@@ -117,15 +117,6 @@ const useActionStore = create<Store>((set, get) => ({
         preflop: action,
         stack: stack + amount,
       });
-    }
-  },
-  // フェーズを進める（現在の状態を見て自動で判断）
-  switchNextPhase: () => {
-    const { phase, preflop, shuffleAndDeal } = get();
-    if (phase === "preflop") {
-      if (preflop === "fold") {
-        shuffleAndDeal();
-      }
     }
   },
 }));

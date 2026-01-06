@@ -41,9 +41,9 @@ describe("getPositionString", () => {
     expect(getPositionString(1, 9)).toBe("UTG");
     expect(getPositionString(2, 9)).toBe("+1");
     expect(getPositionString(6, 9)).toBe("+5");
-    expect(getPositionString(7, 9)).toBe("SB");
-    expect(getPositionString(8, 9)).toBe("BB");
-    expect(getPositionString(9, 9)).toBe("BTN");
+    expect(getPositionString(7, 9)).toBe("BTN");
+    expect(getPositionString(8, 9)).toBe("SB");
+    expect(getPositionString(9, 9)).toBe("BB");
   });
 
   it("ヘッズアップ(2人)での対応を返す", () => {

@@ -29,14 +29,12 @@ export const HandRankingList = ({ result, onScroll }: Props) => {
           <div className="relative w-12 scale-75">
             <PlayCard
               className="relative -left-px -rotate-2"
-              suit={hand.split(" ")[0][1] as "c" | "d" | "h" | "s"}
-              rank={hand.split(" ")[0].slice(0, -1)}
+              rs={hand.split(" ")[0]}
               size="sm"
             />
             <PlayCard
               className="absolute top-0 right-0 rotate-4"
-              suit={hand.split(" ")[1][1] as "c" | "d" | "h" | "s"}
-              rank={hand.split(" ")[1].slice(0, -1)}
+              rs={hand.split(" ")[1]}
               size="sm"
             />
           </div>

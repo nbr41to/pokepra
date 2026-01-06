@@ -6,11 +6,12 @@ export const ActionArea = () => {
   const { hand, showedHand, showHand, preflopAction } = useActionStore();
 
   return (
-    <div className="relative pt-6">
+    <div className="relative w-full pt-6">
       <HandConfirmation
         hands={hand}
         onOpenHand={showHand}
         onFold={() => preflopAction("fold")}
+        className="bg bg-green-50 dark:bg-green-950/60"
       />
       {showedHand && (
         <div className="absolute top-0 left-0 h-full w-1/2 pt-6">

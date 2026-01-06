@@ -66,30 +66,15 @@ export const Board = ({ cards }: Props) => {
   return (
     <div className="mx-auto flex w-88 gap-x-2">
       {cards.map((card, index) => {
-        const suit = card[1] as "s" | "h" | "d" | "c";
-        const rank = card[0];
         return (
-          <FlipCard
-            key={card}
-            suit={suit}
-            rank={rank}
-            progress={flipProgress[index] ?? 0}
-          />
+          <FlipCard key={card} rs={card} progress={flipProgress[index] ?? 0} />
         );
       })}
     </div>
   );
 };
 
-const FlipCard = ({
-  suit,
-  rank,
-  progress,
-}: {
-  suit: "s" | "h" | "d" | "c";
-  rank: string;
-  progress: number;
-}) => {
+const FlipCard = ({ rs, progress }: { rs: string; progress: number }) => {
   const clamped = Math.min(Math.max(progress, 0), 1);
   const rotation = 180 - clamped * 180;
 
@@ -100,7 +85,7 @@ const FlipCard = ({
         style={{ transform: `rotateY(${rotation}deg)` }}
       >
         <div className="backface-hidden absolute inset-0 grid place-items-center">
-          <PlayCard suit={suit} rank={rank} />
+          <PlayCard rs={rs} />
         </div>
         <div className="backface-hidden transform-[rotateY(180deg)] absolute inset-0 grid place-items-center">
           <PlayCard />

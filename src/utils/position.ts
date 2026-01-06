@@ -35,12 +35,14 @@ function getPositionString(positionNumber: number, maxPeople: number) {
     );
   }
 
-  if (positionNumber === maxPeople - 2) {
-    return "SB";
-  } else if (positionNumber === maxPeople - 1) {
+  if (positionNumber === maxPeople) {
+    if (maxPeople === 2) return "BTN\nSB";
     return "BB";
-  } else if (positionNumber === maxPeople) {
-    return `BTN${maxPeople === 2 ? "\nSB" : ""}`;
+  } else if (positionNumber === maxPeople - 1) {
+    if (maxPeople === 2) return "BB";
+    return "SB";
+  } else if (positionNumber === maxPeople - 2) {
+    return "BTN";
   } else if (positionNumber === 1) {
     return "UTG";
   } else {

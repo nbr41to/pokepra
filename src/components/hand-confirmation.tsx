@@ -3,7 +3,8 @@
 import { ArrowBigUpDash } from "lucide-react";
 import type { PointerEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { PlayHandCard } from "@/components/play-hand-card";
+import { cn } from "@/lib/utils";
+import { PlayCard } from "./play-card";
 
 /**
  * Preflopのカードを確認するためのUI
@@ -13,6 +14,7 @@ type Props = {
   onOpenHand: () => void;
   disabledFold?: boolean;
   onFold: () => void;
+  className?: string;
 };
 
 export const HandConfirmation = ({
@@ -20,6 +22,7 @@ export const HandConfirmation = ({
   onOpenHand,
   disabledFold = false, // TODO: fold機能を無効化するオプション
   onFold,
+  className,
 }: Props) => {
   const [hand1, hand2] = hands;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -76,8 +79,8 @@ export const HandConfirmation = ({
 
     // Allow fold gesture only after cards are opened
     if (locked && flipProgress >= 1 && !folded) {
-      const foldZoneWidth = rect.width * 0.35;
-      const foldZoneHeight = rect.height * 0.35;
+      const foldZoneWidth = rect.width * 0.5;
+      const foldZoneHeight = rect.height * 0.4;
       const isInFoldZone =
         x >= rect.width - foldZoneWidth && y >= rect.height - foldZoneHeight;
 
@@ -172,32 +175,32 @@ export const HandConfirmation = ({
     ? "translateX(7rem) translateY(1rem)"
     : "translateX(0) translateY(0)";
 
+  console.log(locked);
+
   return (
     <div
       ref={containerRef}
-      className="relative flex aspect-video w-full touch-none select-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60"
+      className={cn(
+        "relative flex aspect-video w-full touch-none select-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60",
+        className,
+      )}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={resetGesture}
       onPointerCancel={resetGesture}
     >
       {!locked && showGuide && (
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-1/2 w-1/2 animate-pulse rounded-md border-2 border-green-400/70 border-dashed bg-green-200/20">
+        <div className="pointer-events-none absolute bottom-0 left-0 z-10 h-1/2 w-1/2 animate-pulse rounded-md border-2 border-teal-400/70 border-dashed bg-teal-200/20">
           <ArrowBigUpDash
             size={40}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-240 text-green-500"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-60 text-teal-500"
           />
-          <span className="absolute bottom-1 left-2 font-montserrat text-green-500 text-sm">
+          <span className="absolute bottom-1 left-2 font-montserrat text-sm text-teal-500">
             Swipe start
           </span>
         </div>
       )}
-      {/* {locked && !disabledFold && (
-        <div className="pointer-events-none absolute top-16 right-20 z-10 flex h-16 flex-col justify-center gap-y-2">
-          <span className="text-gray-400 text-sm">Fold</span>
-          <ArrowBigUpDash size={32} className="animate-bounce text-gray-400" />
-        </div>
-      )} */}
+
       <div
         className="relative top-1 transform transition-transform duration-200"
         style={{
@@ -205,18 +208,24 @@ export const HandConfirmation = ({
         }}
       >
         <div className="relative top-0 -left-8 z-10 rotate-6">
-          <FlipCard
-            progress={flipProgress}
-            suit={hand1[1] as "s" | "h" | "d" | "c"}
-            rank={hand1[0]}
-          />
+          <FlipCard progress={flipProgress} rs={hand1} />
         </div>
         <div className="absolute top-0 left-2 -rotate-5">
-          <FlipCard
-            progress={flipProgress}
-            suit={hand2[1] as "s" | "h" | "d" | "c"}
-            rank={hand2[0]}
+          <FlipCard progress={flipProgress} rs={hand2} />
+        </div>
+        {/* guide */}
+        <div
+          className={cn(
+            "pointer-events-none absolute right-24 bottom-3 z-10 flex h-16 rotate-6 flex-col justify-center gap-y-1 transition-opacity delay-2000",
+            locked ? "opacity-100" : "opacity-0",
+          )}
+        >
+          {locked}
+          <ArrowBigUpDash
+            size={32}
+            className="animate-bounce text-gray-400 dark:text-gray-600"
           />
+          <span className="text-gray-400 text-sm dark:text-gray-600">Fold</span>
         </div>
       </div>
       {folded && (
@@ -228,15 +237,7 @@ export const HandConfirmation = ({
   );
 };
 
-const FlipCard = ({
-  suit,
-  rank,
-  progress,
-}: {
-  suit: "s" | "h" | "d" | "c";
-  rank: string;
-  progress: number;
-}) => {
+const FlipCard = ({ rs, progress }: { rs: string; progress: number }) => {
   const clamped = Math.min(Math.max(progress, 0), 1);
   const accelerateStart = (value: number) => {
     const breakpoint = 0.25; // first quarter of the swipe
@@ -255,10 +256,10 @@ const FlipCard = ({
         style={{ transform: `rotateY(${rotation}deg)` }}
       >
         <div className="backface-hidden absolute inset-0 grid place-items-center">
-          <PlayHandCard suit={suit} rank={rank} />
+          <PlayCard size="lg" rs={rs} />
         </div>
         <div className="backface-hidden transform-[rotateY(180deg)] absolute inset-0 grid place-items-center">
-          <PlayHandCard />
+          <PlayCard size="lg" />
         </div>
       </div>
     </div>
