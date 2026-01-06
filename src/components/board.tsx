@@ -9,11 +9,10 @@ type Props = {
 };
 
 export const Board = ({ cards }: Props) => {
-  const [flipProgress, setFlipProgress] = useState<number[]>(
-    Array(cards.length).fill(0),
-  );
+  const [cardStates, setCardStates] = useState<
+    { card: string; delay: number; instant: boolean; animKey: string }[]
+  >([]);
   const prevCardsRef = useRef<string[]>(cards);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const baseDelayMs = 200;
   const stepDelayMs = 220;
 
@@ -23,66 +22,71 @@ export const Board = ({ cards }: Props) => {
       cards.length === prevCards.length + 1 &&
       prevCards.every((card, idx) => cards[idx] === card);
 
-    // clear previous timers
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
+    const nextStates = cards.map((card, idx) => {
+      if (isSingleAppend && idx < prevCards.length) {
+        // keep existing cards face up immediately
+        return { card, delay: 0, instant: true, animKey: `${card}-static` };
+      }
+      const delay = isSingleAppend
+        ? baseDelayMs
+        : baseDelayMs + idx * stepDelayMs;
+      // change animKey to force animation restart when cards change
+      return {
+        card,
+        delay,
+        instant: false,
+        animKey: `${card}-${Date.now()}-${idx}`,
+      };
+    });
 
-    if (isSingleAppend) {
-      // 既存カードは表のまま、新規1枚だけめくる
-      setFlipProgress([...Array(prevCards.length).fill(1), 0]);
-      const timer = setTimeout(() => {
-        setFlipProgress((prev) => {
-          const next = [...prev];
-          next[prev.length - 1] = 1;
-          return next;
-        });
-      }, baseDelayMs);
-      timeoutsRef.current.push(timer);
-    } else {
-      // リセットして左から順にめくる
-      setFlipProgress(Array(cards.length).fill(0));
-      cards.forEach((_, index) => {
-        const timer = setTimeout(
-          () => {
-            setFlipProgress((prev) => {
-              const next = [...prev];
-              next[index] = 1;
-              return next;
-            });
-          },
-          baseDelayMs + index * stepDelayMs,
-        );
-        timeoutsRef.current.push(timer);
-      });
-    }
+    setCardStates(nextStates);
 
     prevCardsRef.current = cards;
-    return () => {
-      timeoutsRef.current.forEach(clearTimeout);
-      timeoutsRef.current = [];
-    };
   }, [cards]);
 
   return (
     <div className="mx-auto flex w-88 gap-x-2">
-      {cards.map((card, index) => {
+      {cardStates.map(({ card, delay, instant, animKey }) => {
         return (
-          <FlipCard key={card} rs={card} progress={flipProgress[index] ?? 0} />
+          <FlipCard key={animKey} rs={card} delayMs={delay} instant={instant} />
         );
       })}
+      <style jsx>{`
+        @keyframes flipCard {
+          from {
+            transform: rotateY(180deg);
+          }
+          to {
+            transform: rotateY(0deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-const FlipCard = ({ rs, progress }: { rs: string; progress: number }) => {
-  const clamped = Math.min(Math.max(progress, 0), 1);
-  const rotation = 180 - clamped * 180;
+const FlipCard = ({
+  rs,
+  delayMs,
+  instant,
+}: {
+  rs: string;
+  delayMs: number;
+  instant: boolean;
+}) => {
+  const initialRotation = instant ? 0 : 180;
+  const animation = instant
+    ? undefined
+    : `flip 300ms ease-out ${delayMs}ms forwards`;
 
   return (
     <div className="perspective-distant relative h-22 w-16">
       <div
-        className="transform-3d relative h-full w-full transition-transform duration-300 ease-out"
-        style={{ transform: `rotateY(${rotation}deg)` }}
+        className="transform-3d relative h-full w-full"
+        style={{
+          transform: `rotateY(${initialRotation}deg)`,
+          animation,
+        }}
       >
         <div className="backface-hidden absolute inset-0 grid place-items-center">
           <PlayCard rs={rs} />

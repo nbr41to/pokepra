@@ -1,5 +1,6 @@
 import { HandConfirmation } from "@/components/hand-confirmation";
 import { iterateWinSimulations } from "@/lib/poker/simulation";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
 import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
@@ -20,8 +21,18 @@ export const ActionArea = () => {
 
   const handleOnPostflopAction = async (answer: "commit" | "fold") => {
     await new Promise((resolve) => setTimeout(resolve, 200)); // アニメーション用のフレーム確保
-    const equity = await getEquity({ position, hand, board });
-    postflopAction(phase, answer, equity);
+    const result = await simulateVsListWithRanks({
+      hero: hand.join(" "),
+      board: board.join(" "),
+      compare: getHandsByTiers(getTierIndexByPosition(position), [
+        ...hand,
+        ...board,
+      ])
+        .join("; ")
+        .replaceAll(",", " "),
+      trials: 100,
+    });
+    postflopAction(phase, answer, result.equity);
   };
 
   const handleFoldAction = () => {

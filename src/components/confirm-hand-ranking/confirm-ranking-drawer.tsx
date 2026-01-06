@@ -34,7 +34,6 @@ export const ConfirmRankingDrawer = ({
   disabled = false,
   className,
 }: Props) => {
-  console.log("render");
   const equityRanksPromise = simulateVsListWithRanks({
     hero: hand.join(" "),
     board: board.join(" "),
@@ -44,7 +43,7 @@ export const ConfirmRankingDrawer = ({
     ])
       .join("; ")
       .replaceAll(",", " "),
-    trials: 100,
+    trials: 1000,
   });
 
   return (

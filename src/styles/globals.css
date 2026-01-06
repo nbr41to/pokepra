@@ -157,8 +157,19 @@
       transform: scale(1);
     }
   }
-
   .animate-score-bounce {
     animation: score-bounce 500ms ease;
+  }
+
+  @keyframes flip {
+    from {
+      transform: rotateY(180deg);
+    }
+    to {
+      transform: rotateY(0deg);
+    }
+  }
+  .animate-flip {
+    animation: flip 300ms ease-out forwards;
   }
 }
