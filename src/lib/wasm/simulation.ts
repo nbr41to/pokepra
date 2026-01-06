@@ -98,6 +98,11 @@ async function simulateVsListWithRanks({
   seed?: bigint;
   wasmUrl?: string;
 }): Promise<CombinedPayload> {
+  const startTime = performance.now();
+  const heroTrimmed = hero.trim();
+  const boardTrimmed = board.trim();
+  const compareTrimmed = compare.trim();
+
   const { exports, memory } = await loadWasm(wasmUrl);
   if (typeof exports.simulate_vs_list_with_ranks !== "function") {
     throw new Error("WASM export 'simulate_vs_list_with_ranks' not found");
@@ -120,14 +125,15 @@ async function simulateVsListWithRanks({
     return { ptr, len: bytes.length };
   };
 
-  const heroBuf = writeString(hero.trim());
-  const boardBuf = writeString(board.trim());
-  const compareBuf = writeString(compare.trim());
+  const heroBuf = writeString(heroTrimmed);
+  const boardBuf = writeString(boardTrimmed);
+  const compareBuf = writeString(compareTrimmed);
 
-  const compareCount = compare
+  const handList = compareTrimmed
     .split(";")
     .map((h) => h.trim())
-    .filter(Boolean).length;
+    .filter(Boolean);
+  const compareCount = handList.length;
   if (compareCount === 0) {
     throw new Error("No compare hands provided");
   }
@@ -179,33 +185,29 @@ async function simulateVsListWithRanks({
     return `${rankChar}${suitChar}`;
   };
 
-  const handList = compare
-    .split(";")
-    .map((h) => h.trim())
-    .filter(Boolean);
-
   const data: CombinedEntry[] = [];
   let heroEntry: CombinedEntry | null = null;
 
   for (let i = 0; i < records; i += 1) {
     const base = i * 14;
-    const raw1 = out[base];
-    const raw2 = out[base + 1];
+    const chunk = out.subarray(base, base + 14);
+    const raw1 = chunk[0];
+    const raw2 = chunk[1];
     const card1 = decodeCard(raw1);
     const card2 = decodeCard(raw2);
-    const heroWins = out[base + 2];
-    const ties = out[base + 3];
-    const plays = out[base + 4];
-    const rankCounts = Array.from(out.slice(base + 5, base + 14));
-    const resultsObject = labels.reduce((acc, label, idx) => {
-      acc[label] = rankCounts[idx] ?? 0;
-      return acc;
-    }, {} as RankResults);
+    const heroWins = chunk[2];
+    const ties = chunk[3];
+    const plays = chunk[4];
+    const rankCounts = chunk.subarray(5, 14);
+    const resultsObject = {} as RankResults;
+    for (let r = 0; r < labels.length; r += 1) {
+      resultsObject[labels[r]] = rankCounts[r] ?? 0;
+    }
 
     const isHero = raw1 === 0xffffffff && raw2 === 0xffffffff;
     if (isHero) {
       heroEntry = {
-        hand: hero.trim(),
+        hand: heroTrimmed,
         count: plays,
         win: heroWins,
         tie: ties,
@@ -238,8 +240,15 @@ async function simulateVsListWithRanks({
       ? 0
       : (heroEntry.win + heroEntry.tie * 0.5) / heroEntry.count;
 
+  const endTime = performance.now();
+  console.log(
+    `simulateVsListWithRanks completed in ${(endTime - startTime).toFixed(
+      2,
+    )} ms`,
+  );
+
   return {
-    hand: hero.trim(),
+    hand: heroTrimmed,
     equity,
     data,
   };

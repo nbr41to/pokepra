@@ -18,7 +18,7 @@ export default function Page() {
   }, [shuffleAndDeal, reset]);
 
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-8 p-2 pb-10">
+    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-8 p-2 pb-8">
       <CommunityBoard />
       <div className="flex flex-col items-end space-y-1">
         <ConfirmPosition />

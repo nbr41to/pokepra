@@ -59,17 +59,13 @@ pub extern "C" fn simulate_vs_list_with_ranks(
   }
 
   let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
-  let mut idx = 0usize;
-  for (c1, c2, w, t, p, ranks) in &results {
-    out[idx] = *c1;
-    out[idx + 1] = *c2;
-    out[idx + 2] = *w;
-    out[idx + 3] = *t;
-    out[idx + 4] = *p;
-    for i in 0..9 {
-      out[idx + 5 + i] = ranks[i];
-    }
-    idx += 14;
+  for ((c1, c2, w, t, p, ranks), chunk) in results.iter().zip(out.chunks_exact_mut(14)) {
+    chunk[0] = *c1;
+    chunk[1] = *c2;
+    chunk[2] = *w;
+    chunk[3] = *t;
+    chunk[4] = *p;
+    chunk[5..14].copy_from_slice(ranks);
   }
 
   results.len() as i32

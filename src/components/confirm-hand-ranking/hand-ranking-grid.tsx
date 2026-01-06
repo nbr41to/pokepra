@@ -21,8 +21,9 @@ export const HandRankingGrid = ({ result, onScroll }: Props) => {
           key={hand}
           id={hand}
           className={cn(
-            "flex justify-between gap-x-2 rounded border p-2",
-            hand === result.hand && "border-2 border-orange-500 bg-orange-100",
+            "flex justify-between gap-x-1 rounded border p-2",
+            hand === result.hand &&
+              "border-2 border-orange-500 bg-orange-100 dark:bg-orange-900",
           )}
         >
           <div className="h-full space-y-2">
@@ -30,16 +31,14 @@ export const HandRankingGrid = ({ result, onScroll }: Props) => {
               {((index / result.data.length) * 100).toFixed(2)}
               <span className="ml-px text-[10px]">%</span>
             </div>
-            <Combo hand={hand.split(" ")} />
+            <Combo className="w-12 scale-80" hand={hand.split(" ")} />
             <div className="text-center font-bold text-base">
               <span>
                 {(((win + tie / 2) / count) * 100).toFixed(1).split(".")[0]}
               </span>
-              <span>.</span>
               <span className="text-xs">
-                {(((win + tie / 2) / count) * 100).toFixed(1).split(".")[1]}
+                .{(((win + tie / 2) / count) * 100).toFixed(1).split(".")[1]}%
               </span>
-              <span>%</span>
             </div>
           </div>
 
@@ -63,7 +62,7 @@ export const HandRankingGrid = ({ result, onScroll }: Props) => {
                 return (
                   <div
                     key={name}
-                    className="relative z-10 flex h-fit w-14 justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-[10px]/[1]"
+                    className="relative z-10 flex h-fit justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-[10px]/[1]"
                   >
                     <div>{getShortHandName(name)}</div>
                     <div>{probability}%</div>

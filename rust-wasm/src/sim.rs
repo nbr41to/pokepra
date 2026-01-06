@@ -364,6 +364,8 @@ pub fn simulate_vs_list_with_ranks(
     return Err("no compare hands provided".into());
   }
 
+  let trials = trials.max(1);
+
   // validate board duplicates
   {
     let mut seen = Vec::new();
@@ -403,7 +405,10 @@ pub fn simulate_vs_list_with_ranks(
     }
   }
 
-  let missing_board = 5usize.saturating_sub(board.len());
+  let board_len = board.len();
+  let missing_board = 5usize.saturating_sub(board_len);
+  let mut board_buf = [Card { rank: 0, suit: 0 }; 5];
+  board_buf[..board_len].copy_from_slice(&board);
   let mut rng = Lcg64::new(seed);
   let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
     vec![(0, 0, 0, 0, 0, [0u32; 9]); opponents.len()];
@@ -420,33 +425,49 @@ pub fn simulate_vs_list_with_ranks(
     let mut plays = 0u32;
     let mut rank_counts = [0u32; 9];
 
-    for _ in 0..trials.max(1) {
-      // deck per opponent: exclude hero + board + this opponent
-      let mut exclude = board.clone();
-      exclude.push(hero_hand[0]);
-      exclude.push(hero_hand[1]);
-      exclude.push(opp[0]);
-      exclude.push(opp[1]);
-      let remaining_cards = 52usize.saturating_sub(exclude.len());
-      if remaining_cards < missing_board {
-        return Err("not enough cards to complete board".into());
-      }
-      let mut deck = build_deck(&exclude);
+    // deck per opponent: exclude hero + board + this opponent (built once)
+    let mut exclude = Vec::with_capacity(board_len + 4);
+    exclude.extend_from_slice(&board);
+    exclude.push(hero_hand[0]);
+    exclude.push(hero_hand[1]);
+    exclude.push(opp[0]);
+    exclude.push(opp[1]);
+    let remaining_cards = 52usize.saturating_sub(exclude.len());
+    if remaining_cards < missing_board {
+      return Err("not enough cards to complete board".into());
+    }
+    let deck_template = build_deck(&exclude);
+    let mut deck = deck_template.clone();
+    let mut full_board = board_buf;
+
+    for _ in 0..trials {
+      deck.clone_from(&deck_template);
       shuffle_slice(&mut deck, &mut rng);
 
-      let mut full_board = board.clone();
       for i in 0..missing_board {
-        full_board.push(deck[i]);
+        full_board[board_len + i] = deck[i];
       }
 
-      let mut hero_cards = Vec::with_capacity(7);
-      hero_cards.extend_from_slice(&hero_hand);
-      hero_cards.extend_from_slice(&full_board);
+      let hero_cards = [
+        hero_hand[0],
+        hero_hand[1],
+        full_board[0],
+        full_board[1],
+        full_board[2],
+        full_board[3],
+        full_board[4],
+      ];
       let hero_score = best_of(&hero_cards);
 
-      let mut opp_cards = Vec::with_capacity(7);
-      opp_cards.extend_from_slice(opp);
-      opp_cards.extend_from_slice(&full_board);
+      let opp_cards = [
+        opp[0],
+        opp[1],
+        full_board[0],
+        full_board[1],
+        full_board[2],
+        full_board[3],
+        full_board[4],
+      ];
       let opp_score = best_of(&opp_cards);
 
       plays += 1;
@@ -474,25 +495,34 @@ pub fn simulate_vs_list_with_ranks(
   }
 
   // hero rank distribution (deck excludes hero + board only)
-  for _ in 0..trials.max(1) {
-    let mut exclude = board.clone();
-    exclude.push(hero_hand[0]);
-    exclude.push(hero_hand[1]);
-    let remaining_cards = 52usize.saturating_sub(exclude.len());
-    if remaining_cards < missing_board {
-      return Err("not enough cards to complete board".into());
-    }
-    let mut deck = build_deck(&exclude);
-    shuffle_slice(&mut deck, &mut rng);
+  let mut exclude = Vec::with_capacity(board_len + 2);
+  exclude.extend_from_slice(&board);
+  exclude.push(hero_hand[0]);
+  exclude.push(hero_hand[1]);
+  let remaining_cards = 52usize.saturating_sub(exclude.len());
+  if remaining_cards < missing_board {
+    return Err("not enough cards to complete board".into());
+  }
+  let hero_deck_template = build_deck(&exclude);
+  let mut hero_deck = hero_deck_template.clone();
+  let mut full_board = board_buf;
+  for _ in 0..trials {
+    hero_deck.clone_from(&hero_deck_template);
+    shuffle_slice(&mut hero_deck, &mut rng);
 
-    let mut full_board = board.clone();
     for i in 0..missing_board {
-      full_board.push(deck[i]);
+      full_board[board_len + i] = hero_deck[i];
     }
 
-    let mut hero_cards = Vec::with_capacity(7);
-    hero_cards.extend_from_slice(&hero_hand);
-    hero_cards.extend_from_slice(&full_board);
+    let hero_cards = [
+      hero_hand[0],
+      hero_hand[1],
+      full_board[0],
+      full_board[1],
+      full_board[2],
+      full_board[3],
+      full_board[4],
+    ];
     let hero_score = best_of(&hero_cards);
     let r_idx = hero_score.rank as usize;
     if r_idx < 9 {
@@ -596,4 +626,3 @@ pub fn simulate_rank_distribution(
 
   Ok(counts)
 }
-use std::collections::HashMap;

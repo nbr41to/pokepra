@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
+import { cn } from "@/lib/utils";
 
 type Props = {
   total: number;
@@ -8,34 +9,35 @@ type Props = {
 
 export function Position({ total, playerPosition }: Props) {
   return (
-    <div className="flex items-center justify-center gap-x-px rounded-full border px-4 py-2">
+    <div className="flex w-full justify-center gap-x-px">
       {Array.from({ length: total }).map((_, index) => {
         let label = "";
         if (index === 0) label = "UTG";
         else if (index === total - 3) label = "BTN";
         else if (index === total - 2) label = "SB";
         else if (index === total - 1) label = "BB";
+        else label = `+${index.toString()}`;
 
         const isPlayer = index === playerPosition - 1;
 
         return (
           <Fragment key={index + label}>
             <div className="flex flex-col items-center">
+              <div
+                className={cn(
+                  "flex size-7 items-center justify-center rounded-full border-2 font-bold font-noto-sans-jp text-[10px]/[1]",
+                  isPlayer
+                    ? "border-red-500 bg-red-100 dark:border-red-600 dark:bg-red-900"
+                    : "border-gray-300",
+                )}
+              >
+                {!isPlayer && label}
+              </div>
               <div className="h-3.75 font-bold text-[10px] text-red-500 dark:text-red-600">
                 {isPlayer && "YOU"}
               </div>
-              <div
-                className={`flex size-6 items-center justify-center rounded-full border-2 ${
-                  isPlayer
-                    ? "border-red-500 bg-red-100 dark:border-red-600 dark:bg-red-900"
-                    : "border-gray-300"
-                }`}
-              />
-              <div className="font-bold font-noto-sans-jp text-[10px]">
-                {label || `+${index.toString()}`}
-              </div>
             </div>
-            {index !== total - 1 && <ArrowRight size={8} />}
+            {index !== total - 1 && <ArrowRight size={8} className="mt-2.5" />}
           </Fragment>
         );
       })}

@@ -11,6 +11,7 @@ export const ActionArea = () => {
     position,
     hand,
     board,
+    river,
     showedHand,
     showHand,
     preflopAction,
@@ -37,6 +38,7 @@ export const ActionArea = () => {
         hands={hand}
         onOpenHand={showHand}
         onFold={handleFoldAction}
+        disabledFold={!!river}
       />
       {showedHand && (
         <div className="absolute top-0 left-0 h-full w-1/2 pt-6">
@@ -90,7 +92,6 @@ async function getEquity({
   });
 
   const equity = (win + 0.5 * tie) / COUNT;
-  console.log("equity:", equity);
 
   const durationMs = performance.now() - timeStart;
   console.log(`startWinSimulation: end in ${durationMs.toFixed(2)}ms`);

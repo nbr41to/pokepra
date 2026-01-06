@@ -78,7 +78,7 @@ export const HandConfirmation = ({
     const y = event.clientY - rect.top;
 
     // Allow fold gesture only after cards are opened
-    if (locked && flipProgress >= 1 && !folded) {
+    if (locked && flipProgress >= 1 && !folded && !disabledFold) {
       const foldZoneWidth = rect.width * 0.5;
       const foldZoneHeight = rect.height * 0.4;
       const isInFoldZone =
@@ -125,6 +125,8 @@ export const HandConfirmation = ({
       return;
     }
 
+    if (disabledFold) return;
+
     const y = event.clientY - rect.top;
     const deltaY = gestureRef.current.startY - y;
     const requiredLift = rect.height * 0.3;
@@ -145,6 +147,10 @@ export const HandConfirmation = ({
     }
     hideGuide();
     if (gestureRef.current?.type === "fold") {
+      if (disabledFold) {
+        gestureRef.current = null;
+        return;
+      }
       if (!folded) setFoldLift(0);
       gestureRef.current = null;
       return;
@@ -174,8 +180,6 @@ export const HandConfirmation = ({
   const shiftTransform = shifted
     ? "translateX(7rem) translateY(1rem)"
     : "translateX(0) translateY(0)";
-
-  console.log(locked);
 
   return (
     <div
@@ -216,11 +220,13 @@ export const HandConfirmation = ({
         {/* guide */}
         <div
           className={cn(
-            "pointer-events-none absolute right-24 bottom-3 z-10 flex h-16 rotate-6 flex-col justify-center gap-y-1 transition-opacity delay-2000",
-            locked ? "opacity-100" : "opacity-0",
+            "pointer-events-none absolute right-24 bottom-3 z-10 flex h-16 rotate-6 flex-col justify-center gap-y-1",
+            locked
+              ? "opacity-100 transition-opacity delay-2000"
+              : "opacity-0 transition-none",
+            (folded || disabledFold) && "hidden",
           )}
         >
-          {locked}
           <ArrowBigUpDash
             size={32}
             className="animate-bounce text-gray-400 dark:text-gray-600"
