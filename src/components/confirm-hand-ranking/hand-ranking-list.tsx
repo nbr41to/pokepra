@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { PlayCard } from "@/components/play-card";
+import { Combo } from "@/components/combo";
 import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
@@ -21,23 +21,12 @@ export const HandRankingList = ({ result, onScroll }: Props) => {
           key={hand}
           id={hand}
           className={cn(
-            "grid grid-cols-[36px_48px_52px_1fr] items-center px-2 py-1",
+            "grid grid-cols-[28px_52px_60px_1fr] items-center px-2 py-1",
             hand === result.hand && "bg-orange-200 dark:bg-orange-900",
           )}
         >
           <span className="w-10 text-sm">{index + 1}.</span>
-          <div className="relative w-12 scale-75">
-            <PlayCard
-              className="relative -left-px -rotate-2"
-              rs={hand.split(" ")[0]}
-              size="sm"
-            />
-            <PlayCard
-              className="absolute top-0 right-0 rotate-4"
-              rs={hand.split(" ")[1]}
-              size="sm"
-            />
-          </div>
+          <Combo className="scale-75" hand={hand.split(" ")} />
           <div>
             <div className="text-center font-bold text-sm">
               {((index / result.data.length) * 100).toFixed(2)}%
