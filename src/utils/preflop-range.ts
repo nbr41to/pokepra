@@ -15,7 +15,7 @@ function getTierIndexByPosition(position: number, people: number = 9) {
   // position をもとに Tier Index を引く (9max 想定)
   const afterPositions = people - position;
   // SB を除外するため afterPositions が people - 1 になるパターンはスキップされている
-  const positionToTierIndexes = [7, 6, 5, 5, 4, 4, 3, 3, 3];
+  const positionToTierIndexes = [7, 7, 7, 6, 5, 5, 4, 4, 3];
   const tierIndex = positionToTierIndexes[afterPositions];
   if (typeof tierIndex !== "number") {
     return -1;
@@ -44,14 +44,14 @@ function getHandString(hands: string[]) {
 
 function judgeInRange(hands: string[], position: number, people = 9) {
   const tierIndex = getTierIndexByPosition(position, people);
-  const tierIndexes = Array.from({ length: tierIndex + 1 }, (_, i) => i);
+  const tierIndexes = Array.from({ length: tierIndex }, (_, i) => i);
   const openRaiseHands = tierIndexes.flatMap((index) => TIERS[index]);
   const handString = getHandString(hands);
 
-  // console.log("tierIndex", tierIndex);
-  // console.log("tierIndexes", tierIndexes);
-  // console.log("openRaiseHands", openRaiseHands);
-  // console.log("handString", handString);
+  console.log("tierIndex", tierIndex);
+  console.log("tierIndexes", tierIndexes);
+  console.log("openRaiseHands", openRaiseHands);
+  console.log("handString", handString);
 
   return openRaiseHands.includes(handString);
 }

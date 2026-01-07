@@ -2,16 +2,13 @@ import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-rang
 import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
 import { HandConfirmation } from "@/components/hand-confirmation";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { getHandString } from "@/utils/preflop-range";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import { getHandsByTiers } from "@/utils/dealer";
+import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 import { SelectAction } from "./select-action";
 
-export const ActionArea = ({
-  rankPromise,
-}: {
-  rankPromise: Promise<CombinedPayload>;
-}) => {
+export const ActionArea = () => {
   const {
     phase,
     position,
@@ -38,6 +35,16 @@ export const ActionArea = ({
       handleOnPostflopAction("fold");
     }
   };
+
+  const rankPromise = simulateVsListWithRanks({
+    hero,
+    board,
+    compare: getHandsByTiers(getTierIndexByPosition(position), [
+      ...hero,
+      ...board,
+    ]),
+    trials: 1000,
+  });
 
   return (
     <div className="relative w-full">

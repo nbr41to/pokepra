@@ -26,19 +26,30 @@ export const ConfirmRanking = ({ promise }: Props) => {
       });
     }
   };
+  const heroIndex =
+    result.data.findIndex((data) => data.hand === result.hand) + 1;
+
+  const eqAve =
+    (result.data.reduce(
+      (acc, cur) => acc + (cur.win + cur.tie / 2) / cur.count,
+      0,
+    ) /
+      result.data.length) *
+    100;
 
   return (
     <>
       <Tabs defaultValue="list" className="px-1">
-        <div className="mb-1 flex items-end justify-between">
-          <span>
-            {(
-              (result.data.findIndex((data) => data.hand === result.hand) /
-                result.data.length) *
-              100
-            ).toFixed(2)}
-            % ({result.data.length} hands)
-          </span>
+        <div className="mb-1 flex items-end justify-between gap-x-4">
+          <div className="flex grow items-end justify-between">
+            <span className="font-bold text-sm">
+              EQAve: {eqAve.toFixed(1)}%
+            </span>
+            <span className="text-xs">
+              {heroIndex}/{result.data.length}(
+              {((heroIndex / result.data.length) * 100).toFixed(2)}%)
+            </span>
+          </div>
           <TabsList>
             <TabsTrigger value="list">
               <List />

@@ -44,10 +44,10 @@ function SlotDigit({
   }, [digit, delay]);
 
   return (
-    <div className="relative h-4 w-3 overflow-hidden">
+    <div className="relative h-5 w-3 overflow-hidden">
       <div
         className={cn(
-          "absolute inset-0 flex items-center justify-center font-bold text-lg tabular-nums transition-all duration-100",
+          "absolute inset-0 flex items-center justify-center font-bold text-xl tabular-nums transition-all duration-100",
           isSpinning && isIncreasing === true && "text-green-500",
           isSpinning && isIncreasing === false && "text-red-500",
           isSpinning && "animate-pulse",

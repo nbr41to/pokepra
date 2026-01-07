@@ -91,22 +91,28 @@ async function simulateVsListWithRanks({
   seed = 123456789n,
   wasmUrl = DEFAULT_WASM_URL,
 }: {
-  hero: string;
-  board: string;
-  compare: string;
+  hero: string[];
+  board: string[];
+  compare: string[][];
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
 }): Promise<CombinedPayload> {
+  const [heroStr, boardStr, compareStr] = [
+    hero.join(" "),
+    board.join(" "),
+    compare.join("; ").replaceAll(",", " "),
+  ];
+
   // 条件を満たさない場合
   if (
-    hero.trim().length < 4 ||
-    board.trim().length < 6 ||
-    compare.trim().length < 2
+    heroStr.trim().length < 4 ||
+    boardStr.trim().length < 6 ||
+    compareStr.trim().length < 2
   )
     return new Promise<CombinedPayload>((resolve) => {
       resolve({
-        hand: hero,
+        hand: heroStr,
         equity: 0,
         data: [],
       });
@@ -114,9 +120,9 @@ async function simulateVsListWithRanks({
 
   await new Promise((resolve) => setTimeout(resolve, 200)); // Yield to avoid blocking UI
   const startTime = performance.now();
-  const heroTrimmed = hero.trim();
-  const boardTrimmed = board.trim();
-  const compareTrimmed = compare.trim();
+  const heroTrimmed = heroStr.trim();
+  const boardTrimmed = boardStr.trim();
+  const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
   if (typeof exports.simulate_vs_list_with_ranks !== "function") {

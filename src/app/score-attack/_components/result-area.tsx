@@ -13,7 +13,7 @@ export const ResultArea = () => {
   const correct = preflop === "open-raise" ? inRange : !inRange;
 
   return (
-    <div className="relative flex h-8 grow items-end justify-center">
+    <div className="relative flex h-8 items-end justify-center">
       <div>
         {preflop && !flop ? (
           correct ? (
@@ -25,7 +25,7 @@ export const ResultArea = () => {
           <span
             key={phase + delta} // deltaが変わるたびにアニメーションを再実行するためのkey
             className={cn(
-              "inline-block origin-bottom animate-score-bounce font-bold text-xl",
+              "inline-block origin-top animate-score-bounce font-bold text-2xl",
               delta > 0 ? "text-green-500" : "text-red-500",
               delta === 0 && "hidden",
             )}

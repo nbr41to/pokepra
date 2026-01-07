@@ -55,7 +55,7 @@ export const ConfirmRankingSheet = ({
                 <PlayCard key={card} className="w-8" size="sm" rs={card} />
               ))}
             </div>
-            <SheetDescription>
+            <SheetDescription className="text-left">
               Simulated hand rankings based on the current board.
             </SheetDescription>
           </div>

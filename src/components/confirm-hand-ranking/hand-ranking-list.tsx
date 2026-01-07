@@ -29,10 +29,10 @@ export const HandRankingList = ({ result, onScroll }: Props) => {
           <Combo className="scale-75" hand={hand.split(" ")} />
           <div>
             <div className="text-center font-bold text-sm">
-              {((index / result.data.length) * 100).toFixed(2)}%
+              {(((win + tie / 2) / count) * 100).toFixed(2)}%
             </div>
             <div className="text-right text-xs">
-              ({(((win + tie / 2) / count) * 100).toFixed(1)}%)
+              ({((index / result.data.length) * 100).toFixed(1)}%)
             </div>
           </div>
 

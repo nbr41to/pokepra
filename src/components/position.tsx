@@ -9,7 +9,7 @@ type Props = {
 
 export function Position({ total, playerPosition }: Props) {
   return (
-    <div className="flex w-full justify-center gap-x-px">
+    <div className="flex w-full justify-center gap-x-px pt-2">
       {Array.from({ length: total }).map((_, index) => {
         let label = "";
         if (index === 0) label = "UTG";

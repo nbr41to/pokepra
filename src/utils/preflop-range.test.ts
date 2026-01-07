@@ -17,12 +17,12 @@ describe("getTierIndexByPosition", () => {
 
   it("ポジションごとのTier index を返す", () => {
     expect(getTierIndexByPosition(1)).toBe(3); // UTG
-    expect(getTierIndexByPosition(2)).toBe(3);
-    expect(getTierIndexByPosition(3)).toBe(3);
-    expect(getTierIndexByPosition(4)).toBe(4);
-    expect(getTierIndexByPosition(5)).toBe(4);
-    expect(getTierIndexByPosition(6)).toBe(5);
-    expect(getTierIndexByPosition(7)).toBe(5); // BTN
+    expect(getTierIndexByPosition(2)).toBe(4);
+    expect(getTierIndexByPosition(3)).toBe(4);
+    expect(getTierIndexByPosition(4)).toBe(5);
+    expect(getTierIndexByPosition(5)).toBe(5);
+    expect(getTierIndexByPosition(6)).toBe(6);
+    expect(getTierIndexByPosition(7)).toBe(7); // BTN
     expect(getTierIndexByPosition(9)).toBe(7); // BB
   });
 });
@@ -65,12 +65,17 @@ describe("judgeInRange", () => {
   it("Tier内のハンドなら true を返す", () => {
     // position 1 -> tierIndex 3 (Tier 1〜4 が対象)
     expect(judgeInRange(["As", "Kh"], 1)).toBe(true); // AKo は Tier1
-    expect(judgeInRange(["6s", "6h"], 1)).toBe(true); // 66 は Tier4
+    expect(judgeInRange(["As", "Qh"], 1)).toBe(true); // AQo は Tier2
+    expect(judgeInRange(["Ks", "Js"], 1)).toBe(true); // KJs は Tier3
+    expect(judgeInRange(["7s", "7h"], 1)).toBe(true); // 77 は Tier3
+    expect(judgeInRange(["6s", "6h"], 2)).toBe(true); // 66 は Tier4
+    expect(judgeInRange(["Ts", "8s"], 4)).toBe(true); // T8s は Tier5
+    expect(judgeInRange(["Ts", "9o"], 6)).toBe(true); // T9o は Tier6
   });
 
   it("Tier外のハンドなら false を返す", () => {
     // 72o はどの Tier にも含まれない
+    expect(judgeInRange(["6s", "6h"], 1)).toBe(false); // 66 は Tier4
     expect(judgeInRange(["7s", "2h"], 1)).toBe(false);
-    expect(judgeInRange(["7s", "2h"], 5)).toBe(false);
   });
 });

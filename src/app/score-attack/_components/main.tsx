@@ -2,9 +2,6 @@
 
 import { useEffect } from "react";
 import { StackView } from "@/components/stack-view";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 import { ActionArea } from "./action-area";
 import { CommunityBoard } from "./community-board";
@@ -12,20 +9,7 @@ import { ConfirmPosition } from "./confirm-position";
 import { ResultArea } from "./result-area";
 
 export default function Main() {
-  const { initialized, stack, hero, board, position, shuffleAndDeal, reset } =
-    useActionStore();
-
-  const rankPromise = simulateVsListWithRanks({
-    hero: hero.join(" "),
-    board: board.join(" "),
-    compare: getHandsByTiers(getTierIndexByPosition(position), [
-      ...hero,
-      ...board,
-    ])
-      .join("; ")
-      .replaceAll(",", " "),
-    trials: 1000,
-  });
+  const { initialized, stack, shuffleAndDeal, reset } = useActionStore();
 
   useEffect(() => {
     shuffleAndDeal();
@@ -35,14 +19,14 @@ export default function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-2 p-2 pb-8">
+    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-3 p-2 pb-8">
       <CommunityBoard />
       <ConfirmPosition />
-      <div className="flex w-full justify-between space-y-1 px-2">
-        <ResultArea />
+      <ResultArea />
+      <div className="flex h-1 w-full items-start justify-end space-y-1 px-2">
         <StackView stack={stack} />
       </div>
-      <ActionArea rankPromise={rankPromise} />
+      <ActionArea />
     </div>
   );
 }
