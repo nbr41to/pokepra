@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { StackView } from "@/components/stack-view";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
@@ -11,13 +12,13 @@ import { ConfirmPosition } from "./confirm-position";
 import { ResultArea } from "./result-area";
 
 export default function Main() {
-  const { stack, hand, board, position } = useActionStore();
+  const { stack, hero, board, position, reset } = useActionStore();
 
   const rankPromise = simulateVsListWithRanks({
-    hero: hand.join(" "),
+    hero: hero.join(" "),
     board: board.join(" "),
     compare: getHandsByTiers(getTierIndexByPosition(position), [
-      ...hand,
+      ...hero,
       ...board,
     ])
       .join("; ")
@@ -25,17 +26,19 @@ export default function Main() {
     trials: 1000,
   });
 
+  useEffect(() => {
+    return reset;
+  }, [reset]);
+
   return (
-    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-8 p-2 pb-8">
+    <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-2 p-2 pb-8">
       <CommunityBoard />
-      <div className="flex flex-col items-end space-y-1">
-        <ConfirmPosition />
+      <ConfirmPosition />
+      <div className="flex w-full justify-between space-y-1 px-2">
+        <ResultArea />
         <StackView stack={stack} />
       </div>
-      <div className="w-full space-y-2">
-        <ResultArea rankPromise={rankPromise} />
-        <ActionArea rankPromise={rankPromise} />
-      </div>
+      <ActionArea rankPromise={rankPromise} />
     </div>
   );
 }

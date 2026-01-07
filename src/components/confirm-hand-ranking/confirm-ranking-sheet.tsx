@@ -2,14 +2,15 @@
 
 import { Crown } from "lucide-react";
 import { Suspense } from "react";
+
 import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { PlayCard } from "../play-card";
@@ -26,23 +27,15 @@ type Props = {
   className?: string;
 };
 
-export const ConfirmRankingDrawer = ({
-  hand,
+export const ConfirmRankingSheet = ({
   board,
-  position,
   disabled = false,
   rankPromise,
   className,
 }: Props) => {
   return (
-    <Drawer direction="top">
-      <DrawerTrigger
-        asChild
-        onClick={(e) => {
-          // Blocked aria-hidden on an element の警告回避
-          e.currentTarget.blur();
-        }}
-      >
+    <Sheet>
+      <SheetTrigger asChild>
         <Button
           className={cn("rounded-full", className)}
           variant="outline"
@@ -51,27 +44,27 @@ export const ConfirmRankingDrawer = ({
         >
           <Crown size={16} />
         </Button>
-      </DrawerTrigger>
+      </SheetTrigger>
 
-      <DrawerContent className="max-h-[95dvh]! px-1 pb-4">
-        <DrawerHeader>
-          <DrawerTitle>Hand Ranking</DrawerTitle>
+      <SheetContent className="h-dvh gap-0 px-1 pb-4" side="bottom">
+        <SheetHeader>
+          <SheetTitle>Hand Ranking</SheetTitle>
           <div className="flex items-center gap-x-4 py-1">
             <div className="flex gap-x-1">
               {board.map((card) => (
                 <PlayCard key={card} className="w-8" size="sm" rs={card} />
               ))}
             </div>
-            <DrawerDescription>
+            <SheetDescription>
               Simulated hand rankings based on the current board.
-            </DrawerDescription>
+            </SheetDescription>
           </div>
-        </DrawerHeader>
+        </SheetHeader>
 
         <Suspense fallback={<ConfirmRankingSkeleton />}>
           <ConfirmRanking promise={rankPromise} />
         </Suspense>
-      </DrawerContent>
-    </Drawer>
+      </SheetContent>
+    </Sheet>
   );
 };

@@ -1,4 +1,5 @@
 import { Club, Diamond, Heart, type LucideProps, Spade } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Props = {
   suit: "s" | "h" | "d" | "c";
@@ -6,14 +7,12 @@ type Props = {
 } & Omit<LucideProps, "ref">;
 
 export const SuitIcon = ({ suit, ...props }: Props) => {
-  switch (suit) {
-    case "s":
-      return <Spade {...props} />;
-    case "h":
-      return <Heart {...props} />;
-    case "d":
-      return <Diamond {...props} />;
-    case "c":
-      return <Club {...props} />;
-  }
+  return (
+    <>
+      <Spade className={cn(suit !== "s" && "hidden")} {...props} />
+      <Heart className={cn(suit !== "h" && "hidden")} {...props} />
+      <Diamond className={cn(suit !== "d" && "hidden")} {...props} />
+      <Club className={cn(suit !== "c" && "hidden")} {...props} />
+    </>
+  );
 };

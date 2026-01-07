@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import { useActionStore } from "../_utils/state";
 
 export const PreflopAction = () => {
-  const { preflop, preflopAction, switchNextPhase } = useActionStore();
+  const { preflop, preflopAction, shuffleAndDeal } = useActionStore();
 
   const handleNext = () => {
-    switchNextPhase();
+    shuffleAndDeal();
   };
 
   return (

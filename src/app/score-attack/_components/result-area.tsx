@@ -1,27 +1,19 @@
-import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-range-drawer";
-import { ConfirmRankingDrawer } from "@/components/confirm-hand-ranking/confirm-ranking-drawer";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { getHandString, judgeInRange } from "@/utils/preflop-range";
+import { judgeInRange } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 
-export const ResultArea = ({
-  rankPromise,
-}: {
-  rankPromise: Promise<CombinedPayload>;
-}) => {
-  const { phase, position, hand, board, score, preflop, flop } =
-    useActionStore();
+export const ResultArea = () => {
+  const { phase, position, hero, delta, preflop, flop } = useActionStore();
 
-  if (hand.length === 0 || !preflop) return <div className="h-12" />;
+  if (hero.length === 0 || !preflop) return <div className="h-8" />;
 
-  const inRange = judgeInRange(hand, position);
+  const inRange = judgeInRange(hero, position);
   const correct = preflop === "open-raise" ? inRange : !inRange;
 
   return (
-    <div className="relative flex h-12 items-end justify-between pl-12">
+    <div className="relative flex h-8 grow items-end justify-center">
       <div>
         {preflop && !flop ? (
           correct ? (
@@ -31,32 +23,17 @@ export const ResultArea = ({
           )
         ) : (
           <span
-            key={score}
+            key={phase + delta} // deltaが変わるたびにアニメーションを再実行するためのkey
             className={cn(
               "inline-block origin-bottom animate-score-bounce font-bold text-xl",
-              score > 0 ? "text-green-500" : "text-red-500",
-              score === 0 && "hidden",
+              delta > 0 ? "text-green-500" : "text-red-500",
+              delta === 0 && "hidden",
             )}
           >
-            {score > 0 ? "+" : ""}
-            {score}pt
+            {delta > 0 ? "+" : ""}
+            {delta}pt
           </span>
         )}
-      </div>
-      <div className="absolute right-0 bottom-0 flex items-center gap-2">
-        <ConfirmRankingDrawer
-          className={cn(board.length < 3 && "hidden")}
-          position={position}
-          hand={hand}
-          board={board}
-          rankPromise={rankPromise}
-        />
-        <ConfirmRangeDrawer
-          className={cn(
-            (flop || (phase === "preflop" && preflop !== "fold")) && "hidden",
-          )}
-          mark={getHandString(hand)}
-        />
       </div>
     </div>
   );

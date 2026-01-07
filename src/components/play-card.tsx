@@ -56,6 +56,7 @@ export const PlayCard = ({
 
   return (
     <div
+      suppressHydrationWarning
       data-suit={suit}
       className={cn(variants({ size, variant, className }))}
     >
@@ -68,8 +69,15 @@ export const PlayCard = ({
         />
       ) : (
         <div className="grid place-items-center">
-          <SuitIcon suit={suit} strokeWidth={strokeWidth} />
-          <span className={cn("font-bold font-montserrat", rankFontSizeClass)}>
+          <SuitIcon
+            suppressHydrationWarning
+            suit={suit}
+            strokeWidth={strokeWidth}
+          />
+          <span
+            suppressHydrationWarning
+            className={cn("font-bold font-montserrat", rankFontSizeClass)}
+          >
             {rank}
           </span>
         </div>

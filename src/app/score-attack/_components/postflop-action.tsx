@@ -9,7 +9,7 @@ type Props = {
 };
 export const PostflopAction = ({ onAction }: Props) => {
   const [loading, setLoading] = useState(false);
-  const { phase, flop, turn, river, switchNextPhase } = useActionStore();
+  const { phase, flop, turn, river, shuffleAndDeal } = useActionStore();
 
   const handleOnAction = async () => {
     setLoading(true);
@@ -18,7 +18,7 @@ export const PostflopAction = ({ onAction }: Props) => {
   };
 
   const handleNext = () => {
-    switchNextPhase();
+    shuffleAndDeal();
   };
 
   const disabled =

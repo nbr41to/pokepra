@@ -25,6 +25,26 @@ function getAllCards(): string[] {
 }
 
 /**
+ * 配列をシャッフル
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+/**
+ * すべてのカードをシャッフルしてゲームに使用するdeckを作成
+ */
+function getShuffledDeck(excludes: string[] = []): string[] {
+  const allCards = getAllCards().filter((card) => !excludes.includes(card));
+  return shuffleArray(allCards);
+}
+
+/**
  * すべてのハンドを取得
  * @param excludes
  */
@@ -115,4 +135,11 @@ function genBoard(cardCount: 1 | 3 = 3, usedCards: string[] = []) {
   return board;
 }
 
-export { getAllCards, getAllHands, getHandsByTiers, genHands, genBoard };
+export {
+  getShuffledDeck,
+  getAllCards,
+  getAllHands,
+  getHandsByTiers,
+  genHands,
+  genBoard,
+};

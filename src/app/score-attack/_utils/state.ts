@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { genBoard, genHands } from "@/utils/dealer";
+import { genHands, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 import { judgeInRange } from "@/utils/preflop-range";
 
@@ -22,15 +22,14 @@ type History = {
 };
 
 type State = {
-  state: "reception" | "confirmation"; // アクション待ち | 確認待ち
-
-  // game
   phase: Phase; // ストリート
   stack: number; // 持ち点
-  score: number; // 前回のスコア変動
+  delta: number; // 前回のスコア変動
+
+  deck: string[]; // デッキ
 
   position: number; // ポジション番号
-  hand: string[]; // ハンド
+  hero: string[]; // 自分のハンド
   showedHand: boolean; // ハンドを見たかどうか
   board: string[]; // ボード
 
@@ -54,18 +53,18 @@ type Actions = {
     action: "commit" | "fold",
     rank: CombinedPayload,
   ) => void;
-  switchNextPhase: () => void;
 };
 
 type Store = State & Actions;
 
-const INITIAL_STATE: State = {
-  state: "reception",
+const hero = genHands(8);
+const deck = getShuffledDeck(hero);
+
+const INITIAL_STATE: Omit<State, "deck" | "hero"> = {
   phase: "preflop",
   stack: 100,
-  score: 0,
-  position: 0,
-  hand: [],
+  delta: 0,
+  position: 1,
   board: [],
 
   showedHand: false,
@@ -80,32 +79,40 @@ const INITIAL_STATE: State = {
 const useActionStore = create<Store>((set, get) => ({
   /* State */
   ...INITIAL_STATE,
+  hero,
+  deck,
 
   /* Action */
   reset: () => {
-    set(() => ({ ...INITIAL_STATE }));
+    set(() => ({ ...INITIAL_STATE, hero, deck }));
   },
   shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
     const tier = options?.tier ?? DEFAULT_TIER;
     const people = options?.people ?? PEOPLE;
 
-    const hand = genHands(tier);
+    const { stack } = get();
+
+    const hero = genHands(tier);
+    const deck = getShuffledDeck(hero);
+
+    console.log(hero);
+
     set(() => ({
       ...INITIAL_STATE,
       position: genPositionNumber(people),
-      hand,
-      // INITIAL_STATE をベースにしているが、stack は維持したいので上書きせず流用
-      stack: get().stack,
+      hero: hero,
+      deck: deck,
+      stack,
     }));
   },
   // ハンドを確認
   showHand: () => {
-    set(() => ({ showedHand: true }));
+    set({ showedHand: true });
   },
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
-    const { position, hand, stack } = get();
-    const inRange = judgeInRange(hand, position);
+    const { position, hero, deck, stack } = get();
+    const inRange = judgeInRange(hero, position);
     const correct = action === "open-raise" ? inRange : !inRange;
     const amount = correct ? 2 : -2;
 
@@ -115,14 +122,15 @@ const useActionStore = create<Store>((set, get) => ({
         stack: stack + amount,
       });
     } else {
-      const board = genBoard(3, hand);
-      set(() => ({ phase: "flop", board, score: 0 }));
+      const board = deck.splice(0, 3);
 
       set({
         preflop: action,
         stack: stack + amount,
         phase: "flop",
+        deck,
         board,
+        delta: amount,
       });
     }
   },
@@ -139,7 +147,7 @@ const useActionStore = create<Store>((set, get) => ({
       set(() => ({ river: action }));
     }
 
-    const { stack, hand, board } = get();
+    const { stack, deck, board } = get();
 
     const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;
 
@@ -158,11 +166,11 @@ const useActionStore = create<Store>((set, get) => ({
 
     const newStack = stack + deltaScore;
 
-    const newCard = genBoard(1, [...hand, ...board])[0];
+    const newCard = deck.splice(0, 1)[0];
 
     if (action === "fold") {
       set(() => ({
-        score: deltaScore,
+        delta: deltaScore,
       }));
       return;
     }
@@ -170,48 +178,9 @@ const useActionStore = create<Store>((set, get) => ({
     set(() => ({
       phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
       stack: newStack,
-      score: deltaScore,
+      delta: deltaScore,
       ...(phase === "river" ? {} : { board: [...board, newCard] }),
     }));
-  },
-  // フェーズを進める（現在の状態を見て自動で判断）
-  switchNextPhase: () => {
-    const { hand, phase, preflop, flop, turn, shuffleAndDeal } = get();
-    if (phase === "preflop") {
-      if (preflop === "fold") {
-        shuffleAndDeal();
-      }
-    }
-
-    if (phase === "flop") {
-      if (flop === "fold") {
-        shuffleAndDeal();
-      } else {
-        const { board: currentBoard } = get();
-        const newCard = genBoard(1, [...hand, ...currentBoard])[0];
-        set(() => ({
-          phase: "turn",
-          board: [...currentBoard, newCard],
-        }));
-      }
-    }
-
-    if (phase === "turn") {
-      if (turn === "fold") {
-        shuffleAndDeal();
-      } else {
-        const { board: currentBoard } = get();
-        const newCard = genBoard(1, [...hand, ...currentBoard])[0];
-        set(() => ({
-          phase: "river",
-          board: [...currentBoard, newCard],
-        }));
-      }
-    }
-
-    if (phase === "river") {
-      shuffleAndDeal();
-    }
   },
 }));
 

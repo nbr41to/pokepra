@@ -2,7 +2,7 @@
 
 import { GalleryVertical, Grid, List, X } from "lucide-react";
 import { use } from "react";
-import { DrawerClose, DrawerFooter } from "@/components/ui/drawer";
+import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { Button } from "../ui/button";
@@ -52,19 +52,19 @@ export const ConfirmRanking = ({ promise }: Props) => {
         </div>
 
         <TabsContent value="list" className="grow">
-          <ScrollArea className="relative h-[65dvh]">
+          <ScrollArea className="relative h-[calc(100dvh-200px)]">
             <HandRankingList result={result} onScroll={scrollToMyHand} />
           </ScrollArea>
         </TabsContent>
         <TabsContent value="grid">
-          <ScrollArea className="relative h-[65dvh]">
+          <ScrollArea className="relative h-[calc(100dvh-200px)]">
             <HandRankingGrid result={result} onScroll={scrollToMyHand} />
           </ScrollArea>
         </TabsContent>
       </Tabs>
 
-      <DrawerFooter className="absolute bottom-6 left-0 z-10 w-full">
-        <DrawerClose asChild>
+      <SheetFooter className="absolute bottom-6 left-0 z-10 w-full">
+        <SheetClose asChild>
           <Button
             variant="outline"
             size="icon-lg"
@@ -72,7 +72,7 @@ export const ConfirmRanking = ({ promise }: Props) => {
           >
             <X />
           </Button>
-        </DrawerClose>
+        </SheetClose>
         <Button
           className="absolute right-2 bottom-0 rounded-full opacity-80"
           size="icon-lg"
@@ -80,7 +80,7 @@ export const ConfirmRanking = ({ promise }: Props) => {
         >
           <GalleryVertical />
         </Button>
-      </DrawerFooter>
+      </SheetFooter>
     </>
   );
 };
