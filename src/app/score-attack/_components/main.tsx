@@ -12,7 +12,8 @@ import { ConfirmPosition } from "./confirm-position";
 import { ResultArea } from "./result-area";
 
 export default function Main() {
-  const { stack, hero, board, position, reset } = useActionStore();
+  const { initialized, stack, hero, board, position, shuffleAndDeal, reset } =
+    useActionStore();
 
   const rankPromise = simulateVsListWithRanks({
     hero: hero.join(" "),
@@ -27,8 +28,11 @@ export default function Main() {
   });
 
   useEffect(() => {
+    shuffleAndDeal();
     return reset;
-  }, [reset]);
+  }, [shuffleAndDeal, reset]);
+
+  if (!initialized) return null;
 
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-end gap-y-2 p-2 pb-8">

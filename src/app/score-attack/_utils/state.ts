@@ -22,6 +22,8 @@ type History = {
 };
 
 type State = {
+  initialized: boolean;
+
   phase: Phase; // ストリート
   stack: number; // 持ち点
   delta: number; // 前回のスコア変動
@@ -57,14 +59,14 @@ type Actions = {
 
 type Store = State & Actions;
 
-const hero = genHands(8);
-const deck = getShuffledDeck(hero);
-
-const INITIAL_STATE: Omit<State, "deck" | "hero"> = {
+const INITIAL_STATE: State = {
+  initialized: false,
   phase: "preflop",
   stack: 100,
   delta: 0,
   position: 1,
+  hero: [],
+  deck: [],
   board: [],
 
   showedHand: false,
@@ -79,12 +81,10 @@ const INITIAL_STATE: Omit<State, "deck" | "hero"> = {
 const useActionStore = create<Store>((set, get) => ({
   /* State */
   ...INITIAL_STATE,
-  hero,
-  deck,
 
   /* Action */
   reset: () => {
-    set(() => ({ ...INITIAL_STATE, hero, deck }));
+    set(() => ({ ...INITIAL_STATE }));
   },
   shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
     const tier = options?.tier ?? DEFAULT_TIER;
@@ -95,14 +95,13 @@ const useActionStore = create<Store>((set, get) => ({
     const hero = genHands(tier);
     const deck = getShuffledDeck(hero);
 
-    console.log(hero);
-
     set(() => ({
       ...INITIAL_STATE,
       position: genPositionNumber(people),
       hero: hero,
       deck: deck,
       stack,
+      initialized: true,
     }));
   },
   // ハンドを確認
