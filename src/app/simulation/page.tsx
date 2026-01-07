@@ -83,9 +83,9 @@ export default function Page() {
 
     try {
       const result = await simulateVsListWithRanks({
-        hero,
-        board,
-        compare,
+        hero: hero.split(" "),
+        board: board.split(" "),
+        compare: compare.split("; ").map((hand) => hand.split(" ")),
         trials: 1000,
       });
 
