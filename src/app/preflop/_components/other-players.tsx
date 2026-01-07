@@ -8,20 +8,16 @@ import { useActionStore } from "../_utils/state";
 
 export const OtherPlayers = () => {
   const PEOPLE = 9;
-  const {
-    position,
-    hand: heroHand,
-    otherPlayersHands,
-    preflop,
-  } = useActionStore();
+  const { position, stack, hero, otherPlayersHands, preflop } =
+    useActionStore();
 
   const seats = Array.from({ length: PEOPLE }, (_, index) => index + 1);
   const angleStep = (2 * Math.PI) / PEOPLE;
   const baseAngle = Math.PI / 2 - (position - 1) * angleStep; // 自身が真下に来るように調整
   const radiusPercent = 38;
   const selfRate =
-    heroHand.length > 1
-      ? Rating.find((r) => r.hand === getHandString(heroHand))?.player6
+    hero.length > 1
+      ? Rating.find((r) => r.hand === getHandString(hero))?.player6
       : undefined;
 
   return (
@@ -32,7 +28,7 @@ export const OtherPlayers = () => {
           const x = 50 + Math.cos(angle) * radiusPercent;
           const y = 50 + Math.sin(angle) * radiusPercent;
           const isSelf = seatNumber === position;
-          const hand = [heroHand, ...otherPlayersHands][seatNumber - position];
+          const hand = [hero, ...otherPlayersHands][seatNumber - position];
           const rating = hand
             ? Rating.find((r) => r.hand === getHandString(hand))?.player6
             : undefined;
@@ -85,6 +81,9 @@ export const OtherPlayers = () => {
         })}
         <div>
           <Redo className="absolute -bottom-2 left-1/2 size-8 -translate-x-20 rotate-225 text-gray-400 dark:text-gray-600" />
+        </div>
+        <div className="absolute right-0 bottom-0 font-bold text-xl">
+          {stack} pt
         </div>
       </div>
     </div>

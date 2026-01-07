@@ -29,7 +29,7 @@ export const HandRankingGrid = ({ result, onScroll }: Props) => {
           <div className="h-full space-y-2">
             <div className="text-sm/[1]">{index + 1}.</div>
             <Combo className="w-12 scale-80" hand={hand.split(" ")} />
-            <span className="text-xs">EV</span>
+            <span className="text-xs">EQ</span>
             <div className="text-center font-bold text-base">
               <span>
                 {(((win + tie / 2) / count) * 100).toFixed(1).split(".")[0]}

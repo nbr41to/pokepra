@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { genBoard, genHands } from "@/utils/dealer";
+import RANKING from "@/data/preflop-hand-ranking.json";
+import { genHands } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
-import { judgeInRange } from "@/utils/preflop-range";
+import { getHandString } from "@/utils/preflop-range";
 
 const PEOPLE = 9;
-const DEFAULT_TIER = 6;
 
-type Phase = "preflop" | "flop" | "turn" | "river";
+type Phase = "preflop";
 type PreflopAction = "open-raise" | "fold";
 
 type History = {
@@ -14,9 +14,6 @@ type History = {
   position: number;
   board: string[];
   preflop: PreflopAction;
-  flop: "commit" | "fold" | null;
-  turn: "commit" | "fold" | null;
-  river: "commit" | "fold" | null;
   equity: number;
 };
 
@@ -26,10 +23,10 @@ type State = {
   // game
   phase: Phase; // ストリート
   stack: number; // 持ち点
-  score: number; // 前回のスコア変動
+  delta: number; // 変動点数
 
   position: number; // ポジション番号
-  hand: string[]; // ハンド
+  hero: string[]; // ハンド
   otherPlayersHands: string[][]; // 他プレイヤーのハンド
   showedHand: boolean; // ハンドを見たかどうか
 
@@ -42,6 +39,7 @@ type State = {
 
 type Actions = {
   reset: () => void;
+  retry: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
@@ -52,10 +50,10 @@ type Store = State & Actions;
 const INITIAL_STATE: State = {
   state: "reception",
   phase: "preflop",
-  stack: 100,
-  score: 0,
+  stack: 10,
+  delta: 0,
   position: 0,
-  hand: [],
+  hero: [],
   otherPlayersHands: [],
 
   showedHand: false,
@@ -72,22 +70,40 @@ const useActionStore = create<Store>((set, get) => ({
   reset: () => {
     set(() => ({ ...INITIAL_STATE }));
   },
+  retry: () => {
+    const people = PEOPLE;
+    const position = genPositionNumber(people - 1);
+
+    const hero = genHands(0);
+    const otherPlayersHands: string[][] = [];
+    for (let i = 1; i < people - position + 1; i++) {
+      const hands = genHands(0, [...hero, ...otherPlayersHands.flat()]);
+      otherPlayersHands.push(hands);
+    }
+    set(() => ({
+      ...INITIAL_STATE,
+      position,
+      hero,
+      otherPlayersHands,
+      preflop: null,
+    }));
+  },
   shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
     const { stack } = get();
     const people = options?.people ?? PEOPLE;
     const position = genPositionNumber(people - 1);
 
-    const playerHand = genHands(0);
+    const hero = genHands(0);
     const otherPlayersHands: string[][] = [];
     for (let i = 1; i < people - position + 1; i++) {
-      const hands = genHands(0, [...playerHand, ...otherPlayersHands.flat()]);
+      const hands = genHands(0, [...hero, ...otherPlayersHands.flat()]);
       otherPlayersHands.push(hands);
     }
 
     set(() => ({
       ...INITIAL_STATE,
       position,
-      hand: playerHand,
+      hero,
       otherPlayersHands,
       stack,
       preflop: null,
@@ -99,25 +115,25 @@ const useActionStore = create<Store>((set, get) => ({
   },
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
-    const { position, hand, stack } = get();
-    const inRange = judgeInRange(hand, position);
-    const correct = action === "open-raise" ? inRange : !inRange;
-    const amount = correct ? 2 : -2;
-
-    if (action === "fold") {
-      set({
-        preflop: action,
-        stack: stack + amount,
+    if (action === "open-raise") {
+      const { hero, stack, otherPlayersHands } = get();
+      const heroEq =
+        RANKING.find((r) => r.hand === getHandString(hero))?.player6 ?? 0;
+      const otherHandEqs = otherPlayersHands.map((h) => {
+        return RANKING.find((r) => r.hand === getHandString(h))?.player6 ?? 0;
       });
-    } else {
-      const board = genBoard(3, hand);
-      set(() => ({ phase: "flop", board, score: 0 }));
-
+      const lossCount = otherHandEqs.filter((eq) => eq > heroEq).length;
+      const delta = lossCount === 0 ? 3 : -lossCount;
       set({
         preflop: action,
-        stack: stack + amount,
+        stack: stack + delta,
+        delta,
       });
     }
+
+    set({
+      preflop: action,
+    });
   },
 }));
 
