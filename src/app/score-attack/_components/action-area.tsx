@@ -22,7 +22,7 @@ export const ActionArea = ({
 
   const handleOnPostflopAction = async (answer: "commit" | "fold") => {
     const result = await rankPromise;
-    postflopAction(phase, answer, result.equity);
+    postflopAction(phase, answer, result);
   };
 
   const handleFoldAction = () => {

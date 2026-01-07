@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { genBoard, genHands } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 import { judgeInRange } from "@/utils/preflop-range";
@@ -51,7 +52,7 @@ type Actions = {
   postflopAction: (
     phase: Phase,
     action: "commit" | "fold",
-    equity: number,
+    rank: CombinedPayload,
   ) => void;
   switchNextPhase: () => void;
 };
@@ -125,7 +126,11 @@ const useActionStore = create<Store>((set, get) => ({
       });
     }
   },
-  postflopAction: (phase: Phase, action: "commit" | "fold", equity: number) => {
+  postflopAction: (
+    phase: Phase,
+    action: "commit" | "fold",
+    rank: CombinedPayload,
+  ) => {
     if (phase === "flop") {
       set(() => ({ flop: action }));
     } else if (phase === "turn") {
@@ -135,25 +140,39 @@ const useActionStore = create<Store>((set, get) => ({
     }
 
     const { stack, hand, board } = get();
-    const M = 100; // 倍率
-    const BASE_LINE = 0.5; // 基準点
-    const deltaScore = Math.floor((equity - BASE_LINE) * M);
+
+    const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;
+
+    const rare =
+      rank.data.findIndex((data) => data.hand === rank.hand) / rank.data.length;
+
+    const compareEquityAveage =
+      rank.data.reduce(
+        (acc, cur) => acc + (cur.win + cur.tie / 2) / cur.count,
+        0,
+      ) / rank.data.length;
+    const deltaScore = Math.floor(
+      ((rank.equity - compareEquityAveage) * 10 * STREET_W[phase]) /
+        (rare < 0.1 ? 0.5 : rare < 0.3 ? 0.7 : 1),
+    );
+
     const newStack = stack + deltaScore;
 
-    if (action === "commit") {
-      const newCard = genBoard(1, [...hand, ...board])[0];
+    const newCard = genBoard(1, [...hand, ...board])[0];
 
-      set(() => ({
-        phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
-        stack: newStack,
-        score: deltaScore,
-        ...(phase === "river" ? {} : { board: [...board, newCard] }),
-      }));
-    } else {
+    if (action === "fold") {
       set(() => ({
         score: deltaScore,
       }));
+      return;
     }
+
+    set(() => ({
+      phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
+      stack: newStack,
+      score: deltaScore,
+      ...(phase === "river" ? {} : { board: [...board, newCard] }),
+    }));
   },
   // フェーズを進める（現在の状態を見て自動で判断）
   switchNextPhase: () => {
