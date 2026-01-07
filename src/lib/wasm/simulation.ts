@@ -98,6 +98,21 @@ async function simulateVsListWithRanks({
   seed?: bigint;
   wasmUrl?: string;
 }): Promise<CombinedPayload> {
+  // 条件を満たさない場合
+  if (
+    hero.trim().length < 4 ||
+    board.trim().length < 6 ||
+    compare.trim().length < 2
+  )
+    return new Promise<CombinedPayload>((resolve) => {
+      resolve({
+        hand: hero,
+        equity: 0,
+        data: [],
+      });
+    });
+
+  await new Promise((resolve) => setTimeout(resolve, 200)); // Yield to avoid blocking UI
   const startTime = performance.now();
   const heroTrimmed = hero.trim();
   const boardTrimmed = board.trim();

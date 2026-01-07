@@ -3,10 +3,15 @@ import { ConfirmRankingDrawer } from "@/components/confirm-hand-ranking/confirm-
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { getHandString, judgeInRange } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
 
-export const ResultArea = () => {
+export const ResultArea = ({
+  rankPromise,
+}: {
+  rankPromise: Promise<CombinedPayload>;
+}) => {
   const { phase, position, hand, board, score, preflop, flop } =
     useActionStore();
 
@@ -44,6 +49,7 @@ export const ResultArea = () => {
           position={position}
           hand={hand}
           board={board}
+          rankPromise={rankPromise}
         />
         <ConfirmRangeDrawer
           className={cn(

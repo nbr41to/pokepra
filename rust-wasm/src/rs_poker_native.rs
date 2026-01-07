@@ -3,6 +3,7 @@
 use rs_poker::core::{Card, Hand, Rank, Rankable, Suit, Value};
 use std::cmp::Ordering;
 
+/// 2文字のカード表記から `Card` を構築する。
 fn parse_card(token: &str) -> Option<Card> {
   if token.len() != 2 {
     return None;
@@ -13,6 +14,7 @@ fn parse_card(token: &str) -> Option<Card> {
   Some(Card { value, suit })
 }
 
+/// 文字列ハンドを5枚の `Hand` に変換する。
 fn parse_hand_5(hand: &str) -> Option<Hand> {
   let tokens: Vec<String> = if hand.contains(' ') {
     hand.split_whitespace().map(|s| s.to_string()).collect()
@@ -35,6 +37,7 @@ fn parse_hand_5(hand: &str) -> Option<Hand> {
 
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
+/// `rs_poker` が返すランクを人間が理解しやすいカテゴリで表す列挙。
 pub enum HandCategory {
   HighCard = 0,
   OnePair = 1,
@@ -47,6 +50,7 @@ pub enum HandCategory {
   StraightFlush = 8,
 }
 
+/// `Rank` から対応する `HandCategory` を導出する。
 fn category_from_rank(rank: &Rank) -> HandCategory {
   match rank {
     Rank::StraightFlush(_) => HandCategory::StraightFlush,
@@ -61,11 +65,13 @@ fn category_from_rank(rank: &Rank) -> HandCategory {
   }
 }
 
+/// 文字列表現のハンドを評価して `HandCategory` を返す。
 pub fn evaluate_hand_rs(hand: &str) -> Result<HandCategory, String> {
   let parsed = parse_hand_5(hand).ok_or("failed to parse hand")?;
   Ok(category_from_rank(&parsed.rank()))
 }
 
+/// 2つのハンド文字列を比較し、強弱の順序を返す。
 pub fn compare_hands_rs(a: &str, b: &str) -> Result<Ordering, String> {
   let h1 = parse_hand_5(a).ok_or("failed to parse hand a")?;
   let h2 = parse_hand_5(b).ok_or("failed to parse hand b")?;

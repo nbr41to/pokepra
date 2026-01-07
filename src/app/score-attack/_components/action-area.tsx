@@ -1,12 +1,13 @@
 import { HandConfirmation } from "@/components/hand-confirmation";
-import { iterateWinSimulations } from "@/lib/poker/simulation";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getTierIndexByPosition } from "@/utils/preflop-range";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { useActionStore } from "../_utils/state";
 import { SelectAction } from "./select-action";
 
-export const ActionArea = () => {
+export const ActionArea = ({
+  rankPromise,
+}: {
+  rankPromise: Promise<CombinedPayload>;
+}) => {
   const {
     phase,
     position,
@@ -20,18 +21,7 @@ export const ActionArea = () => {
   } = useActionStore();
 
   const handleOnPostflopAction = async (answer: "commit" | "fold") => {
-    await new Promise((resolve) => setTimeout(resolve, 200)); // アニメーション用のフレーム確保
-    const result = await simulateVsListWithRanks({
-      hero: hand.join(" "),
-      board: board.join(" "),
-      compare: getHandsByTiers(getTierIndexByPosition(position), [
-        ...hand,
-        ...board,
-      ])
-        .join("; ")
-        .replaceAll(",", " "),
-      trials: 100,
-    });
+    const result = await rankPromise;
     postflopAction(phase, answer, result.equity);
   };
 
@@ -59,53 +49,3 @@ export const ActionArea = () => {
     </div>
   );
 };
-
-async function getEquity({
-  position,
-  hand: fixHand,
-  board,
-}: {
-  position: number;
-  hand: string[];
-  board: string[];
-}): Promise<number> {
-  const timeStart = performance.now(); // 計測開始
-
-  const allHands = getHandsByTiers(getTierIndexByPosition(position), [
-    ...board,
-    ...fixHand,
-  ]);
-
-  const ITERATIONS = 100;
-  const COUNT = allHands.length * ITERATIONS;
-
-  const simulateResults = allHands.map((hand) => {
-    const result = iterateWinSimulations([fixHand, hand], board, ITERATIONS);
-
-    return {
-      hand,
-      result,
-    };
-  });
-
-  // fixHand の勝率計算
-  let win = 0;
-  let tie = 0;
-
-  simulateResults.forEach(({ result }) => {
-    const fixHandResult = result.find(
-      (r) => r.hand[0] === fixHand[0] && r.hand[1] === fixHand[1],
-    );
-    if (fixHandResult) {
-      win += fixHandResult.wins;
-      tie += fixHandResult.ties;
-    }
-  });
-
-  const equity = (win + 0.5 * tie) / COUNT;
-
-  const durationMs = performance.now() - timeStart;
-  console.log(`startWinSimulation: end in ${durationMs.toFixed(2)}ms`);
-
-  return equity;
-}

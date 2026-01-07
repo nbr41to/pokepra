@@ -11,9 +11,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getTierIndexByPosition } from "@/utils/preflop-range";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { PlayCard } from "../play-card";
 import { Button } from "../ui/button";
 import { ConfirmRanking } from "./confirm-ranking";
@@ -24,6 +22,7 @@ type Props = {
   board: string[];
   position: number;
   disabled?: boolean;
+  rankPromise: Promise<CombinedPayload>;
   className?: string;
 };
 
@@ -32,20 +31,9 @@ export const ConfirmRankingDrawer = ({
   board,
   position,
   disabled = false,
+  rankPromise,
   className,
 }: Props) => {
-  const equityRanksPromise = simulateVsListWithRanks({
-    hero: hand.join(" "),
-    board: board.join(" "),
-    compare: getHandsByTiers(getTierIndexByPosition(position), [
-      ...hand,
-      ...board,
-    ])
-      .join("; ")
-      .replaceAll(",", " "),
-    trials: 1000,
-  });
-
   return (
     <Drawer direction="top">
       <DrawerTrigger
@@ -81,7 +69,7 @@ export const ConfirmRankingDrawer = ({
         </DrawerHeader>
 
         <Suspense fallback={<ConfirmRankingSkeleton />}>
-          <ConfirmRanking promise={equityRanksPromise} />
+          <ConfirmRanking promise={rankPromise} />
         </Suspense>
       </DrawerContent>
     </Drawer>
