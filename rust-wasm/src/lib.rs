@@ -17,6 +17,29 @@ extern "C" {
   fn report_progress(progress: u32);
 }
 
+#[cfg(target_arch = "wasm32")]
+mod wasm_getrandom {
+  use getrandom::Error;
+
+  #[link(wasm_import_module = "env")]
+  extern "C" {
+    fn getrandom_fill(dest: *mut u8, len: usize) -> i32;
+  }
+
+  #[no_mangle]
+  pub unsafe extern "Rust" fn __getrandom_v03_custom(
+    dest: *mut u8,
+    len: usize,
+  ) -> Result<(), Error> {
+    let rc = getrandom_fill(dest, len);
+    if rc == 0 {
+      Ok(())
+    } else {
+      Err(Error::new_custom(1))
+    }
+  }
+}
+
 fn run_simulation(
   hero_ptr: *const u8,
   hero_len: usize,

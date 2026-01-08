@@ -4,6 +4,7 @@ import type { WasmExports } from "./types";
 const encoder = new TextEncoder();
 
 let progressListener: ((pct: number) => void) | null = null;
+let wasmMemory: WebAssembly.Memory | null = null;
 let wasmInstancePromise: Promise<{
   exports: WasmExports;
   memory: WebAssembly.Memory;
@@ -50,6 +51,22 @@ export async function loadWasm(wasmUrl: string): Promise<{
         report_progress(progress: number) {
           progressListener?.(progress);
         },
+        getrandom_fill(dest: number, len: number) {
+          if (!wasmMemory) {
+            return 1;
+          }
+          const view = new Uint8Array(wasmMemory.buffer, dest, len);
+          const cryptoObj =
+            typeof globalThis !== "undefined" ? globalThis.crypto : undefined;
+          if (cryptoObj?.getRandomValues) {
+            cryptoObj.getRandomValues(view);
+            return 0;
+          }
+          for (let i = 0; i < view.length; i += 1) {
+            view[i] = Math.floor(Math.random() * 256);
+          }
+          return 0;
+        },
       },
     };
     const { instance } = await WebAssembly.instantiate(buffer, imports);
@@ -58,6 +75,7 @@ export async function loadWasm(wasmUrl: string): Promise<{
     if (!(memory instanceof WebAssembly.Memory)) {
       throw new Error("WASM export 'memory' not found");
     }
+    wasmMemory = memory;
     return { exports: exports as WasmExports, memory };
   })();
 
