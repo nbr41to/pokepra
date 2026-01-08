@@ -2,7 +2,10 @@ import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-rang
 import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
 import { HandConfirmation } from "@/components/hand-confirmation";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import {
+  simulateVsListEquity,
+  simulateVsListWithRanks,
+} from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
 import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "../_utils/state";
@@ -24,7 +27,15 @@ export const ActionArea = () => {
   } = useActionStore();
 
   const handleOnPostflopAction = async (answer: "commit" | "fold") => {
-    const result = await rankPromise;
+    const result = await simulateVsListEquity({
+      hero: hero,
+      board: board,
+      compare: getHandsByTiers(getTierIndexByPosition(position), [
+        ...hero,
+        ...board,
+      ]),
+      trials: 1000,
+    });
     postflopAction(phase, answer, result);
   };
 

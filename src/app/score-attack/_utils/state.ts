@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
+import type { EquityPayload } from "@/lib/wasm/simulation";
 import { genHands, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 import { judgeInRange } from "@/utils/preflop-range";
@@ -53,7 +53,7 @@ type Actions = {
   postflopAction: (
     phase: Phase,
     action: "commit" | "fold",
-    rank: CombinedPayload,
+    result: EquityPayload,
   ) => void;
 };
 
@@ -136,7 +136,7 @@ const useActionStore = create<Store>((set, get) => ({
   postflopAction: (
     phase: Phase,
     action: "commit" | "fold",
-    rank: CombinedPayload,
+    result: EquityPayload,
   ) => {
     if (phase === "flop") {
       set(() => ({ flop: action }));
@@ -151,15 +151,14 @@ const useActionStore = create<Store>((set, get) => ({
     const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;
 
     const rare =
-      rank.data.findIndex((data) => data.hand === rank.hand) / rank.data.length;
+      result.data.findIndex((data) => data.hand === result.hand) /
+      result.data.length;
 
     const compareEquityAveage =
-      rank.data.reduce(
-        (acc, cur) => acc + (cur.win + cur.tie / 2) / cur.count,
-        0,
-      ) / rank.data.length;
+      result.data.reduce((acc, cur) => acc + cur.equity, 0) /
+      result.data.length;
     const deltaScore = Math.floor(
-      ((rank.equity - compareEquityAveage) * 10 * STREET_W[phase]) /
+      ((result.equity - compareEquityAveage) * 10 * STREET_W[phase]) /
         (rare < 0.1 ? 0.5 : rare < 0.3 ? 0.7 : 1),
     );
 

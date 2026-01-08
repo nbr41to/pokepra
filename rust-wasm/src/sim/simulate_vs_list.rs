@@ -1,5 +1,8 @@
 use std::cmp::Ordering;
 
+use rs_poker::core::{Card as RsCard, Hand as RsHand, Suit as RsSuit, Value as RsValue};
+use rs_poker::holdem::MonteCarloGame;
+
 use super::card::Card;
 use super::deck::{build_deck, decode_hand_pair, shuffle_slice};
 use super::eval::best_of;
@@ -32,6 +35,7 @@ pub fn simulate_vs_list_equity(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
+  let _ = seed;
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
   let board = parse_board(board_str).ok_or("failed to parse board")?;
@@ -89,11 +93,7 @@ pub fn simulate_vs_list_equity(
   }
 
   let trials = trials.max(1);
-  let board_len = board.len();
-  let missing_board = 5usize.saturating_sub(board_len);
-  let mut board_buf = [Card { rank: 0, suit: 0 }; 5];
-  board_buf[..board_len].copy_from_slice(&board);
-  let mut rng = Lcg64::new(seed);
+  let board_rs: Vec<RsCard> = board.iter().map(to_rs_card).collect();
 
   let mut stats: Vec<(u32, u32, u32, u32, u32)> =
     vec![(0, 0, 0, 0, 0); opponents.len()];
@@ -108,56 +108,27 @@ pub fn simulate_vs_list_equity(
     let mut ties = 0u32;
     let mut plays = 0u32;
 
-    let mut exclude = Vec::with_capacity(board_len + 4);
-    exclude.extend_from_slice(&board);
-    exclude.push(hero_hand[0]);
-    exclude.push(hero_hand[1]);
-    exclude.push(opp[0]);
-    exclude.push(opp[1]);
-    let remaining_cards = 52usize.saturating_sub(exclude.len());
-    if remaining_cards < missing_board {
-      return Err("not enough cards to complete board".into());
+    let mut hero_rs = to_rs_hand(&hero_hand);
+    let mut opp_rs = to_rs_hand(opp);
+    for c in &board_rs {
+      hero_rs.insert(*c);
+      opp_rs.insert(*c);
     }
-    let deck_template = build_deck(&exclude);
-    let mut deck = deck_template.clone();
-    let mut full_board = board_buf;
+
+    let mut game =
+      MonteCarloGame::new(vec![hero_rs, opp_rs]).map_err(|e| format!("{e:?}"))?;
 
     for _ in 0..trials {
-      deck.clone_from(&deck_template);
-      shuffle_slice(&mut deck, &mut rng);
-
-      for i in 0..missing_board {
-        full_board[board_len + i] = deck[i];
-      }
-
-      let hero_cards = [
-        hero_hand[0],
-        hero_hand[1],
-        full_board[0],
-        full_board[1],
-        full_board[2],
-        full_board[3],
-        full_board[4],
-      ];
-      let hero_score = best_of(&hero_cards);
-
-      let opp_cards = [
-        opp[0],
-        opp[1],
-        full_board[0],
-        full_board[1],
-        full_board[2],
-        full_board[3],
-        full_board[4],
-      ];
-      let opp_score = best_of(&opp_cards);
-
+      let (winners, _) = game.simulate();
       plays += 1;
-      match hero_score.encoded.cmp(&opp_score.encoded) {
-        Ordering::Greater => wins += 1,
-        Ordering::Equal => ties += 1,
-        Ordering::Less => {}
+      let hero_win = winners.get(0);
+      let opp_win = winners.get(1);
+      if hero_win && opp_win {
+        ties += 1;
+      } else if hero_win {
+        wins += 1;
       }
+      game.reset();
     }
 
     stats[idx].0 = opp_encoded[idx].0;
@@ -434,4 +405,21 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
 
   update_progress(total_work);
   Ok(stats)
+}
+
+fn to_rs_card(card: &Card) -> RsCard {
+  let value = RsValue::from(card.rank);
+  let suit = match card.suit {
+    0 => RsSuit::Spade,
+    1 => RsSuit::Heart,
+    2 => RsSuit::Diamond,
+    3 => RsSuit::Club,
+    _ => RsSuit::Spade,
+  };
+  RsCard::new(value, suit)
+}
+
+fn to_rs_hand(hand: &[Card; 2]) -> RsHand {
+  let cards = vec![to_rs_card(&hand[0]), to_rs_card(&hand[1])];
+  RsHand::new_with_cards(cards)
 }
