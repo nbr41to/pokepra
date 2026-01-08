@@ -7,9 +7,13 @@ import { InputCardPalette } from "@/components/input-card-palette";
 import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import {
+  type simulateVsListWithRanks,
+  simulateVsListWithRanksWithProgress,
+} from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
 
 export default function Page() {
@@ -57,6 +61,7 @@ export default function Page() {
     ReturnType<typeof simulateVsListWithRanks>
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [progress, setProgress] = useState(0);
 
   // palette外クリックで閉じる
   useEffect(() => {
@@ -80,22 +85,27 @@ export default function Page() {
     setTarget(null);
     setError(null);
     setLoading(true);
+    setProgress(0);
 
     try {
-      const result = await simulateVsListWithRanks({
+      const result = await simulateVsListWithRanksWithProgress({
         hero: hero.split(" "),
         board: board.split(" "),
         compare: compare.split("; ").map((hand) => hand.split(" ")),
         trials: 1000,
+        onProgress: (pct) => {
+          setProgress(pct);
+          console.log(`simulation progress: ${pct.toFixed(2)}%`);
+        },
       });
 
       setResult(result);
-
       console.log("simulation result:", result);
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setLoading(false);
+      setProgress(0);
     }
   };
 
@@ -105,6 +115,14 @@ export default function Page() {
         Monte Carlo Simulation
       </h1>
       <div className="w-full space-y-2">
+        {loading ? (
+          <div className="flex items-center gap-3">
+            <Progress value={progress} className="h-3" />
+            <span className="min-w-[72px] text-muted-foreground text-sm tabular-nums">
+              {progress.toFixed(0)}%
+            </span>
+          </div>
+        ) : null}
         <div className="space-y-3">
           <Label>hero</Label>
           <div className="flex items-center gap-x-1">

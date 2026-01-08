@@ -15,7 +15,7 @@ export default function Page() {
         <Button className="w-60" variant="default" size="lg" asChild>
           <Link href="/score-attack">Score attack</Link>
         </Button>
-        <Button className="w-60" variant="default" size="lg" asChild disabled>
+        <Button className="w-60" variant="default" size="lg" disabled>
           <Link href="/range-bet">Range bet</Link>
         </Button>
         <Button className="w-60" variant="outline" size="lg" asChild>

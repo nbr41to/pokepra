@@ -314,6 +314,42 @@ pub fn simulate_vs_list_with_ranks(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+  simulate_vs_list_with_ranks_inner::<fn(u32)>(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    None,
+  )
+}
+
+pub fn simulate_vs_list_with_ranks_with_progress<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+  simulate_vs_list_with_ranks_inner(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    progress,
+  )
+}
+
+fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
   let hero_tokens: Vec<String> = if hero_hand_str.contains(' ') {
     hero_hand_str
       .split_whitespace()
@@ -364,8 +400,6 @@ pub fn simulate_vs_list_with_ranks(
     return Err("no compare hands provided".into());
   }
 
-  let trials = trials.max(1);
-
   // validate board duplicates
   {
     let mut seen = Vec::new();
@@ -405,6 +439,24 @@ pub fn simulate_vs_list_with_ranks(
     }
   }
 
+  let trials = trials.max(1);
+  let total_work = (opponents.len() as u64)
+    .saturating_mul(trials as u64)
+    .saturating_add(trials as u64)
+    .max(1);
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
   let board_len = board.len();
   let missing_board = 5usize.saturating_sub(board_len);
   let mut board_buf = [Card { rank: 0, suit: 0 }; 5];
@@ -480,6 +532,8 @@ pub fn simulate_vs_list_with_ranks(
       if r_idx < 9 {
         rank_counts[r_idx] += 1;
       }
+      completed = completed.saturating_add(1);
+      update_progress(completed);
     }
 
     stats[idx].0 = opp_encoded[idx].0;
@@ -528,6 +582,8 @@ pub fn simulate_vs_list_with_ranks(
     if r_idx < 9 {
       hero_rank_counts[r_idx] += 1;
     }
+    completed = completed.saturating_add(1);
+    update_progress(completed);
   }
 
   // scale hero rank counts to match total plays (per opponent)
@@ -548,6 +604,7 @@ pub fn simulate_vs_list_with_ranks(
     hero_rank_counts,
   ));
 
+  update_progress(total_work);
   Ok(stats)
 }
 /// Rank distribution for multiple hands given partial board.

@@ -7,6 +7,10 @@ import { SettingButton } from "./_components/setting-button";
 export const metadata: Metadata = {
   title: "MY POKER",
   description: "A poker training app to improve your preflop decision making.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export default function RootLayout({

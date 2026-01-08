@@ -5,13 +5,17 @@
 mod rs_poker_native;
 mod sim;
 
-use sim::simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal;
+use sim::{
+  simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
+  simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
+};
 
-/// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution.
-/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rank0..rank8]
-/// out_len must be >= records * 14 (compareCount * 14). Returns record count (compareCount) or negative error.
-#[no_mangle]
-pub extern "C" fn simulate_vs_list_with_ranks(
+#[link(wasm_import_module = "env")]
+extern "C" {
+  fn report_progress(progress: u32);
+}
+
+fn run_simulation(
   hero_ptr: *const u8,
   hero_len: usize,
   board_ptr: *const u8,
@@ -22,7 +26,14 @@ pub extern "C" fn simulate_vs_list_with_ranks(
   seed: u64,
   out_ptr: *mut u32,
   out_len: usize,
+  mut runner: impl FnMut(
+    &str,
+    &str,
+    &str,
+  ) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, i32>,
 ) -> i32 {
+  // used by closures passed in via `runner`
+  let _ = (trials, seed);
   if hero_ptr.is_null() || out_ptr.is_null() || compare_ptr.is_null() {
     return -1;
   }
@@ -42,15 +53,9 @@ pub extern "C" fn simulate_vs_list_with_ranks(
     Err(_) => return -4,
   };
 
-  let results = match simulate_vs_list_with_ranks_internal(
-    hero_str,
-    board_str,
-    compare_str,
-    trials,
-    seed,
-  ) {
+  let results = match runner(hero_str, board_str, compare_str) {
     Ok(v) => v,
-    Err(_) => return -5,
+    Err(code) => return code,
   };
 
   let needed = results.len() * 14;
@@ -71,4 +76,78 @@ pub extern "C" fn simulate_vs_list_with_ranks(
   results.len() as i32
 }
 
-// keep only simulate_vs_list_with_ranks for WASM FFI
+/// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution.
+/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rank0..rank8]
+/// out_len must be >= records * 14 (compareCount * 14). Returns record count (compareCount) or negative error.
+#[no_mangle]
+pub extern "C" fn simulate_vs_list_with_ranks(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_simulation(
+    hero_ptr,
+    hero_len,
+    board_ptr,
+    board_len,
+    compare_ptr,
+    compare_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, board_str, compare_str| {
+      simulate_vs_list_with_ranks_internal(hero_str, board_str, compare_str, trials, seed)
+        .map_err(|_| -5)
+    },
+  )
+}
+
+/// Progress-reporting variant. Emits progress via imported `report_progress` callback (0-100),
+/// and writes the same output layout as `simulate_vs_list_with_ranks`.
+#[no_mangle]
+pub extern "C" fn simulate_vs_list_with_ranks_with_progress(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_simulation(
+    hero_ptr,
+    hero_len,
+    board_ptr,
+    board_len,
+    compare_ptr,
+    compare_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, board_str, compare_str| {
+      simulate_vs_list_with_progress_internal(
+        hero_str,
+        board_str,
+        compare_str,
+        trials,
+        seed,
+        Some(|p| unsafe {
+          report_progress(p);
+        }),
+      )
+      .map_err(|_| -5)
+    },
+  )
+}

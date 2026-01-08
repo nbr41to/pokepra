@@ -16,6 +16,18 @@ type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_vs_list_with_ranks_with_progress?: (
+    heroPtr: number,
+    heroLen: number,
+    boardPtr: number,
+    boardLen: number,
+    comparePtr: number,
+    compareLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
 };
 
 type RankResults = {
@@ -44,8 +56,22 @@ type CombinedPayload = {
   data: CombinedEntry[];
 };
 
+type SimulateParams = {
+  hero: string[];
+  board: string[];
+  compare: string[][];
+  trials: number;
+  seed?: bigint;
+  wasmUrl?: string;
+};
+
+type SimulateWithProgressParams = SimulateParams & {
+  onProgress?: (pct: number) => void;
+};
+
 const encoder = new TextEncoder();
 
+let progressListener: ((pct: number) => void) | null = null;
 let wasmInstancePromise: Promise<{
   exports: WasmExports;
   memory: WebAssembly.Memory;
@@ -63,7 +89,14 @@ async function loadWasm(wasmUrl: string): Promise<{
       throw new Error(`Failed to fetch WASM: ${res.status}`);
     }
     const buffer = await res.arrayBuffer();
-    const { instance } = await WebAssembly.instantiate(buffer);
+    const imports = {
+      env: {
+        report_progress(progress: number) {
+          progressListener?.(progress);
+        },
+      },
+    };
+    const { instance } = await WebAssembly.instantiate(buffer, imports);
     const exports = instance.exports as WebAssembly.Exports;
     const memory = (exports as Record<string, unknown>).memory;
     if (!(memory instanceof WebAssembly.Memory)) {
@@ -90,14 +123,44 @@ async function simulateVsListWithRanks({
   trials,
   seed = 123456789n,
   wasmUrl = DEFAULT_WASM_URL,
-}: {
-  hero: string[];
-  board: string[];
-  compare: string[][];
-  trials: number;
-  seed?: bigint;
-  wasmUrl?: string;
-}): Promise<CombinedPayload> {
+}: SimulateParams): Promise<CombinedPayload> {
+  return runSimulateVsListWithRanks(
+    {
+      hero,
+      board,
+      compare,
+      trials,
+      seed,
+      wasmUrl,
+    },
+    {},
+  );
+}
+
+async function simulateVsListWithRanksWithProgress({
+  onProgress,
+  ...params
+}: SimulateWithProgressParams): Promise<CombinedPayload> {
+  return runSimulateVsListWithRanks(params, {
+    onProgress,
+    useProgressExport: true,
+  });
+}
+
+async function runSimulateVsListWithRanks(
+  {
+    hero,
+    board,
+    compare,
+    trials,
+    seed = 123456789n,
+    wasmUrl = DEFAULT_WASM_URL,
+  }: SimulateParams,
+  {
+    onProgress,
+    useProgressExport = false,
+  }: { onProgress?: (pct: number) => void; useProgressExport?: boolean },
+): Promise<CombinedPayload> {
   const [heroStr, boardStr, compareStr] = [
     hero.join(" "),
     board.join(" "),
@@ -125,8 +188,17 @@ async function simulateVsListWithRanks({
   const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  if (typeof exports.simulate_vs_list_with_ranks !== "function") {
-    throw new Error("WASM export 'simulate_vs_list_with_ranks' not found");
+  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const simulate =
+    wantsProgress &&
+    typeof exports.simulate_vs_list_with_ranks_with_progress === "function"
+      ? exports.simulate_vs_list_with_ranks_with_progress
+      : exports.simulate_vs_list_with_ranks;
+  if (typeof simulate !== "function") {
+    const missing = wantsProgress
+      ? "simulate_vs_list_with_ranks_with_progress"
+      : "simulate_vs_list_with_ranks";
+    throw new Error(`WASM export '${missing}' not found`);
   }
 
   let heap = HEAP_START;
@@ -165,18 +237,24 @@ async function simulateVsListWithRanks({
   heap += outLen * 4;
   ensureCapacity(memory, heap);
 
-  const rc = exports.simulate_vs_list_with_ranks(
-    heroBuf.ptr,
-    heroBuf.len,
-    boardBuf.ptr,
-    boardBuf.len,
-    compareBuf.ptr,
-    compareBuf.len,
-    trials,
-    seed,
-    outPtr,
-    outLen,
-  );
+  let rc: number;
+  progressListener = onProgress ?? null;
+  try {
+    rc = simulate(
+      heroBuf.ptr,
+      heroBuf.len,
+      boardBuf.ptr,
+      boardBuf.len,
+      compareBuf.ptr,
+      compareBuf.len,
+      trials,
+      seed,
+      outPtr,
+      outLen,
+    );
+  } finally {
+    progressListener = null;
+  }
   if (rc < 0) {
     throw new Error(`simulate_vs_list_with_ranks failed with code ${rc}`);
   }
@@ -275,5 +353,5 @@ async function simulateVsListWithRanks({
   };
 }
 
-export { simulateVsListWithRanks };
+export { simulateVsListWithRanks, simulateVsListWithRanksWithProgress };
 export type { CombinedPayload };
