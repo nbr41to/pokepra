@@ -19,9 +19,7 @@ import { ConfirmRanking } from "./confirm-ranking";
 import { ConfirmRankingSkeleton } from "./confirm-ranking.skeleton";
 
 type Props = {
-  hand: string[];
   board: string[];
-  position: number;
   disabled?: boolean;
   rankPromise: Promise<CombinedPayload>;
   className?: string;

@@ -13,7 +13,7 @@ type Props = {
   hands: string[];
   onOpenHand: () => void;
   disabledFold?: boolean;
-  onFold: () => void;
+  onFold?: () => void;
   className?: string;
 };
 
@@ -135,7 +135,7 @@ export const HandConfirmation = ({
     if (deltaY >= requiredLift && !folded) {
       setFolded(true);
       setFoldLift(requiredLift);
-      onFold();
+      onFold?.();
       containerRef.current?.releasePointerCapture(event.pointerId);
       gestureRef.current = null;
     }

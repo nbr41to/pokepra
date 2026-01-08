@@ -16,6 +16,7 @@ type Props = {
 
 export const ConfirmRanking = ({ promise }: Props) => {
   const result = use(promise);
+  console.log(result);
 
   const scrollToMyHand = (smooth = false) => {
     const element = document.getElementById(result.hand);

@@ -9,16 +9,14 @@ export default function Page() {
         <Button className="w-60" variant="default" size="lg" asChild>
           <Link href="/preflop">Preflop</Link>
         </Button>
-        {/* <Button
-          className="w-60"
-          variant="outline"
-          size="lg"
-          asChild
-        >
+        <Button className="w-60" variant="default" size="lg" asChild>
           <Link href="/postflop">Postflop</Link>
-        </Button> */}
+        </Button>
         <Button className="w-60" variant="default" size="lg" asChild>
           <Link href="/score-attack">Score attack</Link>
+        </Button>
+        <Button className="w-60" variant="default" size="lg" asChild disabled>
+          <Link href="/range-bet">Range bet</Link>
         </Button>
         <Button className="w-60" variant="outline" size="lg" asChild>
           <Link href="/simulation">Simulation</Link>

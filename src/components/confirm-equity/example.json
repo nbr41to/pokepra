@@ -1,0 +1,5905 @@
+{
+  "hand": "Ac 9s",
+  "equity": 0.8170751445086705,
+  "data": [
+    {
+      "hand": "Th 9d",
+      "count": 1000,
+      "win": 944,
+      "tie": 56,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Th 9h",
+      "count": 1000,
+      "win": 940,
+      "tie": 60,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 804,
+        "Flush": 196,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Tc 9h",
+      "count": 1000,
+      "win": 940,
+      "tie": 60,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Tc 9d",
+      "count": 1000,
+      "win": 938,
+      "tie": 62,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Th 9c",
+      "count": 1000,
+      "win": 933,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Td 9c",
+      "count": 1000,
+      "win": 932,
+      "tie": 68,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts 9h",
+      "count": 1000,
+      "win": 929,
+      "tie": 71,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Tc 9c",
+      "count": 1000,
+      "win": 928,
+      "tie": 72,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts 9d",
+      "count": 1000,
+      "win": 926,
+      "tie": 74,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Td 9d",
+      "count": 1000,
+      "win": 923,
+      "tie": 77,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Td 9h",
+      "count": 1000,
+      "win": 922,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts 9c",
+      "count": 1000,
+      "win": 918,
+      "tie": 82,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ac 9s",
+      "count": 346000,
+      "win": 249768,
+      "tie": 65880,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 346000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh 9h",
+      "count": 1000,
+      "win": 272,
+      "tie": 728,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 805,
+        "Flush": 195,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 9h",
+      "count": 1000,
+      "win": 202,
+      "tie": 798,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 798,
+        "Flush": 202,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh 9h",
+      "count": 1000,
+      "win": 202,
+      "tie": 798,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 798,
+        "Flush": 202,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9h 7h",
+      "count": 1000,
+      "win": 202,
+      "tie": 798,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 798,
+        "Flush": 177,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 25
+      }
+    },
+    {
+      "hand": "Kh 9h",
+      "count": 1000,
+      "win": 194,
+      "tie": 806,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 806,
+        "Flush": 194,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc 9h",
+      "count": 1000,
+      "win": 107,
+      "tie": 893,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js 9d",
+      "count": 1000,
+      "win": 103,
+      "tie": 897,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc 9c",
+      "count": 1000,
+      "win": 94,
+      "tie": 906,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd 9h",
+      "count": 1000,
+      "win": 90,
+      "tie": 910,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd 9c",
+      "count": 1000,
+      "win": 87,
+      "tie": 913,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js 9h",
+      "count": 1000,
+      "win": 86,
+      "tie": 914,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js 9c",
+      "count": 1000,
+      "win": 83,
+      "tie": 917,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd 9d",
+      "count": 1000,
+      "win": 83,
+      "tie": 917,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh 9c",
+      "count": 1000,
+      "win": 80,
+      "tie": 920,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh 9d",
+      "count": 1000,
+      "win": 79,
+      "tie": 921,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc 9d",
+      "count": 1000,
+      "win": 74,
+      "tie": 926,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 9h",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9h 9d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9h 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9d 9c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9d 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9d 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9c 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "9c 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 1000,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7h 6h",
+      "count": 1000,
+      "win": 309,
+      "tie": 48,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 574,
+        "Three of a Kind": 0,
+        "Straight": 117,
+        "Flush": 163,
+        "Full House": 94,
+        "Four of a Kind": 0,
+        "Straight Flush": 52
+      }
+    },
+    {
+      "hand": "Qs Ts",
+      "count": 1000,
+      "win": 274,
+      "tie": 0,
+      "results": {
+        "High Card": 290,
+        "One Pair": 370,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 143,
+        "Flush": 197,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "6h 6c",
+      "count": 1000,
+      "win": 239,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 591,
+        "Straight": 170,
+        "Flush": 0,
+        "Full House": 217,
+        "Four of a Kind": 22,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Ts",
+      "count": 1000,
+      "win": 266,
+      "tie": 0,
+      "results": {
+        "High Card": 346,
+        "One Pair": 341,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 119,
+        "Flush": 194,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Th",
+      "count": 1000,
+      "win": 265,
+      "tie": 0,
+      "results": {
+        "High Card": 310,
+        "One Pair": 359,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 133,
+        "Flush": 198,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7h 7c",
+      "count": 1000,
+      "win": 229,
+      "tie": 71,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 603,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 208,
+        "Four of a Kind": 21,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh 7h",
+      "count": 1000,
+      "win": 241,
+      "tie": 44,
+      "results": {
+        "High Card": 0,
+        "One Pair": 372,
+        "Two Pair": 251,
+        "Three of a Kind": 30,
+        "Straight": 106,
+        "Flush": 241,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "8d 8c",
+      "count": 1000,
+      "win": 229,
+      "tie": 64,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 614,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 215,
+        "Four of a Kind": 14,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "5d 5c",
+      "count": 1000,
+      "win": 222,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 607,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 205,
+        "Four of a Kind": 17,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "6d 6c",
+      "count": 1000,
+      "win": 226,
+      "tie": 66,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 614,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 202,
+        "Four of a Kind": 24,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7h 7d",
+      "count": 1000,
+      "win": 227,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 617,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 204,
+        "Four of a Kind": 23,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "8s 8c",
+      "count": 1000,
+      "win": 224,
+      "tie": 62,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 623,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 197,
+        "Four of a Kind": 27,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts 8s",
+      "count": 1000,
+      "win": 254,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 400,
+        "Two Pair": 245,
+        "Three of a Kind": 42,
+        "Straight": 124,
+        "Flush": 189,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Ts",
+      "count": 1000,
+      "win": 253,
+      "tie": 0,
+      "results": {
+        "High Card": 311,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 136,
+        "Flush": 185,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "5s 5d",
+      "count": 1000,
+      "win": 222,
+      "tie": 61,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 635,
+        "Straight": 143,
+        "Flush": 0,
+        "Full House": 201,
+        "Four of a Kind": 21,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh 7h",
+      "count": 1000,
+      "win": 224,
+      "tie": 54,
+      "results": {
+        "High Card": 0,
+        "One Pair": 383,
+        "Two Pair": 239,
+        "Three of a Kind": 33,
+        "Straight": 121,
+        "Flush": 224,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Kh",
+      "count": 1000,
+      "win": 224,
+      "tie": 50,
+      "results": {
+        "High Card": 338,
+        "One Pair": 324,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 114,
+        "Flush": 224,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Ts",
+      "count": 1000,
+      "win": 248,
+      "tie": 0,
+      "results": {
+        "High Card": 318,
+        "One Pair": 356,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 138,
+        "Flush": 188,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "6h 6d",
+      "count": 1000,
+      "win": 209,
+      "tie": 76,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 618,
+        "Straight": 173,
+        "Flush": 0,
+        "Full House": 187,
+        "Four of a Kind": 22,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 4h",
+      "count": 1000,
+      "win": 222,
+      "tie": 46,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 778,
+        "Flush": 222,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "8s 8d",
+      "count": 1000,
+      "win": 212,
+      "tie": 66,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 622,
+        "Straight": 166,
+        "Flush": 0,
+        "Full House": 196,
+        "Four of a Kind": 16,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "5s 5c",
+      "count": 1000,
+      "win": 211,
+      "tie": 64,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 636,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 193,
+        "Four of a Kind": 18,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 3h",
+      "count": 1000,
+      "win": 224,
+      "tie": 37,
+      "results": {
+        "High Card": 358,
+        "One Pair": 320,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 98,
+        "Flush": 224,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Th",
+      "count": 1000,
+      "win": 242,
+      "tie": 0,
+      "results": {
+        "High Card": 307,
+        "One Pair": 379,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 120,
+        "Flush": 194,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 4h",
+      "count": 1000,
+      "win": 225,
+      "tie": 32,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 775,
+        "Flush": 225,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7d 7c",
+      "count": 1000,
+      "win": 213,
+      "tie": 51,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 641,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 189,
+        "Four of a Kind": 24,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs 8s",
+      "count": 1000,
+      "win": 199,
+      "tie": 77,
+      "results": {
+        "High Card": 0,
+        "One Pair": 368,
+        "Two Pair": 252,
+        "Three of a Kind": 43,
+        "Straight": 138,
+        "Flush": 199,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 6h",
+      "count": 1000,
+      "win": 206,
+      "tie": 60,
+      "results": {
+        "High Card": 0,
+        "One Pair": 404,
+        "Two Pair": 219,
+        "Three of a Kind": 45,
+        "Straight": 126,
+        "Flush": 206,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Th",
+      "count": 1000,
+      "win": 235,
+      "tie": 0,
+      "results": {
+        "High Card": 335,
+        "One Pair": 363,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 93,
+        "Flush": 209,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh 6h",
+      "count": 1000,
+      "win": 213,
+      "tie": 43,
+      "results": {
+        "High Card": 0,
+        "One Pair": 401,
+        "Two Pair": 231,
+        "Three of a Kind": 50,
+        "Straight": 105,
+        "Flush": 213,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Th",
+      "count": 1000,
+      "win": 234,
+      "tie": 0,
+      "results": {
+        "High Card": 308,
+        "One Pair": 378,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 128,
+        "Flush": 186,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 7h",
+      "count": 1000,
+      "win": 205,
+      "tie": 51,
+      "results": {
+        "High Card": 0,
+        "One Pair": 396,
+        "Two Pair": 235,
+        "Three of a Kind": 45,
+        "Straight": 119,
+        "Flush": 205,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 6h",
+      "count": 1000,
+      "win": 202,
+      "tie": 56,
+      "results": {
+        "High Card": 0,
+        "One Pair": 404,
+        "Two Pair": 237,
+        "Three of a Kind": 33,
+        "Straight": 124,
+        "Flush": 202,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Jh",
+      "count": 1000,
+      "win": 207,
+      "tie": 45,
+      "results": {
+        "High Card": 341,
+        "One Pair": 341,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 111,
+        "Flush": 207,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 3s",
+      "count": 1000,
+      "win": 192,
+      "tie": 73,
+      "results": {
+        "High Card": 332,
+        "One Pair": 328,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 148,
+        "Flush": 192,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Jh",
+      "count": 1000,
+      "win": 199,
+      "tie": 58,
+      "results": {
+        "High Card": 311,
+        "One Pair": 363,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 127,
+        "Flush": 199,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js 8s",
+      "count": 1000,
+      "win": 184,
+      "tie": 84,
+      "results": {
+        "High Card": 0,
+        "One Pair": 380,
+        "Two Pair": 234,
+        "Three of a Kind": 51,
+        "Straight": 151,
+        "Flush": 184,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Qh",
+      "count": 1000,
+      "win": 203,
+      "tie": 45,
+      "results": {
+        "High Card": 325,
+        "One Pair": 365,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 107,
+        "Flush": 203,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Js",
+      "count": 1000,
+      "win": 192,
+      "tie": 66,
+      "results": {
+        "High Card": 336,
+        "One Pair": 339,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 133,
+        "Flush": 192,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 3s",
+      "count": 1000,
+      "win": 183,
+      "tie": 82,
+      "results": {
+        "High Card": 308,
+        "One Pair": 366,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 143,
+        "Flush": 183,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 4s",
+      "count": 1000,
+      "win": 189,
+      "tie": 68,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 811,
+        "Flush": 189,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Qs",
+      "count": 1000,
+      "win": 185,
+      "tie": 74,
+      "results": {
+        "High Card": 311,
+        "One Pair": 364,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 140,
+        "Flush": 185,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 3h",
+      "count": 1000,
+      "win": 198,
+      "tie": 48,
+      "results": {
+        "High Card": 312,
+        "One Pair": 375,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 115,
+        "Flush": 198,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Qh",
+      "count": 1000,
+      "win": 194,
+      "tie": 55,
+      "results": {
+        "High Card": 354,
+        "One Pair": 328,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 124,
+        "Flush": 194,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 2h",
+      "count": 1000,
+      "win": 198,
+      "tie": 47,
+      "results": {
+        "High Card": 315,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 119,
+        "Flush": 198,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 4s",
+      "count": 1000,
+      "win": 178,
+      "tie": 82,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 822,
+        "Flush": 178,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Js",
+      "count": 1000,
+      "win": 190,
+      "tie": 57,
+      "results": {
+        "High Card": 323,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 119,
+        "Flush": 190,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 2s",
+      "count": 1000,
+      "win": 180,
+      "tie": 73,
+      "results": {
+        "High Card": 338,
+        "One Pair": 332,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 150,
+        "Flush": 180,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Jh",
+      "count": 1000,
+      "win": 189,
+      "tie": 54,
+      "results": {
+        "High Card": 330,
+        "One Pair": 366,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 115,
+        "Flush": 189,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 7h",
+      "count": 1000,
+      "win": 194,
+      "tie": 40,
+      "results": {
+        "High Card": 0,
+        "One Pair": 422,
+        "Two Pair": 236,
+        "Three of a Kind": 36,
+        "Straight": 112,
+        "Flush": 194,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Ks",
+      "count": 1000,
+      "win": 176,
+      "tie": 72,
+      "results": {
+        "High Card": 329,
+        "One Pair": 346,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 149,
+        "Flush": 176,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh 2h",
+      "count": 1000,
+      "win": 186,
+      "tie": 47,
+      "results": {
+        "High Card": 332,
+        "One Pair": 360,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 122,
+        "Flush": 186,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 2s",
+      "count": 1000,
+      "win": 176,
+      "tie": 66,
+      "results": {
+        "High Card": 320,
+        "One Pair": 357,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 147,
+        "Flush": 176,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 8s",
+      "count": 1000,
+      "win": 169,
+      "tie": 80,
+      "results": {
+        "High Card": 0,
+        "One Pair": 387,
+        "Two Pair": 265,
+        "Three of a Kind": 35,
+        "Straight": 144,
+        "Flush": 169,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Qs",
+      "count": 1000,
+      "win": 176,
+      "tie": 65,
+      "results": {
+        "High Card": 347,
+        "One Pair": 325,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 152,
+        "Flush": 176,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 5s",
+      "count": 1000,
+      "win": 171,
+      "tie": 72,
+      "results": {
+        "High Card": 0,
+        "One Pair": 431,
+        "Two Pair": 222,
+        "Three of a Kind": 49,
+        "Straight": 127,
+        "Flush": 171,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Js",
+      "count": 1000,
+      "win": 169,
+      "tie": 76,
+      "results": {
+        "High Card": 312,
+        "One Pair": 384,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 135,
+        "Flush": 169,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks 5s",
+      "count": 1000,
+      "win": 173,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 410,
+        "Two Pair": 256,
+        "Three of a Kind": 44,
+        "Straight": 117,
+        "Flush": 173,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 8s",
+      "count": 1000,
+      "win": 158,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 440,
+        "Two Pair": 233,
+        "Three of a Kind": 31,
+        "Straight": 138,
+        "Flush": 158,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7d 6d",
+      "count": 1000,
+      "win": 100,
+      "tie": 89,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 729,
+        "Three of a Kind": 0,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 100,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "6c 5c",
+      "count": 1000,
+      "win": 109,
+      "tie": 71,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 741,
+        "Three of a Kind": 0,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 109,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "8d 7d",
+      "count": 1000,
+      "win": 90,
+      "tie": 73,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 756,
+        "Three of a Kind": 0,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 90,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "8c 7c",
+      "count": 1000,
+      "win": 98,
+      "tie": 52,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 749,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 98,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "6d 5d",
+      "count": 1000,
+      "win": 81,
+      "tie": 68,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 762,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 81,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "7c 6c",
+      "count": 1000,
+      "win": 79,
+      "tie": 59,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 781,
+        "Three of a Kind": 0,
+        "Straight": 140,
+        "Flush": 0,
+        "Full House": 79,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Td",
+      "count": 1000,
+      "win": 91,
+      "tie": 0,
+      "results": {
+        "High Card": 388,
+        "One Pair": 425,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 187,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Td",
+      "count": 1000,
+      "win": 85,
+      "tie": 0,
+      "results": {
+        "High Card": 434,
+        "One Pair": 380,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 186,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Tc",
+      "count": 1000,
+      "win": 81,
+      "tie": 0,
+      "results": {
+        "High Card": 424,
+        "One Pair": 416,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Tc",
+      "count": 1000,
+      "win": 81,
+      "tie": 0,
+      "results": {
+        "High Card": 421,
+        "One Pair": 422,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts Th",
+      "count": 1000,
+      "win": 80,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 498,
+        "Two Pair": 290,
+        "Three of a Kind": 42,
+        "Straight": 170,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts Tc",
+      "count": 1000,
+      "win": 80,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 528,
+        "Two Pair": 276,
+        "Three of a Kind": 42,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc Tc",
+      "count": 1000,
+      "win": 78,
+      "tie": 0,
+      "results": {
+        "High Card": 423,
+        "One Pair": 422,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 155,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc Th",
+      "count": 1000,
+      "win": 77,
+      "tie": 0,
+      "results": {
+        "High Card": 418,
+        "One Pair": 425,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Td",
+      "count": 1000,
+      "win": 76,
+      "tie": 0,
+      "results": {
+        "High Card": 450,
+        "One Pair": 383,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Ts",
+      "count": 1000,
+      "win": 76,
+      "tie": 0,
+      "results": {
+        "High Card": 429,
+        "One Pair": 411,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Th",
+      "count": 1000,
+      "win": 76,
+      "tie": 0,
+      "results": {
+        "High Card": 432,
+        "One Pair": 392,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 176,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Th Tc",
+      "count": 1000,
+      "win": 76,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 523,
+        "Two Pair": 261,
+        "Three of a Kind": 49,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Td",
+      "count": 1000,
+      "win": 75,
+      "tie": 0,
+      "results": {
+        "High Card": 458,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd Tc",
+      "count": 1000,
+      "win": 75,
+      "tie": 0,
+      "results": {
+        "High Card": 410,
+        "One Pair": 415,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 175,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Td Tc",
+      "count": 1000,
+      "win": 75,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 500,
+        "Two Pair": 287,
+        "Three of a Kind": 42,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Td",
+      "count": 1000,
+      "win": 74,
+      "tie": 0,
+      "results": {
+        "High Card": 418,
+        "One Pair": 414,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Th",
+      "count": 1000,
+      "win": 74,
+      "tie": 0,
+      "results": {
+        "High Card": 436,
+        "One Pair": 397,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc Td",
+      "count": 1000,
+      "win": 74,
+      "tie": 0,
+      "results": {
+        "High Card": 448,
+        "One Pair": 403,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 149,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Tc",
+      "count": 1000,
+      "win": 73,
+      "tie": 0,
+      "results": {
+        "High Card": 455,
+        "One Pair": 387,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Th",
+      "count": 1000,
+      "win": 73,
+      "tie": 0,
+      "results": {
+        "High Card": 431,
+        "One Pair": 395,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Td",
+      "count": 1000,
+      "win": 72,
+      "tie": 0,
+      "results": {
+        "High Card": 438,
+        "One Pair": 407,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 155,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Ts",
+      "count": 1000,
+      "win": 72,
+      "tie": 0,
+      "results": {
+        "High Card": 424,
+        "One Pair": 421,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 155,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd Th",
+      "count": 1000,
+      "win": 71,
+      "tie": 0,
+      "results": {
+        "High Card": 427,
+        "One Pair": 393,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 180,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Ts",
+      "count": 1000,
+      "win": 70,
+      "tie": 0,
+      "results": {
+        "High Card": 439,
+        "One Pair": 399,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 162,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Th",
+      "count": 1000,
+      "win": 70,
+      "tie": 0,
+      "results": {
+        "High Card": 417,
+        "One Pair": 415,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Ts",
+      "count": 1000,
+      "win": 69,
+      "tie": 0,
+      "results": {
+        "High Card": 457,
+        "One Pair": 397,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Tc",
+      "count": 1000,
+      "win": 69,
+      "tie": 0,
+      "results": {
+        "High Card": 448,
+        "One Pair": 404,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 148,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc Ts",
+      "count": 1000,
+      "win": 69,
+      "tie": 0,
+      "results": {
+        "High Card": 448,
+        "One Pair": 392,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Th Td",
+      "count": 1000,
+      "win": 69,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 522,
+        "Two Pair": 266,
+        "Three of a Kind": 43,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Ts",
+      "count": 1000,
+      "win": 68,
+      "tie": 0,
+      "results": {
+        "High Card": 450,
+        "One Pair": 394,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Td",
+      "count": 1000,
+      "win": 68,
+      "tie": 0,
+      "results": {
+        "High Card": 457,
+        "One Pair": 383,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Th",
+      "count": 1000,
+      "win": 68,
+      "tie": 0,
+      "results": {
+        "High Card": 456,
+        "One Pair": 391,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Ts",
+      "count": 1000,
+      "win": 68,
+      "tie": 0,
+      "results": {
+        "High Card": 481,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 151,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd Ts",
+      "count": 1000,
+      "win": 68,
+      "tie": 0,
+      "results": {
+        "High Card": 447,
+        "One Pair": 396,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Tc",
+      "count": 1000,
+      "win": 67,
+      "tie": 0,
+      "results": {
+        "High Card": 443,
+        "One Pair": 399,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Ts",
+      "count": 1000,
+      "win": 67,
+      "tie": 0,
+      "results": {
+        "High Card": 478,
+        "One Pair": 359,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Tc",
+      "count": 1000,
+      "win": 67,
+      "tie": 0,
+      "results": {
+        "High Card": 436,
+        "One Pair": 405,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Td",
+      "count": 1000,
+      "win": 66,
+      "tie": 0,
+      "results": {
+        "High Card": 454,
+        "One Pair": 386,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Tc",
+      "count": 1000,
+      "win": 66,
+      "tie": 0,
+      "results": {
+        "High Card": 423,
+        "One Pair": 428,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 149,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Td",
+      "count": 1000,
+      "win": 66,
+      "tie": 0,
+      "results": {
+        "High Card": 420,
+        "One Pair": 421,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Tc",
+      "count": 1000,
+      "win": 66,
+      "tie": 0,
+      "results": {
+        "High Card": 430,
+        "One Pair": 405,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 165,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Td",
+      "count": 1000,
+      "win": 66,
+      "tie": 0,
+      "results": {
+        "High Card": 429,
+        "One Pair": 406,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 165,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Td",
+      "count": 1000,
+      "win": 65,
+      "tie": 0,
+      "results": {
+        "High Card": 410,
+        "One Pair": 433,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Td",
+      "count": 1000,
+      "win": 65,
+      "tie": 0,
+      "results": {
+        "High Card": 423,
+        "One Pair": 420,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ts Td",
+      "count": 1000,
+      "win": 65,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 519,
+        "Two Pair": 299,
+        "Three of a Kind": 45,
+        "Straight": 137,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Th",
+      "count": 1000,
+      "win": 64,
+      "tie": 0,
+      "results": {
+        "High Card": 442,
+        "One Pair": 402,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Ts",
+      "count": 1000,
+      "win": 64,
+      "tie": 0,
+      "results": {
+        "High Card": 434,
+        "One Pair": 416,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Th",
+      "count": 1000,
+      "win": 63,
+      "tie": 0,
+      "results": {
+        "High Card": 445,
+        "One Pair": 397,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Tc",
+      "count": 1000,
+      "win": 63,
+      "tie": 0,
+      "results": {
+        "High Card": 431,
+        "One Pair": 423,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Tc",
+      "count": 1000,
+      "win": 62,
+      "tie": 0,
+      "results": {
+        "High Card": 426,
+        "One Pair": 412,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 162,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Td",
+      "count": 1000,
+      "win": 61,
+      "tie": 0,
+      "results": {
+        "High Card": 423,
+        "One Pair": 405,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 172,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Tc 8c",
+      "count": 1000,
+      "win": 61,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 529,
+        "Two Pair": 259,
+        "Three of a Kind": 53,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Ts",
+      "count": 1000,
+      "win": 60,
+      "tie": 0,
+      "results": {
+        "High Card": 423,
+        "One Pair": 430,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 147,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Th",
+      "count": 1000,
+      "win": 60,
+      "tie": 0,
+      "results": {
+        "High Card": 431,
+        "One Pair": 416,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd Td",
+      "count": 1000,
+      "win": 60,
+      "tie": 0,
+      "results": {
+        "High Card": 442,
+        "One Pair": 398,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Td 8d",
+      "count": 1000,
+      "win": 60,
+      "tie": 0,
+      "results": {
+        "High Card": 0,
+        "One Pair": 509,
+        "Two Pair": 293,
+        "Three of a Kind": 56,
+        "Straight": 142,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Tc",
+      "count": 1000,
+      "win": 58,
+      "tie": 0,
+      "results": {
+        "High Card": 452,
+        "One Pair": 407,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 141,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Th",
+      "count": 1000,
+      "win": 56,
+      "tie": 0,
+      "results": {
+        "High Card": 418,
+        "One Pair": 418,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Tc",
+      "count": 1000,
+      "win": 55,
+      "tie": 0,
+      "results": {
+        "High Card": 469,
+        "One Pair": 396,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 135,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Tc",
+      "count": 1000,
+      "win": 53,
+      "tie": 0,
+      "results": {
+        "High Card": 456,
+        "One Pair": 406,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 138,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 87,
+      "results": {
+        "High Card": 0,
+        "One Pair": 515,
+        "Two Pair": 258,
+        "Three of a Kind": 56,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 84,
+      "results": {
+        "High Card": 438,
+        "One Pair": 387,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 175,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 5d",
+      "count": 1000,
+      "win": 0,
+      "tie": 84,
+      "results": {
+        "High Card": 0,
+        "One Pair": 530,
+        "Two Pair": 261,
+        "Three of a Kind": 37,
+        "Straight": 172,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 83,
+      "results": {
+        "High Card": 454,
+        "One Pair": 359,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 187,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 83,
+      "results": {
+        "High Card": 0,
+        "One Pair": 507,
+        "Two Pair": 269,
+        "Three of a Kind": 38,
+        "Straight": 186,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 6c",
+      "count": 1000,
+      "win": 0,
+      "tie": 83,
+      "results": {
+        "High Card": 0,
+        "One Pair": 527,
+        "Two Pair": 251,
+        "Three of a Kind": 56,
+        "Straight": 166,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3d 3c",
+      "count": 1000,
+      "win": 0,
+      "tie": 83,
+      "results": {
+        "High Card": 0,
+        "One Pair": 527,
+        "Two Pair": 259,
+        "Three of a Kind": 51,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 82,
+      "results": {
+        "High Card": 0,
+        "One Pair": 516,
+        "Two Pair": 276,
+        "Three of a Kind": 38,
+        "Straight": 170,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 81,
+      "results": {
+        "High Card": 0,
+        "One Pair": 519,
+        "Two Pair": 266,
+        "Three of a Kind": 45,
+        "Straight": 170,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 5d",
+      "count": 1000,
+      "win": 0,
+      "tie": 81,
+      "results": {
+        "High Card": 0,
+        "One Pair": 494,
+        "Two Pair": 285,
+        "Three of a Kind": 39,
+        "Straight": 182,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 81,
+      "results": {
+        "High Card": 437,
+        "One Pair": 392,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 80,
+      "results": {
+        "High Card": 0,
+        "One Pair": 531,
+        "Two Pair": 262,
+        "Three of a Kind": 51,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 80,
+      "results": {
+        "High Card": 0,
+        "One Pair": 532,
+        "Two Pair": 252,
+        "Three of a Kind": 43,
+        "Straight": 173,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 80,
+      "results": {
+        "High Card": 0,
+        "One Pair": 501,
+        "Two Pair": 296,
+        "Three of a Kind": 43,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 80,
+      "results": {
+        "High Card": 421,
+        "One Pair": 407,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 172,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 80,
+      "results": {
+        "High Card": 406,
+        "One Pair": 420,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 79,
+      "results": {
+        "High Card": 432,
+        "One Pair": 396,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 172,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 79,
+      "results": {
+        "High Card": 0,
+        "One Pair": 519,
+        "Two Pair": 250,
+        "Three of a Kind": 42,
+        "Straight": 189,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Ad",
+      "count": 1000,
+      "win": 0,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 542,
+        "Two Pair": 262,
+        "Three of a Kind": 28,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 8s",
+      "count": 1000,
+      "win": 0,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 527,
+        "Two Pair": 255,
+        "Three of a Kind": 44,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 2d",
+      "count": 1000,
+      "win": 0,
+      "tie": 78,
+      "results": {
+        "High Card": 439,
+        "One Pair": 379,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 182,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 526,
+        "Two Pair": 271,
+        "Three of a Kind": 34,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3s 3d",
+      "count": 1000,
+      "win": 0,
+      "tie": 78,
+      "results": {
+        "High Card": 0,
+        "One Pair": 515,
+        "Two Pair": 268,
+        "Three of a Kind": 48,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Kh",
+      "count": 1000,
+      "win": 0,
+      "tie": 77,
+      "results": {
+        "High Card": 0,
+        "One Pair": 506,
+        "Two Pair": 267,
+        "Three of a Kind": 53,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Qs",
+      "count": 1000,
+      "win": 0,
+      "tie": 77,
+      "results": {
+        "High Card": 452,
+        "One Pair": 384,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 77,
+      "results": {
+        "High Card": 0,
+        "One Pair": 532,
+        "Two Pair": 272,
+        "Three of a Kind": 35,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 77,
+      "results": {
+        "High Card": 434,
+        "One Pair": 397,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 76,
+      "results": {
+        "High Card": 451,
+        "One Pair": 385,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 76,
+      "results": {
+        "High Card": 0,
+        "One Pair": 532,
+        "Two Pair": 248,
+        "Three of a Kind": 46,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 443,
+        "One Pair": 400,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Kh",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 454,
+        "One Pair": 393,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 7h",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 0,
+        "One Pair": 537,
+        "Two Pair": 258,
+        "Three of a Kind": 45,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 424,
+        "One Pair": 391,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 185,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 431,
+        "One Pair": 402,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 75,
+      "results": {
+        "High Card": 414,
+        "One Pair": 413,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 173,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Kd",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 470,
+        "One Pair": 371,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Qs",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 431,
+        "One Pair": 409,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 479,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 436,
+        "One Pair": 395,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 449,
+        "One Pair": 403,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 148,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3h 3c",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 0,
+        "One Pair": 537,
+        "Two Pair": 263,
+        "Three of a Kind": 50,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2s 2c",
+      "count": 1000,
+      "win": 0,
+      "tie": 74,
+      "results": {
+        "High Card": 0,
+        "One Pair": 508,
+        "Two Pair": 267,
+        "Three of a Kind": 48,
+        "Straight": 177,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 0,
+        "One Pair": 528,
+        "Two Pair": 256,
+        "Three of a Kind": 49,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Kd",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 448,
+        "One Pair": 391,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 462,
+        "One Pair": 383,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 155,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 6d",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 0,
+        "One Pair": 541,
+        "Two Pair": 242,
+        "Three of a Kind": 46,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 432,
+        "One Pair": 399,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 0,
+        "One Pair": 528,
+        "Two Pair": 264,
+        "Three of a Kind": 49,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 73,
+      "results": {
+        "High Card": 428,
+        "One Pair": 390,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 182,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 454,
+        "One Pair": 380,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 166,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 430,
+        "One Pair": 412,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 452,
+        "One Pair": 374,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 174,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 420,
+        "One Pair": 426,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 4d",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 434,
+        "One Pair": 389,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 177,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 0,
+        "One Pair": 514,
+        "Two Pair": 265,
+        "Three of a Kind": 55,
+        "Straight": 166,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 72,
+      "results": {
+        "High Card": 426,
+        "One Pair": 405,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 71,
+      "results": {
+        "High Card": 460,
+        "One Pair": 383,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 71,
+      "results": {
+        "High Card": 468,
+        "One Pair": 374,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 71,
+      "results": {
+        "High Card": 432,
+        "One Pair": 404,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 71,
+      "results": {
+        "High Card": 0,
+        "One Pair": 512,
+        "Two Pair": 264,
+        "Three of a Kind": 59,
+        "Straight": 165,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2s 2h",
+      "count": 1000,
+      "win": 0,
+      "tie": 71,
+      "results": {
+        "High Card": 0,
+        "One Pair": 510,
+        "Two Pair": 268,
+        "Three of a Kind": 59,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 70,
+      "results": {
+        "High Card": 0,
+        "One Pair": 525,
+        "Two Pair": 268,
+        "Three of a Kind": 43,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 70,
+      "results": {
+        "High Card": 443,
+        "One Pair": 401,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4s 4h",
+      "count": 1000,
+      "win": 0,
+      "tie": 70,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Ah",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 536,
+        "Two Pair": 266,
+        "Three of a Kind": 19,
+        "Straight": 179,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 7h",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 552,
+        "Two Pair": 241,
+        "Three of a Kind": 51,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 556,
+        "Two Pair": 238,
+        "Three of a Kind": 47,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 3d",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 479,
+        "One Pair": 358,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 466,
+        "One Pair": 380,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 419,
+        "One Pair": 426,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 155,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd 6d",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 493,
+        "Two Pair": 296,
+        "Three of a Kind": 43,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3h 3d",
+      "count": 1000,
+      "win": 0,
+      "tie": 69,
+      "results": {
+        "High Card": 0,
+        "One Pair": 525,
+        "Two Pair": 278,
+        "Three of a Kind": 47,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 462,
+        "One Pair": 377,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Qs",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 426,
+        "One Pair": 402,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 172,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 451,
+        "One Pair": 401,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 148,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 438,
+        "One Pair": 405,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 0,
+        "One Pair": 504,
+        "Two Pair": 293,
+        "Three of a Kind": 45,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4d 4c",
+      "count": 1000,
+      "win": 0,
+      "tie": 68,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 473,
+        "One Pair": 370,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 8s",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 550,
+        "Two Pair": 244,
+        "Three of a Kind": 60,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Kd",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 525,
+        "Two Pair": 266,
+        "Three of a Kind": 45,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 421,
+        "One Pair": 423,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 6d",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 547,
+        "Two Pair": 258,
+        "Three of a Kind": 42,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 538,
+        "Two Pair": 270,
+        "Three of a Kind": 42,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 501,
+        "Two Pair": 285,
+        "Three of a Kind": 52,
+        "Straight": 162,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3s 3c",
+      "count": 1000,
+      "win": 0,
+      "tie": 67,
+      "results": {
+        "High Card": 0,
+        "One Pair": 522,
+        "Two Pair": 282,
+        "Three of a Kind": 50,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Ks",
+      "count": 1000,
+      "win": 0,
+      "tie": 66,
+      "results": {
+        "High Card": 438,
+        "One Pair": 384,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 178,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 454,
+        "One Pair": 378,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 168,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 0,
+        "One Pair": 538,
+        "Two Pair": 271,
+        "Three of a Kind": 39,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Kc",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 458,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 461,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 420,
+        "One Pair": 418,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 162,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 427,
+        "One Pair": 404,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Qs",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 438,
+        "One Pair": 386,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 176,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 443,
+        "One Pair": 409,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 148,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 435,
+        "One Pair": 401,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 164,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 0,
+        "One Pair": 486,
+        "Two Pair": 310,
+        "Three of a Kind": 52,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4s 4c",
+      "count": 1000,
+      "win": 0,
+      "tie": 65,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 0,
+        "One Pair": 573,
+        "Two Pair": 239,
+        "Three of a Kind": 41,
+        "Straight": 147,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 424,
+        "One Pair": 417,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 159,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 485,
+        "One Pair": 363,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Ks",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 437,
+        "One Pair": 400,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 476,
+        "One Pair": 357,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 2d",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 420,
+        "One Pair": 427,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 0,
+        "One Pair": 527,
+        "Two Pair": 274,
+        "Three of a Kind": 43,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 427,
+        "One Pair": 421,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jh Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 64,
+      "results": {
+        "High Card": 0,
+        "One Pair": 505,
+        "Two Pair": 294,
+        "Three of a Kind": 43,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 458,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Ad",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 530,
+        "Two Pair": 289,
+        "Three of a Kind": 24,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Kd",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 458,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 161,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Kd",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 543,
+        "Two Pair": 262,
+        "Three of a Kind": 43,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kh Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 412,
+        "One Pair": 428,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 5c",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 538,
+        "Two Pair": 276,
+        "Three of a Kind": 47,
+        "Straight": 139,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 3c",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 456,
+        "One Pair": 392,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 152,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qs Qh",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 533,
+        "Two Pair": 263,
+        "Three of a Kind": 46,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qd Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 434,
+        "One Pair": 415,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 151,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "3s 3h",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 520,
+        "Two Pair": 282,
+        "Three of a Kind": 35,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2h 2d",
+      "count": 1000,
+      "win": 0,
+      "tie": 63,
+      "results": {
+        "High Card": 0,
+        "One Pair": 515,
+        "Two Pair": 270,
+        "Three of a Kind": 46,
+        "Straight": 169,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Kh",
+      "count": 1000,
+      "win": 0,
+      "tie": 62,
+      "results": {
+        "High Card": 478,
+        "One Pair": 380,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 142,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 62,
+      "results": {
+        "High Card": 449,
+        "One Pair": 394,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 157,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 4d",
+      "count": 1000,
+      "win": 0,
+      "tie": 62,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 62,
+      "results": {
+        "High Card": 0,
+        "One Pair": 505,
+        "Two Pair": 284,
+        "Three of a Kind": 40,
+        "Straight": 171,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4h 4d",
+      "count": 1000,
+      "win": 0,
+      "tie": 62,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 61,
+      "results": {
+        "High Card": 482,
+        "One Pair": 365,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 153,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 61,
+      "results": {
+        "High Card": 442,
+        "One Pair": 408,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 61,
+      "results": {
+        "High Card": 0,
+        "One Pair": 558,
+        "Two Pair": 256,
+        "Three of a Kind": 32,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad Qs",
+      "count": 1000,
+      "win": 0,
+      "tie": 61,
+      "results": {
+        "High Card": 468,
+        "One Pair": 381,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 151,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 6c",
+      "count": 1000,
+      "win": 0,
+      "tie": 61,
+      "results": {
+        "High Card": 0,
+        "One Pair": 495,
+        "Two Pair": 287,
+        "Three of a Kind": 53,
+        "Straight": 165,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 60,
+      "results": {
+        "High Card": 0,
+        "One Pair": 566,
+        "Two Pair": 248,
+        "Three of a Kind": 32,
+        "Straight": 154,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 60,
+      "results": {
+        "High Card": 0,
+        "One Pair": 507,
+        "Two Pair": 296,
+        "Three of a Kind": 41,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 2c",
+      "count": 1000,
+      "win": 0,
+      "tie": 60,
+      "results": {
+        "High Card": 430,
+        "One Pair": 403,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 167,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qh Js",
+      "count": 1000,
+      "win": 0,
+      "tie": 60,
+      "results": {
+        "High Card": 424,
+        "One Pair": 429,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 147,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ah 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 59,
+      "results": {
+        "High Card": 0,
+        "One Pair": 536,
+        "Two Pair": 257,
+        "Three of a Kind": 49,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 59,
+      "results": {
+        "High Card": 463,
+        "One Pair": 386,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 151,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As Qc",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 467,
+        "One Pair": 368,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 165,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ks Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 420,
+        "One Pair": 436,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 144,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Jc",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 426,
+        "One Pair": 418,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jc 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 0,
+        "One Pair": 512,
+        "Two Pair": 279,
+        "Three of a Kind": 51,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2s 2d",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 0,
+        "One Pair": 530,
+        "Two Pair": 285,
+        "Three of a Kind": 41,
+        "Straight": 144,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2h 2c",
+      "count": 1000,
+      "win": 0,
+      "tie": 58,
+      "results": {
+        "High Card": 0,
+        "One Pair": 546,
+        "Two Pair": 252,
+        "Three of a Kind": 39,
+        "Straight": 163,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Jh",
+      "count": 1000,
+      "win": 0,
+      "tie": 57,
+      "results": {
+        "High Card": 425,
+        "One Pair": 431,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 144,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 3d",
+      "count": 1000,
+      "win": 0,
+      "tie": 57,
+      "results": {
+        "High Card": 427,
+        "One Pair": 433,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 140,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Js Jd",
+      "count": 1000,
+      "win": 0,
+      "tie": 57,
+      "results": {
+        "High Card": 0,
+        "One Pair": 531,
+        "Two Pair": 263,
+        "Three of a Kind": 62,
+        "Straight": 144,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 8c",
+      "count": 1000,
+      "win": 0,
+      "tie": 56,
+      "results": {
+        "High Card": 0,
+        "One Pair": 551,
+        "Two Pair": 243,
+        "Three of a Kind": 48,
+        "Straight": 158,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 56,
+      "results": {
+        "High Card": 402,
+        "One Pair": 438,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 160,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Jd 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 56,
+      "results": {
+        "High Card": 0,
+        "One Pair": 540,
+        "Two Pair": 268,
+        "Three of a Kind": 42,
+        "Straight": 150,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "2d 2c",
+      "count": 1000,
+      "win": 0,
+      "tie": 56,
+      "results": {
+        "High Card": 0,
+        "One Pair": 505,
+        "Two Pair": 312,
+        "Three of a Kind": 37,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kd 8d",
+      "count": 1000,
+      "win": 0,
+      "tie": 55,
+      "results": {
+        "High Card": 0,
+        "One Pair": 532,
+        "Two Pair": 270,
+        "Three of a Kind": 54,
+        "Straight": 144,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Ad 7d",
+      "count": 1000,
+      "win": 0,
+      "tie": 53,
+      "results": {
+        "High Card": 0,
+        "One Pair": 563,
+        "Two Pair": 259,
+        "Three of a Kind": 51,
+        "Straight": 127,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc Qd",
+      "count": 1000,
+      "win": 0,
+      "tie": 52,
+      "results": {
+        "High Card": 456,
+        "One Pair": 404,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 140,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Kc 4c",
+      "count": 1000,
+      "win": 0,
+      "tie": 52,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "Qc 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 52,
+      "results": {
+        "High Card": 0,
+        "One Pair": 528,
+        "Two Pair": 283,
+        "Three of a Kind": 43,
+        "Straight": 146,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4h 4c",
+      "count": 1000,
+      "win": 0,
+      "tie": 52,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "4s 4d",
+      "count": 1000,
+      "win": 0,
+      "tie": 50,
+      "results": {
+        "High Card": 0,
+        "One Pair": 0,
+        "Two Pair": 0,
+        "Three of a Kind": 0,
+        "Straight": 1000,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    },
+    {
+      "hand": "As 7c",
+      "count": 1000,
+      "win": 0,
+      "tie": 48,
+      "results": {
+        "High Card": 0,
+        "One Pair": 556,
+        "Two Pair": 245,
+        "Three of a Kind": 43,
+        "Straight": 156,
+        "Flush": 0,
+        "Full House": 0,
+        "Four of a Kind": 0,
+        "Straight Flush": 0
+      }
+    }
+  ]
+}
