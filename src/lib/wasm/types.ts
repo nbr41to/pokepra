@@ -34,6 +34,18 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_vs_list_with_ranks_monte_carlo?: (
+    heroPtr: number,
+    heroLen: number,
+    boardPtr: number,
+    boardLen: number,
+    comparePtr: number,
+    compareLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_vs_list_with_ranks_with_progress?: (
     heroPtr: number,
     heroLen: number,

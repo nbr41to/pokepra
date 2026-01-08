@@ -8,6 +8,7 @@ mod sim;
 use sim::{
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
   simulate_rank_distribution as simulate_rank_distribution_internal,
+  simulate_vs_list_with_ranks_monte_carlo as simulate_vs_list_with_ranks_monte_carlo_internal,
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
   simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
 };
@@ -270,6 +271,46 @@ pub extern "C" fn simulate_vs_list_with_ranks_with_progress(
         Some(|p| unsafe {
           report_progress(p);
         }),
+      )
+      .map_err(|_| -5)
+    },
+  )
+}
+
+/// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution (winner ranks only).
+/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rank0..rank8]
+/// out_len must be >= records * 14 (compareCount * 14). Returns record count or negative error.
+#[no_mangle]
+pub extern "C" fn simulate_vs_list_with_ranks_monte_carlo(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_simulation(
+    hero_ptr,
+    hero_len,
+    board_ptr,
+    board_len,
+    compare_ptr,
+    compare_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, board_str, compare_str| {
+      simulate_vs_list_with_ranks_monte_carlo_internal(
+        hero_str,
+        board_str,
+        compare_str,
+        trials,
+        seed,
       )
       .map_err(|_| -5)
     },

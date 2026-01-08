@@ -2,12 +2,14 @@
 
 import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
 import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
+import { runSimulateVsListWithRanksMonteCarlo } from "./simulate-vs-list-with-ranks-monte-carlo-core";
 import type { CombinedPayload, EquityPayload, SimulateParams } from "./types";
 
 type SimulateResult = CombinedPayload | EquityPayload;
 
 type WorkerRequest =
   | { id: number; type: "simulateVsListWithRanks"; params: SimulateParams }
+  | { id: number; type: "simulateVsListWithRanksMonteCarlo"; params: SimulateParams }
   | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
   | {
       id: number;
@@ -51,6 +53,12 @@ ctx.onmessage = async (event) => {
     }
     if (message.type === "simulateVsListWithRanks") {
       const data = await runSimulateVsListWithRanks(message.params, {});
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateVsListWithRanksMonteCarlo") {
+      const data = await runSimulateVsListWithRanksMonteCarlo(message.params);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;

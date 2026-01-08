@@ -1,5 +1,5 @@
 import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm, setProgressListener } from "./loader";
+import { createHeap, loadWasm } from "./loader";
 import type {
   CombinedEntry,
   CombinedPayload,
@@ -7,20 +7,14 @@ import type {
   SimulateParams,
 } from "./types";
 
-export async function runSimulateVsListWithRanks(
-  {
-    hero,
-    board,
-    compare,
-    trials,
-    seed = 123456789n,
-    wasmUrl = DEFAULT_WASM_URL,
-  }: SimulateParams,
-  {
-    onProgress,
-    useProgressExport = false,
-  }: { onProgress?: (pct: number) => void; useProgressExport?: boolean },
-): Promise<CombinedPayload> {
+export async function runSimulateVsListWithRanksMonteCarlo({
+  hero,
+  board,
+  compare,
+  trials,
+  seed = 123456789n,
+  wasmUrl = DEFAULT_WASM_URL,
+}: SimulateParams): Promise<CombinedPayload> {
   const start = performance.now(); // For performance measurement
   const [heroStr, boardStr, compareStr] = [
     hero.join(" "),
@@ -28,7 +22,6 @@ export async function runSimulateVsListWithRanks(
     compare.join("; ").replaceAll(",", " "),
   ];
 
-  // 条件を満たさない場合
   if (
     heroStr.trim().length < 4 ||
     boardStr.trim().length < 6 ||
@@ -46,15 +39,11 @@ export async function runSimulateVsListWithRanks(
   const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
-  const simulate = wantsProgress
-    ? exports.simulate_vs_list_with_ranks_with_progress
-    : exports.simulate_vs_list_with_ranks_monte_carlo;
+  const simulate = exports.simulate_vs_list_with_ranks_monte_carlo;
   if (typeof simulate !== "function") {
-    const missing = wantsProgress
-      ? "simulate_vs_list_with_ranks_with_progress"
-      : "simulate_vs_list_with_ranks_monte_carlo";
-    throw new Error(`WASM export '${missing}' not found`);
+    throw new Error(
+      "WASM export 'simulate_vs_list_with_ranks_monte_carlo' not found",
+    );
   }
 
   const { writeString, allocU32 } = createHeap(memory);
@@ -71,32 +60,24 @@ export async function runSimulateVsListWithRanks(
     throw new Error("No compare hands provided");
   }
 
-  const outLen = (compareCount + 1) * 14; // opponents + hero aggregate
+  const outLen = (compareCount + 1) * 14;
   const outPtr = allocU32(outLen);
 
-  let rc: number;
-  setProgressListener(onProgress ?? null);
-  try {
-    rc = simulate(
-      heroBuf.ptr,
-      heroBuf.len,
-      boardBuf.ptr,
-      boardBuf.len,
-      compareBuf.ptr,
-      compareBuf.len,
-      trials,
-      seed,
-      outPtr,
-      outLen,
-    );
-  } finally {
-    setProgressListener(null);
-  }
+  const rc = simulate(
+    heroBuf.ptr,
+    heroBuf.len,
+    boardBuf.ptr,
+    boardBuf.len,
+    compareBuf.ptr,
+    compareBuf.len,
+    trials,
+    seed,
+    outPtr,
+    outLen,
+  );
   if (rc < 0) {
     throw new Error(
-      wantsProgress
-        ? `simulate_vs_list_with_ranks_with_progress failed with code ${rc}`
-        : `simulate_vs_list_with_ranks_monte_carlo failed with code ${rc}`,
+      `simulate_vs_list_with_ranks_monte_carlo failed with code ${rc}`,
     );
   }
   const records = rc;
@@ -181,8 +162,7 @@ export async function runSimulateVsListWithRanks(
       : (heroEntry.win + heroEntry.tie * 0.5) / heroEntry.count;
 
   const end = performance.now(); // For performance measurement
-  console.log(`runSimulateVsListWithRanks took ${end - start} ms`); // Log the time taken
-
+  console.log(`runSimulateVsListWithRanksMonteCarlo took ${end - start} ms`); // Log the time taken
   return {
     hand: heroTrimmed,
     equity,
