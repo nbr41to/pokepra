@@ -247,9 +247,9 @@ export default function Page() {
         className="w-40"
         size="lg"
         onClick={() => {
-          setHero("As Kh");
-          setBoard("Kd Jc 5h");
-          setCompare("Kc Ks; Qc Qh; Js Jh; 9c 9h; 8c 8h");
+          setHero("5s 5h");
+          setBoard("8d Qc 5c");
+          setCompare("Kc Ks; Qs Qh; Qs Jh; 8c 8h; 5d 8h");
         }}
       >
         set test values
@@ -274,6 +274,7 @@ export default function Page() {
           {error}
         </div>
       )}
+      {progress}
 
       {result && (
         <div className="space-y-1">

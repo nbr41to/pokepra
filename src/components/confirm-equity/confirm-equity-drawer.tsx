@@ -1,4 +1,4 @@
-import { Table2, X } from "lucide-react";
+import { ChartColumnStacked, X } from "lucide-react";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,7 +44,7 @@ export const ConfirmEquityDrawer = ({
           size="icon-lg"
           disabled={disabled}
         >
-          <Table2 size={16} />
+          <ChartColumnStacked size={16} />
         </Button>
       </DrawerTrigger>
 
