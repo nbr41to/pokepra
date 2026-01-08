@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function Page() {
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-center gap-y-8">
-      <h1 className="font-bold font-montserrat text-2xl">MY POKER</h1>
+      <h1 className="font-bold font-montserrat text-2xl">Monte Carlo Poker</h1>
       <div className="flex flex-col items-center justify-center gap-y-3">
         <Button className="w-60" variant="default" size="lg" asChild>
           <Link href="/preflop">Preflop</Link>

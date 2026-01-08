@@ -10,10 +10,17 @@ export default function Page() {
           <Link href="/tips/hand-probability">役が完成する確率</Link>
         </Button>
         <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/starting-hand-winrate">スターティングハンドの勝率</Link>
+          <Link href="/tips/starting-hand-winrate">
+            スターティングハンドの勝率
+          </Link>
         </Button>
         <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/score-attack-scoring">スコアアタックの得点の計算方法</Link>
+          <Link href="/tips/score-attack-scoring">
+            スコアアタックの得点の計算方法
+          </Link>
+        </Button>
+        <Button className="w-60" variant="outline" size="lg" asChild>
+          <Link href="/tips/bet-size">任意のポットに対するベットサイズ</Link>
         </Button>
       </div>
     </div>

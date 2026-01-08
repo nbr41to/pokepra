@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { Suspense } from "react";
 import { EquityChart } from "./equity-chart";
+import { EquityChartSkeleton } from "./equity-chart.skeleton";
 import example from "./example.json";
 
-// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
   component: EquityChart,
   parameters: {
@@ -11,19 +12,25 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {},
   args: {
-    result: example,
-    step: 10,
+    rankPromise: Promise.resolve(example),
   },
 } satisfies Meta<typeof EquityChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-export const Default: Story = {};
+export const Default: Story = {
+  render: () => (
+    <Suspense fallback={<EquityChartSkeleton />}>
+      <EquityChart rankPromise={Promise.resolve(example)} />
+    </Suspense>
+  ),
+};
 
 export const Threshold20: Story = {
-  args: {
-    step: 20,
-  },
+  render: () => (
+    <Suspense fallback={<EquityChartSkeleton step={20} />}>
+      <EquityChart rankPromise={Promise.resolve(example)} step={20} />
+    </Suspense>
+  ),
 };

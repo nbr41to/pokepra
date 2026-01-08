@@ -1,5 +1,5 @@
 import { ChartColumnStacked, X } from "lucide-react";
-import { use } from "react";
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { PlayCard } from "../play-card";
 import { EquityChart } from "./equity-chart";
+import { EquityChartSkeleton } from "./equity-chart.skeleton";
 
 type Props = {
   board: string[];
@@ -29,8 +30,6 @@ export const ConfirmEquityDrawer = ({
   disabled = false,
   className,
 }: Props) => {
-  const result = use(rankPromise);
-
   return (
     <Drawer direction="bottom">
       <DrawerTrigger
@@ -52,7 +51,7 @@ export const ConfirmEquityDrawer = ({
 
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Equity density {result.data.length} hands</DrawerTitle>
+          <DrawerTitle>Equity density</DrawerTitle>
           <div className="flex items-center gap-x-4 py-1">
             <div className="flex gap-x-1">
               {board.map((card) => (
@@ -65,7 +64,9 @@ export const ConfirmEquityDrawer = ({
           </div>
         </DrawerHeader>
 
-        <EquityChart result={result} />
+        <Suspense fallback={<EquityChartSkeleton />}>
+          <EquityChart rankPromise={rankPromise} />
+        </Suspense>
 
         <DrawerFooter className="absolute bottom-6 left-0 z-10 w-full">
           <DrawerClose asChild>

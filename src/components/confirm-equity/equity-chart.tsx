@@ -1,15 +1,17 @@
 import type { CSSProperties } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { Combo } from "../combo";
 
 type Props = {
-  result: CombinedPayload;
+  rankPromise: Promise<CombinedPayload>;
   step?: number;
 };
 
-export const EquityChart = ({ result, step = 10 }: Props) => {
+export const EquityChart = ({ rankPromise, step = 10 }: Props) => {
+  const result = use(rankPromise);
+
   const buckets = useMemo(
     () =>
       Array.from(
