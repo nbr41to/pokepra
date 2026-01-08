@@ -1,5 +1,5 @@
 import { ChartColumnStacked, X } from "lucide-react";
-import { Suspense } from "react";
+import { use } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -29,6 +29,8 @@ export const ConfirmEquityDrawer = ({
   disabled = false,
   className,
 }: Props) => {
+  const result = use(rankPromise);
+
   return (
     <Drawer direction="bottom">
       <DrawerTrigger
@@ -62,9 +64,8 @@ export const ConfirmEquityDrawer = ({
             </DrawerDescription>
           </div>
         </DrawerHeader>
-        <Suspense fallback="loading...">
-          <EquityChart promise={rankPromise} />
-        </Suspense>
+
+        <EquityChart result={result} />
 
         <DrawerFooter className="absolute bottom-6 left-0 z-10 w-full">
           <DrawerClose asChild>
@@ -79,5 +80,18 @@ export const ConfirmEquityDrawer = ({
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  );
+};
+
+export const ConfirmEquityDrawerSkeleton = () => {
+  return (
+    <Button
+      className="animate-pulse rounded-full"
+      variant="outline"
+      size="icon-lg"
+      disabled
+    >
+      <ChartColumnStacked size={16} />
+    </Button>
   );
 };

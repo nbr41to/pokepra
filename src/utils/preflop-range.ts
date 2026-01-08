@@ -48,10 +48,10 @@ function judgeInRange(hands: string[], position: number, people = 9) {
   const openRaiseHands = tierIndexes.flatMap((index) => TIERS[index]);
   const handString = getHandString(hands);
 
-  console.log("tierIndex", tierIndex);
-  console.log("tierIndexes", tierIndexes);
-  console.log("openRaiseHands", openRaiseHands);
-  console.log("handString", handString);
+  // console.log("tierIndex", tierIndex);
+  // console.log("tierIndexes", tierIndexes);
+  // console.log("openRaiseHands", openRaiseHands);
+  // console.log("handString", handString);
 
   return openRaiseHands.includes(handString);
 }

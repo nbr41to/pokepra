@@ -4,6 +4,16 @@ const HEAP_START = 1024; // simple bump allocator starting offset
 
 type WasmExports = {
   memory: WebAssembly.Memory;
+  simulate_rank_distribution?: (
+    handsPtr: number,
+    handsLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_vs_list_with_ranks?: (
     heroPtr: number,
     heroLen: number,
@@ -63,6 +73,19 @@ type SimulateParams = {
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
+};
+
+type RankDistributionParams = {
+  hands: string[][];
+  board: string[];
+  trials: number;
+  seed?: bigint;
+  wasmUrl?: string;
+};
+
+type RankDistributionEntry = {
+  hand: string;
+  results: RankResults;
 };
 
 type SimulateWithProgressParams = SimulateParams & {
@@ -181,7 +204,7 @@ async function runSimulateVsListWithRanks(
       });
     });
 
-  await new Promise((resolve) => setTimeout(resolve, 200)); // Yield to avoid blocking UI
+  await new Promise((resolve) => setTimeout(resolve, 500)); // Yield to avoid blocking UI
   const startTime = performance.now();
   const heroTrimmed = heroStr.trim();
   const boardTrimmed = boardStr.trim();
@@ -353,5 +376,106 @@ async function runSimulateVsListWithRanks(
   };
 }
 
-export { simulateVsListWithRanks, simulateVsListWithRanksWithProgress };
-export type { CombinedPayload };
+async function simulateRankDistribution({
+  hands,
+  board,
+  trials,
+  seed = 123456789n,
+  wasmUrl = DEFAULT_WASM_URL,
+}: RankDistributionParams): Promise<RankDistributionEntry[]> {
+  const handsTrimmed = hands
+    .map((hand) => hand.join(" ").trim())
+    .filter(Boolean);
+  const handsStr = handsTrimmed.join("; ");
+  const boardStr = board.join(" ");
+
+  if (handsTrimmed.length === 0 || board.length < 3 || board.length > 5) {
+    return [];
+  }
+
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  const { exports, memory } = await loadWasm(wasmUrl);
+  const simulate = exports.simulate_rank_distribution;
+  if (typeof simulate !== "function") {
+    throw new Error("WASM export 'simulate_rank_distribution' not found");
+  }
+
+  let heap = HEAP_START;
+  const viewU8 = () => new Uint8Array(memory.buffer);
+  const align4 = () => {
+    const mod = heap & 3;
+    if (mod !== 0) {
+      heap += 4 - mod;
+    }
+  };
+  const writeString = (text: string) => {
+    const bytes = encoder.encode(text);
+    const ptr = heap;
+    heap += bytes.length;
+    ensureCapacity(memory, heap);
+    viewU8().set(bytes, ptr);
+    return { ptr, len: bytes.length };
+  };
+
+  const handsBuf = writeString(handsStr);
+  const boardBuf = writeString(boardStr);
+
+  const outLen = handsTrimmed.length * 9;
+  align4();
+  const outPtr = heap;
+  heap += outLen * 4;
+  ensureCapacity(memory, heap);
+
+  const rc = simulate(
+    handsBuf.ptr,
+    handsBuf.len,
+    boardBuf.ptr,
+    boardBuf.len,
+    trials,
+    seed,
+    outPtr,
+    outLen,
+  );
+  if (rc < 0) {
+    throw new Error(`simulate_rank_distribution failed with code ${rc}`);
+  }
+  if (rc === 0) {
+    return [];
+  }
+
+  const out = new Uint32Array(memory.buffer, outPtr, rc * 9);
+  const labels: (keyof RankResults)[] = [
+    "High Card",
+    "One Pair",
+    "Two Pair",
+    "Three of a Kind",
+    "Straight",
+    "Flush",
+    "Full House",
+    "Four of a Kind",
+    "Straight Flush",
+  ];
+
+  const data: RankDistributionEntry[] = [];
+  for (let i = 0; i < rc; i += 1) {
+    const base = i * 9;
+    const chunk = out.subarray(base, base + 9);
+    const resultsObject = {} as RankResults;
+    for (let r = 0; r < labels.length; r += 1) {
+      resultsObject[labels[r]] = chunk[r] ?? 0;
+    }
+    data.push({
+      hand: handsTrimmed[i] ?? "",
+      results: resultsObject,
+    });
+  }
+
+  return data;
+}
+
+export {
+  simulateVsListWithRanks,
+  simulateVsListWithRanksWithProgress,
+  simulateRankDistribution,
+};
+export type { CombinedPayload, RankDistributionEntry };

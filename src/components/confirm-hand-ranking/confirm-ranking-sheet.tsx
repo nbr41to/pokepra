@@ -1,7 +1,7 @@
 "use client";
 
 import { Crown } from "lucide-react";
-import { Suspense } from "react";
+import { Suspense, use } from "react";
 
 import {
   Sheet,
@@ -31,6 +31,8 @@ export const ConfirmRankingSheet = ({
   rankPromise,
   className,
 }: Props) => {
+  const result = use(rankPromise);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -60,7 +62,7 @@ export const ConfirmRankingSheet = ({
         </SheetHeader>
 
         <Suspense fallback={<ConfirmRankingSkeleton />}>
-          <ConfirmRanking promise={rankPromise} />
+          <ConfirmRanking result={result} />
         </Suspense>
       </SheetContent>
     </Sheet>

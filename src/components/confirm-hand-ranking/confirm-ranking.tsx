@@ -1,7 +1,6 @@
 "use client";
 
 import { GalleryVertical, Grid, List, X } from "lucide-react";
-import { use } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
@@ -11,13 +10,10 @@ import { HandRankingGrid } from "./hand-ranking-grid";
 import { HandRankingList } from "./hand-ranking-list";
 
 type Props = {
-  promise: Promise<CombinedPayload>;
+  result: CombinedPayload;
 };
 
-export const ConfirmRanking = ({ promise }: Props) => {
-  const result = use(promise);
-  console.log(result);
-
+export const ConfirmRanking = ({ result }: Props) => {
   const scrollToMyHand = (smooth = false) => {
     const element = document.getElementById(result.hand);
     if (element) {

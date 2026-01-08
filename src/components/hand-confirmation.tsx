@@ -185,7 +185,7 @@ export const HandConfirmation = ({
     <div
       ref={containerRef}
       className={cn(
-        "relative flex aspect-video w-full touch-none select-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60",
+        "relative flex aspect-video h-62 w-full touch-none select-none items-center justify-evenly rounded-md border-2 bg-orange-50 dark:bg-orange-950/60",
         className,
       )}
       onPointerDown={handlePointerDown}

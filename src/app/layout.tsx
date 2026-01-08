@@ -5,7 +5,8 @@ import { ThemeProvider } from "@/features/setting";
 import { SettingButton } from "./_components/setting-button";
 
 export const metadata: Metadata = {
-  title: "MY POKER",
+  title: "Monte Carlo Poker",
+  applicationName: "MCP",
   description: "A poker training app to improve your preflop decision making.",
   icons: {
     icon: "/favicon.ico",

@@ -696,6 +696,9 @@ pub fn simulate_rank_distribution(
 ) -> Result<Vec<[u32; 9]>, String> {
   let hands = parse_hands_min1(hands_str).ok_or("failed to parse hands")?;
   let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() < 3 {
+    return Err("board must be >=3 cards".into());
+  }
   if board.len() > 5 {
     return Err("board must be <=5 cards".into());
   }
