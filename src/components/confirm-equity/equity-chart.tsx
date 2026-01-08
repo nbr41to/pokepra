@@ -88,95 +88,81 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
   ]);
 
   return (
-    <div className="mx-auto w-fit pt-4 pb-24">
-      <style>{`
-        @keyframes heroEqIndicator {
-          0% { top: 100%; }
-          80% { top: calc(var(--hero-target) - 5%); }
-          100% { top: var(--hero-target); }
-        }
-        .hero-eq-indicator {
-          animation: heroEqIndicator 700ms cubic-bezier(0.16, 1, 0.2, 1) both;
-        }
-      `}</style>
-      <div className="relative h-80 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">
-        {buckets.map((bucket, idx) => {
-          const value = eqThresholds[bucket].count;
-          if (value === 0) return null;
-          const percent = (value / result.data.length) * 100;
+    <div>
+      <p className="text-center text-sm">EQ Ave. {eqAve.toFixed(1)}%</p>
+      <div className="mx-auto flex w-fit pt-4 pb-24">
+        <div className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">
+          {buckets.map((bucket, idx) => {
+            const value = eqThresholds[bucket].count;
+            if (value === 0) return null;
+            const percent = (value / result.data.length) * 100;
 
-          return (
+            return (
+              <div
+                key={bucket}
+                className={cn(
+                  "relative flex w-full items-center justify-center text-xs",
+                  bgColors[idx % bgColors.length],
+                  idx === 0 ? "rounded-t-xs" : "",
+                  idx === buckets.length - 1 ? "rounded-b-xs" : "",
+                )}
+                style={{
+                  height: `${percent}%`,
+                }}
+              >
+                {/* eq step */}
+                <div
+                  className={cn(
+                    "absolute top-1/2 left-0 z-10 -translate-x-full -translate-y-1/2 pr-2 font-bold",
+                    colors[idx % colors.length],
+                  )}
+                >
+                  {bucket}%~
+                </div>
+              </div>
+            );
+          })}
+          {heroEntry && (
             <div
-              key={bucket}
               className={cn(
-                "relative flex w-full items-center justify-center text-xs",
-                bgColors[idx % bgColors.length],
-                idx === 0 ? "rounded-t-xs" : "",
-                idx === buckets.length - 1 ? "rounded-b-xs" : "",
+                "absolute -right-28 flex -translate-y-1/2 items-center gap-1 text-foreground text-sm",
+                animateHero && "hero-eq-indicator",
               )}
+              style={
+                {
+                  "--hero-target": `${heroOffsetPct}%`,
+                  top: `${heroOffsetPct}%`,
+                } as CSSProperties
+              }
+            >
+              <div>
+                <Combo className="" hand={result.hand.split(" ")} />
+                <div className="text-center font-bold">
+                  {heroEq.toFixed(1)}%
+                </div>
+              </div>
+              <span className="h-px w-52 bg-pink-400 dark:bg-pink-700" />
+            </div>
+          )}
+          {/* Ave */}
+        </div>
+        <div className="relative -z-10 w-8">
+          {Array.from({ length: 100 / step + 1 }).map((_, i) => (
+            <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              key={i}
+              className="absolute -left-1 h-px w-8 bg-gray-300 dark:bg-gray-600"
               style={{
-                height: `${percent}%`,
+                bottom: i === 100 / step ? "calc(100% - 1px)" : `${step * i}%`,
               }}
             >
-              {/* measure */}
-              <span
-                className={cn(
-                  "absolute -bottom-px -left-1.5 z-10 h-px w-12 bg-gray-300 dark:bg-gray-600",
-                  idx === buckets.length - 1 && "hidden",
-                )}
-              />
-              {/* eq step */}
-              <div
-                className={cn(
-                  "absolute top-1/2 left-0 z-10 -translate-x-full -translate-y-1/2 pr-2 font-bold",
-                  colors[idx % colors.length],
-                )}
-              >
-                {bucket}%~
-              </div>
-              {/* eq density */}
-              {/* <div className="absolute top-1/2 right-0 translate-x-full -translate-y-1/2 pl-2">
-                {percent.toFixed(1)}%
-              </div> */}
+              <p className="absolute -top-2 left-9 whitespace-nowrap text-xs">
+                {step * i}%{" "}
+                {i === 100 / step && `(${result.data.length} hands)`}
+              </p>
             </div>
-          );
-        })}
-        {heroEntry && (
-          <div
-            className={cn(
-              "absolute -right-12 flex -translate-y-1/2 items-center gap-1 text-foreground text-sm",
-              animateHero && "hero-eq-indicator",
-            )}
-            style={
-              {
-                "--hero-target": `${heroOffsetPct}%`,
-                top: `${heroOffsetPct}%`,
-              } as CSSProperties
-            }
-          >
-            <div>
-              <Combo className="" hand={result.hand.split(" ")} />
-              <div className="text-center font-bold">{heroEq.toFixed(1)}%</div>
-            </div>
-            <span className="h-px w-40 bg-pink-400 dark:bg-pink-700" />
-          </div>
-        )}
-        {/* Ave */}
-        <div className="absolute top-0 right-24 flex flex-col">
-          <span>Ave.</span>
-          <span>{eqAve.toFixed(1)}%</span>
+          ))}
         </div>
-        {Array.from({ length: 100 / step + 1 }).map((_, i) => (
-          <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={i}
-            className="absolute -right-16 bottom-0 -z-10 flex items-end"
-            style={{ bottom: `${step * i}%` }}
-          >
-            <span className={cn("h-px w-10 bg-gray-200 dark:bg-gray-700")} />
-            <span className="text-xs">{step * i}%</span>
-          </div>
-        ))}
       </div>
     </div>
   );

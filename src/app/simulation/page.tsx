@@ -247,9 +247,9 @@ export default function Page() {
         className="w-40"
         size="lg"
         onClick={() => {
-          setHero("5s 5h");
-          setBoard("8d Qc 5c");
-          setCompare("Kc Ks; Qs Qh; Qs Jh; 8c 8h; 5d 8h");
+          setHero("Kc Ks");
+          setBoard("Js Ts 3c 8s As");
+          setCompare("7s 9s; Qs 9s; 8c 8h; 5d 8h");
         }}
       >
         set test values

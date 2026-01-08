@@ -52,7 +52,7 @@ export const ConfirmEquityDrawer = ({
 
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Equity density</DrawerTitle>
+          <DrawerTitle>Equity density {result.data.length} hands</DrawerTitle>
           <div className="flex items-center gap-x-4 py-1">
             <div className="flex gap-x-1">
               {board.map((card) => (
