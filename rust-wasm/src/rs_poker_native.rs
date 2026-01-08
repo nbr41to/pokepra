@@ -1,79 +1,269 @@
-//! Thin wrapper around `rs_poker` to rank 5-card hands and compare them.
+//! rs_poker-based helpers for Monte Carlo simulations.
 
-use rs_poker::core::{Card, Hand, Rank, Rankable, Suit, Value};
-use std::cmp::Ordering;
+use rs_poker::core::{Card, Hand, Rank, Suit, Value};
+use rs_poker::holdem::MonteCarloGame;
 
-/// 2文字のカード表記から `Card` を構築する。
-fn parse_card(token: &str) -> Option<Card> {
-  if token.len() != 2 {
-    return None;
+use crate::sim::{decode_hand_pair, parse_board, parse_hand_two, Card as SimCard};
+
+/// Hero vs provided opponent list, returning wins/ties/plays per opponent and hero aggregate.
+pub fn simulate_vs_list_equity(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
+  let _ = seed;
+  let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
+
+  let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() > 5 {
+    return Err("board must be <=5 cards".into());
   }
-  let mut chars = token.chars();
-  let value = Value::from_char(chars.next()?)?;
-  let suit = Suit::from_char(chars.next()?)?;
-  Some(Card { value, suit })
+
+  let mut opponents: Vec<[SimCard; 2]> = Vec::new();
+  for raw in compare_list.split(';') {
+    if raw.trim().is_empty() {
+      continue;
+    }
+    let hand = parse_hand_two(raw).ok_or("each compare hand must have 2 cards")?;
+    opponents.push(hand);
+  }
+  if opponents.is_empty() {
+    return Err("no compare hands provided".into());
+  }
+
+  validate_inputs(&hero_hand, &board, &opponents)?;
+
+  let trials = trials.max(1);
+  let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
+
+  let mut stats: Vec<(u32, u32, u32, u32, u32)> =
+    vec![(0, 0, 0, 0, 0); opponents.len()];
+  let mut hero_wins_total = 0u32;
+  let mut hero_ties_total = 0u32;
+  let mut hero_plays_total = 0u32;
+
+  let opp_encoded: Vec<(u32, u32)> = opponents.iter().map(|h| decode_hand_pair(h)).collect();
+
+  for (idx, opp) in opponents.iter().enumerate() {
+    let mut wins = 0u32;
+    let mut ties = 0u32;
+    let mut plays = 0u32;
+
+    let mut hero_rs = to_rs_hand(&hero_hand);
+    let mut opp_rs = to_rs_hand(opp);
+    for c in &board_rs {
+      hero_rs.insert(*c);
+      opp_rs.insert(*c);
+    }
+
+    let mut game =
+      MonteCarloGame::new(vec![hero_rs, opp_rs]).map_err(|e| format!("{e:?}"))?;
+
+    for _ in 0..trials {
+      let (winners, _) = game.simulate();
+      plays += 1;
+      let hero_win = winners.get(0);
+      let opp_win = winners.get(1);
+      if hero_win && opp_win {
+        ties += 1;
+      } else if hero_win {
+        wins += 1;
+      }
+      game.reset();
+    }
+
+    stats[idx].0 = opp_encoded[idx].0;
+    stats[idx].1 = opp_encoded[idx].1;
+    stats[idx].2 = wins;
+    stats[idx].3 = ties;
+    stats[idx].4 = plays;
+
+    hero_wins_total = hero_wins_total.saturating_add(wins);
+    hero_ties_total = hero_ties_total.saturating_add(ties);
+    hero_plays_total = hero_plays_total.saturating_add(plays);
+  }
+
+  stats.push((
+    u32::MAX,
+    u32::MAX,
+    hero_wins_total,
+    hero_ties_total,
+    hero_plays_total,
+  ));
+
+  Ok(stats)
 }
 
-/// 文字列ハンドを5枚の `Hand` に変換する。
-fn parse_hand_5(hand: &str) -> Option<Hand> {
-  let tokens: Vec<String> = if hand.contains(' ') {
-    hand.split_whitespace().map(|s| s.to_string()).collect()
-  } else {
-    hand
-      .as_bytes()
-      .chunks(2)
-      .map(|c| String::from_utf8_lossy(c).to_string())
-      .collect()
+/// Hero vs provided opponent list, returning wins/ties and winner rank distribution via MonteCarloGame.
+pub fn simulate_vs_list_with_ranks_monte_carlo(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+  let _ = seed;
+  let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
+
+  let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() > 5 {
+    return Err("board must be <=5 cards".into());
+  }
+
+  let mut opponents: Vec<[SimCard; 2]> = Vec::new();
+  for raw in compare_list.split(';') {
+    if raw.trim().is_empty() {
+      continue;
+    }
+    let hand = parse_hand_two(raw).ok_or("each compare hand must have 2 cards")?;
+    opponents.push(hand);
+  }
+  if opponents.is_empty() {
+    return Err("no compare hands provided".into());
+  }
+
+  validate_inputs(&hero_hand, &board, &opponents)?;
+
+  let trials = trials.max(1);
+  let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
+
+  let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
+    vec![(0, 0, 0, 0, 0, [0u32; 9]); opponents.len()];
+  let mut hero_rank_counts = [0u32; 9];
+  let mut hero_wins_total = 0u32;
+  let mut hero_ties_total = 0u32;
+  let mut hero_plays_total = 0u32;
+
+  let opp_encoded: Vec<(u32, u32)> = opponents.iter().map(|h| decode_hand_pair(h)).collect();
+
+  for (idx, opp) in opponents.iter().enumerate() {
+    let mut wins = 0u32;
+    let mut ties = 0u32;
+    let mut plays = 0u32;
+    let mut rank_counts = [0u32; 9];
+
+    let mut hero_rs = to_rs_hand(&hero_hand);
+    let mut opp_rs = to_rs_hand(opp);
+    for c in &board_rs {
+      hero_rs.insert(*c);
+      opp_rs.insert(*c);
+    }
+
+    let mut game =
+      MonteCarloGame::new(vec![hero_rs, opp_rs]).map_err(|e| format!("{e:?}"))?;
+
+    for _ in 0..trials {
+      let (winners, rank) = game.simulate();
+      plays += 1;
+      let hero_win = winners.get(0);
+      let opp_win = winners.get(1);
+      if hero_win && opp_win {
+        ties += 1;
+      } else if hero_win {
+        wins += 1;
+      }
+      if hero_win {
+        let idx = rank_index(&rank);
+        if idx < 9 {
+          rank_counts[idx] += 1;
+          hero_rank_counts[idx] = hero_rank_counts[idx].saturating_add(1);
+        }
+      }
+      game.reset();
+    }
+
+    stats[idx].0 = opp_encoded[idx].0;
+    stats[idx].1 = opp_encoded[idx].1;
+    stats[idx].2 = wins;
+    stats[idx].3 = ties;
+    stats[idx].4 = plays;
+    stats[idx].5 = rank_counts;
+
+    hero_wins_total = hero_wins_total.saturating_add(wins);
+    hero_ties_total = hero_ties_total.saturating_add(ties);
+    hero_plays_total = hero_plays_total.saturating_add(plays);
+  }
+
+  stats.push((
+    u32::MAX,
+    u32::MAX,
+    hero_wins_total,
+    hero_ties_total,
+    hero_plays_total,
+    hero_rank_counts,
+  ));
+
+  Ok(stats)
+}
+
+fn validate_inputs(
+  hero_hand: &[SimCard; 2],
+  board: &[SimCard],
+  opponents: &[[SimCard; 2]],
+) -> Result<(), String> {
+  {
+    let mut seen = Vec::new();
+    for c in board {
+      if seen.iter().any(|x: &SimCard| x.rank == c.rank && x.suit == c.suit) {
+        return Err("duplicate cards detected in board".into());
+      }
+      seen.push(*c);
+    }
+  }
+
+  if hero_hand[0].rank == hero_hand[1].rank && hero_hand[0].suit == hero_hand[1].suit {
+    return Err("duplicate cards inside hero hand".into());
+  }
+  for c in hero_hand {
+    if board.iter().any(|x| x.rank == c.rank && x.suit == c.suit) {
+      return Err("hero overlaps board".into());
+    }
+  }
+  for opp in opponents {
+    if opp[0].rank == opp[1].rank && opp[0].suit == opp[1].suit {
+      return Err("duplicate cards inside opponent hand".into());
+    }
+    for c in opp {
+      if hero_hand.iter().any(|x| x.rank == c.rank && x.suit == c.suit) {
+        return Err("opponent overlaps hero".into());
+      }
+      if board.iter().any(|x| x.rank == c.rank && x.suit == c.suit) {
+        return Err("opponent overlaps board".into());
+      }
+    }
+  }
+  Ok(())
+}
+
+fn to_rs_card(card: &SimCard) -> Card {
+  let value = Value::from(card.rank);
+  let suit = match card.suit {
+    0 => Suit::Spade,
+    1 => Suit::Heart,
+    2 => Suit::Diamond,
+    3 => Suit::Club,
+    _ => Suit::Spade,
   };
-  if tokens.len() != 5 {
-    return None;
-  }
-  let mut cards = Vec::with_capacity(5);
-  for t in tokens {
-    cards.push(parse_card(&t)?);
-  }
-  Some(Hand::new_with_cards(cards))
+  Card::new(value, suit)
 }
 
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-/// `rs_poker` が返すランクを人間が理解しやすいカテゴリで表す列挙。
-pub enum HandCategory {
-  HighCard = 0,
-  OnePair = 1,
-  TwoPair = 2,
-  ThreeOfAKind = 3,
-  Straight = 4,
-  Flush = 5,
-  FullHouse = 6,
-  FourOfAKind = 7,
-  StraightFlush = 8,
+fn to_rs_hand(hand: &[SimCard; 2]) -> Hand {
+  let cards = vec![to_rs_card(&hand[0]), to_rs_card(&hand[1])];
+  Hand::new_with_cards(cards)
 }
 
-/// `Rank` から対応する `HandCategory` を導出する。
-fn category_from_rank(rank: &Rank) -> HandCategory {
+fn rank_index(rank: &Rank) -> usize {
   match rank {
-    Rank::StraightFlush(_) => HandCategory::StraightFlush,
-    Rank::FourOfAKind(_) => HandCategory::FourOfAKind,
-    Rank::FullHouse(_) => HandCategory::FullHouse,
-    Rank::Flush(_) => HandCategory::Flush,
-    Rank::Straight(_) => HandCategory::Straight,
-    Rank::ThreeOfAKind(_) => HandCategory::ThreeOfAKind,
-    Rank::TwoPair(_) => HandCategory::TwoPair,
-    Rank::OnePair(_) => HandCategory::OnePair,
-    Rank::HighCard(_) => HandCategory::HighCard,
+    Rank::HighCard(_) => 0,
+    Rank::OnePair(_) => 1,
+    Rank::TwoPair(_) => 2,
+    Rank::ThreeOfAKind(_) => 3,
+    Rank::Straight(_) => 4,
+    Rank::Flush(_) => 5,
+    Rank::FullHouse(_) => 6,
+    Rank::FourOfAKind(_) => 7,
+    Rank::StraightFlush(_) => 8,
   }
-}
-
-/// 文字列表現のハンドを評価して `HandCategory` を返す。
-pub fn evaluate_hand_rs(hand: &str) -> Result<HandCategory, String> {
-  let parsed = parse_hand_5(hand).ok_or("failed to parse hand")?;
-  Ok(category_from_rank(&parsed.rank()))
-}
-
-/// 2つのハンド文字列を比較し、強弱の順序を返す。
-pub fn compare_hands_rs(a: &str, b: &str) -> Result<Ordering, String> {
-  let h1 = parse_hand_5(a).ok_or("failed to parse hand a")?;
-  let h2 = parse_hand_5(b).ok_or("failed to parse hand b")?;
-  Ok(h1.rank().cmp(&h2.rank()))
 }

@@ -18,23 +18,6 @@ pub(crate) fn parse_hand_two(input: &str) -> Option<[Card; 2]> {
   Some([c1, c2])
 }
 
-/// Parse multiple hands separated by ';', each hand uses space or no-space
-/// between its 2 hole cards. Example: "AsKs;QhQd;JhTh"
-pub(crate) fn parse_hands(input: &str) -> Option<Vec<[Card; 2]>> {
-  let mut hands = Vec::new();
-  for raw in input.split(';') {
-    if raw.trim().is_empty() {
-      continue;
-    }
-    let hand = parse_hand_two(raw)?;
-    hands.push(hand);
-  }
-  if hands.len() < 2 || hands.len() > 8 {
-    return None;
-  }
-  Some(hands)
-}
-
 pub(crate) fn parse_hands_min1(input: &str) -> Option<Vec<[Card; 2]>> {
   let mut hands = Vec::new();
   for raw in input.split(';') {
