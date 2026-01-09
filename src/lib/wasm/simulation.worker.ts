@@ -1,16 +1,30 @@
 /// <reference lib="webworker" />
 
+import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
 import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
 import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
 import { runSimulateVsListWithRanksMonteCarlo } from "./simulate-vs-list-with-ranks-monte-carlo-core";
-import type { CombinedPayload, EquityPayload, SimulateParams } from "./types";
+import type {
+  CombinedPayload,
+  EquityPayload,
+  RankDistributionEntry,
+  RankDistributionParams,
+  SimulateParams,
+} from "./types";
 
-type SimulateResult = CombinedPayload | EquityPayload;
+type SimulateResult = CombinedPayload | EquityPayload | RankDistributionEntry[];
 
 type WorkerRequest =
   | { id: number; type: "simulateVsListWithRanks"; params: SimulateParams }
   | { id: number; type: "simulateVsListWithRanksMonteCarlo"; params: SimulateParams }
   | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
+  | { id: number; type: "simulateVsListEquityWithProgress"; params: SimulateParams }
+  | { id: number; type: "simulateRankDistribution"; params: RankDistributionParams }
+  | {
+      id: number;
+      type: "simulateRankDistributionWithProgress";
+      params: RankDistributionParams;
+    }
   | {
       id: number;
       type: "simulateVsListWithRanksWithProgress";
@@ -67,6 +81,51 @@ ctx.onmessage = async (event) => {
       const data = await runSimulateVsListEquity(message.params);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateVsListEquityWithProgress") {
+      const data = await runSimulateVsListEquity(
+        message.params,
+        {
+          useProgressExport: true,
+          onProgress: (pct) => {
+            const response: WorkerResponse = {
+              id: message.id,
+              type: "progress",
+              pct,
+            };
+            ctx.postMessage(response);
+          },
+        },
+      );
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateRankDistributionWithProgress") {
+      const data = await runSimulateRankDistribution(
+        message.params,
+        {
+          useProgressExport: true,
+          onProgress: (pct) => {
+            const response: WorkerResponse = {
+              id: message.id,
+              type: "progress",
+              pct,
+            };
+            ctx.postMessage(response);
+          },
+        },
+      );
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateRankDistribution") {
+      const data = await runSimulateRankDistribution(message.params, {});
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
     }
   } catch (error) {
     const response: WorkerResponse = {

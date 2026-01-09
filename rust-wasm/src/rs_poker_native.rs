@@ -20,6 +20,42 @@ pub fn simulate_vs_list_equity(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
+  simulate_vs_list_equity_inner::<fn(u32)>(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    None,
+  )
+}
+
+pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
+  simulate_vs_list_equity_inner(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    progress,
+  )
+}
+
+fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
   let _ = seed;
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
@@ -43,6 +79,21 @@ pub fn simulate_vs_list_equity(
   validate_inputs(&hero_hand, &board, &opponents)?;
 
   let trials = trials.max(1);
+  let total_work = (opponents.len() as u64).saturating_mul(trials as u64).max(1);
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
+
   let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
 
   let mut stats: Vec<(u32, u32, u32, u32, u32)> =
@@ -79,6 +130,8 @@ pub fn simulate_vs_list_equity(
         wins += 1;
       }
       game.reset();
+      completed = completed.saturating_add(1);
+      update_progress(completed);
     }
 
     stats[idx].0 = opp_encoded[idx].0;
@@ -100,6 +153,7 @@ pub fn simulate_vs_list_equity(
     hero_plays_total,
   ));
 
+  update_progress(total_work);
   Ok(stats)
 }
 
@@ -266,6 +320,26 @@ pub fn simulate_rank_distribution(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<[u32; 9]>, String> {
+  simulate_rank_distribution_inner::<fn(u32)>(hands_str, board_str, trials, seed, None)
+}
+
+pub fn simulate_rank_distribution_with_progress<F: FnMut(u32)>(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<[u32; 9]>, String> {
+  simulate_rank_distribution_inner(hands_str, board_str, trials, seed, progress)
+}
+
+fn simulate_rank_distribution_inner<F: FnMut(u32)>(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<[u32; 9]>, String> {
   let hands = parse_hands_min1(hands_str).ok_or("failed to parse hands")?;
   let board = parse_board(board_str).ok_or("failed to parse board")?;
   if board.len() < 3 {
@@ -304,7 +378,23 @@ pub fn simulate_rank_distribution(
   let mut rng = Lcg64::new(seed);
   let mut counts = vec![[0u32; 9]; hands.len()];
 
-  for _ in 0..trials.max(1) {
+  let trials = trials.max(1);
+  let total_work = (trials as u64).saturating_mul(hands.len() as u64).max(1);
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
+
+  for _ in 0..trials {
     for (idx, hand) in hands.iter().enumerate() {
       let mut exclude = board.clone();
       exclude.push(hand[0]);
@@ -330,9 +420,13 @@ pub fn simulate_rank_distribution(
       if r_idx < 9 {
         counts[idx][r_idx] += 1;
       }
+
+      completed = completed.saturating_add(1);
+      update_progress(completed);
     }
   }
 
+  update_progress(total_work);
   Ok(counts)
 }
 

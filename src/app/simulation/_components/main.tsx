@@ -93,10 +93,7 @@ export function Main() {
         board: board.split(" "),
         compare: compare.split("; ").map((hand) => hand.split(" ")),
         trials: 10000,
-        onProgress: (pct) => {
-          setProgress(pct);
-          console.log(`simulation progress: ${pct.toFixed(2)}%`);
-        },
+        onProgress: (pct) => setProgress(pct),
       });
 
       setResult(result);
@@ -344,7 +341,7 @@ export function Main() {
         </div>
       )}
       {target && (
-        <div className="fixed bottom-0 left-0 flex w-full justify-center gap-x-1 bg-background p-2">
+        <div className="fixed bottom-0 left-0 z-10 flex w-full justify-center gap-x-1 bg-background p-2">
           <InputCardPalette
             key={target}
             value={paletteValue}

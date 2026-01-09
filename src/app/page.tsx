@@ -70,10 +70,13 @@ export default function Page() {
       >
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
           <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/simulation">Simulation</Link>
+            <Link href="/simulation">Simulation A</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/simulation-b">Simulation B</Link>
+          </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/simulation-c">Simulation C</Link>
           </Button>
         </div>
       </NavigationSection>

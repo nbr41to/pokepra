@@ -7,7 +7,9 @@ mod sim;
 
 use rs_poker_native::{
   simulate_rank_distribution as simulate_rank_distribution_internal,
+  simulate_rank_distribution_with_progress as simulate_rank_distribution_with_progress_internal,
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
+  simulate_vs_list_equity_with_progress as simulate_vs_list_equity_with_progress_internal,
   simulate_vs_list_with_ranks_monte_carlo as simulate_vs_list_with_ranks_monte_carlo_internal,
   simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
 };
@@ -15,9 +17,24 @@ use sim::{
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
 };
 
+#[cfg(target_arch = "wasm32")]
 #[link(wasm_import_module = "env")]
 extern "C" {
   fn report_progress(progress: u32);
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn report_progress(_progress: u32) {}
+
+fn emit_progress(progress: u32) {
+  #[cfg(target_arch = "wasm32")]
+  unsafe {
+    report_progress(progress);
+  }
+  #[cfg(not(target_arch = "wasm32"))]
+  {
+    report_progress(progress);
+  }
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -353,6 +370,45 @@ pub extern "C" fn simulate_vs_list_equity(
   )
 }
 
+/// Equity variant with progress. Emits progress via `report_progress`.
+#[no_mangle]
+pub extern "C" fn simulate_vs_list_equity_with_progress(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_equity(
+    hero_ptr,
+    hero_len,
+    board_ptr,
+    board_len,
+    compare_ptr,
+    compare_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, board_str, compare_str| {
+      simulate_vs_list_equity_with_progress_internal(
+        hero_str,
+        board_str,
+        compare_str,
+        trials,
+        seed,
+        Some(|p| emit_progress(p)),
+      )
+      .map_err(|_| -5)
+    },
+  )
+}
+
 /// Multiple hands rank distribution for a partial board (>=3 cards).
 /// Output per hand: [rank0..rank8]. out_len must be >= hands_count * 9.
 #[no_mangle]
@@ -377,6 +433,40 @@ pub extern "C" fn simulate_rank_distribution(
     out_len,
     |hands_str, board_str| {
       simulate_rank_distribution_internal(hands_str, board_str, trials, seed).map_err(|_| -5)
+    },
+  )
+}
+
+/// Rank distribution with progress. Emits progress via `report_progress`.
+#[no_mangle]
+pub extern "C" fn simulate_rank_distribution_with_progress(
+  hands_ptr: *const u8,
+  hands_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_rank_distribution(
+    hands_ptr,
+    hands_len,
+    board_ptr,
+    board_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hands_str, board_str| {
+      simulate_rank_distribution_with_progress_internal(
+        hands_str,
+        board_str,
+        trials,
+        seed,
+        Some(|p| emit_progress(p)),
+      )
+      .map_err(|_| -5)
     },
   )
 }

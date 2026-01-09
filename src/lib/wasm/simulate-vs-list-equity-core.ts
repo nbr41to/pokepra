@@ -1,15 +1,21 @@
 import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm } from "./loader";
+import { createHeap, loadWasm, setProgressListener } from "./loader";
 import type { EquityEntry, EquityPayload, SimulateParams } from "./types";
 
-export async function runSimulateVsListEquity({
-  hero,
-  board,
-  compare,
-  trials,
-  seed = 123456789n,
-  wasmUrl = DEFAULT_WASM_URL,
-}: SimulateParams): Promise<EquityPayload> {
+export async function runSimulateVsListEquity(
+  {
+    hero,
+    board,
+    compare,
+    trials,
+    seed = 123456789n,
+    wasmUrl = DEFAULT_WASM_URL,
+  }: SimulateParams,
+  {
+    onProgress,
+    useProgressExport = false,
+  }: { onProgress?: (pct: number) => void; useProgressExport?: boolean } = {},
+): Promise<EquityPayload> {
   const [heroStr, boardStr, compareStr] = [
     hero.join(" "),
     board.join(" "),
@@ -34,9 +40,15 @@ export async function runSimulateVsListEquity({
   const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const simulate = exports.simulate_vs_list_equity;
+  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const simulate = wantsProgress
+    ? exports.simulate_vs_list_equity_with_progress
+    : exports.simulate_vs_list_equity;
   if (typeof simulate !== "function") {
-    throw new Error("WASM export 'simulate_vs_list_equity' not found");
+    const missing = wantsProgress
+      ? "simulate_vs_list_equity_with_progress"
+      : "simulate_vs_list_equity";
+    throw new Error(`WASM export '${missing}' not found`);
   }
 
   const { writeString, allocU32 } = createHeap(memory);
@@ -56,20 +68,30 @@ export async function runSimulateVsListEquity({
   const outLen = (compareCount + 1) * 5;
   const outPtr = allocU32(outLen);
 
-  const rc = simulate(
-    heroBuf.ptr,
-    heroBuf.len,
-    boardBuf.ptr,
-    boardBuf.len,
-    compareBuf.ptr,
-    compareBuf.len,
-    trials,
-    seed,
-    outPtr,
-    outLen,
-  );
+  let rc: number;
+  setProgressListener(onProgress ?? null);
+  try {
+    rc = simulate(
+      heroBuf.ptr,
+      heroBuf.len,
+      boardBuf.ptr,
+      boardBuf.len,
+      compareBuf.ptr,
+      compareBuf.len,
+      trials,
+      seed,
+      outPtr,
+      outLen,
+    );
+  } finally {
+    setProgressListener(null);
+  }
   if (rc < 0) {
-    throw new Error(`simulate_vs_list_equity failed with code ${rc}`);
+    throw new Error(
+      wantsProgress
+        ? `simulate_vs_list_equity_with_progress failed with code ${rc}`
+        : `simulate_vs_list_equity failed with code ${rc}`,
+    );
   }
   if (rc === 0) {
     throw new Error("No records returned from WASM");

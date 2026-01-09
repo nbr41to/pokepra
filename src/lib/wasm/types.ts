@@ -12,7 +12,29 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_vs_list_equity_with_progress?: (
+    heroPtr: number,
+    heroLen: number,
+    boardPtr: number,
+    boardLen: number,
+    comparePtr: number,
+    compareLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_rank_distribution?: (
+    handsPtr: number,
+    handsLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
+  simulate_rank_distribution_with_progress?: (
     handsPtr: number,
     handsLen: number,
     boardPtr: number,
@@ -116,6 +138,10 @@ export type RankDistributionParams = {
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
+};
+
+export type RankDistributionWithProgressParams = RankDistributionParams & {
+  onProgress?: (pct: number) => void;
 };
 
 export type RankDistributionEntry = {
