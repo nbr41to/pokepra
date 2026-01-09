@@ -6,13 +6,13 @@ type Props = {
   className?: string;
 } & Omit<LucideProps, "ref">;
 
-export const SuitIcon = ({ suit, ...props }: Props) => {
+export const SuitIcon = ({ suit, className, ...props }: Props) => {
   return (
     <>
-      <Spade className={cn(suit !== "s" && "hidden")} {...props} />
-      <Heart className={cn(suit !== "h" && "hidden")} {...props} />
-      <Diamond className={cn(suit !== "d" && "hidden")} {...props} />
-      <Club className={cn(suit !== "c" && "hidden")} {...props} />
+      <Spade className={cn(suit !== "s" && "hidden", className)} {...props} />
+      <Heart className={cn(suit !== "h" && "hidden", className)} {...props} />
+      <Diamond className={cn(suit !== "d" && "hidden", className)} {...props} />
+      <Club className={cn(suit !== "c" && "hidden", className)} {...props} />
     </>
   );
 };

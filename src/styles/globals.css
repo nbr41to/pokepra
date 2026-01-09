@@ -8,8 +8,6 @@
   --font-noto-sans-jp: var(--font-noto-sans-jp);
   --font-montserrat: var(--font-montserrat);
 
-  --spacing-header: 3rem;
-
   /* shadcn variables  */
   --color-background: var(--background);
   --color-foreground: var(--foreground);

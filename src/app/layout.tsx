@@ -2,12 +2,18 @@ import type { Metadata } from "next";
 import { montserrat, notoSansJP } from "@/styles/fonts";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/features/setting";
+import { BackButton } from "./_components/back-button";
 import { SettingButton } from "./_components/setting-button";
 
 export const metadata: Metadata = {
-  title: "Monte Carlo Poker",
-  applicationName: "MCP",
-  description: "A poker training app to improve your preflop decision making.",
+  title: {
+    template: "%s | MCPT",
+    default: "MCPT",
+  },
+  applicationName: "Monte Carlo Poker Trainer",
+  description:
+    "A poker training tool using Monte Carlo simulations to improve your skills.",
+  keywords: ["poker"],
   icons: {
     icon: "/favicon.ico",
     apple: "/apple-touch-icon.png",
@@ -25,6 +31,7 @@ export default function RootLayout({
         className={`${notoSansJP.variable} ${montserrat.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <BackButton />
           <SettingButton />
           {children}
         </ThemeProvider>

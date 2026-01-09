@@ -16,7 +16,7 @@ export const Setting = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon-lg">
+        <Button className="rounded-full" variant="ghost" size="icon-lg">
           <Settings />
         </Button>
       </DropdownMenuTrigger>
