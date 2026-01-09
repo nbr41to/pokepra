@@ -18,6 +18,8 @@ export function Main() {
 
   if (!initialized) return null;
 
+  console.log(stack);
+
   return (
     <div className="relative w-full">
       <OtherPlayers />
@@ -25,7 +27,7 @@ export function Main() {
       <div className="absolute right-15 bottom-64 z-1">
         <ResultArea />
       </div>
-      <FailureOverlay visible={stack > 0} onRetry={retry} />
+      <FailureOverlay visible={stack < 1} onRetry={retry} />
     </div>
   );
 }

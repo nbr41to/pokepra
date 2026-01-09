@@ -69,6 +69,7 @@ const useActionStore = create<Store>((set, get) => ({
     }
     set(() => ({
       ...INITIAL_STATE,
+      initialized: true,
       position,
       hero,
       otherPlayersHands,

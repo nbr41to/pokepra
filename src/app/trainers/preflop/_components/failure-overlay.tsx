@@ -16,8 +16,8 @@ export const FailureOverlay = ({ visible, onRetry }: Props) => {
       role="button"
       tabIndex={0}
       className={cn(
-        "fixed z-10 grid h-dvh w-screen place-content-center bg-background/50 indent-0",
-        visible && "hidden",
+        "fixed inset-0 z-10 grid h-dvh w-screen place-content-center bg-background/50",
+        !visible && "hidden",
         !notBlur && "backdrop-blur-xs",
       )}
       onClick={() => setNotBlur((prev) => !prev)}
