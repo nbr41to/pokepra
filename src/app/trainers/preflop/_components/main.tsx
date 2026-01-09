@@ -19,10 +19,12 @@ export function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="w-full">
-      <ResultArea />
+    <div className="relative w-full">
       <OtherPlayers />
       <ActionArea />
+      <div className="absolute right-15 bottom-64 z-1">
+        <ResultArea />
+      </div>
       <FailureOverlay visible={stack > 0} onRetry={retry} />
     </div>
   );

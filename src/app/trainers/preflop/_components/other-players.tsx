@@ -21,7 +21,7 @@ export const OtherPlayers = () => {
       : undefined;
 
   return (
-    <div className="relative h-80 w-full">
+    <div className="relative aspect-video h-[calc(100dvh-272px-56px-32px*2)] max-h-80 w-full">
       <div className="absolute inset-0">
         {seats.map((seatNumber) => {
           const angle = baseAngle + (seatNumber - 1) * angleStep;
