@@ -4,5 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rs_poker = { version = "4.1.0", default-features = false, features = ["arena"] }
-rand = "0.9.1"
+rs_poker = { version = "4.1.0", default-features = false }
+rand = { version = "0.9.1", optional = true }
+
+[features]
+arena = ["rs_poker/arena", "dep:rand"]
