@@ -3,11 +3,16 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CatchAccordion } from "./_components/catch-accordion";
 import { NavigationSection } from "./_components/navigation-section";
+import { RestoreHomeScroll } from "./_components/restore-home-scroll";
 import { SwitchSuitIcon } from "./_components/switch-suit-icon";
 
 export default function Page() {
   return (
-    <div className="flex h-dvh w-full flex-col items-center gap-y-16 overflow-scroll px-2 py-8">
+    <div
+      id="home-scroll-container"
+      className="flex h-dvh w-full flex-col items-center gap-y-16 overflow-scroll px-2 py-8"
+    >
+      <RestoreHomeScroll />
       <div className="-mb-6 space-y-2">
         <div className="mx-auto w-fit rounded-[22px] bg-[conic-gradient(at_50%_50%,#fb923c_0deg,#4ade80_90deg,#60a5fa_180deg,#f472b6_270deg,#fb923c_360deg)] p-1.5 dark:bg-[conic-gradient(at_50%_50%,#ea580c_0deg,#16a34a_90deg,#2563eb_180deg,#db2777_270deg,#ea580c_360deg)]">
           <Image
