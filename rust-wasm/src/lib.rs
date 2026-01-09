@@ -6,13 +6,13 @@ mod rs_poker_native;
 mod sim;
 
 use rs_poker_native::{
+  simulate_rank_distribution as simulate_rank_distribution_internal,
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
   simulate_vs_list_with_ranks_monte_carlo as simulate_vs_list_with_ranks_monte_carlo_internal,
+  simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
 };
 use sim::{
-  simulate_rank_distribution as simulate_rank_distribution_internal,
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
-  simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
 };
 
 #[link(wasm_import_module = "env")]

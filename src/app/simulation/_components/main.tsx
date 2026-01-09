@@ -92,7 +92,7 @@ export function Main() {
         hero: hero.split(" "),
         board: board.split(" "),
         compare: compare.split("; ").map((hand) => hand.split(" ")),
-        trials: 1000,
+        trials: 10000,
         onProgress: (pct) => {
           setProgress(pct);
           console.log(`simulation progress: ${pct.toFixed(2)}%`);

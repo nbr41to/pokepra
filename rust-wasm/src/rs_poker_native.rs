@@ -1,9 +1,16 @@
 //! rs_poker-based helpers for Monte Carlo simulations.
 
-use rs_poker::core::{Card, Hand, Rank, Suit, Value};
+use rs_poker::core::{Card, Hand, Rank, Rankable, Suit, Value};
 use rs_poker::holdem::MonteCarloGame;
 
-use crate::sim::{decode_hand_pair, parse_board, parse_hand_two, Card as SimCard};
+use crate::sim::{
+  decode_hand_pair,
+  parse_board,
+  parse_hand_two,
+  parse_hands_min1,
+  Card as SimCard,
+};
+use crate::sim::{build_deck, shuffle_slice, Lcg64};
 
 /// Hero vs provided opponent list, returning wins/ties/plays per opponent and hero aggregate.
 pub fn simulate_vs_list_equity(
@@ -104,6 +111,42 @@ pub fn simulate_vs_list_with_ranks_monte_carlo(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+  simulate_vs_list_with_ranks_monte_carlo_inner::<fn(u32)>(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    None,
+  )
+}
+
+pub fn simulate_vs_list_with_ranks_with_progress<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+  simulate_vs_list_with_ranks_monte_carlo_inner(
+    hero_hand_str,
+    board_str,
+    compare_list,
+    trials,
+    seed,
+    progress,
+  )
+}
+
+fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
+  hero_hand_str: &str,
+  board_str: &str,
+  compare_list: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
   let _ = seed;
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
@@ -127,6 +170,21 @@ pub fn simulate_vs_list_with_ranks_monte_carlo(
   validate_inputs(&hero_hand, &board, &opponents)?;
 
   let trials = trials.max(1);
+  let total_work = (opponents.len() as u64).saturating_mul(trials as u64).max(1);
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
+
   let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
 
   let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
@@ -172,6 +230,8 @@ pub fn simulate_vs_list_with_ranks_monte_carlo(
         }
       }
       game.reset();
+      completed = completed.saturating_add(1);
+      update_progress(completed);
     }
 
     stats[idx].0 = opp_encoded[idx].0;
@@ -195,7 +255,85 @@ pub fn simulate_vs_list_with_ranks_monte_carlo(
     hero_rank_counts,
   ));
 
+  update_progress(total_work);
   Ok(stats)
+}
+
+/// Rank distribution for multiple hands given partial board using rs_poker evaluation.
+pub fn simulate_rank_distribution(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<Vec<[u32; 9]>, String> {
+  let hands = parse_hands_min1(hands_str).ok_or("failed to parse hands")?;
+  let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() < 3 {
+    return Err("board must be >=3 cards".into());
+  }
+  if board.len() > 5 {
+    return Err("board must be <=5 cards".into());
+  }
+
+  {
+    let mut seen = Vec::new();
+    for c in &board {
+      if seen.iter().any(|x: &SimCard| x.rank == c.rank && x.suit == c.suit) {
+        return Err("duplicate cards detected in board".into());
+      }
+      seen.push(*c);
+    }
+  }
+
+  for h in &hands {
+    if h[0].rank == h[1].rank && h[0].suit == h[1].suit {
+      return Err("duplicate cards inside a hand".into());
+    }
+    for c in h {
+      if board
+        .iter()
+        .any(|x| x.rank == c.rank && x.suit == c.suit)
+      {
+        return Err("hand overlaps board".into());
+      }
+    }
+  }
+
+  let missing_board = 5usize.saturating_sub(board.len());
+
+  let mut rng = Lcg64::new(seed);
+  let mut counts = vec![[0u32; 9]; hands.len()];
+
+  for _ in 0..trials.max(1) {
+    for (idx, hand) in hands.iter().enumerate() {
+      let mut exclude = board.clone();
+      exclude.push(hand[0]);
+      exclude.push(hand[1]);
+      let remaining_cards = 52usize.saturating_sub(exclude.len());
+      if remaining_cards < missing_board {
+        return Err("not enough cards to complete board".into());
+      }
+      let mut deck = build_deck(&exclude);
+      shuffle_slice(&mut deck, &mut rng);
+
+      let mut full_board = board.clone();
+      for i in 0..missing_board {
+        full_board.push(deck[i]);
+      }
+
+      let mut rs_hand = to_rs_hand(hand);
+      for c in &full_board {
+        rs_hand.insert(to_rs_card(c));
+      }
+      let rank = rs_hand.rank();
+      let r_idx = rank_index(&rank);
+      if r_idx < 9 {
+        counts[idx][r_idx] += 1;
+      }
+    }
+  }
+
+  Ok(counts)
 }
 
 fn validate_inputs(

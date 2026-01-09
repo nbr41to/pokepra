@@ -24,24 +24,6 @@ pub fn simulate_vs_list_with_ranks(
   )
 }
 
-pub fn simulate_vs_list_with_ranks_with_progress<F: FnMut(u32)>(
-  hero_hand_str: &str,
-  board_str: &str,
-  compare_list: &str,
-  trials: u32,
-  seed: u64,
-  progress: Option<F>,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
-  simulate_vs_list_with_ranks_inner(
-    hero_hand_str,
-    board_str,
-    compare_list,
-    trials,
-    seed,
-    progress,
-  )
-}
-
 fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
   hero_hand_str: &str,
   board_str: &str,
