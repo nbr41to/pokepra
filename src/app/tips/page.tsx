@@ -20,6 +20,9 @@ export default function Page() {
           </Link>
         </Button>
         <Button className="w-60" variant="outline" size="lg" asChild>
+          <Link href="/tips/monte-carlo">モンテカルロ法の体験</Link>
+        </Button>
+        <Button className="w-60" variant="outline" size="lg" asChild>
           <Link href="/tips/bet-size">任意のポットに対するベットサイズ</Link>
         </Button>
       </div>
