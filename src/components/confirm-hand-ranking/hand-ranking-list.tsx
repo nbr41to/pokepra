@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Combo } from "@/components/combo";
-import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
+import { HandProbability } from "../hand-probability";
 
 type Props = {
   result: CombinedPayload;
@@ -40,31 +40,16 @@ export const HandRankingList = ({ result, onScroll }: Props) => {
             {Object.keys(results)
               .filter((name) => results[name as keyof typeof results] > 0)
               .map((name) => {
-                const probability = (
-                  (results[name as keyof typeof results] / count) *
-                  100
-                ).toFixed(1);
-                const colorClass =
-                  Number(probability) >= 80
-                    ? "bg-green-600 dark:bg-green-950"
-                    : Number(probability) >= 60
-                      ? "bg-green-500 dark:bg-green-900"
-                      : Number(probability) >= 40
-                        ? "bg-green-400 dark:bg-green-800"
-                        : "bg-green-200 dark:bg-green-700";
+                const probability =
+                  (results[name as keyof typeof results] / count) * 100;
 
                 return (
-                  <div
+                  <HandProbability
                     key={name}
-                    className="relative z-10 flex h-fit w-18 justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-xs"
-                  >
-                    <div>{getShortHandName(name)}</div>
-                    <div>{probability}%</div>
-                    <div
-                      className={`${colorClass} absolute top-0 left-0 -z-10 h-full`}
-                      style={{ width: `${probability}%` }}
-                    />
-                  </div>
+                    className=""
+                    handName={name}
+                    probability={probability}
+                  />
                 );
               })}
           </div>

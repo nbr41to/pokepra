@@ -16,5 +16,6 @@ export type {
   CombinedPayload,
   EquityEntry,
   EquityPayload,
+  RankResults,
   RankDistributionEntry,
 } from "./types";

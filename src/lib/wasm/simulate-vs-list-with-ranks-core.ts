@@ -49,11 +49,11 @@ export async function runSimulateVsListWithRanks(
   const wantsProgress = useProgressExport || typeof onProgress === "function";
   const simulate = wantsProgress
     ? exports.simulate_vs_list_with_ranks_with_progress
-    : exports.simulate_vs_list_with_ranks_monte_carlo;
+    : exports.simulate_vs_list_with_ranks;
   if (typeof simulate !== "function") {
     const missing = wantsProgress
       ? "simulate_vs_list_with_ranks_with_progress"
-      : "simulate_vs_list_with_ranks_monte_carlo";
+      : "simulate_vs_list_with_ranks";
     throw new Error(`WASM export '${missing}' not found`);
   }
 
@@ -96,7 +96,7 @@ export async function runSimulateVsListWithRanks(
     throw new Error(
       wantsProgress
         ? `simulate_vs_list_with_ranks_with_progress failed with code ${rc}`
-        : `simulate_vs_list_with_ranks_monte_carlo failed with code ${rc}`,
+        : `simulate_vs_list_with_ranks failed with code ${rc}`,
     );
   }
   const records = rc;

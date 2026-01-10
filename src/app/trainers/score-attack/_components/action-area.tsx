@@ -2,10 +2,7 @@ import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-rang
 import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
 import { HandConfirmation } from "@/components/hand-confirmation";
 import { cn } from "@/lib/utils";
-import {
-  simulateVsListEquity,
-  simulateVsListWithRanks,
-} from "@/lib/wasm/simulation";
+import { simulateVsListEquity, simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
 import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";

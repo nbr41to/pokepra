@@ -11,10 +11,10 @@ use rs_poker_native::{
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
   simulate_vs_list_equity_with_progress as simulate_vs_list_equity_with_progress_internal,
   simulate_vs_list_with_ranks_monte_carlo as simulate_vs_list_with_ranks_monte_carlo_internal,
-  simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_progress_internal,
 };
 use sim::{
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
+  simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_ranks_with_progress_internal,
 };
 
 #[cfg(target_arch = "wasm32")]
@@ -281,7 +281,7 @@ pub extern "C" fn simulate_vs_list_with_ranks_with_progress(
     out_ptr,
     out_len,
     |hero_str, board_str, compare_str| {
-      simulate_vs_list_with_progress_internal(
+      simulate_vs_list_with_ranks_with_progress_internal(
         hero_str,
         board_str,
         compare_str,

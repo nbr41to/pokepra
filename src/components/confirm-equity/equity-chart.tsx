@@ -70,7 +70,7 @@ export const EquityChart = ({ rankPromise, step = 10 }: Props) => {
       const value = eqThresholds[bucket]?.count ?? 0;
       const percent = (value / result.data.length) * 100;
       if (bucket === heroBucketStart) {
-        const intraHeight = ((heroEq - bucket) / step) * percent;
+        const intraHeight = ((bucket + step - heroEq) / step) * percent;
         offset += intraHeight;
         break;
       }
@@ -127,17 +127,17 @@ export const EquityChart = ({ rankPromise, step = 10 }: Props) => {
           {heroEntry && (
             <div
               className={cn(
-                "absolute -right-28 flex -translate-y-1/2 items-center gap-1 text-foreground text-sm",
+                "absolute -right-28 flex items-center gap-1 text-foreground text-sm",
                 animateHero && "hero-eq-indicator",
               )}
               style={
                 {
                   "--hero-target": `${heroOffsetPct}%`,
-                  top: `${heroOffsetPct}%`,
+                  // top: `${heroOffsetPct}%`,
                 } as CSSProperties
               }
             >
-              <div>
+              <div className="absolute -left-16 pt-4">
                 <Combo className="" hand={result.hand.split(" ")} />
                 <div className="text-center font-bold">
                   {heroEq.toFixed(1)}%

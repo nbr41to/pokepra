@@ -20,19 +20,29 @@ export const ActionArea = () => {
     trials: 1000,
   });
 
+  const disabledAnalysis = board.length < 3;
+
   return (
-    <div className="relative w-full pt-14">
+    <div className="relative w-full">
       <HandConfirmation hands={hero} onOpenHand={showHand} disabledFold />
 
       {showedHand && board.length > 2 && (
-        <div className="absolute top-0 left-0 z-10 flex h-76 flex-col space-y-2">
-          <div className="flex h-12 gap-4 px-2">
-            <ConfirmRankingSheet board={board} rankPromise={rankPromise} />
-            <ConfirmEquityDrawer board={board} rankPromise={rankPromise} />
-          </div>
+        <div className="absolute top-0 left-0 z-10 flex flex-col space-y-2">
           <SelectAction />
         </div>
       )}
+      <div className="flex justify-center gap-4 px-2 py-2">
+        <ConfirmRankingSheet
+          board={board}
+          rankPromise={rankPromise}
+          disabled={disabledAnalysis}
+        />
+        <ConfirmEquityDrawer
+          board={board}
+          rankPromise={rankPromise}
+          disabled={disabledAnalysis}
+        />
+      </div>
     </div>
   );
 };

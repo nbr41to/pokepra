@@ -23,9 +23,7 @@ export default function Main() {
       <CommunityBoard />
       <ConfirmPosition />
       <ResultArea />
-      <div className="flex h-1 w-full items-start justify-end space-y-1 px-2">
-        <StackView stack={stack} />
-      </div>
+      <StackView className="justify-end pb-8" stack={stack} />
       <ActionArea />
     </div>
   );
