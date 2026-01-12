@@ -9,13 +9,13 @@ type Props = {
   onScroll: () => void;
 };
 
-export const HandRankingList = ({ result, onScroll }: Props) => {
+export const ComboRanking = ({ result, onScroll }: Props) => {
   useEffect(() => {
     onScroll();
   }, [onScroll]);
 
   return (
-    <div className="divide-y">
+    <div className="divide-y pb-24">
       {result.data.map(({ hand, win, tie, count, results }, index) => (
         <div
           key={hand}

@@ -1,12 +1,16 @@
-import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-range-drawer";
-import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
+import { useState } from "react";
+import { AnalyticsSheet } from "@/components/analytics-sheet";
+import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
-import { cn } from "@/lib/utils";
-import { simulateVsListEquity, simulateVsListWithRanks } from "@/lib/wasm/simulation";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  simulateVsListEquity,
+  simulateVsListWithRanks,
+} from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
 import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";
-import { SelectAction } from "./select-action";
 
 export const ActionArea = () => {
   const {
@@ -16,14 +20,17 @@ export const ActionArea = () => {
     board,
     preflop,
     flop,
+    turn,
     river,
-    showedHand,
     showHand,
     preflopAction,
     postflopAction,
+    shuffleAndDeal,
   } = useActionStore();
 
+  const [loading, setLoading] = useState(false);
   const handleOnPostflopAction = async (answer: "commit" | "fold") => {
+    setLoading(true);
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
@@ -34,6 +41,14 @@ export const ActionArea = () => {
       trials: 1000,
     });
     postflopAction(phase, answer, result);
+    setLoading(false);
+  };
+  const handleOnDoubleTapAction = async () => {
+    if (phase === "preflop") {
+      preflopAction("open-raise");
+    } else {
+      handleOnPostflopAction("commit");
+    }
   };
 
   const handleFoldAction = () => {
@@ -54,35 +69,49 @@ export const ActionArea = () => {
     trials: 1000,
   });
 
-  return (
-    <div className="relative w-full pt-14">
-      <HeroActionArea
-        hand={hero}
-        onOpenHand={showHand}
-        onFold={river ? undefined : handleFoldAction}
-      />
+  const disabled =
+    (phase === "flop" && !!flop) ||
+    (phase === "turn" && !!turn) ||
+    (phase === "river" && !!river);
+  const disabledAnalysis = board.length < 3;
 
-      {showedHand && (
-        <div className="absolute top-0 left-0 z-10 flex h-76 flex-col space-y-2">
-          <div className="flex h-12 gap-4 px-2">
-            <ConfirmRankingSheet
-              className={cn(board.length < 3 && "hidden")}
-              board={board}
-              rankPromise={rankPromise}
-            />
-            <ConfirmRangeDrawer
-              className={cn(
-                (flop || (phase === "preflop" && preflop !== "fold")) &&
-                  "hidden",
-              )}
-              mark={getHandString(hero)}
-            />
+  return (
+    <div className="pt-14">
+      <div className="relative">
+        <HeroActionArea
+          hand={hero}
+          onOpenHand={showHand}
+          onFold={handleFoldAction}
+          onDoubleTap={handleOnDoubleTapAction}
+          disabled={disabled || loading}
+        />
+        {loading && (
+          <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/20">
+            <Spinner className="size-12 text-blue-500 opacity-50" />
           </div>
-          <div className="grow">
-            {showedHand && <SelectAction onAction={handleOnPostflopAction} />}
+        )}
+
+        {disabled && (
+          <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/30">
+            <Button
+              size="lg"
+              className="rounded-lg text-base shadow"
+              onClick={() => shuffleAndDeal()}
+            >
+              Next
+            </Button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      <div className="flex justify-center gap-4 px-2 py-2">
+        <HandRangeDrawer mark={getHandString(hero)} disabled={!preflop} />
+        <AnalyticsSheet
+          board={board}
+          rankPromise={rankPromise}
+          disabled={disabledAnalysis}
+        />
+      </div>
     </div>
   );
 };

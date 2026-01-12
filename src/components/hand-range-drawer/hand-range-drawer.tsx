@@ -19,7 +19,7 @@ type Props = {
   className?: string;
 };
 
-export const ConfirmRangeDrawer = ({
+export const HandRangeDrawer = ({
   mark,
   disabled = false,
   className,
@@ -35,7 +35,6 @@ export const ConfirmRangeDrawer = ({
       >
         <Button
           className={cn("rounded-full", className)}
-          variant="outline"
           size="icon-lg"
           disabled={disabled}
         >

@@ -1,12 +1,14 @@
 "use client";
 
-import { Crown } from "lucide-react";
+import { ChartColumn, X } from "lucide-react";
 import { Suspense } from "react";
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -15,8 +17,8 @@ import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { PlayCard } from "../play-card";
 import { Button } from "../ui/button";
-import { ConfirmRanking } from "./confirm-ranking";
-import { ConfirmRankingSkeleton } from "./confirm-ranking.skeleton";
+import { AnalyticsReport } from "./analytics-report";
+import { EquityChartSkeleton } from "./equity-chart.skeleton";
 
 type Props = {
   board: string[];
@@ -25,7 +27,7 @@ type Props = {
   className?: string;
 };
 
-export const ConfirmRankingSheet = ({
+export const AnalyticsSheet = ({
   board,
   disabled = false,
   rankPromise,
@@ -36,17 +38,16 @@ export const ConfirmRankingSheet = ({
       <SheetTrigger asChild>
         <Button
           className={cn("rounded-full", className)}
-          variant="outline"
           size="icon-lg"
           disabled={disabled}
         >
-          <Crown size={16} />
+          <ChartColumn size={16} />
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="h-dvh gap-0 px-1 pb-4" side="bottom">
+      <SheetContent className="h-dvh gap-0 px-1" side="bottom">
         <SheetHeader>
-          <SheetTitle>Hand Ranking</SheetTitle>
+          <SheetTitle>Hand Analytics</SheetTitle>
           <div className="flex items-center gap-x-4 py-1">
             <div className="flex gap-x-1">
               {board.map((card) => (
@@ -54,13 +55,28 @@ export const ConfirmRankingSheet = ({
               ))}
             </div>
             <SheetDescription className="text-left">
-              Simulated hand rankings based on the current board.
+              Simulated hand analytics based on the current board.
             </SheetDescription>
           </div>
         </SheetHeader>
-        <Suspense fallback={<ConfirmRankingSkeleton />}>
-          <ConfirmRanking rankPromise={rankPromise} />
+
+        <Suspense
+          fallback={
+            <div className="grid h-[calc(100dvh-120px)] place-content-center">
+              <EquityChartSkeleton />
+            </div>
+          }
+        >
+          <AnalyticsReport rankPromise={rankPromise} />
         </Suspense>
+
+        <SheetFooter className="absolute bottom-6 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
+          <SheetClose asChild>
+            <Button variant="outline" size="icon-lg" className="rounded-full">
+              <X />
+            </Button>
+          </SheetClose>
+        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

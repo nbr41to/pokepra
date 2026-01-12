@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ConfirmEquityDrawer } from "@/components/confirm-equity";
-import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
+import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -89,12 +88,7 @@ export const ActionArea = () => {
       </div>
 
       <div className="flex justify-center gap-4 px-2 py-2">
-        <ConfirmRankingSheet
-          board={board}
-          rankPromise={rankPromise}
-          disabled={disabledAnalysis}
-        />
-        <ConfirmEquityDrawer
+        <AnalyticsSheet
           board={board}
           rankPromise={rankPromise}
           disabled={disabledAnalysis}

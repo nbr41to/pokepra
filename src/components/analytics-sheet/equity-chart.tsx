@@ -5,12 +5,12 @@ import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { Combo } from "../combo";
 
 type Props = {
-  rankPromise: Promise<CombinedPayload>;
+  promise: Promise<CombinedPayload>;
   step?: number;
 };
 
-export const EquityChart = ({ rankPromise, step = 10 }: Props) => {
-  const result = use(rankPromise);
+export const EquityChart = ({ promise, step = 10 }: Props) => {
+  const result = use(promise);
 
   const buckets = useMemo(
     () =>
@@ -52,6 +52,7 @@ export const EquityChart = ({ rankPromise, step = 10 }: Props) => {
       const eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
       return sum + eq;
     }, 0);
+    console.log("totalEq", totalEq);
 
     return totalEq / totalEntries;
   }, [result.data]);
