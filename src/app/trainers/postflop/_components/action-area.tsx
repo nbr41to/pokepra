@@ -10,6 +10,7 @@ import {
 import { getHandsByTiers } from "@/utils/dealer";
 import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";
+import { SituationCopyButton } from "./situation-copy-button";
 
 export const ActionArea = () => {
   const {
@@ -17,7 +18,6 @@ export const ActionArea = () => {
     position,
     hero,
     board,
-    showedHand,
     showHand,
     flop,
     turn,
@@ -93,6 +93,7 @@ export const ActionArea = () => {
           rankPromise={rankPromise}
           disabled={disabledAnalysis}
         />
+        <SituationCopyButton board={board} />
       </div>
     </div>
   );

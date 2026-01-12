@@ -346,7 +346,7 @@ export function Main() {
             key={target}
             value={paletteValue}
             limit={paletteLimit}
-            handSeparator={target === "compare" ? "; " : null}
+            handSeparator={target === "compare" ? ";" : null}
             banCards={[
               ...splitCards(hero),
               ...splitCards(board),

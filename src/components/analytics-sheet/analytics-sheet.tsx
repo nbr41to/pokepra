@@ -1,14 +1,12 @@
 "use client";
 
-import { ChartColumn, X } from "lucide-react";
+import { ChartColumn } from "lucide-react";
 import { Suspense } from "react";
 
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -69,14 +67,6 @@ export const AnalyticsSheet = ({
         >
           <AnalyticsReport rankPromise={rankPromise} />
         </Suspense>
-
-        <SheetFooter className="absolute bottom-6 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
-          <SheetClose asChild>
-            <Button variant="outline" size="icon-lg" className="rounded-full">
-              <X />
-            </Button>
-          </SheetClose>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   );

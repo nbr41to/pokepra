@@ -10,6 +10,7 @@ type Props = {
   villains: string[][];
   reversed?: boolean;
   result?: EquityPayload | null;
+  className?: string;
 };
 export const VillainHands = ({
   people,
@@ -17,15 +18,20 @@ export const VillainHands = ({
   villains,
   reversed = true,
   result,
+  className,
 }: Props) => {
-  console.log(villains, result);
   const seats = Array.from({ length: people }, (_, index) => index + 1);
   const angleStep = (2 * Math.PI) / people;
   const baseAngle = Math.PI / 2 - (position - 1) * angleStep; // 自身が真下に来るように調整
   const radiusPercent = 38;
 
   return (
-    <div className="relative aspect-video h-[calc(100dvh-272px-56px-32px*2)] max-h-80 w-full">
+    <div
+      className={cn(
+        "relative aspect-video max-h-80 w-full max-w-screen",
+        className,
+      )}
+    >
       <div className="absolute inset-0">
         {seats.map((seatNumber) => {
           const angle = baseAngle + (seatNumber - 1) * angleStep;

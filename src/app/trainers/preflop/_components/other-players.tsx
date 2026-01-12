@@ -9,6 +9,7 @@ export const OtherPlayers = () => {
   return (
     <div className="relative">
       <VillainHands
+        className="h-[calc(100dvh-272px-56px-32px*2)]"
         people={PEOPLE}
         position={position}
         villains={otherPlayersHands}

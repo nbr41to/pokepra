@@ -1,16 +1,18 @@
 "use client";
 
 import { ListX } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
+import { Combo } from "@/components/combo";
+import { HandProbability } from "@/components/hand-probability";
 import { InputCardPalette } from "@/components/input-card-palette";
 import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
 import {
-  type simulateRankDistribution,
+  type RankDistributionEntry,
   simulateRankDistributionWithProgress,
 } from "@/lib/wasm/simulation";
 import { getHandsByTiers, getShuffledDeck } from "@/utils/dealer";
@@ -26,13 +28,17 @@ const HAND_RARITY = {
   "One Pair": 42.2569,
   "High Card": 50.1177,
 };
+const TRIAL_ITERATE = 10000;
 
 export function Main() {
+  const params = useSearchParams();
+  const initialBoard = params.get("board")?.replaceAll(",", " ") || "";
   const [target, setTarget] = useState<null | "hero" | "board" | "compare">(
     null,
   );
+  const [board, setBoard] = useState(initialBoard);
   const [compare, setCompare] = useState(""); // ハンド ;区切り
-  const [board, setBoard] = useState("");
+
   const splitCards = (val: string) => {
     if (!val) return [] as string[];
     const replaced = val.replaceAll(";", " ");
@@ -54,9 +60,9 @@ export function Main() {
     target === "board" ? 5 : target === "compare" ? 30 : undefined;
 
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState<Awaited<
-    ReturnType<typeof simulateRankDistribution>
-  > | null>(null);
+  const [results, setResults] = useState<
+    (RankDistributionEntry & { score: number })[] | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -87,15 +93,23 @@ export function Main() {
     try {
       const result = await simulateRankDistributionWithProgress({
         board: board.split(" "),
-        hands: compare.split("; ").map((hand) => hand.split(" ")),
-        trials: 10000,
+        hands: compare.split(";").map((hand) => hand.split(" ")),
+        trials: TRIAL_ITERATE,
         onProgress: (pct) => {
           setProgress(pct);
           console.log(`simulation progress: ${pct.toFixed(2)}%`);
         },
       });
+      const resultWithScore = result.map((r) => ({
+        ...r,
+        score: Object.entries(r.results).reduce((score, [handName, count]) => {
+          const rarity = HAND_RARITY[handName as keyof typeof HAND_RARITY] || 0;
 
-      setResults(result);
+          return score + (count * (100 - rarity)) / TRIAL_ITERATE;
+        }, 0),
+      }));
+
+      setResults(resultWithScore.sort((a, b) => b.score - a.score));
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -111,7 +125,7 @@ export function Main() {
         (score, [handName, count]) => {
           const rarity = HAND_RARITY[handName as keyof typeof HAND_RARITY] || 0;
 
-          return score + (count * (100 - rarity)) / 10000;
+          return score + (count * (100 - rarity)) / TRIAL_ITERATE;
         },
         0,
       );
@@ -274,38 +288,29 @@ export function Main() {
       )}
       {results && (
         <div>
-          {results.map(({ hand, results }) => (
-            <div key={hand} className="flex h-full flex-wrap gap-1 pl-2">
-              {Object.keys(results)
-                .filter((name) => results[name as keyof typeof results] > 0)
-                .map((name) => {
-                  const probability = (
-                    (results[name as keyof typeof results] / 1000) *
-                    100
-                  ).toFixed(1);
-                  const colorClass =
-                    Number(probability) >= 80
-                      ? "bg-green-600 dark:bg-green-950"
-                      : Number(probability) >= 60
-                        ? "bg-green-500 dark:bg-green-900"
-                        : Number(probability) >= 40
-                          ? "bg-green-400 dark:bg-green-800"
-                          : "bg-green-200 dark:bg-green-700";
+          {results.map(({ hand, score, results }) => (
+            <div key={hand} className="">
+              <div key={hand} className="flex">
+                <Combo hand={hand.split(" ")} className="scale-75" />
+                <div>{score.toFixed(2)}</div>
+              </div>
+              <div className="flex h-full flex-wrap items-center gap-1 pl-2">
+                {Object.keys(results)
+                  .filter((name) => results[name as keyof typeof results] > 0)
+                  .map((name) => {
+                    const probability =
+                      (results[name as keyof typeof results] / TRIAL_ITERATE) *
+                      100;
 
-                  return (
-                    <div
-                      key={name}
-                      className="relative z-10 flex h-fit w-20 justify-between gap-x-2 overflow-hidden rounded-xs border px-1 py-px text-xs"
-                    >
-                      <div>{getShortHandName(name)}</div>
-                      <div>{probability}%</div>
-                      <div
-                        className={`${colorClass} absolute top-0 left-0 -z-10 h-full`}
-                        style={{ width: `${probability}%` }}
+                    return (
+                      <HandProbability
+                        key={name}
+                        handName={name}
+                        probability={probability}
                       />
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+              </div>
             </div>
           ))}
         </div>
@@ -317,7 +322,7 @@ export function Main() {
             key={target}
             value={paletteValue}
             limit={paletteLimit}
-            handSeparator={target === "compare" ? "; " : null}
+            handSeparator={target === "compare" ? ";" : null}
             banCards={[...splitCards(compare), ...splitCards(board)]}
             onChange={(val) => updateTarget(val)}
           />
