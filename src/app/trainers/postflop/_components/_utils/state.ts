@@ -49,6 +49,7 @@ type Actions = {
     phase: Phase,
     action: "commit" | "fold",
     result: EquityPayload,
+    betAmount?: number,
   ) => void;
 };
 
@@ -108,6 +109,7 @@ const useActionStore = create<Store>((set, get) => ({
     phase: Phase,
     action: "commit" | "fold",
     result: EquityPayload,
+    betAmount?: number,
   ) => {
     if (phase === "flop") {
       set(() => ({ flop: action }));
@@ -121,17 +123,11 @@ const useActionStore = create<Store>((set, get) => ({
 
     const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;
 
-    const rare =
-      result.data.findIndex((data) => data.hand === result.hand) /
-      result.data.length;
-
-    const compareEquityAveage =
-      result.data.reduce((acc, cur) => acc + cur.equity, 0) /
-      result.data.length;
-    const deltaScore = Math.floor(
-      ((result.equity - compareEquityAveage) * 10 * STREET_W[phase]) /
-        (rare < 0.1 ? 0.5 : rare < 0.3 ? 0.7 : 1),
-    );
+    const targetBet = result.equity * 100;
+    const betValue = Math.max(0, Math.min(100, betAmount ?? 0));
+    const distance = Math.abs(betValue - targetBet);
+    const accuracy = 1 - Math.min(distance / 100, 1);
+    const deltaScore = Math.round(accuracy * 10 * STREET_W[phase]);
 
     const newStack = stack + deltaScore;
 
@@ -139,7 +135,7 @@ const useActionStore = create<Store>((set, get) => ({
 
     if (action === "fold") {
       set(() => ({
-        delta: deltaScore,
+        delta: 0,
       }));
       return;
     }

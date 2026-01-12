@@ -5,7 +5,7 @@ export const ResultArea = () => {
   const { phase, delta } = useActionStore();
 
   return (
-    <div className="relative flex h-8 items-end justify-center">
+    <div className="relative flex h-8 select-none items-end justify-center">
       <span
         key={phase + delta} // deltaが変わるたびにアニメーションを再実行するためのkey
         className={cn(

@@ -10,6 +10,7 @@ import {
 import { getHandsByTiers } from "@/utils/dealer";
 import { getTierIndexByPosition } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";
+import { BetSlider } from "./bet-slider";
 import { SituationCopyButton } from "./situation-copy-button";
 
 export const ActionArea = () => {
@@ -18,6 +19,7 @@ export const ActionArea = () => {
     position,
     hero,
     board,
+    showedHand,
     showHand,
     flop,
     turn,
@@ -25,7 +27,10 @@ export const ActionArea = () => {
     postflopAction,
     shuffleAndDeal,
   } = useActionStore();
+
+  const [bet, setBet] = useState(0);
   const [loading, setLoading] = useState(false);
+
   const handleOnAction = async (action: "commit" | "fold") => {
     setLoading(true);
     const result = await simulateVsListEquity({
@@ -37,7 +42,15 @@ export const ActionArea = () => {
       ]),
       trials: 1000,
     });
-    postflopAction(phase, action, result);
+    postflopAction(
+      phase,
+      action,
+      result,
+      action === "commit" ? bet : undefined,
+    );
+    if (phase === "river") {
+      setBet(0);
+    }
     setLoading(false);
   };
 
@@ -55,6 +68,7 @@ export const ActionArea = () => {
     (phase === "flop" && !!flop) ||
     (phase === "turn" && !!turn) ||
     (phase === "river" && !!river);
+
   const disabledAnalysis = board.length < 3;
 
   return (
@@ -70,6 +84,15 @@ export const ActionArea = () => {
           doubleTapActionName="Commit"
           className="bg bg-green-50 dark:bg-green-950/60"
         />
+
+        {showedHand && !disabled && (
+          <BetSlider
+            className="absolute bottom-0 left-0"
+            step={5}
+            value={bet}
+            onChange={setBet}
+          />
+        )}
 
         {loading && (
           <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/20">

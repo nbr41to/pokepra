@@ -79,12 +79,14 @@ export const ActionArea = () => {
     <div className="pt-14">
       <div className="relative">
         <HeroActionArea
+          key={hero.join("-")}
           hand={hero}
           onOpenHand={showHand}
           onFold={handleFoldAction}
           onDoubleTap={handleOnDoubleTapAction}
           disabled={disabled || loading}
         />
+
         {loading && (
           <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/20">
             <Spinner className="size-12 text-blue-500 opacity-50" />
