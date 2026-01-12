@@ -24,7 +24,6 @@ export async function runSimulateVsListEquity(
 
   if (
     heroStr.trim().length < 4 ||
-    boardStr.trim().length < 6 ||
     compareStr.trim().length < 2
   ) {
     return {

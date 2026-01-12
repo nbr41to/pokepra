@@ -1,23 +1,37 @@
-import { HandConfirmation } from "@/components/hand-confirmation";
+import { HeroActionArea } from "@/components/hero-action-area";
+import { Button } from "@/components/ui/button";
 import { useActionStore } from "./_utils/state";
-import { PreflopAction } from "./preflop-action";
 
 export const ActionArea = () => {
-  const { hero, showedHand, showHand, preflopAction } = useActionStore();
+  const { hero, showHand, preflop, preflopAction, shuffleAndDeal } =
+    useActionStore();
 
   return (
-    <div className="relative w-full pt-6">
-      <HandConfirmation
-        hands={hero}
-        onOpenHand={showHand}
-        onFold={() => preflopAction("fold")}
-        className="bg bg-green-50 dark:bg-green-950/60"
-      />
-      {showedHand && (
-        <div className="absolute top-0 left-0 h-full w-1/2 pt-6">
-          <PreflopAction />
-        </div>
-      )}
+    <div className="pt-8">
+      <div className="relative">
+        <HeroActionArea
+          key={hero.join("-")}
+          hand={hero}
+          onOpenHand={showHand}
+          onDoubleTap={() => preflopAction("open-raise")}
+          doubleTapActionName="Open"
+          onFold={() => preflopAction("fold")}
+          disabled={!!preflop}
+          className="bg bg-green-50 dark:bg-green-950/60"
+        />
+
+        {!!preflop && (
+          <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/30">
+            <Button
+              size="lg"
+              className="rounded-lg text-base shadow"
+              onClick={() => shuffleAndDeal()}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

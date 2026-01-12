@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import RANKING from "@/data/preflop-hand-ranking.json";
+import { simulateVsListEquity } from "@/lib/wasm/simulate-vs-list-equity";
+import type { EquityPayload } from "@/lib/wasm/types";
 import { genHands } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
-import { getHandString } from "@/utils/preflop-range";
 
 const PEOPLE = 9;
 
@@ -20,6 +20,8 @@ type State = {
   position: number; // ポジション番号
   hero: string[]; // ハンド
   otherPlayersHands: string[][]; // 他プレイヤーのハンド
+  result: EquityPayload | null; // 結果一覧
+
   showedHand: boolean; // ハンドを見たかどうか
 
   // action
@@ -29,7 +31,7 @@ type State = {
 type Actions = {
   reset: () => void;
   retry: () => void;
-  shuffleAndDeal: (options?: { tier: number; people: number }) => void;
+  shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
 };
@@ -44,6 +46,7 @@ const INITIAL_STATE: State = {
   position: 0,
   hero: [],
   otherPlayersHands: [],
+  result: null,
 
   showedHand: false,
   preflop: null,
@@ -76,7 +79,7 @@ const useActionStore = create<Store>((set, get) => ({
       preflop: null,
     }));
   },
-  shuffleAndDeal: (options?: { tier?: number; people?: number }) => {
+  shuffleAndDeal: async (options?: { tier?: number; people?: number }) => {
     const { stack } = get();
     const people = options?.people ?? PEOPLE;
     const position = genPositionNumber(people - 1);
@@ -88,6 +91,13 @@ const useActionStore = create<Store>((set, get) => ({
       otherPlayersHands.push(hands);
     }
 
+    const result = await simulateVsListEquity({
+      hero: hero,
+      board: [],
+      compare: otherPlayersHands,
+      trials: 1000,
+    });
+
     set(() => ({
       ...INITIAL_STATE,
       initialized: true,
@@ -96,6 +106,7 @@ const useActionStore = create<Store>((set, get) => ({
       otherPlayersHands,
       stack,
       preflop: null,
+      result,
     }));
   },
   // ハンドを確認
@@ -105,13 +116,11 @@ const useActionStore = create<Store>((set, get) => ({
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
     if (action === "open-raise") {
-      const { hero, stack, otherPlayersHands } = get();
-      const heroEq =
-        RANKING.find((r) => r.hand === getHandString(hero))?.player6 ?? 0;
+      const { stack, otherPlayersHands, result } = get();
       const otherHandEqs = otherPlayersHands.map((h) => {
-        return RANKING.find((r) => r.hand === getHandString(h))?.player6 ?? 0;
+        return result?.data.find((r) => r.hand === h.join(" "))?.equity ?? 0;
       });
-      const lossCount = otherHandEqs.filter((eq) => eq > heroEq).length;
+      const lossCount = otherHandEqs.filter((eq) => eq > 0.5).length;
       const delta = lossCount === 0 ? 3 : -lossCount;
       set({
         preflop: action,

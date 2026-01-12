@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useActionStore } from "./_utils/state";
 import { ActionArea } from "./action-area";
 import { FailureOverlay } from "./failure-overlay";
@@ -9,16 +9,19 @@ import { ResultArea } from "./result-area";
 
 export function Main() {
   const { initialized, stack, shuffleAndDeal, reset, retry } = useActionStore();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    shuffleAndDeal();
+    (async () => {
+      setLoading(true);
+      await shuffleAndDeal();
+      setLoading(false);
+    })();
 
     return reset;
   }, [shuffleAndDeal, reset]);
 
-  if (!initialized) return null;
-
-  console.log(stack);
+  if (!initialized || loading) return null;
 
   return (
     <div className="relative w-full">

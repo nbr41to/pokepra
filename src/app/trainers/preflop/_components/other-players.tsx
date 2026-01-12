@@ -1,24 +1,18 @@
 import { Redo } from "lucide-react";
 import { OtherHand } from "@/components/other-hand";
-import Rating from "@/data/preflop-hand-ranking.json";
 import { cn } from "@/lib/utils";
 import { getPositionString } from "@/utils/position";
-import { getHandString } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";
 
 export const OtherPlayers = () => {
   const PEOPLE = 9;
-  const { position, stack, hero, otherPlayersHands, preflop } =
+  const { position, stack, hero, otherPlayersHands, preflop, result } =
     useActionStore();
 
   const seats = Array.from({ length: PEOPLE }, (_, index) => index + 1);
   const angleStep = (2 * Math.PI) / PEOPLE;
   const baseAngle = Math.PI / 2 - (position - 1) * angleStep; // 自身が真下に来るように調整
   const radiusPercent = 38;
-  const selfRate =
-    hero.length > 1
-      ? Rating.find((r) => r.hand === getHandString(hero))?.player6
-      : undefined;
 
   return (
     <div className="relative aspect-video h-[calc(100dvh-272px-56px-32px*2)] max-h-80 w-full">
@@ -28,10 +22,12 @@ export const OtherPlayers = () => {
           const x = 50 + Math.cos(angle) * radiusPercent;
           const y = 50 + Math.sin(angle) * radiusPercent;
           const isSelf = seatNumber === position;
-          const hand = [hero, ...otherPlayersHands][seatNumber - position];
-          const rating = hand
-            ? Rating.find((r) => r.hand === getHandString(hand))?.player6
-            : undefined;
+          const hand: string[] | undefined = [hero, ...otherPlayersHands][
+            seatNumber - position
+          ];
+          const equity = result?.data.find(
+            (r) => r.hand === hand?.join(" "),
+          )?.equity;
 
           return (
             <div
@@ -59,12 +55,12 @@ export const OtherPlayers = () => {
                   <span>{getPositionString(seatNumber, PEOPLE)}</span>
                 )}
               </div>
-              {rating && selfRate && (
+              {equity && result && (
                 <span
                   className={cn(
-                    "font-bold",
-                    isSelf ? "text-lg" : "text-xs",
-                    rating > selfRate && "text-red-500 dark:text-red-600",
+                    "absolute -bottom-1.5 font-bold",
+                    isSelf ? "-bottom-7 text-lg" : "-bottom-1.5 text-xs",
+                    equity > result.equity && "text-red-500 dark:text-red-600",
                     preflop
                       ? "opacity-100 transition-opacity"
                       : "opacity-0 transition-none",
@@ -73,7 +69,7 @@ export const OtherPlayers = () => {
                     transitionDelay: `${200 * (seatNumber - position)}ms`,
                   }}
                 >
-                  {rating}%
+                  {(equity * 100).toFixed(1)}%
                 </span>
               )}
             </div>

@@ -1,6 +1,6 @@
 import { ConfirmRangeDrawer } from "@/components/confirm-hand-range/confirm-range-drawer";
 import { ConfirmRankingSheet } from "@/components/confirm-hand-ranking";
-import { HandConfirmation } from "@/components/hand-confirmation";
+import { HeroActionArea } from "@/components/hero-action-area";
 import { cn } from "@/lib/utils";
 import { simulateVsListEquity, simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { getHandsByTiers } from "@/utils/dealer";
@@ -56,11 +56,10 @@ export const ActionArea = () => {
 
   return (
     <div className="relative w-full pt-14">
-      <HandConfirmation
-        hands={hero}
+      <HeroActionArea
+        hand={hero}
         onOpenHand={showHand}
-        onFold={handleFoldAction}
-        disabledFold={!!river}
+        onFold={river ? undefined : handleFoldAction}
       />
 
       {showedHand && (
