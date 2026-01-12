@@ -11,11 +11,12 @@ export {
   simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "./simulate-vs-list-with-ranks";
-export { simulateVsListWithRanksMonteCarlo } from "./simulate-vs-list-with-ranks-monte-carlo";
 export type {
   CombinedPayload,
   EquityEntry,
   EquityPayload,
-  RankResults,
   RankDistributionEntry,
+  RankOutcome,
+  RankOutcomeResults,
+  RankResults,
 } from "./types";

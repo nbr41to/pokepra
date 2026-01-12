@@ -54,7 +54,7 @@ fn hero_vs_qq_regression() {
   .expect("simulation ok");
   let mut qq = None;
   let mut hero = None;
-  for (c1, c2, w, t, p, _) in &res {
+  for (c1, c2, w, t, p, _, _, _) in &res {
     if *c1 == u32::MAX && *c2 == u32::MAX {
       hero = Some((*w, *t, *p));
     } else {

@@ -3,7 +3,7 @@ import { createHeap, loadWasm, setProgressListener } from "./loader";
 import type {
   CombinedEntry,
   CombinedPayload,
-  RankResults,
+  RankOutcomeResults,
   SimulateParams,
 } from "./types";
 
@@ -29,11 +29,7 @@ export async function runSimulateVsListWithRanks(
   ];
 
   // 条件を満たさない場合
-  if (
-    heroStr.trim().length < 4 ||
-    boardStr.trim().length < 6 ||
-    compareStr.trim().length < 2
-  ) {
+  if (heroStr.trim().length < 4 || compareStr.trim().length < 2) {
     return {
       hand: heroStr,
       equity: 0,
@@ -71,7 +67,7 @@ export async function runSimulateVsListWithRanks(
     throw new Error("No compare hands provided");
   }
 
-  const outLen = (compareCount + 1) * 14; // opponents + hero aggregate
+  const outLen = (compareCount + 1) * 32; // opponents + hero aggregate
   const outPtr = allocU32(outLen);
 
   let rc: number;
@@ -104,8 +100,8 @@ export async function runSimulateVsListWithRanks(
     throw new Error("No records returned from WASM");
   }
 
-  const out = new Uint32Array(memory.buffer, outPtr, records * 14);
-  const labels: (keyof RankResults)[] = [
+  const out = new Uint32Array(memory.buffer, outPtr, records * 32);
+  const labels: (keyof RankOutcomeResults)[] = [
     "High Card",
     "One Pair",
     "Two Pair",
@@ -129,8 +125,8 @@ export async function runSimulateVsListWithRanks(
   let heroEntry: CombinedEntry | null = null;
 
   for (let i = 0; i < records; i += 1) {
-    const base = i * 14;
-    const chunk = out.subarray(base, base + 14);
+    const base = i * 32;
+    const chunk = out.subarray(base, base + 32);
     const raw1 = chunk[0];
     const raw2 = chunk[1];
     const card1 = decodeCard(raw1);
@@ -138,10 +134,16 @@ export async function runSimulateVsListWithRanks(
     const heroWins = chunk[2];
     const ties = chunk[3];
     const plays = chunk[4];
-    const rankCounts = chunk.subarray(5, 14);
-    const resultsObject = {} as RankResults;
+    const rankWins = chunk.subarray(5, 14);
+    const rankTies = chunk.subarray(14, 23);
+    const rankLosses = chunk.subarray(23, 32);
+    const resultsObject = {} as RankOutcomeResults;
     for (let r = 0; r < labels.length; r += 1) {
-      resultsObject[labels[r]] = rankCounts[r] ?? 0;
+      resultsObject[labels[r]] = {
+        win: rankWins[r] ?? 0,
+        tie: rankTies[r] ?? 0,
+        lose: rankLosses[r] ?? 0,
+      };
     }
 
     const isHero = raw1 === 0xffffffff && raw2 === 0xffffffff;
@@ -151,15 +153,18 @@ export async function runSimulateVsListWithRanks(
         count: plays,
         win: heroWins,
         tie: ties,
+        lose: Math.max(0, plays - heroWins - ties),
         results: resultsObject,
       };
     } else {
       const oppWins = Math.max(0, plays - heroWins - ties);
+      const oppLosses = Math.max(0, plays - oppWins - ties);
       data.push({
         hand: handList[i] ?? `${card1} ${card2}`,
         count: plays,
         win: oppWins,
         tie: ties,
+        lose: oppLosses,
         results: resultsObject,
       });
     }

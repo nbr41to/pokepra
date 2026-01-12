@@ -27,7 +27,7 @@ export function Main() {
     <div className="relative w-full">
       <OtherPlayers />
       <ActionArea />
-      <div className="absolute right-15 bottom-64 z-1">
+      <div className="absolute right-15 bottom-80 z-1">
         <ResultArea />
       </div>
       <FailureOverlay visible={stack < 1} onRetry={retry} />

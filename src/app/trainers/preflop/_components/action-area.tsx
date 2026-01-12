@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { getHandString } from "@/utils/preflop-range";
 import { useActionStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
+import { RetrySheet } from "./retry-sheet";
 
 export const ActionArea = () => {
-  const { hero, showHand, preflop, preflopAction, shuffleAndDeal } =
+  const { hero, showHand, preflop, result, preflopAction, shuffleAndDeal } =
     useActionStore();
 
   return (
@@ -37,7 +38,8 @@ export const ActionArea = () => {
       </div>
 
       <div className="flex justify-center gap-4 px-2 py-2">
-        <HandRangeDrawer mark={getHandString(hero)} disabled={!!preflop} />
+        <RetrySheet hero={hero} result={result} disabled={!preflop} />
+        <HandRangeDrawer mark={getHandString(hero)} disabled={!preflop} />
         <InformationSheet />
       </div>
     </div>

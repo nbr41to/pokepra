@@ -75,7 +75,7 @@ fn run_simulation(
     &str,
     &str,
     &str,
-  ) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, i32>,
+  ) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, i32>,
 ) -> i32 {
   // used by closures passed in via `runner`
   let _ = (trials, seed);
@@ -103,19 +103,23 @@ fn run_simulation(
     Err(code) => return code,
   };
 
-  let needed = results.len() * 14;
+  let needed = results.len() * 32;
   if out_len < needed {
     return -6;
   }
 
   let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
-  for ((c1, c2, w, t, p, ranks), chunk) in results.iter().zip(out.chunks_exact_mut(14)) {
+  for ((c1, c2, w, t, p, rank_wins, rank_ties, rank_lose_counts), chunk) in
+    results.iter().zip(out.chunks_exact_mut(32))
+  {
     chunk[0] = *c1;
     chunk[1] = *c2;
     chunk[2] = *w;
     chunk[3] = *t;
     chunk[4] = *p;
-    chunk[5..14].copy_from_slice(ranks);
+    chunk[5..14].copy_from_slice(rank_wins);
+    chunk[14..23].copy_from_slice(rank_ties);
+    chunk[23..32].copy_from_slice(rank_lose_counts);
   }
 
   results.len() as i32
@@ -221,8 +225,8 @@ fn run_equity(
 }
 
 /// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution.
-/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rank0..rank8]
-/// out_len must be >= records * 14 (compareCount * 14). Returns record count (compareCount) or negative error.
+/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rankWin0..rankWin8, rankTie0..rankTie8, rankLose0..rankLose8]
+/// out_len must be >= records * 32 (compareCount * 32). Returns record count (compareCount) or negative error.
 #[no_mangle]
 pub extern "C" fn simulate_vs_list_with_ranks(
   hero_ptr: *const u8,
@@ -297,8 +301,8 @@ pub extern "C" fn simulate_vs_list_with_ranks_with_progress(
 }
 
 /// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution (winner ranks only).
-/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rank0..rank8]
-/// out_len must be >= records * 14 (compareCount * 14). Returns record count or negative error.
+/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays, rankWin0..rankWin8, rankTie0..rankTie8, rankLose0..rankLose8]
+/// out_len must be >= records * 32 (compareCount * 32). Returns record count or negative error.
 #[no_mangle]
 pub extern "C" fn simulate_vs_list_with_ranks_monte_carlo(
   hero_ptr: *const u8,

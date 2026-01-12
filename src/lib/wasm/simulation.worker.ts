@@ -3,7 +3,6 @@
 import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
 import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
 import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
-import { runSimulateVsListWithRanksMonteCarlo } from "./simulate-vs-list-with-ranks-monte-carlo-core";
 import type {
   CombinedPayload,
   EquityPayload,
@@ -16,10 +15,22 @@ type SimulateResult = CombinedPayload | EquityPayload | RankDistributionEntry[];
 
 type WorkerRequest =
   | { id: number; type: "simulateVsListWithRanks"; params: SimulateParams }
-  | { id: number; type: "simulateVsListWithRanksMonteCarlo"; params: SimulateParams }
+  | {
+      id: number;
+      type: "simulateVsListWithRanksMonteCarlo";
+      params: SimulateParams;
+    }
   | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
-  | { id: number; type: "simulateVsListEquityWithProgress"; params: SimulateParams }
-  | { id: number; type: "simulateRankDistribution"; params: RankDistributionParams }
+  | {
+      id: number;
+      type: "simulateVsListEquityWithProgress";
+      params: SimulateParams;
+    }
+  | {
+      id: number;
+      type: "simulateRankDistribution";
+      params: RankDistributionParams;
+    }
   | {
       id: number;
       type: "simulateRankDistributionWithProgress";
@@ -39,15 +50,22 @@ type WorkerResponse =
 const ctx: DedicatedWorkerGlobalScope =
   self as unknown as DedicatedWorkerGlobalScope;
 
+const createRandomSeed = () =>
+  (BigInt(Date.now()) << 16n) ^ BigInt(Math.floor(Math.random() * 0xffff));
+
 ctx.onmessage = async (event) => {
   const message = event.data as WorkerRequest | undefined;
   if (!message) return;
 
   try {
     if (message.type === "simulateVsListWithRanksWithProgress") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
       const data = await runSimulateVsListWithRanks(
         {
-          ...message.params,
+          ...params,
         },
         {
           useProgressExport: true,
@@ -66,63 +84,71 @@ ctx.onmessage = async (event) => {
       return;
     }
     if (message.type === "simulateVsListWithRanks") {
-      const data = await runSimulateVsListWithRanks(message.params, {});
-      const response: WorkerResponse = { id: message.id, type: "result", data };
-      ctx.postMessage(response);
-      return;
-    }
-    if (message.type === "simulateVsListWithRanksMonteCarlo") {
-      const data = await runSimulateVsListWithRanksMonteCarlo(message.params);
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateVsListWithRanks(params, {});
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
     }
     if (message.type === "simulateVsListEquity") {
-      const data = await runSimulateVsListEquity(message.params);
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateVsListEquity(params);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
     }
     if (message.type === "simulateVsListEquityWithProgress") {
-      const data = await runSimulateVsListEquity(
-        message.params,
-        {
-          useProgressExport: true,
-          onProgress: (pct) => {
-            const response: WorkerResponse = {
-              id: message.id,
-              type: "progress",
-              pct,
-            };
-            ctx.postMessage(response);
-          },
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateVsListEquity(params, {
+        useProgressExport: true,
+        onProgress: (pct) => {
+          const response: WorkerResponse = {
+            id: message.id,
+            type: "progress",
+            pct,
+          };
+          ctx.postMessage(response);
         },
-      );
+      });
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
     }
     if (message.type === "simulateRankDistributionWithProgress") {
-      const data = await runSimulateRankDistribution(
-        message.params,
-        {
-          useProgressExport: true,
-          onProgress: (pct) => {
-            const response: WorkerResponse = {
-              id: message.id,
-              type: "progress",
-              pct,
-            };
-            ctx.postMessage(response);
-          },
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateRankDistribution(params, {
+        useProgressExport: true,
+        onProgress: (pct) => {
+          const response: WorkerResponse = {
+            id: message.id,
+            type: "progress",
+            pct,
+          };
+          ctx.postMessage(response);
         },
-      );
+      });
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
     }
     if (message.type === "simulateRankDistribution") {
-      const data = await runSimulateRankDistribution(message.params, {});
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateRankDistribution(params, {});
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;

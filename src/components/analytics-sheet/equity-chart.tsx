@@ -52,7 +52,6 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
       const eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
       return sum + eq;
     }, 0);
-    console.log("totalEq", totalEq);
 
     return totalEq / totalEntries;
   }, [result.data]);

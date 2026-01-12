@@ -66,6 +66,9 @@ export const ActionArea = () => {
           onOpenHand={showHand}
           onDoubleTap={() => handleOnAction("commit")}
           onFold={() => handleOnAction("fold")}
+          disabled={disabled || loading}
+          doubleTapActionName="Commit"
+          className="bg bg-green-50 dark:bg-green-950/60"
         />
 
         {loading && (

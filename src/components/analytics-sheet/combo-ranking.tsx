@@ -29,7 +29,7 @@ export const ComboRanking = ({ result, onScroll }: Props) => {
           <Combo className="scale-75" hand={hand.split(" ")} />
           <div>
             <div className="text-center font-bold text-sm">
-              {(((win + tie / 2) / count) * 100).toFixed(2)}%
+              {(((win + tie) / count) * 100).toFixed(2)}%
             </div>
             <div className="text-right text-xs">
               ({((index / result.data.length) * 100).toFixed(1)}%)
@@ -38,10 +38,14 @@ export const ComboRanking = ({ result, onScroll }: Props) => {
 
           <div className="flex h-full flex-wrap gap-1 pl-2">
             {Object.keys(results)
-              .filter((name) => results[name as keyof typeof results] > 0)
+              .filter((name) => {
+                const outcome = results[name as keyof typeof results];
+                return outcome.win + outcome.tie > 0;
+              })
               .map((name) => {
-                const probability =
-                  (results[name as keyof typeof results] / count) * 100;
+                const outcome = results[name as keyof typeof results];
+                const total = outcome.win + outcome.tie;
+                const probability = (total / count) * 100;
 
                 return (
                   <HandProbability

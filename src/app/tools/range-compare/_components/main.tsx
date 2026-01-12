@@ -1,9 +1,8 @@
 "use client";
 
-import { ListX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { InputCardPalette } from "@/components/input-card-palette";
-import { PlayCard } from "@/components/play-card";
+import { useRef, useState } from "react";
+import { InputCards } from "@/components/input-cards";
+import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -11,11 +10,12 @@ import { RANK_ORDER, RANKS } from "@/constants/card";
 import { cn } from "@/lib/utils";
 import { simulateVsListEquityWithProgress } from "@/lib/wasm/simulation";
 import { getHandsByTiers, getShuffledDeck } from "@/utils/dealer";
+import { getPositionString } from "@/utils/position";
 import { getHandString } from "@/utils/preflop-range";
 
 export function Main() {
-  const [target, setTarget] = useState<null | "board">(null);
   const [board, setBoard] = useState("");
+  const [comparePositions, setComparePositions] = useState<number[]>([]); // 想定する相手のポジション
 
   const splitCards = (val: string) => {
     if (!val) return [] as string[];
@@ -40,32 +40,23 @@ export function Main() {
   const progressByHandRef = useRef<number[]>([]);
   const progressRafRef = useRef<number | null>(null);
 
-  // palette外クリックで閉じる
-  useEffect(() => {
-    if (!target) return;
-    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
-      const palette = document.getElementById("input-card-palette");
-      if (!palette) return;
-      const targetNode = e.target as Node | null;
-      if (targetNode && palette.contains(targetNode)) return;
-      setTarget(null);
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    document.addEventListener("touchstart", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-      document.removeEventListener("touchstart", handleOutsideClick);
-    };
-  }, [target]);
-
   const runSimulation = async () => {
-    setTarget(null);
+    if (comparePositions.length !== 2) {
+      setError("Please select exactly two positions to compare.");
+      return;
+    }
     setError(null);
     setLoading(true);
     setProgress(0);
 
-    const btnRangeHands = getHandsByTiers(7, splitCards(board));
-    const utgRangeHands = getHandsByTiers(1, splitCards(board));
+    const btnRangeHands = getHandsByTiers(
+      comparePositions[0],
+      splitCards(board),
+    );
+    const utgRangeHands = getHandsByTiers(
+      comparePositions[1],
+      splitCards(board),
+    );
 
     try {
       progressByHandRef.current = new Array(btnRangeHands.length).fill(0);
@@ -124,38 +115,35 @@ export function Main() {
   };
 
   return (
-    <div className="w-full max-w-full space-y-3">
-      <div className="space-y-2 pb-6">
-        <div className="space-y-3">
-          <Label>board</Label>
-          <div className="flex items-center gap-x-1">
-            <button
-              type="button"
-              className={cn(
-                "flex h-16 w-full flex-wrap items-center gap-1 rounded-md border px-4 py-2",
-                target === "board" &&
-                  "bg-green-200 ring-2 ring-green-400 ring-offset-2 ring-offset-background dark:bg-green-900 dark:ring-green-600",
-              )}
-              onClick={() => {
-                setTarget("board");
-              }}
-            >
-              {board ? (
-                board
-                  .split(" ")
-                  .map((card) => (
-                    <PlayCard key={card} rs={card} size="sm" className="w-8" />
-                  ))
-              ) : (
-                <div className="text-sm">Select board Cards</div>
-              )}
-            </button>
-            <Button size="icon-lg" variant="ghost" onClick={() => setBoard("")}>
-              <ListX size={32} />
-            </Button>
-          </div>
-        </div>
+    <div className="w-full space-y-3">
+      <div className="space-y-3">
+        <Label>board (0 ~ 5)</Label>
+        <InputCards
+          value={board}
+          onChange={setBoard}
+          limit={5}
+          banCards={splitCards(board)}
+        />
+
+        <Label>compare1</Label>
+        <SelectPosition
+          total={9}
+          value={comparePositions[0]}
+          setValue={(value) =>
+            setComparePositions([value, comparePositions[1]])
+          }
+        />
+
+        <Label>compare2</Label>
+        <SelectPosition
+          total={9}
+          value={comparePositions[1]}
+          setValue={(value) =>
+            setComparePositions([comparePositions[0], value])
+          }
+        />
       </div>
+
       <div className="flex flex-wrap gap-2">
         <Button
           size="lg"
@@ -228,9 +216,15 @@ export function Main() {
       {/* Summary */}
       {result && (
         <div>
-          BTN vs UTG Range EQ:{" "}
+          {getPositionString(comparePositions[0], 9)} vs{" "}
+          {getPositionString(comparePositions[1], 9)} | EQ Ave:{" "}
           {(
-            result.reduce((sum, r) => sum + r.equity, 0) / result.length
+            result.reduce((sum, r) => sum + r.equity * 100, 0) / result.length
+          ).toFixed(2)}
+          % |{" "}
+          {(
+            (result.filter((r) => r.equity > 0.5).length / result.length) *
+            100
           ).toFixed(2)}
           %
         </div>
@@ -273,18 +267,6 @@ export function Main() {
               );
             });
           })}
-        </div>
-      )}
-
-      {target && (
-        <div className="fixed bottom-0 left-0 z-10 flex w-full justify-center gap-x-1 bg-background p-2">
-          <InputCardPalette
-            key={target}
-            value={board}
-            limit={5}
-            banCards={splitCards(board)}
-            onChange={(val) => setBoard(val)}
-          />
         </div>
       )}
     </div>

@@ -13,7 +13,7 @@ pub fn simulate_vs_list_with_ranks(
   compare_list: &str,
   trials: u32,
   seed: u64,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   simulate_vs_list_with_ranks_inner::<fn(u32)>(
     hero_hand_str,
     board_str,
@@ -32,7 +32,7 @@ pub fn simulate_vs_list_with_ranks_with_progress<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   progress: Option<F>,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   simulate_vs_list_with_ranks_inner(
     hero_hand_str,
     board_str,
@@ -50,7 +50,7 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   mut progress: Option<F>,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
   let board = parse_board(board_str).ok_or("failed to parse board")?;
@@ -113,7 +113,6 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
   let trials = trials.max(1);
   let total_work = (opponents.len() as u64)
     .saturating_mul(trials as u64)
-    .saturating_add(trials as u64)
     .max(1);
   let mut completed = 0u64;
   let mut last_progress: Option<u32> = None;
@@ -133,9 +132,13 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
   let mut board_buf = [Card { rank: 0, suit: 0 }; 5];
   board_buf[..board_len].copy_from_slice(&board);
   let mut rng = Lcg64::new(seed);
-  let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
-    vec![(0, 0, 0, 0, 0, [0u32; 9]); opponents.len()];
-  let mut hero_rank_counts = [0u32; 9];
+  let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])> = vec![
+    (0, 0, 0, 0, 0, [0u32; 9], [0u32; 9], [0u32; 9]);
+    opponents.len()
+  ];
+  let mut hero_rank_wins = [0u32; 9];
+  let mut hero_rank_ties = [0u32; 9];
+  let mut hero_rank_lose_counts = [0u32; 9];
   let mut hero_wins_total = 0u32;
   let mut hero_ties_total = 0u32;
   let mut hero_plays_total = 0u32;
@@ -146,7 +149,9 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
     let mut wins = 0u32;
     let mut ties = 0u32;
     let mut plays = 0u32;
-    let mut rank_counts = [0u32; 9];
+    let mut rank_wins = [0u32; 9];
+    let mut rank_ties = [0u32; 9];
+    let mut rank_lose_counts = [0u32; 9];
 
     // deck per opponent: exclude hero + board + this opponent (built once)
     let mut exclude = Vec::with_capacity(board_len + 4);
@@ -195,13 +200,38 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
 
       plays += 1;
       match hero_score.encoded.cmp(&opp_score.encoded) {
-        Ordering::Greater => wins += 1,
-        Ordering::Equal => ties += 1,
-        Ordering::Less => {}
-      }
-      let r_idx = opp_score.rank as usize;
-      if r_idx < 9 {
-        rank_counts[r_idx] += 1;
+        Ordering::Greater => {
+          wins += 1;
+          let hero_idx = hero_score.rank as usize;
+          if hero_idx < 9 {
+            hero_rank_wins[hero_idx] = hero_rank_wins[hero_idx].saturating_add(1);
+          }
+          let opp_idx = opp_score.rank as usize;
+          if opp_idx < 9 {
+            rank_lose_counts[opp_idx] = rank_lose_counts[opp_idx].saturating_add(1);
+          }
+        }
+        Ordering::Equal => {
+          ties += 1;
+          let hero_idx = hero_score.rank as usize;
+          if hero_idx < 9 {
+            hero_rank_ties[hero_idx] = hero_rank_ties[hero_idx].saturating_add(1);
+          }
+          let opp_idx = opp_score.rank as usize;
+          if opp_idx < 9 {
+            rank_ties[opp_idx] = rank_ties[opp_idx].saturating_add(1);
+          }
+        }
+        Ordering::Less => {
+          let hero_idx = hero_score.rank as usize;
+          if hero_idx < 9 {
+            hero_rank_lose_counts[hero_idx] = hero_rank_lose_counts[hero_idx].saturating_add(1);
+          }
+          let opp_idx = opp_score.rank as usize;
+          if opp_idx < 9 {
+            rank_wins[opp_idx] = rank_wins[opp_idx].saturating_add(1);
+          }
+        }
       }
       completed = completed.saturating_add(1);
       update_progress(completed);
@@ -212,57 +242,13 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
     stats[idx].2 = wins;
     stats[idx].3 = ties;
     stats[idx].4 = plays;
-    stats[idx].5 = rank_counts;
+    stats[idx].5 = rank_wins;
+    stats[idx].6 = rank_ties;
+    stats[idx].7 = rank_lose_counts;
 
     hero_wins_total = hero_wins_total.saturating_add(wins);
     hero_ties_total = hero_ties_total.saturating_add(ties);
     hero_plays_total = hero_plays_total.saturating_add(plays);
-  }
-
-  // hero rank distribution (deck excludes hero + board only)
-  let mut exclude = Vec::with_capacity(board_len + 2);
-  exclude.extend_from_slice(&board);
-  exclude.push(hero_hand[0]);
-  exclude.push(hero_hand[1]);
-  let remaining_cards = 52usize.saturating_sub(exclude.len());
-  if remaining_cards < missing_board {
-    return Err("not enough cards to complete board".into());
-  }
-  let hero_deck_template = build_deck(&exclude);
-  let mut hero_deck = hero_deck_template.clone();
-  let mut full_board = board_buf;
-  for _ in 0..trials {
-    hero_deck.clone_from(&hero_deck_template);
-    shuffle_slice(&mut hero_deck, &mut rng);
-
-    for i in 0..missing_board {
-      full_board[board_len + i] = hero_deck[i];
-    }
-
-    let hero_cards = [
-      hero_hand[0],
-      hero_hand[1],
-      full_board[0],
-      full_board[1],
-      full_board[2],
-      full_board[3],
-      full_board[4],
-    ];
-    let hero_score = best_of(&hero_cards);
-    let r_idx = hero_score.rank as usize;
-    if r_idx < 9 {
-      hero_rank_counts[r_idx] += 1;
-    }
-    completed = completed.saturating_add(1);
-    update_progress(completed);
-  }
-
-  // scale hero rank counts to match total plays (per opponent)
-  let multiplier = opponents.len() as u32;
-  if multiplier > 1 {
-    for r in &mut hero_rank_counts {
-      *r = r.saturating_mul(multiplier);
-    }
   }
 
   // append hero aggregate record with sentinel cards = u32::MAX
@@ -272,7 +258,9 @@ fn simulate_vs_list_with_ranks_inner<F: FnMut(u32)>(
     hero_wins_total,
     hero_ties_total,
     hero_plays_total,
-    hero_rank_counts,
+    hero_rank_wins,
+    hero_rank_ties,
+    hero_rank_lose_counts,
   ));
 
   update_progress(total_work);

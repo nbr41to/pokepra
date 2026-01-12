@@ -30,7 +30,7 @@ export const InformationSheet = ({ className }: Props) => {
           variant="outline"
           size="icon-lg"
         >
-          <CircleQuestionMark size={16} />
+          <CircleQuestionMark />
         </Button>
       </SheetTrigger>
 

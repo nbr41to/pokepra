@@ -16,7 +16,7 @@ export const SituationCopyButton = ({ board }: Props) => {
       disabled={board.length === 0}
     >
       <a
-        href={`/simulation-b?board=${encodedBoard}`}
+        href={`/tools/calc-hand-score?board=${encodedBoard}`}
         target="_blank"
         rel="noreferrer"
       >

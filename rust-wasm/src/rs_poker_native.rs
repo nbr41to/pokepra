@@ -164,7 +164,7 @@ pub fn simulate_vs_list_with_ranks_monte_carlo(
   compare_list: &str,
   trials: u32,
   seed: u64,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   simulate_vs_list_with_ranks_monte_carlo_inner::<fn(u32)>(
     hero_hand_str,
     board_str,
@@ -182,7 +182,7 @@ pub fn simulate_vs_list_with_ranks_with_progress<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   progress: Option<F>,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   simulate_vs_list_with_ranks_monte_carlo_inner(
     hero_hand_str,
     board_str,
@@ -200,7 +200,7 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   mut progress: Option<F>,
-) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9])>, String> {
+) -> Result<Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])>, String> {
   let _ = seed;
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
@@ -241,9 +241,13 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
 
   let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
 
-  let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9])> =
-    vec![(0, 0, 0, 0, 0, [0u32; 9]); opponents.len()];
-  let mut hero_rank_counts = [0u32; 9];
+  let mut stats: Vec<(u32, u32, u32, u32, u32, [u32; 9], [u32; 9], [u32; 9])> = vec![
+    (0, 0, 0, 0, 0, [0u32; 9], [0u32; 9], [0u32; 9]);
+    opponents.len()
+  ];
+  let mut hero_rank_wins = [0u32; 9];
+  let mut hero_rank_ties = [0u32; 9];
+  let mut hero_rank_lose_counts = [0u32; 9];
   let mut hero_wins_total = 0u32;
   let mut hero_ties_total = 0u32;
   let mut hero_plays_total = 0u32;
@@ -254,7 +258,9 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
     let mut wins = 0u32;
     let mut ties = 0u32;
     let mut plays = 0u32;
-    let mut rank_counts = [0u32; 9];
+    let mut rank_wins = [0u32; 9];
+    let mut rank_ties = [0u32; 9];
+    let mut rank_lose_counts = [0u32; 9];
 
     let mut hero_rs = to_rs_hand(&hero_hand);
     let mut opp_rs = to_rs_hand(opp);
@@ -271,16 +277,23 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
       plays += 1;
       let hero_win = winners.get(0);
       let opp_win = winners.get(1);
+      let idx = rank_index(&rank);
       if hero_win && opp_win {
         ties += 1;
+        if idx < 9 {
+          rank_ties[idx] = rank_ties[idx].saturating_add(1);
+          hero_rank_ties[idx] = hero_rank_ties[idx].saturating_add(1);
+        }
       } else if hero_win {
         wins += 1;
-      }
-      if hero_win {
-        let idx = rank_index(&rank);
         if idx < 9 {
-          rank_counts[idx] += 1;
-          hero_rank_counts[idx] = hero_rank_counts[idx].saturating_add(1);
+          rank_lose_counts[idx] = rank_lose_counts[idx].saturating_add(1);
+          hero_rank_wins[idx] = hero_rank_wins[idx].saturating_add(1);
+        }
+      } else if opp_win {
+        if idx < 9 {
+          rank_wins[idx] = rank_wins[idx].saturating_add(1);
+          hero_rank_lose_counts[idx] = hero_rank_lose_counts[idx].saturating_add(1);
         }
       }
       game.reset();
@@ -293,7 +306,9 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
     stats[idx].2 = wins;
     stats[idx].3 = ties;
     stats[idx].4 = plays;
-    stats[idx].5 = rank_counts;
+    stats[idx].5 = rank_wins;
+    stats[idx].6 = rank_ties;
+    stats[idx].7 = rank_lose_counts;
 
     hero_wins_total = hero_wins_total.saturating_add(wins);
     hero_ties_total = hero_ties_total.saturating_add(ties);
@@ -306,7 +321,9 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
     hero_wins_total,
     hero_ties_total,
     hero_plays_total,
-    hero_rank_counts,
+    hero_rank_wins,
+    hero_rank_ties,
+    hero_rank_lose_counts,
   ));
 
   update_progress(total_work);

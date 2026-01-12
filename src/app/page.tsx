@@ -65,18 +65,18 @@ export default function Page() {
       </NavigationSection>
 
       <NavigationSection
-        title="Monte Carlo Simulator"
+        title="Simulator"
         description="特定の状況における統計解析"
       >
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
           <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/simulation">Simulation A</Link>
+            <Link href="/tools/equity-ranking">EQ Ranking</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/simulation-b">Simulation B</Link>
+            <Link href="/tools/calc-hand-score">Hand Score</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/simulation-c">Simulation C</Link>
+            <Link href="/tools/range-compare">Range Compare</Link>
           </Button>
         </div>
       </NavigationSection>

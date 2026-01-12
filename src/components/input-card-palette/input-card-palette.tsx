@@ -71,7 +71,7 @@ export const InputCardPalette = ({
                   .trim(),
               );
             }
-            return grouped.filter(Boolean).join(`${handSeparator} `).trim();
+            return grouped.filter(Boolean).join(`${handSeparator}`).trim();
           })()
         : updated.join(separator).trim();
 

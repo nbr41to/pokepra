@@ -82,6 +82,12 @@ export type WasmExports = {
   ) => number;
 };
 
+export type RankOutcome = {
+  win: number;
+  tie: number;
+  lose: number;
+};
+
 export type RankResults = {
   "High Card": number;
   "One Pair": number;
@@ -94,12 +100,25 @@ export type RankResults = {
   "Straight Flush": number;
 };
 
+export type RankOutcomeResults = {
+  "High Card": RankOutcome;
+  "One Pair": RankOutcome;
+  "Two Pair": RankOutcome;
+  "Three of a Kind": RankOutcome;
+  Straight: RankOutcome;
+  Flush: RankOutcome;
+  "Full House": RankOutcome;
+  "Four of a Kind": RankOutcome;
+  "Straight Flush": RankOutcome;
+};
+
 export type CombinedEntry = {
   hand: string;
   count: number;
   win: number;
   tie: number;
-  results: RankResults;
+  lose: number;
+  results: RankOutcomeResults;
 };
 
 export type CombinedPayload = {

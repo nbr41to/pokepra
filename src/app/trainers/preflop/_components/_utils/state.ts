@@ -120,8 +120,8 @@ const useActionStore = create<Store>((set, get) => ({
       const otherHandEqs = otherPlayersHands.map((h) => {
         return result?.data.find((r) => r.hand === h.join(" "))?.equity ?? 0;
       });
-      const lossCount = otherHandEqs.filter((eq) => eq > 0.5).length;
-      const delta = lossCount === 0 ? 3 : -lossCount;
+      const loseCount = otherHandEqs.filter((eq) => eq > 0.5).length;
+      const delta = loseCount === 0 ? 3 : -loseCount;
       set({
         preflop: action,
         stack: stack + delta,
