@@ -89,7 +89,6 @@ function getRangeStrengthByHand(
 function getRangeStrengthByPosition(position: number, people: number = 9) {
   const preflopPosition = [8, 9, 1, 2, 3, 4, 5, 6, 7]; // TODO: 動的なpeople対応
   const rangeStrengthRank = preflopPosition[position - 1];
-  console.log(position, people, rangeStrengthRank);
   if (position === 1) return -1; // TODO:SB は今は対象外
 
   // SB(people - 1) を除外した 1-based seat number を受け取る

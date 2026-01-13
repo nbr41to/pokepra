@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
 import { getAllCards } from "./card";
-import { genHands, getAllCombos, getShuffledDeck } from "./dealer";
+import {
+  genHands,
+  getAllCombos,
+  getShuffledDeck,
+  getShortRankName,
+} from "./dealer";
 
 const mockRandomSequence = (values: number[]) => {
   let index = 0;
@@ -54,5 +59,24 @@ describe("genHands", () => {
     mockRandomSequence([0, 0, 0.1, 0.3]);
     const hand = genHands(0);
     expect(hand).toEqual(["As", "Kh"]);
+  });
+});
+
+describe("getShortRankName", () => {
+  it("役名を省略形に変換する", () => {
+    expect(getShortRankName("High Card")).toBe("HC");
+    expect(getShortRankName("One Pair")).toBe("1P");
+    expect(getShortRankName("Pair")).toBe("1P");
+    expect(getShortRankName("Two Pair")).toBe("2P");
+    expect(getShortRankName("Three of a Kind")).toBe("3K");
+    expect(getShortRankName("Straight")).toBe("ST");
+    expect(getShortRankName("Flush")).toBe("FL");
+    expect(getShortRankName("Full House")).toBe("FH");
+    expect(getShortRankName("Four of a Kind")).toBe("4K");
+    expect(getShortRankName("Straight Flush")).toBe("SF");
+  });
+
+  it("未知の役名はそのまま返す", () => {
+    expect(getShortRankName("Unknown")).toBe("Unknown");
   });
 });

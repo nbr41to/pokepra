@@ -1,5 +1,5 @@
-import { getShortHandName } from "@/lib/poker/pokersolver";
 import { cn } from "@/lib/utils";
+import { getShortRankName } from "@/utils/dealer";
 
 type Props = {
   handName: string;
@@ -27,7 +27,7 @@ export const HandProbability = ({
         className,
       )}
     >
-      <div>{getShortHandName(handName)}</div>
+      <div>{getShortRankName(handName)}</div>
       <div>{probability.toFixed(1)}%</div>
       <div
         className={`absolute top-0 left-0 -z-10 h-full ${colorClass}`}
