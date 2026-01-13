@@ -90,14 +90,16 @@ describe("getShortRankName", () => {
 describe("shuffleAndDeal", () => {
   it("hero/villainが重複せずデッキから除外される", () => {
     mockRandomSequence([0, 0, 0, 0.1, 0.3, 0.2, 0.6, 0.3, 0.9]);
-    const { position, hero, villain, deck } = shuffleAndDeal({
+    const { position, hero, villains, deck } = shuffleAndDeal({
       people: 9,
       heroStrength: 0,
     });
+    const [villain] = villains;
     expect(position).toBeGreaterThanOrEqual(1);
     expect(position).toBeLessThanOrEqual(9);
     expect(hero.length).toBe(2);
-    expect(villain.length).toBe(2);
+    expect(villains.length).toBe(1);
+    expect(villain?.length).toBe(2);
     expect(new Set([...hero, ...villain]).size).toBe(4);
     expect(deck.length).toBe(48);
     for (const card of [...hero, ...villain]) {

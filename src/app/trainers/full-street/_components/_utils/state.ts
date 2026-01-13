@@ -24,7 +24,6 @@ type History = {
   villains: string[][];
   board: string[];
   actions: HeroActions;
-  report: any;
 };
 
 type State = {
@@ -49,6 +48,8 @@ type State = {
   villains: string[][]; // 相手のハンド候補
   board: string[]; // ボード
   actions: HeroActions;
+
+  villainsEq: (number | undefined)[]; // 相手のエクイティ
 
   // history
   histories: History[];
@@ -94,6 +95,8 @@ const INITIAL_STATE: State = {
     turn: null,
     river: null,
   },
+
+  villainsEq: [],
 
   histories: [],
 };
@@ -177,15 +180,20 @@ const useHoldemStore = create<Store>((set, get) => ({
    */
   postflopAction: async (params) => {
     const { street: currentStreet, bet } = params;
-    const { stack, hero, position, deck, board, actions } = get();
+    const { stack, hero, villains, position, deck, board, actions } = get();
 
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
-      compare: getHandsInRange(getRangeStrengthByPosition(position), [
-        ...hero,
-        ...board,
-      ]),
+      compare: Array.from(
+        new Set([
+          ...getHandsInRange(getRangeStrengthByPosition(position), [
+            ...hero,
+            ...board,
+          ]),
+          ...villains,
+        ]),
+      ),
       trials: 1000,
     });
 
@@ -228,6 +236,14 @@ const useHoldemStore = create<Store>((set, get) => ({
 
     const newCard = deck.splice(0, 1)[0];
 
+    console.log(
+      result.data.find((data) => data.hand === villains[0].join(" ")),
+    );
+    const newVillainsEq = villains.map(
+      (villainHand) =>
+        result.data.find((data) => data.hand === villainHand.join(" "))?.equity,
+    );
+
     set(() => ({
       street:
         currentStreet === "flop"
@@ -241,7 +257,10 @@ const useHoldemStore = create<Store>((set, get) => ({
         ...actions,
         [currentStreet]: "commit",
       },
-      ...(currentStreet === "river" ? {} : { board: [...board, newCard] }),
+      villainsEq: newVillainsEq,
+      ...(currentStreet === "river"
+        ? {}
+        : { board: [...board, newCard], deck }),
       finished: currentStreet === "river",
     }));
   },

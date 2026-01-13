@@ -58,8 +58,8 @@ describe("getRangeStrengthByPosition", () => {
     expect(getRangeStrengthByPosition(1, 1)).toBe(-1);
     expect(getRangeStrengthByPosition(1, 10)).toBe(-1);
   });
-  it("SBも-1", () => {
-    expect(getRangeStrengthByPosition(1, 9)).toBe(-1);
+  it("SBは強さを返す", () => {
+    expect(getRangeStrengthByPosition(1, 9)).toBe(7);
   });
 
   it("ポジションに応じた強さを返す", () => {

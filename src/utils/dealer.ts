@@ -118,7 +118,7 @@ function shuffleAndDeal(setting: { people: number; heroStrength: number }) {
   const villain = genHands(heroStrength, hero);
   const deck = getShuffledDeck([...hero, ...villain]);
 
-  return { position, hero, villain, deck, board: [] };
+  return { position, hero, villains: [villain], deck, board: [] };
 }
 
 export {

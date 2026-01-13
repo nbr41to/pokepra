@@ -13,10 +13,10 @@ export const ResultArea = () => {
     actions: { preflop, flop },
   } = useHoldemStore();
 
-  if (hero.length === 0 || !preflop) return <div className="h-8" />;
+  if (hero.length === 0 || !preflop) return <div className="h-15" />;
 
   return (
-    <div className="flex flex-col items-center gap-y-2">
+    <div className="flex h-15 flex-col items-center gap-y-2">
       <div>
         {(street === "preflop" && preflop.action === "fold") ||
         (street !== "preflop" && !flop) ? (

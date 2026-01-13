@@ -7,6 +7,7 @@ import { CommunityArea } from "./community-area";
 import { ConfirmPositionArea } from "./confirm-position-area";
 import { FailureOverlay } from "./failure-overlay";
 import { ResultArea } from "./result-area";
+import { VillainHand } from "./villain-hand";
 
 export default function Main() {
   const { gameId, stack, initialize, clear } = useHoldemStore();
@@ -25,6 +26,7 @@ export default function Main() {
 
   return (
     <div className="w-full space-y-2">
+      <VillainHand />
       <ResultArea />
       <CommunityArea />
       <ConfirmPositionArea />

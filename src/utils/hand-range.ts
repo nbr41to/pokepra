@@ -92,7 +92,7 @@ function getRangeStrengthByPosition(position: number, people: number = 9) {
   // SB(people - 1) を除外した 1-based seat number を受け取る
   if (people < 2 || people > 9) return -1;
   if (position < 1 || position > people) return -1;
-  if (position === 1) return -1; // SB は対象外
+  // if (position === 1) return -1; // SB は対象外
   if (rangeStrengthRank < 1 || rangeStrengthRank > people) return -1;
 
   // position をもとに Tier Index を引く (9max 想定)
