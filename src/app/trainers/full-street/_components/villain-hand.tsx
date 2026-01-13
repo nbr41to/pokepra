@@ -14,13 +14,11 @@ export const VillainHand = ({ className }: Props) => {
   return (
     <div
       className={cn(
-        "flex w-full flex-col items-center justify-center gap-x-3",
+        "flex flex-col items-center justify-center gap-y-1",
         className,
       )}
     >
-      {finished && typeof eq === "number" && (
-        <span>{(eq * 100).toFixed(2)}%</span>
-      )}
+      {typeof eq === "number" && <span>{(eq * 100).toFixed(2)}%</span>}
       <OtherHand hand={villains[0]} reversed={finished} />
     </div>
   );

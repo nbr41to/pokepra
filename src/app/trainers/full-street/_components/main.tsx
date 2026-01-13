@@ -26,8 +26,10 @@ export default function Main() {
 
   return (
     <div className="w-full space-y-2">
-      <VillainHand />
-      <ResultArea />
+      <div className="flex justify-between px-8">
+        <VillainHand />
+        <ResultArea />
+      </div>
       <CommunityArea />
       <ConfirmPositionArea />
       <ActionArea />
