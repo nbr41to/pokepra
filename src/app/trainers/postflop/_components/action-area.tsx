@@ -57,7 +57,7 @@ export const ActionArea = () => {
   const rankPromise = simulateVsListWithRanks({
     hero,
     board,
-    compare: getHandsByTiers(getTierIndexByPosition(position), [
+    compare: getHandsByTiers(getTierIndexByPosition(9), [
       ...hero,
       ...board,
     ]),

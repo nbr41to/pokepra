@@ -1,24 +1,22 @@
 import type { CSSProperties } from "react";
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { Combo } from "../combo";
 
 type Props = {
-  promise: Promise<CombinedPayload>;
+  result: CombinedPayload;
   step?: number;
 };
 
-export const EquityChart = ({ promise, step = 10 }: Props) => {
-  const result = use(promise);
-
+export const EquityChart = ({ result, step = 10 }: Props) => {
   const buckets = useMemo(
     () =>
       Array.from(
         { length: Math.ceil(100 / step) },
-        (_, i) => 100 - step * (i + 1),
+        (_, i) => 100 - step * (i + 1)
       ),
-    [step],
+    [step]
   ); // 90,80,...0 (high → low)
   const heroEntry = result.data.find((data) => data.hand === result.hand);
   const heroEq =
@@ -27,7 +25,7 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
       : 0;
   const heroBucketStart = Math.min(
     100 - step,
-    Math.max(0, Math.floor(heroEq / step) * step),
+    Math.max(0, Math.floor(heroEq / step) * step)
   );
   const eqThresholds = useMemo(
     () =>
@@ -40,10 +38,10 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
           return acc;
         },
         Object.fromEntries(
-          buckets.map((b) => [b, { count: 0, eq: [] }]),
-        ) as Record<number, { count: number; eq: number[] }>,
+          buckets.map((b) => [b, { count: 0, eq: [] }])
+        ) as Record<number, { count: number; eq: number[] }>
       ),
-    [buckets, result.data, step],
+    [buckets, result.data, step]
   );
   const eqAve = useMemo(() => {
     const totalEntries = result.data.length;
@@ -106,7 +104,7 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
                   "relative flex w-full items-center justify-center text-xs",
                   bgColors[idx % bgColors.length],
                   idx === 0 ? "rounded-t-xs" : "",
-                  idx === buckets.length - 1 ? "rounded-b-xs" : "",
+                  idx === buckets.length - 1 ? "rounded-b-xs" : ""
                 )}
                 style={{
                   height: `${percent}%`,
@@ -116,7 +114,7 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
                 <div
                   className={cn(
                     "absolute top-1/2 left-0 z-10 -translate-x-full -translate-y-1/2 pr-2 font-bold",
-                    colors[idx % colors.length],
+                    colors[idx % colors.length]
                   )}
                 >
                   {bucket}%~
@@ -128,7 +126,7 @@ export const EquityChart = ({ promise, step = 10 }: Props) => {
             <div
               className={cn(
                 "absolute -right-28 flex items-center gap-1 text-foreground text-sm",
-                animateHero && "hero-eq-indicator",
+                animateHero && "hero-eq-indicator"
               )}
               style={
                 {

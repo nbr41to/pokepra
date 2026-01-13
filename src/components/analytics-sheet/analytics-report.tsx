@@ -7,10 +7,13 @@ import {
   GalleryVerticalEnd,
   X,
 } from "lucide-react";
-import { use, useCallback, useRef } from "react";
+import { use, useCallback, useRef, useState } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TIERS } from "@/constants/tiers";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
+import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
+import { SelectPosition } from "../select-position";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { ComboRanking } from "./combo-ranking";
@@ -23,6 +26,17 @@ type Props = {
 export const AnalyticsReport = ({ rankPromise }: Props) => {
   const result = use(rankPromise);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const [selectedRange, setSelectedRange] = useState(7);
+  const filteredResult = {
+    ...result,
+    data: result.data.filter(({ hand }) => {
+      const tierIndex = getTierIndexByPosition(selectedRange);
+      const selectedRangeHandStrings = TIERS.slice(0, tierIndex + 1).flat();
+      return selectedRangeHandStrings.includes(getHandString(hand.split(" ")));
+    }),
+  };
+
   const scrollToMyHand = (smooth = false) => {
     const element = document.getElementById(result.hand);
     if (element) {
@@ -32,6 +46,7 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
       });
     }
   };
+
   const scrollToTop = useCallback((smooth = false) => {
     const viewport = scrollAreaRef.current?.querySelector(
       "[data-radix-scroll-area-viewport]",
@@ -44,15 +59,22 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
   }, []);
 
   return (
-    <Tabs defaultValue="equity" className="h-[calc(100dvh-120px)] px-1">
+    <Tabs defaultValue="equity" className="relative h-[calc(100dvh-120px)]">
+      <div className="absolute -top-2 left-1/2 z-20 w-full -translate-x-1/2">
+        <SelectPosition
+          total={9}
+          value={selectedRange}
+          setValue={setSelectedRange}
+        />
+      </div>
       <TabsContent value="equity" className="grid place-items-center">
-        <EquityChart promise={rankPromise} />
+        <EquityChart result={filteredResult} />
       </TabsContent>
       <TabsContent value="ranking">
         <ScrollArea ref={scrollAreaRef} className="h-[calc(100dvh-120px)]">
-          <ComboRanking result={result} onScroll={scrollToMyHand} />
+          <ComboRanking result={filteredResult} onScroll={scrollToMyHand} />
         </ScrollArea>
-        <div className="absolute right-2 bottom-6 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
+        <div className="absolute right-2 bottom-4 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
           <Button
             className="rounded-full"
             size="icon-lg"
@@ -70,7 +92,7 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
         </div>
       </TabsContent>
 
-      <SheetFooter className="absolute bottom-6 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
+      <SheetFooter className="absolute bottom-0 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
         <TabsList className="h-12 rounded-full">
           <TabsTrigger value="equity" className="h-10 rounded-full">
             <ChartColumnBig />
