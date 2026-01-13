@@ -1,4 +1,5 @@
 export { DEFAULT_WASM_URL } from "./constants";
+export { parseRangeToHands } from "./parse-range";
 export {
   simulateRankDistribution,
   simulateRankDistributionWithProgress,
@@ -11,7 +12,6 @@ export {
   simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "./simulate-vs-list-with-ranks";
-export { parseRangeToHands } from "./parse-range";
 export type {
   CombinedPayload,
   EquityEntry,

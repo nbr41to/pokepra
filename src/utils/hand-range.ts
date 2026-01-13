@@ -125,7 +125,7 @@ function judgeInRange(hands: string[], position: number, people = 9) {
 }
 
 /** 用途検討 */
-const HAND_RANGE_SYMBOLS = [
+const _HAND_RANGE_SYMBOLS = [
   "QQ+,AKo,AKs",
   "99+,ATs+,AQo+,KQs",
   "77+,ATs+,AJo+,KJs+,QJ-JTs,KQo",

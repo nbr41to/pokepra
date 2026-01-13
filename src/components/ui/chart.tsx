@@ -80,7 +80,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: Chart theme CSS is generated here.
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(

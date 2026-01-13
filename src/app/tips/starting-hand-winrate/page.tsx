@@ -16,15 +16,15 @@ export default function StartingHandWinratePage() {
         </Button>
       </header>
       <section className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          preflop-hand-ranking.json を元にしたプリフロップ勝率の上位抜粋。
-          2 人 (HU)、6-max、フルリングの勝率を確認できます。
+        <p className="text-muted-foreground text-sm">
+          preflop-hand-ranking.json を元にしたプリフロップ勝率の上位抜粋。 2 人
+          (HU)、6-max、フルリングの勝率を確認できます。
         </p>
         <div className="space-y-3 rounded-lg border bg-card p-4 shadow-sm">
           <h2 className="font-semibold">勝率テーブル (上位 30)</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="border-b text-xs uppercase text-muted-foreground">
+              <thead className="border-b text-muted-foreground text-xs uppercase">
                 <tr>
                   <th className="py-2 pr-3">Rank</th>
                   <th className="py-2 pr-3">Hand</th>
@@ -46,9 +46,9 @@ export default function StartingHandWinratePage() {
               </tbody>
             </table>
           </div>
-          <p className="text-xs text-muted-foreground">
-            データソース: src/data/preflop-hand-ranking.json。
-            スーツは s=スーテッド, o=オフスート。必要に応じて全件を参照してください。
+          <p className="text-muted-foreground text-xs">
+            データソース: src/data/preflop-hand-ranking.json。 スーツは
+            s=スーテッド, o=オフスート。必要に応じて全件を参照してください。
           </p>
         </div>
       </section>

@@ -110,7 +110,15 @@ export const HeroActionArea = ({
       gestureRef.current = { startX: x, startY: y, type: "flip" };
       containerRef.current?.setPointerCapture(event.pointerId);
     },
-    [disabled, flipProgress, foldEnabled, folded, hideGuide, locked, registerDoubleTap],
+    [
+      disabled,
+      flipProgress,
+      foldEnabled,
+      folded,
+      hideGuide,
+      locked,
+      registerDoubleTap,
+    ],
   );
 
   const handlePointerMove = useCallback(
@@ -149,7 +157,15 @@ export const HeroActionArea = ({
         gestureRef.current = null;
       }
     },
-    [disabled, foldEnabled, folded, hideGuide, locked, triggerFold, triggerOpenHand],
+    [
+      disabled,
+      foldEnabled,
+      folded,
+      hideGuide,
+      locked,
+      triggerFold,
+      triggerOpenHand,
+    ],
   );
 
   const resetGesture = useCallback(
@@ -178,7 +194,15 @@ export const HeroActionArea = ({
       }
       gestureRef.current = null;
     },
-    [disabled, finalizeOpenHand, flipProgress, foldEnabled, folded, hideGuide, locked],
+    [
+      disabled,
+      finalizeOpenHand,
+      flipProgress,
+      foldEnabled,
+      folded,
+      hideGuide,
+      locked,
+    ],
   );
 
   useEffect(() => {

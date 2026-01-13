@@ -13,7 +13,7 @@ export const EquityChartSkeleton = ({ step = 10 }: Props) => {
         <div className="relative -z-10 w-8">
           {Array.from({ length: 100 / step + 1 }).map((_, i) => (
             <div
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static tick marks are stable.
               key={i}
               className="absolute -left-1 h-px w-8 bg-gray-300 dark:bg-gray-600"
               style={{

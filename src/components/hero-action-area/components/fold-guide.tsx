@@ -25,7 +25,9 @@ export const FoldGuide = ({
   return (
     <div
       className={guideClasses}
-      style={locked ? { transitionDelay: `${FOLD_GUIDE_DELAY_MS}ms` } : undefined}
+      style={
+        locked ? { transitionDelay: `${FOLD_GUIDE_DELAY_MS}ms` } : undefined
+      }
     >
       <ArrowBigUpDash
         size={32}

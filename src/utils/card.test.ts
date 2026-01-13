@@ -1,13 +1,13 @@
 import { describe, expect, it } from "bun:test";
 import {
-  CARD_RANKS,
   CARD_RANK_ORDER,
+  CARD_RANKS,
   CARD_SUIT,
   CARD_SUITS,
   getAllCards,
   toHandArray,
-  toHandsArray,
   toHandString,
+  toHandsArray,
   toHandsString,
 } from "./card";
 

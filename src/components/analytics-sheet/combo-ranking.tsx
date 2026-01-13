@@ -22,7 +22,7 @@ export const ComboRanking = ({ result, onScroll }: Props) => {
           id={hand}
           className={cn(
             "grid grid-cols-[24px_56px_60px_1fr] items-center px-2 py-1",
-            hand === result.hand && "bg-orange-200 dark:bg-orange-900"
+            hand === result.hand && "bg-orange-200 dark:bg-orange-900",
           )}
         >
           <span className="text-sm">{index + 1}.</span>

@@ -172,9 +172,15 @@
   }
 
   @keyframes heroEqIndicator {
-    0% { top: 100%; }
-    80% { top: calc(var(--hero-target) - 5%); }
-    100% { top: var(--hero-target); }
+    0% {
+      top: 100%;
+    }
+    80% {
+      top: calc(var(--hero-target) - 5%);
+    }
+    100% {
+      top: var(--hero-target);
+    }
   }
   .hero-eq-indicator {
     animation: heroEqIndicator 700ms 300ms cubic-bezier(0.16, 1, 0.2, 1) both;

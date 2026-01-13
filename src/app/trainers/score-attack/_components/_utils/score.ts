@@ -1,6 +1,6 @@
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 
-const calcScore = ({
+const _calcScore = ({
   phase,
   action,
   eqData,

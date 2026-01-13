@@ -3,8 +3,8 @@ import { getAllCards } from "./card";
 import {
   genHands,
   getAllCombos,
-  getShuffledDeck,
   getShortRankName,
+  getShuffledDeck,
 } from "./dealer";
 
 const mockRandomSequence = (values: number[]) => {

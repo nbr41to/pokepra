@@ -5,15 +5,13 @@ export default function HandProbabilityPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-3xl flex-col gap-8 px-6 py-10">
       <header className="flex items-center justify-between">
-        <h1 className="font-bold font-montserrat text-2xl">
-          役が完成する確率
-        </h1>
+        <h1 className="font-bold font-montserrat text-2xl">役が完成する確率</h1>
         <Button variant="ghost" asChild>
           <Link href="/tips">← Tips 一覧へ</Link>
         </Button>
       </header>
       <section className="space-y-4">
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           フロップ以降に特定の役を完成させるおおまかな確率のメモです。
           実戦ではアウト数を数えて「ターン・リバーで届くか」を目安にしてください。
         </p>
@@ -36,7 +34,7 @@ export default function HandProbabilityPage() {
             <li>4 outs: 1 枚で約 8.7%</li>
             <li>2 outs: 1 枚で約 4.3%</li>
           </ul>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             4/2 ルールの目安: アウト数 × 4 ≒ ターン+リバー、アウト数 × 2 ≒ 1
             枚で引く確率。
           </p>

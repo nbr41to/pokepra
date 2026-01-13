@@ -132,7 +132,7 @@ export const BetSlider = ({
   const displayValue = clampedValue.toFixed(precision);
 
   return (
-    // biome-ignore lint/a11y/useFocusableInteractive: <explanation>
+    // biome-ignore lint/a11y/useFocusableInteractive: Drag handling requires a div wrapper.
     <div
       ref={containerRef}
       className={cn(

@@ -11,7 +11,7 @@ export const FailureOverlay = ({ visible, onRetry }: Props) => {
   const [notBlur, setNotBlur] = useState(false);
 
   return (
-    // biome-ignore lint/a11y/useSemanticElements: <explanation>
+    // biome-ignore lint/a11y/useSemanticElements: Uses div for overlay positioning with role.
     <div
       role="button"
       tabIndex={0}

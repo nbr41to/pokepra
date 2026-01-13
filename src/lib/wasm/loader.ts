@@ -30,7 +30,9 @@ const resolveWasmUrl = (url: string) => {
   return url;
 };
 
-export const setProgressListener = (listener: ((pct: number) => void) | null) => {
+export const setProgressListener = (
+  listener: ((pct: number) => void) | null,
+) => {
   progressListener = listener;
 };
 
