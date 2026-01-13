@@ -6,6 +6,7 @@ mod rs_poker_native;
 mod sim;
 
 use rs_poker_native::{
+  parse_range_to_hands as parse_range_to_hands_internal,
   simulate_rank_distribution as simulate_rank_distribution_internal,
   simulate_rank_distribution_with_progress as simulate_rank_distribution_with_progress_internal,
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
@@ -219,6 +220,41 @@ fn run_equity(
     chunk[2] = *w;
     chunk[3] = *t;
     chunk[4] = *p;
+  }
+
+  results.len() as i32
+}
+
+fn run_parse_range(
+  range_ptr: *const u8,
+  range_len: usize,
+  out_ptr: *mut u32,
+  out_len: usize,
+  mut runner: impl FnMut(&str) -> Result<Vec<(u32, u32)>, i32>,
+) -> i32 {
+  if range_ptr.is_null() || out_ptr.is_null() {
+    return -1;
+  }
+  let range_slice = unsafe { std::slice::from_raw_parts(range_ptr, range_len) };
+  let range_str = match std::str::from_utf8(range_slice) {
+    Ok(s) => s,
+    Err(_) => return -2,
+  };
+
+  let results = match runner(range_str) {
+    Ok(v) => v,
+    Err(code) => return code,
+  };
+
+  let needed = results.len() * 2;
+  if out_len < needed {
+    return -6;
+  }
+
+  let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
+  for ((c1, c2), chunk) in results.iter().zip(out.chunks_exact_mut(2)) {
+    chunk[0] = *c1;
+    chunk[1] = *c2;
   }
 
   results.len() as i32
@@ -473,4 +509,18 @@ pub extern "C" fn simulate_rank_distribution_with_progress(
       .map_err(|_| -5)
     },
   )
+}
+
+/// Parse a range string into encoded hands.
+/// Output per hand: [card1, card2]. out_len must be >= hands_count * 2.
+#[no_mangle]
+pub extern "C" fn parse_range_to_hands(
+  range_ptr: *const u8,
+  range_len: usize,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_parse_range(range_ptr, range_len, out_ptr, out_len, |range_str| {
+    parse_range_to_hands_internal(range_str).map_err(|_| -5)
+  })
 }

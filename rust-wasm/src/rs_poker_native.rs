@@ -1,7 +1,7 @@
 //! rs_poker-based helpers for Monte Carlo simulations.
 
 use rs_poker::core::{Card, Hand, Rank, Rankable, Suit, Value};
-use rs_poker::holdem::MonteCarloGame;
+use rs_poker::holdem::{MonteCarloGame, RangeParser};
 
 use crate::sim::{
   decode_hand_pair,
@@ -447,6 +447,23 @@ fn simulate_rank_distribution_inner<F: FnMut(u32)>(
   Ok(counts)
 }
 
+/// Parse a range string into encoded hand pairs.
+pub fn parse_range_to_hands(range_str: &str) -> Result<Vec<(u32, u32)>, String> {
+  let hands = RangeParser::parse_many(range_str).map_err(|e| format!("{e:?}"))?;
+  let mut encoded = Vec::with_capacity(hands.len());
+  for hand in hands {
+    if hand.len() != 2 {
+      return Err("range hand must have 2 cards".into());
+    }
+    let c1 = encode_rs_card(&hand[0]);
+    let c2 = encode_rs_card(&hand[1]);
+    let (a, b) = if c1 <= c2 { (c1, c2) } else { (c2, c1) };
+    encoded.push((a, b));
+  }
+  encoded.sort_unstable_by(|a, b| a.0.cmp(&b.0).then_with(|| a.1.cmp(&b.1)));
+  Ok(encoded)
+}
+
 fn validate_inputs(
   hero_hand: &[SimCard; 2],
   board: &[SimCard],
@@ -514,5 +531,38 @@ fn rank_index(rank: &Rank) -> usize {
     Rank::FullHouse(_) => 6,
     Rank::FourOfAKind(_) => 7,
     Rank::StraightFlush(_) => 8,
+  }
+}
+
+fn encode_rs_card(card: &Card) -> u32 {
+  let rank = value_to_rank(card.value);
+  let suit = suit_to_index(card.suit);
+  (rank << 2) | suit
+}
+
+fn value_to_rank(value: Value) -> u32 {
+  match value {
+    Value::Two => 0,
+    Value::Three => 1,
+    Value::Four => 2,
+    Value::Five => 3,
+    Value::Six => 4,
+    Value::Seven => 5,
+    Value::Eight => 6,
+    Value::Nine => 7,
+    Value::Ten => 8,
+    Value::Jack => 9,
+    Value::Queen => 10,
+    Value::King => 11,
+    Value::Ace => 12,
+  }
+}
+
+fn suit_to_index(suit: Suit) -> u32 {
+  match suit {
+    Suit::Spade => 0,
+    Suit::Heart => 1,
+    Suit::Diamond => 2,
+    Suit::Club => 3,
   }
 }

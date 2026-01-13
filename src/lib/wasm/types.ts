@@ -80,6 +80,12 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  parse_range_to_hands?: (
+    rangePtr: number,
+    rangeLen: number,
+    outPtr: number,
+    outLen: number,
+  ) => number;
 };
 
 export type RankOutcome = {
@@ -161,6 +167,11 @@ export type RankDistributionParams = {
 
 export type RankDistributionWithProgressParams = RankDistributionParams & {
   onProgress?: (pct: number) => void;
+};
+
+export type ParseRangeParams = {
+  range: string;
+  wasmUrl?: string;
 };
 
 export type RankDistributionEntry = {

@@ -11,10 +11,12 @@ export {
   simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "./simulate-vs-list-with-ranks";
+export { parseRangeToHands } from "./parse-range";
 export type {
   CombinedPayload,
   EquityEntry,
   EquityPayload,
+  ParseRangeParams,
   RankDistributionEntry,
   RankOutcome,
   RankOutcomeResults,

@@ -78,6 +78,9 @@ export default function Page() {
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/tools/range-compare">Range Compare</Link>
           </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/tools/range-setting">Range Setting</Link>
+          </Button>
         </div>
       </NavigationSection>
 
