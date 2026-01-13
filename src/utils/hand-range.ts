@@ -89,10 +89,10 @@ function getRangeStrengthByHand(
 function getRangeStrengthByPosition(position: number, people: number = 9) {
   const preflopPosition = [8, 9, 1, 2, 3, 4, 5, 6, 7]; // TODO: 動的なpeople対応
   const rangeStrengthRank = preflopPosition[position - 1];
-  if (position === 1) return -1; // TODO:SB は今は対象外
-
   // SB(people - 1) を除外した 1-based seat number を受け取る
   if (people < 2 || people > 9) return -1;
+  if (position < 1 || position > people) return -1;
+  if (position === 1) return -1; // SB は対象外
   if (rangeStrengthRank < 1 || rangeStrengthRank > people) return -1;
 
   // position をもとに Tier Index を引く (9max 想定)
@@ -115,11 +115,6 @@ function judgeInRange(hands: string[], position: number, people = 9) {
     (index) => getInitialHandRangeArray()[index],
   );
   const handString = toHandSymbol(hands);
-
-  // console.log("tierIndex", tierIndex);
-  // console.log("tierIndexes", tierIndexes);
-  // console.log("openRaiseHands", openRaiseHands);
-  // console.log("handString", handString);
 
   return openRaiseHands.includes(handString);
 }

@@ -17,7 +17,7 @@ export const HandCards = ({
   children,
 }: HandCardsProps) => {
   const shiftTransform = shifted
-    ? "translateX(7rem) translateY(1rem)"
+    ? "translateX(7.5rem) translateY(1.2rem)"
     : "translateX(0) translateY(0)";
 
   return (

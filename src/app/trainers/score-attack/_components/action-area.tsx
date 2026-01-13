@@ -73,6 +73,7 @@ export const ActionArea = () => {
   });
 
   const disabled =
+    (phase === "preflop" && preflop === "fold") ||
     (phase === "flop" && !!flop) ||
     (phase === "turn" && !!turn) ||
     (phase === "river" && !!river);

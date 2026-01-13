@@ -6,5 +6,9 @@ export const CommunityBoard = () => {
 
   if (board.length === 0 || phase === "preflop") return null;
 
-  return <Board cards={board} />;
+  return (
+    <div className="mx-auto mb-4 h-20 w-fit">
+      <Board cards={board} />
+    </div>
+  );
 };

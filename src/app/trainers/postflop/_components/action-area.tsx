@@ -81,9 +81,9 @@ export const ActionArea = () => {
           hand={hero}
           onOpenHand={showHand}
           onDoubleTap={() => handleOnAction("commit")}
+          doubleTapActionName="Bet"
           onFold={() => handleOnAction("fold")}
           disabled={disabled || loading}
-          doubleTapActionName="Commit"
           className="bg bg-green-50 dark:bg-green-950/60"
         />
 

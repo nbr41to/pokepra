@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
@@ -14,7 +15,6 @@ import {
   type simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "@/lib/wasm/simulation";
-
 import { getShuffledDeck } from "@/utils/dealer";
 import {
   getHandsInRange,
@@ -32,8 +32,12 @@ const splitCards = (val: string) => {
 };
 
 export function Main() {
-  const [hero, setHero] = useState("");
-  const [board, setBoard] = useState("");
+  const params = useSearchParams();
+  const initialHero = params.get("hero")?.replaceAll(",", " ") || "";
+  const initialBoard = params.get("board")?.replaceAll(",", " ") || "";
+
+  const [hero, setHero] = useState(initialHero);
+  const [board, setBoard] = useState(initialBoard);
   const [compare, setCompare] = useState(""); // 想定する相手のハンド ;区切り
 
   const [loading, setLoading] = useState(false);
@@ -71,6 +75,7 @@ export function Main() {
     ...splitCards(board),
     ...splitCards(compare),
   ];
+  const rangeExcludes = [...splitCards(hero), ...splitCards(board)];
 
   return (
     <div className="w-full space-y-3">
@@ -105,7 +110,11 @@ export function Main() {
 
       <div className="-mt-3">
         <p className="text-center text-xs">set range hands</p>
-        <SetRangeHands total={9} setValue={setCompare} excludes={usedCards} />
+        <SetRangeHands
+          total={9}
+          setValue={setCompare}
+          excludes={rangeExcludes}
+        />
       </div>
       <Button
         size="lg"

@@ -126,7 +126,7 @@ export async function runSimulateVsListEquity(
   data.sort((a, b) => b.equity - a.equity);
 
   const end = performance.now();
-  console.log(
+  console.info(
     `runSimulateVsListEquity completed in ${(end - start).toFixed(2)} ms`,
   );
 

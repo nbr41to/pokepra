@@ -4,6 +4,7 @@ import {
   getHandsInRange,
   getRangeStrengthByPosition,
 } from "@/utils/hand-range";
+import { getPositionLabel } from "@/utils/position";
 
 type Props = {
   total: number;
@@ -15,15 +16,13 @@ export function SetRangeHands({ total, setValue, excludes = [] }: Props) {
   return (
     <div className="flex w-full flex-wrap justify-center gap-x-1 pt-2">
       {Array.from({ length: total }).map((_, index) => {
-        let label = "";
-        if (index === 0) label = "UTG";
-        else if (index === total - 3) label = "BTN";
-        else if (index === total - 2) label = "SB";
-        else if (index === total - 1) label = "BB";
-        else label = `+${index.toString()}`;
+        const positionValue =
+          index + 3 > total ? (index + 3) % total : index + 3;
+        const label = getPositionLabel(positionValue, total);
 
-        const strength = getRangeStrengthByPosition(index + 1, total);
-        const hands = getHandsInRange(strength, excludes);
+        const strength = getRangeStrengthByPosition(positionValue, total);
+        const hands =
+          strength === -1 ? [] : getHandsInRange(strength, excludes);
 
         return (
           <Fragment key={index + label}>

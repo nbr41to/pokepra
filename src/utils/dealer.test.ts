@@ -5,6 +5,7 @@ import {
   getAllCombos,
   getShortRankName,
   getShuffledDeck,
+  shuffleAndDeal,
 } from "./dealer";
 
 const mockRandomSequence = (values: number[]) => {
@@ -60,6 +61,11 @@ describe("genHands", () => {
     const hand = genHands(0);
     expect(hand).toEqual(["As", "Kh"]);
   });
+  it("除外カードを含まない", () => {
+    mockRandomSequence([0, 0.5, 0.2, 0.3]);
+    const hand = genHands(0, ["As", "Kh"]);
+    expect(hand).toEqual(["Ad", "Qh"]);
+  });
 });
 
 describe("getShortRankName", () => {
@@ -78,5 +84,24 @@ describe("getShortRankName", () => {
 
   it("未知の役名はそのまま返す", () => {
     expect(getShortRankName("Unknown")).toBe("Unknown");
+  });
+});
+
+describe("shuffleAndDeal", () => {
+  it("hero/villainが重複せずデッキから除外される", () => {
+    mockRandomSequence([0, 0, 0, 0.1, 0.3, 0.2, 0.6, 0.3, 0.9]);
+    const { position, hero, villain, deck } = shuffleAndDeal({
+      people: 9,
+      heroStrength: 0,
+    });
+    expect(position).toBeGreaterThanOrEqual(1);
+    expect(position).toBeLessThanOrEqual(9);
+    expect(hero.length).toBe(2);
+    expect(villain.length).toBe(2);
+    expect(new Set([...hero, ...villain]).size).toBe(4);
+    expect(deck.length).toBe(48);
+    for (const card of [...hero, ...villain]) {
+      expect(deck).not.toContain(card);
+    }
   });
 });

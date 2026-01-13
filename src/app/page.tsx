@@ -56,7 +56,10 @@ export default function Page() {
             <Link href="/trainers/postflop">Postflop</Link>
           </Button>
           <Button className="w-full" variant="default" size="lg" asChild>
-            <Link href="/trainers/score-attack">Full streets</Link>
+            <Link href="/trainers/score-attack">Full street</Link>
+          </Button>
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/full-street">Full street</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" disabled>
             <Link href="/trainers/range-bet">Range bet</Link>

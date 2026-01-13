@@ -18,7 +18,7 @@ export const FlipCard = ({ rs, progress }: FlipCardProps) => {
   const rotation = 180 - mappedProgress * 180;
 
   return (
-    <div className="perspective-distant relative h-42 w-32">
+    <div className="perspective-distant relative h-36 w-28">
       <div
         className="transform-3d relative h-full w-full transition-transform duration-75"
         style={{ transform: `rotateY(${rotation}deg)` }}

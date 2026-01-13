@@ -34,12 +34,15 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
   const filteredResult = {
     ...result,
     data: result.data.filter(({ hand }) => {
-      const tierIndex = getRangeStrengthByPosition(selectedRange);
+      const strength = getRangeStrengthByPosition(selectedRange);
       const selectedRangeHandStrings = getInitialHandRangeArray()
-        .slice(0, tierIndex + 1)
+        .slice(0, strength)
         .flat();
+      const isHeroHand = hand === result.hand;
 
-      return selectedRangeHandStrings.includes(toHandSymbol(hand));
+      return (
+        isHeroHand || selectedRangeHandStrings.includes(toHandSymbol(hand))
+      );
     }),
   };
 

@@ -64,7 +64,6 @@ describe("getRangeStrengthByPosition", () => {
 
   it("ポジションに応じた強さを返す", () => {
     expect(getRangeStrengthByPosition(8, 9)).toBe(6);
-    expect(getRangeStrengthByPosition(3, 9)).toBe(3);
     expect(getRangeStrengthByPosition(3, 9)).toBe(3); // UTG
   });
 });

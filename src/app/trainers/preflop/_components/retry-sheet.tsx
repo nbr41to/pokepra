@@ -113,7 +113,7 @@ export const RetrySheet = ({
                 <span className="font-bold text-sm">VS</span>
                 <Combo
                   hand={result.data
-                    .filter((r) => r.hand === selected?.join(" "))[0]
+                    .filter((r) => r.hand === hero.join(" "))[0]
                     .hand.split(" ")}
                 />
               </div>

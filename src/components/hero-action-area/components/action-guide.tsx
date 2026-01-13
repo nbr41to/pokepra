@@ -16,9 +16,9 @@ export const ActionGuide = ({
   const tapLabel = doubleTapActionName ?? "Action";
 
   return (
-    <div className="absolute top-4 left-4 z-20 rounded-md border border-teal-400/70 bg-teal-200/20 px-3 py-2 text-teal-500 text-xs shadow-sm">
-      {showFold && <div>Fold: カードを上にスワイプ</div>}
-      {showDoubleTap && <div>{tapLabel}: カードをダブルタップ</div>}
+    <div className="absolute top-2 right-3 z-20 flex gap-x-3 rounded-md text-teal-500 text-xs">
+      {showDoubleTap && <div>{tapLabel}: ダブルタップ</div>}
+      {showFold && <div>Fold: 上にスワイプ</div>}
     </div>
   );
 };

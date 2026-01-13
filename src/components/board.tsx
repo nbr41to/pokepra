@@ -45,22 +45,12 @@ export const Board = ({ cards }: Props) => {
   }, [cards]);
 
   return (
-    <div className="mx-auto flex w-88 gap-x-2">
+    <div className="flex w-81 gap-x-1.5">
       {cardStates.map(({ card, delay, instant, animKey }) => {
         return (
           <FlipCard key={animKey} rs={card} delayMs={delay} instant={instant} />
         );
       })}
-      <style jsx>{`
-        @keyframes flipCard {
-          from {
-            transform: rotateY(180deg);
-          }
-          to {
-            transform: rotateY(0deg);
-          }
-        }
-      `}</style>
     </div>
   );
 };
@@ -80,7 +70,7 @@ const FlipCard = ({
     : `flip 300ms ease-out ${delayMs}ms forwards`;
 
   return (
-    <div className="perspective-distant relative h-22 w-16">
+    <div className="perspective-distant relative h-20 w-15">
       <div
         className="transform-3d relative h-full w-full"
         style={{

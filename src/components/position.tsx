@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Fragment } from "react/jsx-runtime";
 import { cn } from "@/lib/utils";
+import { getPositionLabel } from "@/utils/position";
 
 type Props = {
   total: number;
@@ -11,14 +12,10 @@ export function Position({ total, playerPosition }: Props) {
   return (
     <div className="flex w-full justify-center gap-x-px pt-2">
       {Array.from({ length: total }).map((_, index) => {
-        let label = "";
-        if (index === 0) label = "UTG";
-        else if (index === total - 3) label = "BTN";
-        else if (index === total - 2) label = "SB";
-        else if (index === total - 1) label = "BB";
-        else label = `+${index.toString()}`;
-
-        const isPlayer = index === playerPosition - 1;
+        const positionValue =
+          index + 3 > total ? (index + 3) % total : index + 3;
+        const isPlayer = positionValue === playerPosition;
+        const label = getPositionLabel(positionValue, total);
 
         return (
           <Fragment key={index + label}>

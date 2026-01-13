@@ -36,7 +36,6 @@ export function Main() {
 
   const [board, setBoard] = useState(initialBoard);
   const [compare, setCompare] = useState(""); // ハンド ;区切り
-  console.log(board);
 
   const splitCards = (val: string) => {
     if (!val) return [] as string[];
@@ -114,6 +113,7 @@ export function Main() {
   };
 
   const usedCards = [...splitCards(board), ...splitCards(compare)];
+  const rangeExcludes = splitCards(board);
 
   return (
     <div className="w-full max-w-full space-y-3">
@@ -140,7 +140,11 @@ export function Main() {
 
       <div className="-mt-3">
         <p className="text-center text-xs">set range hands</p>
-        <SetRangeHands total={9} setValue={setCompare} excludes={usedCards} />
+        <SetRangeHands
+          total={9}
+          setValue={setCompare}
+          excludes={rangeExcludes}
+        />
       </div>
 
       <Button

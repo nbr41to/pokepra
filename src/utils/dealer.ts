@@ -1,6 +1,11 @@
 import { CARD_RANKS, CARD_SUITS, getAllCards } from "@/utils/card";
 import { genRandomInt, shuffleArray } from "./general";
 import { getRangeStrengthByHand } from "./hand-range";
+import { genPositionNumber } from "./position";
+
+/**
+ * ゲームの進行に関わるutils
+ */
 
 /**
  * Deck
@@ -52,16 +57,10 @@ function genHands(strength = 0, excludes: string[] = []) {
     hand2 =
       CARD_RANKS[genRandomInt(CARD_RANKS.length)] +
       CARD_SUITS[genRandomInt(CARD_SUITS.length)];
-
-    // hand1とhand2が被らないようにする
-    while (hand1 === hand2) {
-      hand2 =
-        CARD_RANKS[genRandomInt(CARD_RANKS.length)] +
-        CARD_SUITS[genRandomInt(CARD_SUITS.length)];
-    }
   } while (
     hand1 === hand2 ||
-    (strength !== 0 && getRangeStrengthByHand([hand1, hand2]) <= strength) ||
+    (strength !== 0 && getRangeStrengthByHand([hand1, hand2]) > strength) ||
+    getRangeStrengthByHand([hand1, hand2]) === -1 ||
     excludes.includes(hand1) ||
     excludes.includes(hand2)
   ); // includeTiesが指定されている場合、該当するtierに含まれるまで繰り返す
@@ -107,10 +106,26 @@ function getShortRankName(handName: string) {
   }
 }
 
+/**
+ * 新しいゲームを開始する最初の準備
+ */
+
+function shuffleAndDeal(setting: { people: number; heroStrength: number }) {
+  const { people, heroStrength } = setting;
+
+  const position = genPositionNumber(people);
+  const hero = genHands(heroStrength);
+  const villain = genHands(heroStrength, hero);
+  const deck = getShuffledDeck([...hero, ...villain]);
+
+  return { position, hero, villain, deck, board: [] };
+}
+
 export {
   getShuffledDeck,
   getAllCards,
   getAllCombos,
   genHands,
   getShortRankName,
+  shuffleAndDeal,
 };

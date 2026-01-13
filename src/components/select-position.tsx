@@ -1,5 +1,6 @@
 import { Fragment } from "react/jsx-runtime";
 import { cn } from "@/lib/utils";
+import { getPositionLabel } from "@/utils/position";
 
 type Props = {
   total: number;
@@ -11,12 +12,9 @@ export function SelectPosition({ total, value, setValue }: Props) {
   return (
     <div className="flex w-full flex-wrap justify-center gap-x-1 pt-2">
       {Array.from({ length: total }).map((_, index) => {
-        let label = "";
-        if (index === 0) label = "UTG";
-        else if (index === total - 3) label = "BTN";
-        else if (index === total - 2) label = "SB";
-        else if (index === total - 1) label = "BB";
-        else label = `+${index.toString()}`;
+        const positionValue =
+          index + 3 > total ? (index + 3) % total : index + 3;
+        const label = getPositionLabel(positionValue, total);
 
         return (
           <Fragment key={index + label}>
@@ -24,9 +22,9 @@ export function SelectPosition({ total, value, setValue }: Props) {
               type="button"
               className={cn(
                 "flex size-8 items-center justify-center rounded-full border-2 border-gray-300 bg-background font-bold font-noto-sans-jp text-[10px]/[1]",
-                value === index + 1 && "bg-blue-500 text-white",
+                value === positionValue && "bg-blue-500 text-white",
               )}
-              onClick={() => setValue(index + 1)}
+              onClick={() => setValue(positionValue)}
             >
               {label}
             </button>
