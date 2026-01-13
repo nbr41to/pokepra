@@ -16,16 +16,14 @@ export async function runSimulateVsListEquity(
     useProgressExport = false,
   }: { onProgress?: (pct: number) => void; useProgressExport?: boolean } = {},
 ): Promise<EquityPayload> {
+  const start = performance.now(); // For performance measurement
   const [heroStr, boardStr, compareStr] = [
     hero.join(" "),
     board.join(" "),
     compare.join("; ").replaceAll(",", " "),
   ];
 
-  if (
-    heroStr.trim().length < 4 ||
-    compareStr.trim().length < 2
-  ) {
+  if (heroStr.trim().length < 4 || compareStr.trim().length < 2) {
     return {
       hand: heroStr,
       equity: 0,
@@ -33,7 +31,6 @@ export async function runSimulateVsListEquity(
     };
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 300));
   const heroTrimmed = heroStr.trim();
   const boardTrimmed = boardStr.trim();
   const compareTrimmed = compareStr.trim();
@@ -127,6 +124,11 @@ export async function runSimulateVsListEquity(
   }
 
   data.sort((a, b) => b.equity - a.equity);
+
+  const end = performance.now();
+  console.log(
+    `runSimulateVsListEquity completed in ${(end - start).toFixed(2)} ms`,
+  );
 
   return {
     hand: heroTrimmed,

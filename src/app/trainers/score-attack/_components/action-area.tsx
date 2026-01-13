@@ -8,8 +8,11 @@ import {
   simulateVsListEquity,
   simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
+import {
+  getHandsInRange,
+  getRangeStrengthByPosition,
+  toHandSymbol,
+} from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 
 export const ActionArea = () => {
@@ -34,7 +37,7 @@ export const ActionArea = () => {
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
-      compare: getHandsByTiers(getTierIndexByPosition(position), [
+      compare: getHandsInRange(getRangeStrengthByPosition(position), [
         ...hero,
         ...board,
       ]),
@@ -62,7 +65,7 @@ export const ActionArea = () => {
   const rankPromise = simulateVsListWithRanks({
     hero,
     board,
-    compare: getHandsByTiers(getTierIndexByPosition(9), [
+    compare: getHandsInRange(getRangeStrengthByPosition(9), [
       ...hero,
       ...board,
     ]),
@@ -107,7 +110,7 @@ export const ActionArea = () => {
       </div>
 
       <div className="flex justify-center gap-4 px-2 py-2">
-        <HandRangeDrawer mark={getHandString(hero)} disabled={!preflop} />
+        <HandRangeDrawer mark={toHandSymbol(hero)} disabled={!preflop} />
         <AnalyticsSheet
           board={board}
           rankPromise={rankPromise}

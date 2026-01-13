@@ -1,7 +1,7 @@
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
-import { getHandString } from "@/utils/preflop-range";
+import { toHandSymbol } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 import { RetrySheet } from "./retry-sheet";
@@ -39,7 +39,7 @@ export const ActionArea = () => {
 
       <div className="flex justify-center gap-4 px-2 py-2">
         <RetrySheet hero={hero} result={result} disabled={!preflop} />
-        <HandRangeDrawer mark={getHandString(hero)} disabled={!preflop} />
+        <HandRangeDrawer mark={toHandSymbol(hero)} disabled={!preflop} />
         <InformationSheet />
       </div>
     </div>

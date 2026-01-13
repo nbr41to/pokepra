@@ -15,7 +15,7 @@ import {
   type RankDistributionEntry,
   simulateRankDistributionWithProgress,
 } from "@/lib/wasm/simulation";
-import { getHandString } from "@/utils/preflop-range";
+import { toHandSymbol } from "@/utils/hand-range";
 
 const HAND_RARITY = {
   "Straight Flush": 0.0015,
@@ -74,7 +74,7 @@ export function Main() {
         score: Object.entries(r.results).reduce((score, [handName, count]) => {
           const rarity = HAND_RARITY[handName as keyof typeof HAND_RARITY] || 0;
           const rankEq =
-            RANKING.find((h) => h.hand === getHandString(r.hand.split(" ")))
+            RANKING.find((h) => h.hand === toHandSymbol(r.hand.split(" ")))
               ?.player10 || 1;
           const K = 0.05; // ランク補正の調整用定数
 
@@ -98,7 +98,7 @@ export function Main() {
         (score, [handName, count]) => {
           const rarity = HAND_RARITY[handName as keyof typeof HAND_RARITY] || 0;
           const rankEq =
-            RANKING.find((h) => h.hand === getHandString(r.hand.split(" ")))
+            RANKING.find((h) => h.hand === toHandSymbol(r.hand.split(" ")))
               ?.player10 || 1;
           const K = 0.05; // ランク補正の調整用定数
 

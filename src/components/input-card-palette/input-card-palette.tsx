@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { RANKS, SUITS } from "@/constants/card";
+import { CARD_RANKS, CARD_SUITS } from "@/utils/card";
 import { DeleteButton } from "./delete-button";
 import { InputRankButton } from "./input-rank-button";
 import { InputSuitButton } from "./input-suit-button";
@@ -128,7 +128,7 @@ export const InputCardPalette = ({
       id="input-card-palette"
     >
       <div className="flex flex-col gap-y-1">
-        {SUITS.map((suit) => (
+        {CARD_SUITS.map((suit) => (
           <InputSuitButton
             key={suit}
             suit={suit}
@@ -142,7 +142,7 @@ export const InputCardPalette = ({
       </div>
       <div className="flex h-full w-[256px] flex-wrap gap-1">
         <div className="flex flex-col gap-y-1">
-          {RANKS.slice(0, 4).map((rank) => (
+          {CARD_RANKS.slice(0, 4).map((rank) => (
             <InputRankButton
               key={rank}
               rank={rank}
@@ -155,7 +155,7 @@ export const InputCardPalette = ({
           ))}
         </div>
         <div className="flex flex-col gap-y-1">
-          {RANKS.slice(4, 8).map((rank) => (
+          {CARD_RANKS.slice(4, 8).map((rank) => (
             <InputRankButton
               key={rank}
               rank={rank}
@@ -168,7 +168,7 @@ export const InputCardPalette = ({
           ))}
         </div>
         <div className="flex flex-col gap-y-1">
-          {RANKS.slice(8, 12).map((rank) => (
+          {CARD_RANKS.slice(8, 12).map((rank) => (
             <InputRankButton
               key={rank}
               rank={rank}
@@ -181,7 +181,7 @@ export const InputCardPalette = ({
           ))}
         </div>
         <div className="flex flex-col justify-between gap-y-1">
-          {RANKS.slice(12, 13).map((rank) => (
+          {CARD_RANKS.slice(12, 13).map((rank) => (
             <InputRankButton
               key={rank}
               rank={rank}

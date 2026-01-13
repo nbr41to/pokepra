@@ -1,16 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { RANK_ORDER, RANKS } from "@/constants/card";
+import HAND_RANGES from "@/data/initial-hand-ranges.json";
 import { parseRangeToHands } from "@/lib/wasm/simulation";
-import { TIERS_RANGES } from "@/constants/tiers.range";
-import { getHandString } from "@/utils/preflop-range";
+import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
+import { toHandSymbol } from "@/utils/hand-range";
 
-const DEFAULT_RANGE = TIERS_RANGES[0] ?? "AA,KK,QQ,AKs,AKo";
+const DEFAULT_RANGE = HAND_RANGES[0] ?? "AA,KK,QQ,AKs,AKo";
 
 const buildRangeUpToTier = (tier: number) => {
-  const upperBound = Math.max(1, Math.min(tier, TIERS_RANGES.length));
-  return TIERS_RANGES.slice(0, upperBound).join(",");
+  const upperBound = Math.max(1, Math.min(tier, HAND_RANGES.length));
+  return HAND_RANGES.slice(0, upperBound).join(",");
 };
 const PREVIEW_LIMIT = 40;
 
@@ -21,7 +21,7 @@ const formatHands = (hands: string[][], limit: number) =>
     .join(", ");
 
 const rankIndex = (rank: string) =>
-  RANKS.indexOf(rank as (typeof RANKS)[number]);
+  CARD_RANKS.indexOf(rank as (typeof CARD_RANKS)[number]);
 
 type HandCode = {
   hi: string;
@@ -33,8 +33,7 @@ type HandCode = {
 const parseHandCode = (raw: string): HandCode | null => {
   const trimmed = raw.trim();
   if (trimmed.length < 2) return null;
-  const suitedness =
-    trimmed.length >= 3 ? (trimmed.at(-1) as "s" | "o") : null;
+  const suitedness = trimmed.length >= 3 ? (trimmed.at(-1) as "s" | "o") : null;
   if (suitedness && suitedness !== "s" && suitedness !== "o") return null;
   const ranks = trimmed.slice(0, 2);
   if (ranks.length !== 2) return null;
@@ -44,8 +43,7 @@ const parseHandCode = (raw: string): HandCode | null => {
   if (r1 === r2) {
     return { hi: r1, lo: r2, suitedness: null, raw: `${r1}${r2}` };
   }
-  const [hi, lo] =
-    rankIndex(r1) < rankIndex(r2) ? [r1, r2] : [r2, r1];
+  const [hi, lo] = rankIndex(r1) < rankIndex(r2) ? [r1, r2] : [r2, r1];
   return {
     hi,
     lo,
@@ -54,11 +52,8 @@ const parseHandCode = (raw: string): HandCode | null => {
   };
 };
 
-const buildHandCode = (
-  hi: string,
-  lo: string,
-  suitedness: "s" | "o" | null,
-) => (hi === lo ? `${hi}${lo}` : `${hi}${lo}${suitedness ?? ""}`);
+const buildHandCode = (hi: string, lo: string, suitedness: "s" | "o" | null) =>
+  hi === lo ? `${hi}${lo}` : `${hi}${lo}${suitedness ?? ""}`;
 
 const expandPlus = (hand: HandCode): string[] => {
   const hiIdx = rankIndex(hand.hi);
@@ -67,7 +62,7 @@ const expandPlus = (hand: HandCode): string[] => {
   if (hand.hi === hand.lo) {
     const out: string[] = [];
     for (let i = hiIdx; i >= 0; i -= 1) {
-      const r = RANKS[i];
+      const r = CARD_RANKS[i];
       out.push(`${r}${r}`);
     }
     return out;
@@ -76,8 +71,8 @@ const expandPlus = (hand: HandCode): string[] => {
   if (gap === 1) {
     const out: string[] = [];
     for (let i = hiIdx; i >= 0; i -= 1) {
-      const hi = RANKS[i];
-      const lo = RANKS[i + gap];
+      const hi = CARD_RANKS[i];
+      const lo = CARD_RANKS[i + gap];
       if (!hi || !lo) continue;
       out.push(buildHandCode(hi, lo, hand.suitedness));
     }
@@ -85,7 +80,7 @@ const expandPlus = (hand: HandCode): string[] => {
   }
   const out: string[] = [];
   for (let i = loIdx; i > hiIdx; i -= 1) {
-    const lo = RANKS[i];
+    const lo = CARD_RANKS[i];
     out.push(buildHandCode(hand.hi, lo, hand.suitedness));
   }
   return out;
@@ -100,7 +95,7 @@ const compressStartingHands = (hands: string[]) => {
 
   const tokens: string[] = [];
 
-  const pairRanks = RANKS.filter((r) => normalized.has(`${r}${r}`));
+  const pairRanks = CARD_RANKS.filter((r) => normalized.has(`${r}${r}`));
   const pairIndexes = pairRanks.map(rankIndex).sort((a, b) => a - b);
   let i = 0;
   while (i < pairIndexes.length) {
@@ -114,22 +109,22 @@ const compressStartingHands = (hands: string[]) => {
       end = pairIndexes[i];
     }
     if (end !== start) {
-      const high = RANKS[start];
-      const low = RANKS[end];
+      const high = CARD_RANKS[start];
+      const low = CARD_RANKS[end];
       if (start === 0) {
         tokens.push(`${low}${low}+`);
       } else {
         tokens.push(`${high}${high}-${low}${low}`);
       }
       for (let idx = start; idx <= end; idx += 1) {
-        const r = RANKS[idx];
+        const r = CARD_RANKS[idx];
         normalized.delete(`${r}${r}`);
       }
     }
     i += 1;
   }
 
-  for (const r of RANKS) {
+  for (const r of CARD_RANKS) {
     const pair = `${r}${r}`;
     if (normalized.has(pair)) {
       tokens.push(pair);
@@ -198,16 +193,16 @@ const compressStartingHands = (hands: string[]) => {
         end = hiIndexes[j];
       }
       if (end !== start) {
-        const hiStart = RANKS[start];
-        const loStart = RANKS[start + gap];
-        const hiEnd = RANKS[end];
-        const loEnd = RANKS[end + gap];
+        const hiStart = CARD_RANKS[start];
+        const loStart = CARD_RANKS[start + gap];
+        const hiEnd = CARD_RANKS[end];
+        const loEnd = CARD_RANKS[end + gap];
         if (hiStart && loStart && hiEnd && loEnd) {
           const token = `${hiStart}${loStart}-${hiEnd}${loEnd}${suitedness ?? ""}`;
           const covered: string[] = [];
           for (let idx = start; idx <= end; idx += 1) {
-            const hi = RANKS[idx];
-            const lo = RANKS[idx + gap];
+            const hi = CARD_RANKS[idx];
+            const lo = CARD_RANKS[idx + gap];
             if (!hi || !lo) continue;
             covered.push(buildHandCode(hi, lo, suitedness));
           }
@@ -247,12 +242,12 @@ export function Main() {
 
   const preview = useMemo(() => formatHands(hands, PREVIEW_LIMIT), [hands]);
   const rangeSet = useMemo(() => {
-    return new Set(hands.map((hand) => getHandString(hand)));
+    return new Set(hands.map((hand) => toHandSymbol(hand)));
   }, [hands]);
 
   const handleTierChange = (value: number) => {
     const next =
-      value >= 1 && value <= TIERS_RANGES.length
+      value >= 1 && value <= HAND_RANGES.length
         ? buildRangeUpToTier(value)
         : DEFAULT_RANGE;
     setTier(value);
@@ -263,7 +258,7 @@ export function Main() {
   const handleParse = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       const parsed = await parseRangeToHands({ range });
       setHands(parsed);
@@ -294,14 +289,14 @@ export function Main() {
     <div className="w-full max-w-2xl space-y-6">
       <div className="space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-wrap items-center gap-3">
-          <label className="text-sm font-medium text-gray-700">
+          <label className="font-medium text-gray-700 text-sm">
             Tier
             <select
               className="ml-2 rounded border border-gray-300 px-2 py-1 text-sm"
               value={tier}
               onChange={(event) => handleTierChange(Number(event.target.value))}
             >
-              {TIERS_RANGES.map((_, idx) => (
+              {HAND_RANGES.map((_, idx) => (
                 <option key={`tier-${idx + 1}`} value={idx + 1}>
                   Tier {idx + 1}
                 </option>
@@ -309,7 +304,7 @@ export function Main() {
             </select>
           </label>
           <button
-            className="rounded bg-black px-3 py-1.5 text-sm font-semibold text-white disabled:opacity-60"
+            className="rounded bg-black px-3 py-1.5 font-semibold text-sm text-white disabled:opacity-60"
             onClick={handleParse}
             disabled={loading}
             type="button"
@@ -317,7 +312,7 @@ export function Main() {
             {loading ? "Parsing..." : "Parse Range"}
           </button>
           <button
-            className="rounded border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-700 disabled:opacity-60"
+            className="rounded border border-gray-300 px-3 py-1.5 font-semibold text-gray-700 text-sm disabled:opacity-60"
             onClick={handleSimplify}
             disabled={loading || simplifyLocked}
             type="button"
@@ -325,7 +320,10 @@ export function Main() {
             {loading ? "Simplifying..." : "Simplify"}
           </button>
         </div>
-        <label className="block text-sm font-medium text-gray-700" htmlFor="range-input">
+        <label
+          className="block font-medium text-gray-700 text-sm"
+          htmlFor="range-input"
+        >
           Range (comma separated)
         </label>
         <textarea
@@ -337,7 +335,7 @@ export function Main() {
             setSimplifyLocked(false);
           }}
         />
-        <p className="text-xs text-gray-500">
+        <p className="text-gray-500 text-xs">
           例: <span className="font-mono">AA,KK,AKs,AQo</span> /{" "}
           <span className="font-mono">99+,ATs+,AQo+</span>
         </p>
@@ -345,19 +343,17 @@ export function Main() {
 
       <div className="space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <span className="text-sm font-semibold text-gray-800">Result</span>
-          <span className="text-xs text-gray-500">
-            count: {hands.length}
-          </span>
+          <span className="font-semibold text-gray-800 text-sm">Result</span>
+          <span className="text-gray-500 text-xs">count: {hands.length}</span>
         </div>
         {error ? (
-          <p className="text-sm text-red-600">{error}</p>
+          <p className="text-red-600 text-sm">{error}</p>
         ) : (
           <>
-            <p className="text-xs text-gray-500">
+            <p className="text-gray-500 text-xs">
               preview ({Math.min(hands.length, PREVIEW_LIMIT)}):
             </p>
-            <p className="break-words text-sm text-gray-800">
+            <p className="break-words text-gray-800 text-sm">
               {hands.length === 0 ? "-" : preview}
             </p>
           </>
@@ -365,22 +361,23 @@ export function Main() {
       </div>
 
       <div className="space-y-2 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-        <div className="text-sm font-semibold text-gray-800">Range Table</div>
+        <div className="font-semibold text-gray-800 text-sm">Range Table</div>
         <div className="grid w-fit grid-cols-13 border-r border-b">
-          {RANKS.map((_rank, rowIndex) => {
-            const prefixRank = RANKS[rowIndex];
-            return RANKS.map((rank, column) => {
+          {CARD_RANKS.map((_rank, rowIndex) => {
+            const prefixRank = CARD_RANKS[rowIndex];
+            return CARD_RANKS.map((rank, column) => {
               const orderedRanks = [prefixRank, rank]
-                .sort((a, b) => RANK_ORDER[b] - RANK_ORDER[a])
+                .sort((a, b) => CARD_RANK_ORDER[b] - CARD_RANK_ORDER[a])
                 .join("");
               const ranksString =
                 orderedRanks +
                 (rank !== prefixRank ? (column < rowIndex ? "o" : "s") : "");
               const isActive = rangeSet.has(ranksString);
+
               return (
                 <div
-                  key={`${rank}-${column}`}
-                  className={`grid h-5 w-full px-0.5 place-items-center border-t border-l text-[10px] ${
+                  key={ranksString}
+                  className={`grid h-5 w-full place-items-center border-t border-l px-0.5 text-[10px] ${
                     isActive ? "bg-emerald-500 text-white" : "text-foreground"
                   }`}
                 >

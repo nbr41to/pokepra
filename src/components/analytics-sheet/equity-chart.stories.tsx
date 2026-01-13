@@ -12,7 +12,7 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {},
   args: {
-    promise: Promise.resolve(example),
+    result: example,
   },
 } satisfies Meta<typeof EquityChart>;
 
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Suspense fallback={<EquityChartSkeleton />}>
-      <EquityChart promise={Promise.resolve(example)} />
+      <EquityChart result={example} />
     </Suspense>
   ),
 };
@@ -30,7 +30,7 @@ export const Default: Story = {
 export const Threshold20: Story = {
   render: () => (
     <Suspense fallback={<EquityChartSkeleton step={20} />}>
-      <EquityChart promise={Promise.resolve(example)} step={20} />
+      <EquityChart result={example} step={20} />
     </Suspense>
   ),
 };

@@ -1,7 +1,9 @@
 import { Fragment } from "react/jsx-runtime";
 import { cn } from "@/lib/utils";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getTierIndexByPosition } from "@/utils/preflop-range";
+import {
+  getHandsInRange,
+  getRangeStrengthByPosition,
+} from "@/utils/hand-range";
 
 type Props = {
   total: number;
@@ -20,8 +22,8 @@ export function SetRangeHands({ total, setValue, excludes = [] }: Props) {
         else if (index === total - 1) label = "BB";
         else label = `+${index.toString()}`;
 
-        const tierIndex = getTierIndexByPosition(index + 1, total);
-        const hands = getHandsByTiers(tierIndex, excludes);
+        const strength = getRangeStrengthByPosition(index + 1, total);
+        const hands = getHandsInRange(strength, excludes);
 
         return (
           <Fragment key={index + label}>

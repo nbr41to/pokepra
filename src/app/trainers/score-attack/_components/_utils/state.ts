@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import type { EquityPayload } from "@/lib/wasm/simulation";
 import { genHands, getShuffledDeck } from "@/utils/dealer";
+import { judgeInRange } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";
-import { judgeInRange } from "@/utils/preflop-range";
 
 const PEOPLE = 9;
 const DEFAULT_TIER = 6;

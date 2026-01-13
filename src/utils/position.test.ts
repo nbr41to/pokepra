@@ -1,53 +1,40 @@
-import { describe, expect, it } from "bun:test";
-import { genPositionNumber, getPositionString } from "./position";
+import { afterEach, describe, expect, it, vi } from "bun:test";
+import { genPositionNumber, getPositionLabel } from "./position";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("genPositionNumber", () => {
-  it("maxPeople が範囲外なら例外", () => {
+  it("maxPeopleが範囲外ならエラー", () => {
     expect(() => genPositionNumber(1)).toThrow();
     expect(() => genPositionNumber(10)).toThrow();
   });
 
-  it("1..maxPeople の範囲で値を返す", () => {
-    const maxPeople = 9;
-    for (let i = 0; i < 200; i += 1) {
-      const value = genPositionNumber(maxPeople);
-      expect(value).toBeGreaterThanOrEqual(1);
-      expect(value).toBeLessThanOrEqual(maxPeople);
-      expect(value).not.toBe(maxPeople - 1); // SB の座席番号は除外
-    }
-  });
-
-  it("SB は再抽選されるので出現しない", () => {
-    const maxPeople = 9;
-    const samples = Array.from({ length: 500 }, () =>
-      genPositionNumber(maxPeople),
-    );
-    expect(samples).not.toContain(maxPeople - 1);
+  it("1〜maxPeopleの範囲で返す", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    expect(genPositionNumber(9)).toBe(1);
+    vi.spyOn(Math, "random").mockReturnValue(0.999);
+    expect(genPositionNumber(9)).toBe(9);
   });
 });
 
-describe("getPositionString", () => {
-  it("maxPeople が範囲外なら例外", () => {
-    expect(() => getPositionString(1, 1)).toThrow();
-    expect(() => getPositionString(1, 10)).toThrow();
+describe("getPositionLabel", () => {
+  it("2人の場合の表記", () => {
+    expect(getPositionLabel(1, 2)).toBe("BB");
+    expect(getPositionLabel(2, 2)).toBe("BTN/SB");
   });
 
-  it("positionNumber が範囲外なら例外", () => {
-    expect(() => getPositionString(0, 6)).toThrow();
-    expect(() => getPositionString(7, 6)).toThrow();
+  it("3人以上の場合の表記", () => {
+    expect(getPositionLabel(1, 9)).toBe("SB");
+    expect(getPositionLabel(2, 9)).toBe("BB");
+    expect(getPositionLabel(3, 9)).toBe("UTG");
+    expect(getPositionLabel(9, 9)).toBe("BTN");
+    expect(getPositionLabel(4, 9)).toBe("+1");
   });
 
-  it("9人テーブルでの対応を返す", () => {
-    expect(getPositionString(1, 9)).toBe("UTG");
-    expect(getPositionString(2, 9)).toBe("+1");
-    expect(getPositionString(6, 9)).toBe("+5");
-    expect(getPositionString(7, 9)).toBe("BTN");
-    expect(getPositionString(8, 9)).toBe("SB");
-    expect(getPositionString(9, 9)).toBe("BB");
-  });
-
-  it("ヘッズアップ(2人)での対応を返す", () => {
-    expect(getPositionString(1, 2)).toBe("BB");
-    expect(getPositionString(2, 2)).toBe("BTN\nSB");
+  it("範囲外ならエラー", () => {
+    expect(() => getPositionLabel(0, 9)).toThrow();
+    expect(() => getPositionLabel(1, 10)).toThrow();
   });
 });

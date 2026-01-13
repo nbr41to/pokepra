@@ -1,9 +1,9 @@
-import type { SUIT } from "@/constants/card";
 import { cn } from "@/lib/utils";
+import type { CARD_SUIT } from "@/utils/card";
 import { SuitIcon } from "../ui/suit-icon";
 
 type Props = {
-  suit: SUIT;
+  suit: CARD_SUIT;
   onClick: () => void;
   pending?: boolean; // 入力中
   disabled?: boolean;

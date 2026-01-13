@@ -7,8 +7,10 @@ import {
   simulateVsListEquity,
   simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
-import { getHandsByTiers } from "@/utils/dealer";
-import { getTierIndexByPosition } from "@/utils/preflop-range";
+import {
+  getHandsInRange,
+  getRangeStrengthByPosition,
+} from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 import { BetSlider } from "./bet-slider";
 import { SituationCopyButton } from "./situation-copy-button";
@@ -36,7 +38,7 @@ export const ActionArea = () => {
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
-      compare: getHandsByTiers(getTierIndexByPosition(position), [
+      compare: getHandsInRange(getRangeStrengthByPosition(position), [
         ...hero,
         ...board,
       ]),
@@ -57,7 +59,7 @@ export const ActionArea = () => {
   const rankPromise = simulateVsListWithRanks({
     hero,
     board,
-    compare: getHandsByTiers(getTierIndexByPosition(9), [
+    compare: getHandsInRange(getRangeStrengthByPosition(9), [
       ...hero,
       ...board,
     ]),

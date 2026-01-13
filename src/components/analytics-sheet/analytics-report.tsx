@@ -10,9 +10,12 @@ import {
 import { use, useCallback, useRef, useState } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TIERS } from "@/constants/tiers";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { getHandString, getTierIndexByPosition } from "@/utils/preflop-range";
+import {
+  getInitialHandRangeArray,
+  getRangeStrengthByPosition,
+  toHandSymbol,
+} from "@/utils/hand-range";
 import { SelectPosition } from "../select-position";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -31,9 +34,12 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
   const filteredResult = {
     ...result,
     data: result.data.filter(({ hand }) => {
-      const tierIndex = getTierIndexByPosition(selectedRange);
-      const selectedRangeHandStrings = TIERS.slice(0, tierIndex + 1).flat();
-      return selectedRangeHandStrings.includes(getHandString(hand.split(" ")));
+      const tierIndex = getRangeStrengthByPosition(selectedRange);
+      const selectedRangeHandStrings = getInitialHandRangeArray()
+        .slice(0, tierIndex + 1)
+        .flat();
+
+      return selectedRangeHandStrings.includes(toHandSymbol(hand));
     }),
   };
 

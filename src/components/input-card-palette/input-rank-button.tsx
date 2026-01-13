@@ -1,8 +1,8 @@
-import type { RANKS } from "@/constants/card";
 import { cn } from "@/lib/utils";
+import type { CARD_RANKS } from "@/utils/card";
 
 type Props = {
-  rank: (typeof RANKS)[number];
+  rank: (typeof CARD_RANKS)[number];
   onClick: () => void;
   pending?: boolean; // 入力中
   disabled?: boolean;

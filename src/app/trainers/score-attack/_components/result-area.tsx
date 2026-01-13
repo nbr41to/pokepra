@@ -1,7 +1,7 @@
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { cn } from "@/lib/utils";
-import { judgeInRange } from "@/utils/preflop-range";
+import { judgeInRange } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 
 export const ResultArea = () => {

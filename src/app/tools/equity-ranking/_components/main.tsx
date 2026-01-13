@@ -14,7 +14,12 @@ import {
   type simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "@/lib/wasm/simulation";
-import { getHandsByTiers, getShuffledDeck } from "@/utils/dealer";
+
+import { getShuffledDeck } from "@/utils/dealer";
+import {
+  getHandsInRange,
+  getRangeStrengthByPosition,
+} from "@/utils/hand-range";
 
 const splitCards = (val: string) => {
   if (!val) return [] as string[];
@@ -110,7 +115,10 @@ export function Main() {
           setHero(deck.slice(0, 2).join(" "));
           setBoard(deck.slice(2, 5).join(" "));
 
-          const allHands = getHandsByTiers(6, deck.slice(0, 5));
+          const allHands = getHandsInRange(
+            getRangeStrengthByPosition(7),
+            deck.slice(0, 5),
+          );
           const newCompare = allHands.join("; ").replaceAll(",", " ");
           setCompare(newCompare);
         }}

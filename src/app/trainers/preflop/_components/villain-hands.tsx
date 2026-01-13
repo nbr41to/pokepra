@@ -2,7 +2,7 @@ import { Redo } from "lucide-react";
 import { OtherHand } from "@/components/other-hand";
 import { cn } from "@/lib/utils";
 import type { EquityPayload } from "@/lib/wasm/types";
-import { getPositionString } from "@/utils/position";
+import { getPositionLabel } from "@/utils/position";
 
 type Props = {
   people: number;
@@ -67,7 +67,7 @@ export const VillainHands = ({
                     delay={200 * (seatNumber - position)}
                   />
                 ) : (
-                  <span>{getPositionString(seatNumber, people)}</span>
+                  <span>{getPositionLabel(seatNumber, people)}</span>
                 )}
               </div>
               {equity && result && (

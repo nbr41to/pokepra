@@ -6,12 +6,16 @@ import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import { RANK_ORDER, RANKS } from "@/constants/card";
 import { cn } from "@/lib/utils";
 import { simulateVsListEquityWithProgress } from "@/lib/wasm/simulation";
-import { getHandsByTiers, getShuffledDeck } from "@/utils/dealer";
-import { getPositionString } from "@/utils/position";
-import { getHandString } from "@/utils/preflop-range";
+import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
+import { getShuffledDeck } from "@/utils/dealer";
+import {
+  getHandsInRange,
+  getRangeStrengthByPosition,
+  toHandSymbol,
+} from "@/utils/hand-range";
+import { getPositionLabel } from "@/utils/position";
 
 export function Main() {
   const [board, setBoard] = useState("");
@@ -49,12 +53,12 @@ export function Main() {
     setLoading(true);
     setProgress(0);
 
-    const btnRangeHands = getHandsByTiers(
-      comparePositions[0],
+    const btnRangeHands = getHandsInRange(
+      getRangeStrengthByPosition(comparePositions[0]),
       splitCards(board),
     );
-    const utgRangeHands = getHandsByTiers(
-      comparePositions[1],
+    const utgRangeHands = getHandsInRange(
+      getRangeStrengthByPosition(comparePositions[1]),
       splitCards(board),
     );
 
@@ -159,7 +163,7 @@ export function Main() {
           onClick={() => {
             // ペアボードとなる3枚とランダムに生成
             const deck = getShuffledDeck();
-            const pairRank = RANKS[Math.floor(Math.random() * 13)];
+            const pairRank = CARD_RANKS[Math.floor(Math.random() * 13)];
             const pairCards = deck.filter((card) => card.startsWith(pairRank));
             const otherCards = deck.filter((card) => !pairCards.includes(card));
             const boardCards = [pairCards[0], pairCards[1], otherCards[0]];
@@ -173,7 +177,7 @@ export function Main() {
           onClick={() => {
             const deck = getShuffledDeck();
             // 2〜7の数字をランダムに並べる
-            const ramLowRanks = RANKS.slice(7, 13)
+            const ramLowRanks = CARD_RANKS.slice(7, 13)
               .sort(() => Math.random() - 0.5)
               .slice(0, 3);
             const lowCards = ramLowRanks.map(
@@ -216,8 +220,8 @@ export function Main() {
       {/* Summary */}
       {result && (
         <div>
-          {getPositionString(comparePositions[0], 9)} vs{" "}
-          {getPositionString(comparePositions[1], 9)} | EQ Ave:{" "}
+          {getPositionLabel(comparePositions[0], 9)} vs{" "}
+          {getPositionLabel(comparePositions[1], 9)} | EQ Ave:{" "}
           {(
             result.reduce((sum, r) => sum + r.equity * 100, 0) / result.length
           ).toFixed(2)}
@@ -233,17 +237,17 @@ export function Main() {
       {/* Results */}
       {result && (
         <div className="grid w-fit grid-cols-13 border-r border-b">
-          {RANKS.map((_rank, rowIndex) => {
-            const prefixRank = RANKS[rowIndex];
-            return RANKS.map((rank, column) => {
+          {CARD_RANKS.map((_rank, rowIndex) => {
+            const prefixRank = CARD_RANKS[rowIndex];
+            return CARD_RANKS.map((rank, column) => {
               const orderedRanks = [prefixRank, rank]
-                .sort((a, b) => RANK_ORDER[b] - RANK_ORDER[a])
+                .sort((a, b) => CARD_RANK_ORDER[b] - CARD_RANK_ORDER[a])
                 .join("");
               const ranksString =
                 orderedRanks +
                 (rank !== prefixRank ? (column < rowIndex ? "o" : "s") : "");
               const totalEquities = result.filter(
-                (res) => getHandString(res.hand.split(" ")) === ranksString,
+                (res) => toHandSymbol(res.hand.split(" ")) === ranksString,
               );
               const totalEquity =
                 totalEquities.reduce((sum, r) => sum + r.equity, 0) /

@@ -1,4 +1,4 @@
-import { getAllCards } from "@/utils/dealer";
+import { getAllCards } from "@/utils/card";
 import { solve, winner } from "./pokersolver";
 
 const getLeavingCards = (cards: string[]) => {

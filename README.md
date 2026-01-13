@@ -12,11 +12,33 @@
 - モーダル系のボタンを下に
 - レンジ全体のEVの算出を可能に
 - 自分だけのレンジ表を設定可能に
+- BET額で相手のハンドを絞り込むゲーム（FEの練習）
 
 ## Memo
 - `@types/bun` は bun test用
 
-## 用語の定義
+## 用語の定義と規約
+- Game関連
+    - card(playCard): カード1枚
+    - suit: スート（ハート、ダイヤ、クラブ、スペード）
+    - rank(cardRank): カードのランク（2 ~ A）
+    - hand: プレイヤーの手札（2枚）
+    - rank: 役
+    - hero: 自分のhand
+    - villain: 相手のhand
+    - board: 共有カード（3 ~ 5枚）
+    - deck: 残りのカード群
+    - street: ゲームの進行段階（preflop, flop, turn, river）
+    - people: 対戦人数
+    - position: 座席位置（1 ~ 9）
+    - pot: ポット（賭け金の合計）
+- Analytics関連
+    - trial: シミュレーション1回分
+    - result: シミュレーション結果
+    - combo: hand の組み合わせパターン
+    - eq(equity): 勝率
+    - ev(expectValue): 期待値
+    - handStrength: hand の強さ（rankの強さではない）
 
 ## パフォーマンス改善の Knowledge
 なぜここまでパフォーマンスが変わるのか（調査まとめ）

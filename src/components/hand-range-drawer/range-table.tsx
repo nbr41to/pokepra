@@ -1,6 +1,6 @@
-import { RANK_ORDER, RANKS } from "@/constants/card";
-import { TIERS } from "@/constants/tiers";
 import { cn } from "@/lib/utils";
+import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
+import { getInitialHandRangeArray } from "@/utils/hand-range";
 
 type Props = {
   mark?: string;
@@ -10,16 +10,18 @@ export const RangeTable = ({ mark }: Props) => {
   return (
     <div className="space-y-3 font-noto-sans-jp">
       <div className="grid w-fit grid-cols-13 border-r border-b">
-        {RANKS.map((_rank, rowIndex) => {
-          const prefixRank = RANKS[rowIndex];
-          return RANKS.map((rank, column) => {
+        {CARD_RANKS.map((_rank, rowIndex) => {
+          const prefixRank = CARD_RANKS[rowIndex];
+          return CARD_RANKS.map((rank, column) => {
             const orderedRanks = [prefixRank, rank]
-              .sort((a, b) => RANK_ORDER[b] - RANK_ORDER[a])
+              .sort((a, b) => CARD_RANK_ORDER[b] - CARD_RANK_ORDER[a])
               .join("");
             const ranksString =
               orderedRanks +
               (rank !== prefixRank ? (column < rowIndex ? "o" : "s") : "");
-            const tier = TIERS.findIndex((tier) => tier.includes(ranksString));
+            const tier = getInitialHandRangeArray().findIndex((tier) =>
+              tier.includes(ranksString),
+            );
 
             return (
               <div
