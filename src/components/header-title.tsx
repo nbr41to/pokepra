@@ -18,7 +18,7 @@ export const HeaderTitle = ({ title, description, hidable = false }: Props) => {
 
   return (
     <div className="grid w-full place-content-center p-2">
-      <div className="relative">
+      <div className="relative w-fit">
         <h1 className="text-xl">{title}</h1>{" "}
         <Button
           size="icon"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
@@ -15,11 +15,6 @@ import {
   type simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "@/lib/wasm/simulation";
-import { getShuffledDeck } from "@/utils/dealer";
-import {
-  getHandsInRange,
-  getRangeStrengthByPosition,
-} from "@/utils/hand-range";
 
 const splitCards = (val: string) => {
   if (!val) return [] as string[];
@@ -31,11 +26,14 @@ const splitCards = (val: string) => {
     .filter(Boolean);
 };
 
-export function Main() {
-  const params = useSearchParams();
-  const initialHero = params.get("hero")?.replaceAll(",", " ") || "";
-  const initialBoard = params.get("board")?.replaceAll(",", " ") || "";
-
+type Props = {
+  hero?: string;
+  board?: string;
+};
+export function Main({
+  hero: initialHero = "",
+  board: initialBoard = "",
+}: Props) {
   const [hero, setHero] = useState(initialHero);
   const [board, setBoard] = useState(initialBoard);
   const [compare, setCompare] = useState(""); // 想定する相手のハンド ;区切り
@@ -77,29 +75,51 @@ export function Main() {
   ];
   const rangeExcludes = [...splitCards(hero), ...splitCards(board)];
 
+  const scrollToMyHand = (smooth = false) => {
+    const element = document.getElementById(hero);
+    if (element) {
+      element.scrollIntoView({
+        behavior: smooth ? "smooth" : "auto",
+        block: "center",
+      });
+    }
+  };
+  const scrollToTop = (smooth = false) => {
+    window.scrollTo({
+      top: 0,
+      behavior: smooth ? "smooth" : "auto",
+    });
+  };
+
   return (
     <div className="w-full space-y-3">
       <div className="space-y-2 pb-6">
-        <div className="space-y-3">
-          <Label>hero (2)</Label>
+        <div className="space-y-2">
+          <Label className="font-bold">
+            <span>
+              あなたのハンド<span className="text-muted-foreground">*</span>
+              （2枚のみ）
+            </span>
+          </Label>
           <InputCards
             value={hero}
             onChange={setHero}
             limit={2}
             banCards={usedCards}
           />
-        </div>
-        <div className="space-y-3">
-          <Label>board (0 ~ 5)</Label>
+          <Label className="font-bold">ボード（0 ~ 5枚）</Label>
           <InputCards
             value={board}
             onChange={setBoard}
             limit={5}
             banCards={usedCards}
           />
-        </div>
-        <div className="space-y-3">
-          <Label>compare (2 ~)</Label>
+          <Label className="font-bold">
+            <span>
+              相手のハンド
+              <span className="text-muted-foreground">*</span>（2枚以上）
+            </span>
+          </Label>
           <InputHands
             value={compare}
             onChange={setCompare}
@@ -109,42 +129,30 @@ export function Main() {
       </div>
 
       <div className="-mt-3">
-        <p className="text-center text-xs">set range hands</p>
+        <p className="text-center font-bold text-sm">
+          レンジから相手のハンドを設定
+        </p>
         <SetRangeHands
           total={9}
           setValue={setCompare}
           excludes={rangeExcludes}
         />
       </div>
-      <Button
-        size="lg"
-        onClick={() => {
-          const deck = getShuffledDeck();
-
-          setHero(deck.slice(0, 2).join(" "));
-          setBoard(deck.slice(2, 5).join(" "));
-
-          const allHands = getHandsInRange(
-            getRangeStrengthByPosition(7),
-            deck.slice(0, 5),
-          );
-          const newCompare = allHands.join("; ").replaceAll(",", " ");
-          setCompare(newCompare);
-        }}
-      >
-        set test values
-      </Button>
 
       <div className="flex">
         <Button
           className="w-full rounded-full"
-          variant="outline"
           size="lg"
           onClick={runSimulation}
-          disabled={loading}
+          disabled={
+            loading ||
+            splitCards(hero).length !== 2 ||
+            splitCards(compare).length < 1
+          }
         >
           {loading ? "Running..." : "Run Simulation"}
         </Button>
+
         {error && (
           <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
             {error}
@@ -174,6 +182,7 @@ export function Main() {
                 return (
                   <div
                     key={hand}
+                    id={hand}
                     className={cn(
                       "space-y-1 px-2 py-1",
                       result.hand === hand &&
@@ -226,6 +235,23 @@ export function Main() {
                 );
               },
             )}
+          </div>
+
+          <div className="fixed right-4 bottom-4 flex flex-col gap-y-2 opacity-80">
+            <Button
+              className="rounded-full"
+              size="icon-lg"
+              onClick={() => scrollToTop(true)}
+            >
+              <GalleryVerticalEnd className="rotate-180" />
+            </Button>
+            <Button
+              className="rounded-full"
+              size="icon-lg"
+              onClick={() => scrollToMyHand(true)}
+            >
+              <GalleryVertical />
+            </Button>
           </div>
         </div>
       )}

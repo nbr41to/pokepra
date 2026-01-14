@@ -1,6 +1,6 @@
 'use client";';
 
-import { ListX } from "lucide-react";
+import { CircleX } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { InputCardPalette } from "./input-card-palette";
@@ -80,7 +80,7 @@ export const InputHands = ({
           )}
         </button>
         <Button size="icon-lg" variant="ghost" onClick={() => onChange("")}>
-          <ListX size={32} />
+          <CircleX />
         </Button>
       </div>
       {value && (
@@ -89,13 +89,14 @@ export const InputHands = ({
         </div>
       )}
       {active && (
-        <div className="fixed bottom-0 left-0 z-50 flex w-full justify-center gap-x-1 bg-background p-2">
+        <div className="fixed bottom-0 left-0 z-50 flex w-full justify-center gap-x-1 bg-background">
           <InputCardPalette
             value={value}
             handSeparator={"; "}
             limit={limit}
             banCards={banCards}
             onChange={(val) => onChange(val)}
+            onEnter={() => setActive(false)}
           />
         </div>
       )}

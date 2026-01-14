@@ -38,7 +38,11 @@ export default function Page() {
           </h1>
           <SwitchSuitIcon suit="h" />
         </div>
-        <p>The simulation of game data.</p>
+        <p className="text-center font-bold text-sm">
+          初心者と感覚派のための
+          <br />
+          楽しいポーカートレーナー
+        </p>
 
         <p className="text-right font-bold font-noto-sans-jp text-xl">
           ベータ版
@@ -61,14 +65,8 @@ export default function Page() {
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/full-street">Full Street</Link>
           </Button>
-          <Button className="w-full" variant="default" size="lg" asChild>
-            <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
-          </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/bb-defense">BB Defense</Link>
-          </Button>
-          <Button className="w-full" variant="default" size="lg" disabled>
-            <Link href="/trainers/range-bet">Range Bet</Link>
           </Button>
         </div>
       </NavigationSection>
@@ -100,6 +98,17 @@ export default function Page() {
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/tips">Tips</Link>
+          </Button>
+        </div>
+      </NavigationSection>
+
+      <NavigationSection title="Experimental" description="試験運用中のもの">
+        <div className="flex w-60 flex-col items-center justify-center gap-y-3">
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
+          </Button>
+          <Button className="w-full" variant="default" size="lg" disabled>
+            <Link href="/trainers/range-bet">Range Bet</Link>
           </Button>
         </div>
       </NavigationSection>
