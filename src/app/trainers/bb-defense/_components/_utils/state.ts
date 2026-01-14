@@ -113,7 +113,7 @@ const useActionStore = create<Store>((set, get) => ({
     }));
   },
 
-  shuffleAndDeal: async (options?: { tier?: number; people?: number }) => {
+  shuffleAndDeal: async (_options?: { tier?: number; people?: number }) => {
     const { stack } = get();
     const people = PEOPLE;
     const villainPosition = genPositionNumber(people, [2]);

@@ -61,6 +61,9 @@ export default function Page() {
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/full-street">Full Street</Link>
           </Button>
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
+          </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/bb-defense">BB Defense</Link>
           </Button>
