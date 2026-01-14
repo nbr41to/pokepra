@@ -6,7 +6,7 @@ import { ActionArea } from "./action-area";
 import { CommunityArea } from "./community-area";
 import { ConfirmPositionArea } from "./confirm-position-area";
 import { FailureOverlay } from "./failure-overlay";
-import { ResultArea } from "./result-area";
+import { StoryViewer } from "./story-viewer";
 import { VillainHand } from "./villain-hand";
 
 export default function Main() {
@@ -26,9 +26,9 @@ export default function Main() {
 
   return (
     <div className="w-full space-y-2">
-      <div className="flex justify-between px-8">
-        <VillainHand />
-        <ResultArea />
+      <div className="mx-auto flex w-76">
+        <VillainHand className="pb-16" />
+        <StoryViewer className="-ml-16" />
       </div>
       <CommunityArea />
       <ConfirmPositionArea />

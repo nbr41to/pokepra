@@ -1,10 +1,13 @@
 import { create } from "zustand";
-import { simulateVsListEquity } from "@/lib/wasm/simulate-vs-list-equity";
+import PREFLOP_RANKING from "@/data/preflop-hand-ranking.json";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulate-vs-list-with-ranks";
+import type { RankOutcomeResults } from "@/lib/wasm/simulation";
 import { shuffleAndDeal } from "@/utils/dealer";
 import {
   getHandsInRange,
   getRangeStrengthByPosition,
   judgeInRange,
+  toHandSymbol,
 } from "@/utils/hand-range";
 
 type Street = "preflop" | "flop" | "turn" | "river";
@@ -53,6 +56,11 @@ type State = {
 
   // history
   histories: History[];
+  resultHistories: {
+    equity: number;
+    rankOutcome: RankOutcomeResults | null;
+    count: number | null;
+  }[];
 };
 
 type Actions = {
@@ -99,6 +107,7 @@ const INITIAL_STATE: State = {
   villainsEq: [],
 
   histories: [],
+  resultHistories: [],
 };
 
 const useHoldemStore = create<Store>((set, get) => ({
@@ -135,6 +144,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       delta: 0,
       confirmedHand: false,
       actions: INITIAL_STATE.actions,
+      resultHistories: [],
     });
   },
 
@@ -149,28 +159,30 @@ const useHoldemStore = create<Store>((set, get) => ({
    * プリフロップのアクション
    */
   preflopAction: (action: PreflopAction) => {
-    const { position, hero, deck, stack, actions } = get();
+    const { position, hero, deck, actions } = get();
     const inRange = judgeInRange(hero, position); // 今のPositionのレンジ強さで判定
     const correct = action === "open-raise" ? inRange : !inRange;
-    const amount = correct ? 2 : -2;
+
+    const equity = PREFLOP_RANKING.find((h) => h.hand === toHandSymbol(hero))
+      ?.player2 as number;
 
     if (action === "fold") {
       set({
         actions: { ...actions, preflop: { action, correct } },
-        stack: stack + amount,
-        delta: amount,
         finished: true,
+        resultHistories: [{ equity, rankOutcome: null, count: null }],
       });
     } else {
       const board = deck.splice(0, 3);
 
       set({
         actions: { ...actions, preflop: { action, correct } },
-        stack: stack + amount,
         street: "flop",
         deck,
         board,
-        delta: amount,
+        resultHistories: [
+          { equity: equity / 100, rankOutcome: null, count: null },
+        ],
       });
     }
   },
@@ -180,9 +192,10 @@ const useHoldemStore = create<Store>((set, get) => ({
    */
   postflopAction: async (params) => {
     const { street: currentStreet, bet } = params;
-    const { stack, hero, villains, position, deck, board, actions } = get();
+    const { hero, villains, position, deck, board, actions, resultHistories } =
+      get();
 
-    const result = await simulateVsListEquity({
+    const result = await simulateVsListWithRanks({
       hero: hero,
       board: board,
       compare: Array.from(
@@ -199,7 +212,6 @@ const useHoldemStore = create<Store>((set, get) => ({
 
     if (bet === "fold") {
       set(() => ({
-        delta: Number((result.equity * 100).toFixed(2)),
         actions: {
           ...actions,
           [currentStreet]: "fold",
@@ -210,39 +222,19 @@ const useHoldemStore = create<Store>((set, get) => ({
       return;
     }
 
-    const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;
-
-    const rare =
-      result.data.findIndex((data) => data.hand === result.hand) /
-      result.data.length;
-    const compareEquityAverage =
-      result.data.reduce((acc, cur) => acc + cur.equity, 0) /
-      result.data.length;
-    const villainRequiredEq = bet / (100 + bet); // 相手の必要勝率
-
-    const canFold = compareEquityAverage < villainRequiredEq;
-
-    const deltaScore =
-      Math.abs(
-        Math.floor(
-          ((result.equity - compareEquityAverage) *
-            10 *
-            STREET_W[currentStreet]) /
-            (rare < 0.1 ? 0.5 : rare < 0.3 ? 0.7 : 1),
-        ),
-      ) * (canFold ? 1 : -1);
-
-    const newStack = stack + deltaScore;
-
     const newCard = deck.splice(0, 1)[0];
 
-    console.log(
-      result.data.find((data) => data.hand === villains[0].join(" ")),
-    );
-    const newVillainsEq = villains.map(
-      (villainHand) =>
-        result.data.find((data) => data.hand === villainHand.join(" "))?.equity,
-    );
+    const newVillainsEq = villains.map((villainHand) => {
+      const hand = result.data.find(
+        (data) => data.hand === villainHand.join(" "),
+      );
+      if (!hand) return 0;
+      const equity = (hand.win + hand.tie / 2) / hand.count;
+
+      return equity;
+    });
+
+    const heroData = result.data.find((data) => data.hand === hero.join(" "));
 
     set(() => ({
       street:
@@ -251,8 +243,6 @@ const useHoldemStore = create<Store>((set, get) => ({
           : currentStreet === "turn"
             ? "river"
             : "river",
-      stack: newStack,
-      delta: deltaScore,
       actions: {
         ...actions,
         [currentStreet]: "commit",
@@ -262,6 +252,14 @@ const useHoldemStore = create<Store>((set, get) => ({
         ? {}
         : { board: [...board, newCard], deck }),
       finished: currentStreet === "river",
+      resultHistories: [
+        ...resultHistories,
+        {
+          equity: result.equity,
+          rankOutcome: heroData ? heroData.results : null,
+          count: heroData ? heroData.count : null,
+        },
+      ],
     }));
   },
 

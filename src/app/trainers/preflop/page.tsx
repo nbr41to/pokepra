@@ -7,7 +7,11 @@ export const metadata: Metadata = { title: "Preflop" };
 export default function Page() {
   return (
     <div className="flex h-dvh w-full flex-col items-center justify-between gap-y-3 px-2 pt-8">
-      <HeaderTitle title="Preflop Equity Simulator" hidable />
+      <HeaderTitle
+        title="Preflop Equity"
+        description="Preflopで参加するポジションが早いほど後ろに強い相手がいる確率が高いということを体感できるゲームです。"
+        hidable
+      />
       <Main />
     </div>
   );

@@ -39,7 +39,7 @@ export const ActionArea = () => {
 
       <div className="flex justify-center gap-4 px-2 py-2">
         <RetrySheet hero={hero} result={result} disabled={!preflop} />
-        <HandRangeDrawer mark={toHandSymbol(hero)} disabled={!preflop} />
+        <HandRangeDrawer mark={toHandSymbol(hero)} />
         <InformationSheet />
       </div>
     </div>

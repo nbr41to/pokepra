@@ -8,17 +8,18 @@ type Props = {
 
 export const VillainHand = ({ className }: Props) => {
   const { villains, villainsEq, finished } = useHoldemStore();
-  console.log(villainsEq);
   const eq = villainsEq?.[0];
 
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center gap-y-1",
+        "flex flex-col items-center justify-end gap-y-1",
         className,
       )}
     >
-      {typeof eq === "number" && <span>{(eq * 100).toFixed(2)}%</span>}
+      {typeof eq === "number" && finished && (
+        <span>{(eq * 100).toFixed(1)}%</span>
+      )}
       <OtherHand hand={villains[0]} reversed={finished} />
     </div>
   );

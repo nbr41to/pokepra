@@ -8,9 +8,12 @@ import {
   shuffleAndDeal,
 } from "./dealer";
 
-const mockRandomSequence = (values: number[]) => {
+const mockRandomSequence = (values: number[], maxCalls = 5000) => {
   let index = 0;
   vi.spyOn(Math, "random").mockImplementation(() => {
+    if (index >= maxCalls) {
+      throw new Error("mockRandomSequence: exceeded maxCalls");
+    }
     const value = values[index] ?? values[values.length - 1] ?? 0;
     index += 1;
     return value;
@@ -89,7 +92,6 @@ describe("getShortRankName", () => {
 
 describe("shuffleAndDeal", () => {
   it("hero/villainが重複せずデッキから除外される", () => {
-    mockRandomSequence([0, 0, 0, 0.1, 0.3, 0.2, 0.6, 0.3, 0.9]);
     const { position, hero, villains, deck } = shuffleAndDeal({
       people: 9,
       heroStrength: 0,

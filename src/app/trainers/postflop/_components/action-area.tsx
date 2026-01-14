@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
+import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -10,6 +11,7 @@ import {
 import {
   getHandsInRange,
   getRangeStrengthByPosition,
+  toHandSymbol,
 } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 import { BetSlider } from "./bet-slider";
@@ -116,6 +118,7 @@ export const ActionArea = () => {
       </div>
 
       <div className="flex justify-center gap-4 px-2 py-2">
+        <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet
           board={board}
           rankPromise={rankPromise}
