@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulate-vs-list-with-ranks";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 import {
   getHandsInRange,
   getRangeStrengthByPosition,
@@ -28,6 +29,10 @@ export const ActionArea = () => {
   } = useHoldemStore();
 
   const [loading, setLoading] = useState(false);
+  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [rankPromise, setRankPromise] =
+    useState<Promise<CombinedPayload> | null>(null);
+  const rankPromiseCache = useRef(new Map<string, Promise<CombinedPayload>>());
 
   const handleOnFold = async () => {
     if (street === "preflop") {
@@ -49,15 +54,28 @@ export const ActionArea = () => {
     }
   };
 
-  const resultPromise = simulateVsListWithRanks({
-    hero,
-    board,
-    compare: getHandsInRange(getRangeStrengthByPosition(9), [
-      ...hero,
-      ...board,
-    ]),
-    trials: 1000,
-  });
+  const compareHands = useMemo(
+    () => getHandsInRange(getRangeStrengthByPosition(9), [...hero, ...board]),
+    [hero, board],
+  );
+
+  useEffect(() => {
+    if (!analyticsOpen) return;
+    const cacheKey = `${hero.join("-")}|${board.join("-")}`;
+    const cached = rankPromiseCache.current.get(cacheKey);
+    if (cached) {
+      setRankPromise(cached);
+      return;
+    }
+    const nextPromise = simulateVsListWithRanks({
+      hero,
+      board,
+      compare: compareHands,
+      trials: 1000,
+    });
+    rankPromiseCache.current.set(cacheKey, nextPromise);
+    setRankPromise(nextPromise);
+  }, [analyticsOpen, hero, board, compareHands]);
 
   return (
     <div className="">
@@ -90,14 +108,12 @@ export const ActionArea = () => {
       </div>
 
       <div className="flex justify-center gap-4 p-2">
-        <HandRangeDrawer
-          mark={toHandSymbol(hero)}
-          disabled={!actions.preflop}
-        />
+        <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet
           board={board}
-          rankPromise={resultPromise}
+          rankPromise={rankPromise}
           disabled={street === "preflop" || board.length < 3}
+          onOpenChange={setAnalyticsOpen}
         />
         <SituationCopyButton hero={hero} board={board} />
       </div>

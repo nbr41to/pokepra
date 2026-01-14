@@ -7,7 +7,6 @@ type Props = {
 };
 export const StoryViewer = ({ className }: Props) => {
   const { resultHistories } = useHoldemStore();
-  console.log(resultHistories);
 
   return (
     <div className={cn("flex gap-x-2", className)}>

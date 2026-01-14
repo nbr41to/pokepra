@@ -21,7 +21,8 @@ import { EquityChartSkeleton } from "./equity-chart.skeleton";
 type Props = {
   board: string[];
   disabled?: boolean;
-  rankPromise: Promise<CombinedPayload>;
+  rankPromise?: Promise<CombinedPayload> | null;
+  onOpenChange?: (open: boolean) => void;
   className?: string;
 };
 
@@ -29,10 +30,11 @@ export const AnalyticsSheet = ({
   board,
   disabled = false,
   rankPromise,
+  onOpenChange,
   className,
 }: Props) => {
   return (
-    <Sheet>
+    <Sheet onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
         <Button
           className={cn("rounded-full", className)}
@@ -58,15 +60,21 @@ export const AnalyticsSheet = ({
           </div>
         </SheetHeader>
 
-        <Suspense
-          fallback={
-            <div className="grid h-[calc(100dvh-120px)] place-content-center">
-              <EquityChartSkeleton />
-            </div>
-          }
-        >
-          <AnalyticsReport rankPromise={rankPromise} />
-        </Suspense>
+        {rankPromise ? (
+          <Suspense
+            fallback={
+              <div className="grid h-[calc(100dvh-120px)] place-content-center">
+                <EquityChartSkeleton />
+              </div>
+            }
+          >
+            <AnalyticsReport rankPromise={rankPromise} />
+          </Suspense>
+        ) : (
+          <div className="grid h-[calc(100dvh-120px)] place-content-center">
+            <EquityChartSkeleton />
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

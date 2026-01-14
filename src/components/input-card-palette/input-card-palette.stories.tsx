@@ -12,6 +12,7 @@ const meta = {
   args: {
     value: "",
     onChange: fn(),
+    onEnter: fn(),
   },
 } satisfies Meta<typeof InputCardPalette>;
 
@@ -25,7 +26,11 @@ export const Default: Story = {
     return (
       <div className="space-y-4">
         <p>value: {value}</p>
-        <InputCardPalette value={value} onChange={(val) => setValue(val)} />
+        <InputCardPalette
+          value={value}
+          onChange={(val) => setValue(val)}
+          onEnter={fn()}
+        />
       </div>
     );
   },

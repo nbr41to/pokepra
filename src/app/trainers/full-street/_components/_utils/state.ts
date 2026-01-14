@@ -210,18 +210,6 @@ const useHoldemStore = create<Store>((set, get) => ({
       trials: 1000,
     });
 
-    if (bet === "fold") {
-      set(() => ({
-        actions: {
-          ...actions,
-          [currentStreet]: "fold",
-        },
-        finished: true,
-      }));
-
-      return;
-    }
-
     const newCard = deck.splice(0, 1)[0];
 
     const newVillainsEq = villains.map((villainHand) => {
@@ -235,6 +223,26 @@ const useHoldemStore = create<Store>((set, get) => ({
     });
 
     const heroData = result.data.find((data) => data.hand === hero.join(" "));
+
+    if (bet === "fold") {
+      set(() => ({
+        actions: {
+          ...actions,
+          [currentStreet]: "fold",
+        },
+        finished: true,
+        resultHistories: [
+          ...resultHistories,
+          {
+            equity: result.equity,
+            rankOutcome: heroData ? heroData.results : null,
+            count: heroData ? heroData.count : null,
+          },
+        ],
+      }));
+
+      return;
+    }
 
     set(() => ({
       street:
