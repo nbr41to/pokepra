@@ -17,11 +17,16 @@ const MAX_PEOPLE = 9;
  * maxPeopleがBTNとして、Positionの数字をランダムに生成する
  * @param maxPeople 最大人数 (2~9)
  */
-function genPositionNumber(maxPeople: number) {
+function genPositionNumber(maxPeople: number, excludes: number[] = []) {
   if (maxPeople < MIN_PEOPLE || maxPeople > MAX_PEOPLE) {
     throw new Error("genPositionNumber: maxPeopleは2~9の間で指定してください");
   }
-  return genRandomInt(maxPeople) + 1;
+  let position: number;
+  do {
+    position = genRandomInt(maxPeople) + 1;
+  } while (excludes.includes(position));
+
+  return position;
 }
 
 /**

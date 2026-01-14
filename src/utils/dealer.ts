@@ -60,7 +60,7 @@ function genHands(strength = 0, excludes: string[] = []) {
   } while (
     hand1 === hand2 ||
     (strength !== 0 && getRangeStrengthByHand([hand1, hand2]) > strength) ||
-    getRangeStrengthByHand([hand1, hand2]) === -1 ||
+    (strength !== 0 && getRangeStrengthByHand([hand1, hand2]) === -1) ||
     excludes.includes(hand1) ||
     excludes.includes(hand2)
   ); // includeTiesが指定されている場合、該当するtierに含まれるまで繰り返す

@@ -6,9 +6,10 @@ import { getPositionLabel } from "@/utils/position";
 type Props = {
   total: number;
   playerPosition: number;
+  heroLabel?: string;
 };
 
-export function Position({ total, playerPosition }: Props) {
+export function Position({ total, playerPosition, heroLabel = "YOU" }: Props) {
   return (
     <div className="flex w-full justify-center gap-x-px pt-2">
       {Array.from({ length: total }).map((_, index) => {
@@ -31,7 +32,7 @@ export function Position({ total, playerPosition }: Props) {
                 {!isPlayer && label}
               </div>
               <div className="h-3.75 font-bold text-[10px] text-red-500 dark:text-red-600">
-                {isPlayer && "YOU"}
+                {isPlayer && heroLabel}
               </div>
             </div>
             {index !== total - 1 && <ArrowRight size={8} className="mt-2.5" />}

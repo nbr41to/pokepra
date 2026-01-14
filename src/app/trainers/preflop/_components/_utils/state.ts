@@ -62,7 +62,7 @@ const useActionStore = create<Store>((set, get) => ({
   },
   retry: () => {
     const people = PEOPLE;
-    const position = genPositionNumber(people - 1);
+    const position = genPositionNumber(people, [2]);
 
     const hero = genHands(0);
     const otherPlayersHands: string[][] = [];

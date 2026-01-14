@@ -90,7 +90,7 @@ export function StackView({ stack, className }: Props) {
           />
         ))}
       </div>
-      <span className="h-5 font-bold">pt</span>
+      <span className="h-5 font-bold">BB</span>
     </div>
   );
 }
