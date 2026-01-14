@@ -16,6 +16,7 @@ const BB_ANTE = 1;
 const RAKE = 0.05;
 const MIN_OPEN_RAISE = 2;
 const MAX_OPEN_RAISE = 8;
+const OPEN_RAISE_STEP = 0.5;
 
 type PreflopAction = "call" | "fold";
 
@@ -65,8 +66,11 @@ const INITIAL_STATE: State = {
   result: null,
 };
 
-const getRandomOpenRaise = () =>
-  MIN_OPEN_RAISE + genRandomInt(MAX_OPEN_RAISE - MIN_OPEN_RAISE + 1);
+const getRandomOpenRaise = () => {
+  const steps =
+    Math.round((MAX_OPEN_RAISE - MIN_OPEN_RAISE) / OPEN_RAISE_STEP) + 1;
+  return MIN_OPEN_RAISE + genRandomInt(steps) * OPEN_RAISE_STEP;
+};
 
 const calcPreflopMeta = (openRaise: number) => {
   const callAmount = Math.max(openRaise - BB, 0);

@@ -8,7 +8,7 @@ export const ActionArea = () => {
     useActionStore();
 
   return (
-    <div className="pt-8">
+    <div className="pt-3">
       <div className="relative">
         <HeroActionArea
           key={hero.join("-")}
