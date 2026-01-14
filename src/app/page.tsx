@@ -1,3 +1,4 @@
+import { Club, Crown, Heart, Spade } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ export default function Page() {
           </h1>
           <SwitchSuitIcon suit="h" />
         </div>
+
         <p className="text-center font-bold text-sm">
           初心者と感覚派のための
           <br />
@@ -54,16 +56,26 @@ export default function Page() {
       <NavigationSection title="Trainers" description="練習用GAME">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
           <Button className="w-full" variant="default" size="lg" asChild>
-            <Link href="/trainers/preflop">Preflop</Link>
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/trainers/postflop">Postflop</Link>
+            <Link href="/trainers/preflop">
+              <Spade />
+              Preflop Equity
+            </Link>
           </Button>
           <Button className="w-full" variant="default" size="lg" asChild>
-            <Link href="/trainers/score-attack">Score Attack</Link>
+            <Link href="/trainers/postflop">
+              <Heart />
+              Postflop
+            </Link>
           </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/trainers/full-street">Full Street</Link>
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/full-street">
+              <Club />
+              Full Street
+            </Link>
+          </Button>
+          <br />
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/score-attack">Score Attack</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/bb-defense">BB Defense</Link>
@@ -71,22 +83,13 @@ export default function Page() {
         </div>
       </NavigationSection>
 
-      <NavigationSection
-        title="Simulator"
-        description="特定の状況における統計解析"
-      >
+      <NavigationSection title="Tools" description="便利ツール">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/equity-ranking">EQ Ranking</Link>
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/calc-hand-score">Hand Score</Link>
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/range-compare">Range Compare</Link>
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/range-setting">Range Setting</Link>
+          <Button className="w-full" size="lg" asChild>
+            <Link href="/tools/calculate-equities">
+              <Crown />
+              Calculate Equities
+            </Link>
           </Button>
         </div>
       </NavigationSection>
@@ -109,6 +112,16 @@ export default function Page() {
           </Button>
           <Button className="w-full" variant="default" size="lg" disabled>
             <Link href="/trainers/range-bet">Range Bet</Link>
+          </Button>
+          <br />
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/tools/calc-hand-score">Hand Score</Link>
+          </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/tools/range-compare">Range Compare</Link>
+          </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/tools/range-setting">Range Setting</Link>
           </Button>
         </div>
       </NavigationSection>

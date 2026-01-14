@@ -34,7 +34,7 @@ export const HeaderTitle = ({ title, description, hidable = false }: Props) => {
         </Button>
       </div>
       {description && (
-        <p className="mt-1 whitespace-pre-wrap text-muted-foreground text-xs">
+        <p className="mt-1 whitespace-pre-wrap text-muted-foreground text-xs leading-normal">
           {description}
         </p>
       )}
