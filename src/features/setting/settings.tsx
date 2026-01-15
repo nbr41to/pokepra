@@ -15,7 +15,7 @@ import { SwitchMode } from "./switch-mode";
 
 export const Setting = () => {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button className="rounded-full" variant="ghost" size="icon-lg">
           <Settings />
