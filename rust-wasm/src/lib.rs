@@ -14,9 +14,11 @@ use rs_poker_native::{
   simulate_vs_list_with_ranks_monte_carlo as simulate_vs_list_with_ranks_monte_carlo_internal,
 };
 use sim::{
+  eval::best_of,
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
   simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_ranks_with_progress_internal,
 };
+use sim::{parse_board, parse_hands_min1, Card as SimCard};
 
 #[cfg(target_arch = "wasm32")]
 #[link(wasm_import_module = "env")]
@@ -258,6 +260,110 @@ fn run_parse_range(
   }
 
   results.len() as i32
+}
+
+fn validate_hand_board(hand: &[SimCard; 2], board: &[SimCard]) -> Result<(), i32> {
+  let mut seen = Vec::new();
+  for c in board {
+    if seen.iter().any(|x: &SimCard| x.rank == c.rank && x.suit == c.suit) {
+      return Err(-5);
+    }
+    seen.push(*c);
+  }
+  if hand[0].rank == hand[1].rank && hand[0].suit == hand[1].suit {
+    return Err(-5);
+  }
+  for c in hand {
+    if board.iter().any(|x| x.rank == c.rank && x.suit == c.suit) {
+      return Err(-5);
+    }
+  }
+  Ok(())
+}
+
+fn encode_sim_card(card: &SimCard) -> u32 {
+  (card.rank as u32) << 2 | (card.suit as u32)
+}
+
+/// Evaluate and rank multiple hands for a given board.
+/// Output per hand: [card1, card2, rankIndex, encoded, kicker1..kicker5] (9 u32s).
+/// out_len must be >= hands_count * 9. Returns record count or negative error.
+#[no_mangle]
+pub extern "C" fn evaluate_hands_ranking(
+  hands_ptr: *const u8,
+  hands_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  if hands_ptr.is_null() || board_ptr.is_null() || out_ptr.is_null() {
+    return -1;
+  }
+  let hands_slice = unsafe { std::slice::from_raw_parts(hands_ptr, hands_len) };
+  let board_slice = unsafe { std::slice::from_raw_parts(board_ptr, board_len) };
+  let hands_str = match std::str::from_utf8(hands_slice) {
+    Ok(s) => s,
+    Err(_) => return -2,
+  };
+  let board_str = match std::str::from_utf8(board_slice) {
+    Ok(s) => s,
+    Err(_) => return -3,
+  };
+
+  let hands = match parse_hands_min1(hands_str) {
+    Some(hands) => hands,
+    None => return -5,
+  };
+  let board = match parse_board(board_str) {
+    Some(board) => board,
+    None => return -5,
+  };
+  if board.len() < 3 || board.len() > 5 {
+    return -5;
+  }
+
+  for hand in &hands {
+    if validate_hand_board(hand, &board).is_err() {
+      return -5;
+    }
+  }
+
+  let needed = hands.len().saturating_mul(9);
+  if out_len < needed {
+    return -6;
+  }
+
+  let mut ranked: Vec<(u32, u32, u32, u32, [u8; 5])> = Vec::with_capacity(hands.len());
+  for hand in &hands {
+    let mut cards: Vec<SimCard> = Vec::with_capacity(board.len() + 2);
+    cards.extend_from_slice(&board);
+    cards.push(hand[0]);
+    cards.push(hand[1]);
+    let score = best_of(&cards);
+    ranked.push((
+      encode_sim_card(&hand[0]),
+      encode_sim_card(&hand[1]),
+      score.rank as u32,
+      score.encoded,
+      score.kickers,
+    ));
+  }
+
+  ranked.sort_by(|a, b| b.3.cmp(&a.3).then_with(|| a.0.cmp(&b.0)).then_with(|| a.1.cmp(&b.1)));
+
+  let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
+  for (row, chunk) in ranked.iter().zip(out.chunks_exact_mut(9)) {
+    chunk[0] = row.0;
+    chunk[1] = row.1;
+    chunk[2] = row.2;
+    chunk[3] = row.3;
+    for i in 0..5 {
+      chunk[4 + i] = row.4[i] as u32;
+    }
+  }
+
+  ranked.len() as i32
 }
 
 /// Hero vs provided opponent list (heads-up) Monte Carlo with rank distribution.

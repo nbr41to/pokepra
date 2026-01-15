@@ -10,7 +10,7 @@ import {
 import { use, useCallback, useRef, useState } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
+import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
 import {
   getInitialHandRangeArray,
   getRangeStrengthByPosition,
@@ -24,10 +24,13 @@ import { EquityChart } from "./equity-chart";
 
 type Props = {
   rankPromise: Promise<CombinedPayload>;
+  evaluationPromise: Promise<HandRankingEntry[]>;
 };
 
-export const AnalyticsReport = ({ rankPromise }: Props) => {
+export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
   const result = use(rankPromise);
+  const ranking = use(evaluationPromise);
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const [selectedRange, setSelectedRange] = useState(7);
@@ -81,7 +84,11 @@ export const AnalyticsReport = ({ rankPromise }: Props) => {
       </TabsContent>
       <TabsContent value="ranking">
         <ScrollArea ref={scrollAreaRef} className="h-[calc(100dvh-120px)]">
-          <ComboRanking result={filteredResult} onScroll={scrollToMyHand} />
+          <ComboRanking
+            result={filteredResult}
+            ranking={ranking}
+            onScroll={scrollToMyHand}
+          />
         </ScrollArea>
         <div className="absolute right-2 bottom-4 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
           <Button

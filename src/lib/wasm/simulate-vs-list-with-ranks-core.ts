@@ -186,7 +186,9 @@ export async function runSimulateVsListWithRanks(
       : (heroEntry.win + heroEntry.tie * 0.5) / heroEntry.count;
 
   const end = performance.now(); // For performance measurement
-  console.info(`runSimulateVsListWithRanks took ${end - start} ms`); // Log the time taken
+  console.info(
+    `runSimulateVsListWithRanks took ${(end - start).toFixed(2)} ms`,
+  ); // Log the time taken
 
   return {
     hand: heroTrimmed,

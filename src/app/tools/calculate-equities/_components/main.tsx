@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import {
+  evaluateHandsRanking,
   type simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "@/lib/wasm/simulation";
@@ -51,15 +52,32 @@ export function Main({
     setProgress(0);
 
     try {
-      const result = await simulateVsListWithRanksWithProgress({
-        hero: hero.split(" "),
-        board: board.split(" "),
-        compare: compare.split("; ").map((hand) => hand.split(" ")),
-        trials: 1000,
-        onProgress: (pct) => setProgress(pct),
-      });
+      const heroHands = hero.split(" ");
+      const compareHands = compare.split("; ").map((hand) => hand.split(" "));
+      const [result, ranking] = await Promise.all([
+        simulateVsListWithRanksWithProgress({
+          hero: heroHands,
+          board: board.split(" "),
+          compare: compareHands,
+          trials: 1000,
+          onProgress: (pct) => setProgress(pct),
+        }),
+        evaluateHandsRanking({
+          hands: [heroHands, ...compareHands],
+          board: board.split(" "),
+        }),
+      ]);
+      console.log(ranking);
+      const sortedResult = {
+        ...result,
+        data: result.data.sort(
+          (a, b) =>
+            ranking.findIndex((r) => r.hand === a.hand) -
+            ranking.findIndex((r) => r.hand === b.hand),
+        ),
+      };
 
-      setResult(result);
+      setResult(sortedResult);
     } catch (e) {
       setError((e as Error).message);
     } finally {

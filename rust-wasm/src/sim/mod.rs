@@ -1,6 +1,6 @@
 mod card;
 mod deck;
-mod eval;
+pub(crate) mod eval;
 mod parse;
 mod rng;
 mod simulate_vs_list;

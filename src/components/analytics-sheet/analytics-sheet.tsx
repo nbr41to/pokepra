@@ -12,7 +12,11 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
+import {
+  type CombinedPayload,
+  evaluateHandsRanking,
+} from "@/lib/wasm/simulation";
+import { getAllCombos } from "@/utils/dealer";
 import { PlayCard } from "../play-card";
 import { Button } from "../ui/button";
 import { AnalyticsReport } from "./analytics-report";
@@ -33,6 +37,11 @@ export const AnalyticsSheet = ({
   onOpenChange,
   className,
 }: Props) => {
+  const evaluationPromise = evaluateHandsRanking({
+    hands: getAllCombos(board),
+    board: board,
+  });
+
   return (
     <Sheet onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
@@ -68,7 +77,10 @@ export const AnalyticsSheet = ({
               </div>
             }
           >
-            <AnalyticsReport rankPromise={rankPromise} />
+            <AnalyticsReport
+              rankPromise={rankPromise}
+              evaluationPromise={evaluationPromise}
+            />
           </Suspense>
         ) : (
           <div className="grid h-[calc(100dvh-120px)] place-content-center">

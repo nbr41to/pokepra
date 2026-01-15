@@ -1,5 +1,13 @@
 export type WasmExports = {
   memory: WebAssembly.Memory;
+  evaluate_hands_ranking?: (
+    handsPtr: number,
+    handsLen: number,
+    boardPtr: number,
+    boardLen: number,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_vs_list_equity?: (
     heroPtr: number,
     heroLen: number,
@@ -172,6 +180,20 @@ export type RankDistributionWithProgressParams = RankDistributionParams & {
 export type ParseRangeParams = {
   range: string;
   wasmUrl?: string;
+};
+
+export type EvaluateHandsRankingParams = {
+  hands: string[][];
+  board: string[];
+  wasmUrl?: string;
+};
+
+export type HandRankingEntry = {
+  hand: string;
+  rankIndex: number;
+  rankName: string;
+  encoded: number;
+  kickers: number[];
 };
 
 export type RankDistributionEntry = {
