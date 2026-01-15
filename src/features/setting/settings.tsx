@@ -7,6 +7,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuPortal,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -21,21 +22,23 @@ export const Setting = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent side="bottom" className="mr-2">
-        <DropdownMenuLabel className="text-xs opacity-60">
-          Menu
-        </DropdownMenuLabel>
-        <DropdownMenuItem asChild>
-          <Link href="/">Back to Home</Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel className="text-xs opacity-60">
-          My Settings
-        </DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <SwitchMode />
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
+      <DropdownMenuPortal>
+        <DropdownMenuContent side="bottom" className="mr-2">
+          <DropdownMenuLabel className="text-xs opacity-60">
+            Menu
+          </DropdownMenuLabel>
+          <DropdownMenuItem asChild>
+            <Link href="/">Back to Home</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-xs opacity-60">
+            My Settings
+          </DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <SwitchMode />
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenuPortal>
     </DropdownMenu>
   );
 };

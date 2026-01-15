@@ -11,7 +11,7 @@ export function IntroductionContent() {
   return (
     <TabsContent
       value="introduction"
-      className="relative z-10 flex w-full flex-col items-center gap-y-16"
+      className="z-10 flex w-full flex-col items-center gap-y-16"
     >
       <SuitConfettiOverlay />
       <div className="-mb-6 space-y-2">
@@ -50,7 +50,7 @@ export function IntroductionContent() {
       </div>
 
       <section className="relative w-full max-w-md px-4">
-        <div className="pointer-events-none absolute -inset-3 rounded-[32px] bg-[radial-gradient(circle_at_top,#38bdf8_0%,transparent_55%),radial-gradient(circle_at_30%_90%,#f472b6_0%,transparent_60%)] opacity-70 blur-2xl" />
+        <div className="pointer-events-none absolute -inset-3 w-full rounded-[32px] bg-[radial-gradient(circle_at_top,#38bdf8_0%,transparent_55%),radial-gradient(circle_at_30%_90%,#f472b6_0%,transparent_60%)] opacity-70 blur-2xl" />
         <div className="relative rounded-[28px] border border-black/10 bg-white/85 p-6 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.6)] backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
           <p className="font-montserrat text-[0.6rem] text-slate-500 uppercase tracking-[0.35em] dark:text-slate-300">
             Concept
@@ -90,7 +90,7 @@ export function IntroductionContent() {
             <Button
               className="h-12 w-full rounded-full border-none font-bold text-base"
               size="lg"
-              variant="outline"
+              variant="secondary"
               asChild
             >
               <Link href="/tips/experience-monte-carlo-poker">

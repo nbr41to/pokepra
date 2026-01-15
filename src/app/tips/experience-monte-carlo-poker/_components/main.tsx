@@ -47,9 +47,7 @@ export const Main = () => {
       acc[entry.rankName] = (acc[entry.rankName] ?? 0) + 1;
       return acc;
     }, {});
-    const sortedRanks = Object.entries(rankCounts).sort(
-      (a, b) => b[1] - a[1],
-    );
+    const sortedRanks = Object.entries(rankCounts).sort((a, b) => b[1] - a[1]);
     return { total, wins, ties, losses, equity, sortedRanks };
   }, [trace]);
 
@@ -209,11 +207,11 @@ export const Main = () => {
                   <div>負け: {resultSummary.losses}</div>
                 </div>
               </div>
-              <div className="mt-4 border-t border-black/10 pt-3 dark:border-white/10">
+              <div className="mt-4 border-black/10 border-t pt-3 dark:border-white/10">
                 <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
                   役の回数
                 </div>
-                <div className="mt-2 grid gap-2 text-xs text-slate-600 dark:text-slate-300 sm:grid-cols-2">
+                <div className="mt-2 grid gap-2 text-slate-600 text-xs sm:grid-cols-2 dark:text-slate-300">
                   {resultSummary.sortedRanks.map(([name, count]) => (
                     <div
                       key={name}
