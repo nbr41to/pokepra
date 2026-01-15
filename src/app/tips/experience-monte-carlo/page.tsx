@@ -1,7 +1,9 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 
 const FACES = [1, 2, 3, 4, 5, 6] as const;
@@ -18,7 +20,7 @@ const rollDice = (count: number) => {
 
 export default function MonteCarloTipsPage() {
   const [rollCount, setRollCount] = useState<(typeof ROLL_OPTIONS)[number]>(
-    ROLL_OPTIONS[2],
+    ROLL_OPTIONS[0],
   );
   const [buckets, setBuckets] = useState<number[]>(
     Array.from({ length: 6 }, () => 0),
@@ -30,17 +32,13 @@ export default function MonteCarloTipsPage() {
   const maxDeviationPct = (maxDeviation / rollCount) * 100;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-4xl flex-col gap-8 px-6 py-10">
-      <header className="flex items-center justify-between">
-        <h1 className="font-bold font-montserrat text-2xl">
-          モンテカルロ法を体感する
-        </h1>
-        <Button variant="ghost" asChild>
-          <Link href="/tips">← Tips 一覧へ</Link>
-        </Button>
-      </header>
+    <div className="space-y-4 px-6 py-10">
+      <HeaderTitle
+        title="モンテカルロ法を体験する1"
+        description="モンテカルロ法は、乱数で試行を繰り返して確率や期待値を推定する方法です。"
+      />
 
-      <section className="space-y-4">
+      <section className="space-y-8">
         <p className="text-muted-foreground text-sm">
           モンテカルロ法は、乱数で試行を繰り返して確率や期待値を推定する方法です。
           ここではサイコロを 100〜10000 回投げた想定で分布を作り、理論値 (各目
@@ -136,6 +134,16 @@ export default function MonteCarloTipsPage() {
           </div>
         </div>
       </section>
+
+      <p>次はモンテカルロ法とポーカーを組み合わせてみましょう。</p>
+      <div className="flex justify-end">
+        <Button asChild variant="link" className="rounded-full underline">
+          <Link href="/tips/experience-monte-carlo-poker">
+            モンテカルロ法を体験する2
+            <ChevronRight />
+          </Link>
+        </Button>
+      </div>
     </div>
   );
 }

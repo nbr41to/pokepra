@@ -22,11 +22,19 @@ export function ToolsContent() {
           href="/tools/calc-equities"
           title="Calculate Equities"
           description="指定したハンドとボードに対する勝率を計算します。"
+          buttonLabel="使う"
         />
         <LinkCard
           href="/tools/calc-range-equity"
           title="Range Equity"
           description="指定したボードに対してレンジ単位の勝率を計算します。"
+          buttonLabel="使う"
+        />
+        <LinkCard
+          href="/tools/calc-bet-size"
+          title="Bet Size"
+          description="任意のポットに対するベットサイズと必要勝率の計算。"
+          buttonLabel="使う"
         />
       </div>
 

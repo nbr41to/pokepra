@@ -2,6 +2,7 @@ import Link from "next/link";
 import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
+import { NavigationSection } from "./navigation-section";
 
 export function TipsContent() {
   return (
@@ -14,30 +15,45 @@ export function TipsContent() {
         description="便利なポーカー用ツールを集めました。"
       />
 
-      <div className="flex flex-col items-center justify-center gap-y-3">
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/hand-probability">役が完成する確率</Link>
-        </Button>
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/starting-hand-winrate">
-            スターティングハンドの勝率
-          </Link>
-        </Button>
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/score-attack-scoring">
-            スコアアタックの得点の計算方法
-          </Link>
-        </Button>
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/monte-carlo">モンテカルロ法の体験</Link>
-        </Button>
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/bet-size">任意のポットに対するベットサイズ</Link>
-        </Button>
-        <Button className="w-60" variant="outline" size="lg" asChild>
-          <Link href="/tips/flop-check">フロップでチェックする理由</Link>
-        </Button>
-      </div>
+      <NavigationSection title="Guide" description="はじめて使う方へ">
+        <div className="flex flex-col items-center justify-center gap-y-3">
+          <Button className="w-60" variant="outline" size="lg" disabled>
+            <Link href="/tips/hand-probability">ポーカーのルール説明</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" disabled>
+            <Link href="/tips/hand-probability">ポーカーの楽しさ</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/experience-monte-carlo">
+              モンテカルロ法の体験1
+            </Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/experience-monte-carlo-poker">
+              モンテカルロ法を体験2
+            </Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/recommend-using">アプリの簡単な使い方</Link>
+          </Button>
+        </div>
+      </NavigationSection>
+
+      <NavigationSection title="Tips" description="はじめて使う方へ">
+        <div className="flex flex-col items-center justify-center gap-y-3">
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/hand-probability">役が完成する確率</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/starting-hand-winrate">
+              スターティングハンドの勝率
+            </Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/flop-check">フロップでチェックする理由</Link>
+          </Button>
+        </div>
+      </NavigationSection>
     </TabsContent>
   );
 }

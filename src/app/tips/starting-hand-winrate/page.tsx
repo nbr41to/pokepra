@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { HeaderTitle } from "@/components/header-title";
 import preflopHandRanking from "@/data/preflop-hand-ranking.json";
 
 export default function StartingHandWinratePage() {
@@ -7,14 +6,8 @@ export default function StartingHandWinratePage() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-3xl flex-col gap-8 px-6 py-10">
-      <header className="flex items-center justify-between">
-        <h1 className="font-bold font-montserrat text-2xl">
-          スターティングハンドの勝率目安
-        </h1>
-        <Button variant="ghost" asChild>
-          <Link href="/tips">← Tips 一覧へ</Link>
-        </Button>
-      </header>
+      <HeaderTitle title="スターティングハンドの勝率目安" />
+
       <section className="space-y-4">
         <p className="text-muted-foreground text-sm">
           preflop-hand-ranking.json を元にしたプリフロップ勝率の上位抜粋。 2 人

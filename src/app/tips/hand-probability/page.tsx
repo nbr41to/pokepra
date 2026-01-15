@@ -1,15 +1,9 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { HeaderTitle } from "@/components/header-title";
 
 export default function HandProbabilityPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-3xl flex-col gap-8 px-6 py-10">
-      <header className="flex items-center justify-between">
-        <h1 className="font-bold font-montserrat text-2xl">役が完成する確率</h1>
-        <Button variant="ghost" asChild>
-          <Link href="/tips">← Tips 一覧へ</Link>
-        </Button>
-      </header>
+      <HeaderTitle title="役が完成する確率" />
       <section className="space-y-4">
         <p className="text-muted-foreground text-sm">
           フロップ以降に特定の役を完成させるおおまかな確率のメモです。
