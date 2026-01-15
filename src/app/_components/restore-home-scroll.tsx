@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 const HOME_SCROLL_KEY = "mcpt:home-scroll";
 const HOME_WINDOW_SCROLL_KEY = "mcpt:home-window-scroll";
@@ -27,6 +27,7 @@ export const RestoreHomeScroll = ({
   tabValue,
 }: RestoreHomeScrollProps) => {
   const pathname = usePathname();
+  const prevTabValue = useRef<string | null>(null);
 
   useLayoutEffect(() => {
     if (pathname !== "/") return;
@@ -86,15 +87,22 @@ export const RestoreHomeScroll = ({
   }, [tabValue]);
 
   useEffect(() => {
-    if (!tabValue || pathname !== "/") return;
-    const container = document.getElementById(HOME_SCROLL_CONTAINER_ID);
-    if (container && container.scrollHeight > container.clientHeight) {
-      container.scrollTo({ top: 0, behavior: "auto" });
-      sessionStorage.setItem(HOME_SCROLL_KEY, "0");
+    if (!tabValue || pathname !== "/") {
+      prevTabValue.current = tabValue ?? null;
       return;
     }
-    window.scrollTo(0, 0);
-    sessionStorage.setItem(HOME_WINDOW_SCROLL_KEY, "0");
+    const previous = prevTabValue.current;
+    if (previous && previous !== tabValue) {
+      const container = document.getElementById(HOME_SCROLL_CONTAINER_ID);
+      if (container && container.scrollHeight > container.clientHeight) {
+        container.scrollTo({ top: 0, behavior: "auto" });
+        sessionStorage.setItem(HOME_SCROLL_KEY, "0");
+      } else {
+        window.scrollTo(0, 0);
+        sessionStorage.setItem(HOME_WINDOW_SCROLL_KEY, "0");
+      }
+    }
+    prevTabValue.current = tabValue;
   }, [tabValue, pathname]);
 
   return null;
