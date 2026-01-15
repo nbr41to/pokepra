@@ -11,6 +11,7 @@ import {
   HOME_TAB_KEY,
   RestoreHomeScroll,
 } from "./restore-home-scroll";
+import { SettingsContent } from "./settings-content";
 import { TipsContent } from "./tips-content";
 import { ToolsContent } from "./tools-content";
 import { TrainerContent } from "./trainer-content";
@@ -44,7 +45,8 @@ export const HomeTabs = () => {
         <TrainerContent />
         <ToolsContent />
         <TipsContent />
-        <FooterTablist className="fixed bottom-5 left-1/2 -translate-x-1/2" />
+        <SettingsContent />
+        <FooterTablist className="fixed bottom-5 left-1/2 z-10 -translate-x-1/2" />
       </Tabs>
     </div>
   );

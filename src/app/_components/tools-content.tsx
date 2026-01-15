@@ -3,8 +3,8 @@ import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
+import { LinkCard } from "./link-card";
 import { NavigationSection } from "./navigation-section";
-import { TrainerLinkCard } from "./trainer-link-card";
 
 export function ToolsContent() {
   return (
@@ -18,12 +18,12 @@ export function ToolsContent() {
       />
 
       <div className="grid w-full grid-cols-2 gap-4 px-2">
-        <TrainerLinkCard
+        <LinkCard
           href="/tools/calc-equities"
           title="Calculate Equities"
           description="指定したハンドとボードに対する勝率を計算します。"
         />
-        <TrainerLinkCard
+        <LinkCard
           href="/tools/calc-range-equity"
           title="Range Equity"
           description="指定したボードに対してレンジ単位の勝率を計算します。"

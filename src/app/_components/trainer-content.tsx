@@ -3,8 +3,8 @@ import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
+import { LinkCard } from "./link-card";
 import { NavigationSection } from "./navigation-section";
-import { TrainerLinkCard } from "./trainer-link-card";
 
 export function TrainerContent() {
   return (
@@ -18,17 +18,17 @@ export function TrainerContent() {
       />
 
       <div className="grid w-full grid-cols-2 gap-4 px-2">
-        <TrainerLinkCard
+        <LinkCard
           href="/trainers/preflop"
           title="Preflop Equity"
           description="プリフロップで参加するハンドの勝率を体感できます。"
         />
-        <TrainerLinkCard
+        <LinkCard
           href="/trainers/full-street"
           title="Full Street"
           description="様々なシチュエーションにおける勝率を体感できます。"
         />
-        <TrainerLinkCard
+        <LinkCard
           href="/trainers/bb-defense"
           title="BB Defense"
           description="BBでのディフェンスを体感できます。"

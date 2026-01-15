@@ -15,15 +15,10 @@ type Props = {
   description: string;
   className?: string;
 };
-export function TrainerLinkCard({
-  href,
-  title,
-  description,
-  className,
-}: Props) {
+export function LinkCard({ href, title, description, className }: Props) {
   return (
     <Link href={href} className={cn("w-full", className)}>
-      <Card className="h-48 justify-between font-noto-sans-jp">
+      <Card className="h-50 justify-between font-noto-sans-jp">
         <CardHeader className="px-5">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{description}</CardDescription>
