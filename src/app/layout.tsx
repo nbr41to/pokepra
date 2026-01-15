@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="ja" suppressHydrationWarning>
       <body
-        className={`${notoSansJP.variable} ${montserrat.variable} antialiased`}
+        className={`${notoSansJP.variable} ${montserrat.variable} mx-auto max-w-xl antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <BackButton />

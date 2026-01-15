@@ -142,6 +142,9 @@
     @apply bg-background text-foreground font-sans;
     overscroll-behavior: none; /* disable iOS/Safari bounce */
   }
+  p {
+    @apply leading-loose;
+  }
 
   html {
     overscroll-behavior: none;
