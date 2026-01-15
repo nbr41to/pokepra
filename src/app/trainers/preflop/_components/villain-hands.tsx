@@ -24,6 +24,8 @@ export const VillainHands = ({
   const angleStep = (2 * Math.PI) / people;
   const baseAngle = Math.PI / 2 - (position - 1) * angleStep; // 自身が真下に来るように調整
   const radiusPercent = 38;
+  const getSeatPosition = (seatNumber: number) =>
+    ((seatNumber + 1) % people) + 1;
 
   return (
     <div
@@ -34,12 +36,18 @@ export const VillainHands = ({
     >
       <div className="absolute inset-0">
         {seats.map((seatNumber) => {
-          const angle = baseAngle + (seatNumber - 1) * angleStep;
+          const seatPosition = getSeatPosition(seatNumber);
+          const angle = baseAngle + (seatPosition - 1) * angleStep;
           const x = 50 + Math.cos(angle) * radiusPercent;
           const y = 50 + Math.sin(angle) * radiusPercent;
-          const isSelf = seatNumber === position;
-          const hand: string[] | undefined =
-            villains[seatNumber - position - 1];
+          const isSelf = seatPosition === position;
+          const distanceToSeat = (seatPosition - position + people) % people;
+          const distanceToBB = (2 - position + people) % people;
+          const handIndex =
+            distanceToSeat > 0 && distanceToSeat <= distanceToBB
+              ? distanceToSeat - 1
+              : null;
+          const hand = handIndex !== null ? villains[handIndex] : undefined;
           const equity = result?.data.find(
             (r) => r.hand === hand?.join(" "),
           )?.equity;
@@ -64,10 +72,10 @@ export const VillainHands = ({
                   <OtherHand
                     hand={hand}
                     reversed={reversed}
-                    delay={200 * (seatNumber - position)}
+                    delay={200 * distanceToSeat}
                   />
                 ) : (
-                  <span>{getPositionLabel(seatNumber, people)}</span>
+                  <span>{getPositionLabel(seatPosition, people)}</span>
                 )}
               </div>
               {equity && result && (

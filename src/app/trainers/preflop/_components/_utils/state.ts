@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { simulateVsListEquity } from "@/lib/wasm/simulate-vs-list-equity";
 import type { EquityPayload } from "@/lib/wasm/types";
-import { genHands } from "@/utils/dealer";
+import { genHands, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 
 const PEOPLE = 9;
@@ -31,7 +31,7 @@ type State = {
 type Actions = {
   reset: () => void;
   retry: () => void;
-  shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
+  shuffleAndDeal: (people?: number) => Promise<void>;
   showHand: () => void;
   preflopAction: (action: PreflopAction) => void;
 };
@@ -79,15 +79,16 @@ const useActionStore = create<Store>((set, get) => ({
       preflop: null,
     }));
   },
-  shuffleAndDeal: async (options?: { tier?: number; people?: number }) => {
+  shuffleAndDeal: async (people = PEOPLE) => {
     const { stack } = get();
-    const people = options?.people ?? PEOPLE;
-    const position = genPositionNumber(people - 1);
+    const position = genPositionNumber(people, [2]); // BBは除外
+    const afterPeople = position === 1 ? 1 : people + 2 - position;
+    const deck = getShuffledDeck();
 
-    const hero = genHands(0);
+    const hero = deck.splice(0, 2);
     const otherPlayersHands: string[][] = [];
-    for (let i = 1; i < people - position + 1; i++) {
-      const hands = genHands(0, [...hero, ...otherPlayersHands.flat()]);
+    for (let i = 1; i < afterPeople + 1; i++) {
+      const hands = deck.splice(0, 2);
       otherPlayersHands.push(hands);
     }
 

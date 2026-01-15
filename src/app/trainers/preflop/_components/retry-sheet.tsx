@@ -62,7 +62,7 @@ export const RetrySheet = ({
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="h-dvh" side="bottom">
+      <SheetContent className="" side="bottom">
         <ScrollArea className="h-dvh">
           <SheetHeader>
             <SheetTitle>Retry</SheetTitle>
@@ -107,7 +107,7 @@ export const RetrySheet = ({
           </div>
 
           {result && (
-            <div className="flex flex-col items-center gap-4 px-4 py-6">
+            <div className="flex flex-col items-center gap-4 px-4 pt-6 pb-28">
               <div className="flex items-end justify-center gap-x-3">
                 <Combo hand={hero} />
                 <span className="font-bold text-sm">VS</span>
