@@ -74,13 +74,29 @@ export function IntroductionContent() {
               スポット特化のミニゲームで状況別に反復練習
             </div>
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              むずかしい理論の話を
+              勝率が計算できる複数のツールが使える
+            </div>
+            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
+              むずかしいゲーム理論の話、
               <span className="font-semibold text-suit-heart">GTO</span>{" "}
-              を体で覚える設計、初心者にもやさしい
+              を体で覚える設計で初心者にもやさしい
             </div>
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
               ブラウザで完結、ダウンロード不要
             </div>
+          </div>
+
+          <div className="mt-5 rounded-full bg-[conic-gradient(at_50%_50%,#fb923c_0deg,#4ade80_90deg,#60a5fa_180deg,#f472b6_270deg,#fb923c_360deg)] p-[2px] dark:bg-[conic-gradient(at_50%_50%,#ea580c_0deg,#16a34a_90deg,#2563eb_180deg,#db2777_270deg,#ea580c_360deg)]">
+            <Button
+              className="h-12 w-full rounded-full border-none font-bold text-base"
+              size="lg"
+              variant="outline"
+              asChild
+            >
+              <Link href="/tips/experience-monte-carlo-poker">
+                モンテカルロポーカーを体験する
+              </Link>
+            </Button>
           </div>
 
           <TabsList className="mt-6 grid h-auto w-full grid-cols-2 gap-3 bg-transparent p-0">
