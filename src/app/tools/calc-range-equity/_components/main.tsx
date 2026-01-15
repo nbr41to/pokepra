@@ -16,6 +16,7 @@ import {
   toHandSymbol,
 } from "@/utils/hand-range";
 import { getPositionLabel } from "@/utils/position";
+import { PresetCollapse } from "./preset-collapse";
 
 export function Main() {
   const [board, setBoard] = useState("");
@@ -36,6 +37,7 @@ export function Main() {
     | {
         hand: string;
         equity: number;
+        compareWeight: number;
       }[]
     | null
   >(null);
@@ -88,6 +90,7 @@ export function Main() {
           const filteredUtgHands = utgRangeHands.filter(
             (hand) => !hand.some((card) => btnHand.includes(card)),
           );
+          const compareWeight = filteredUtgHands.length;
 
           const result = await simulateVsListEquityWithProgress({
             hero: btnHand,
@@ -101,6 +104,7 @@ export function Main() {
           return {
             hand: btnHand.join(" "),
             equity: result.equity,
+            compareWeight,
           };
         }),
       );
@@ -121,90 +125,101 @@ export function Main() {
   return (
     <div className="w-full space-y-3">
       <div className="space-y-3">
-        <Label>board (0 ~ 5)</Label>
+        <Label className="font-bold">ボード（0 ~ 5枚）</Label>
         <InputCards
           value={board}
           onChange={setBoard}
           limit={5}
           banCards={splitCards(board)}
         />
-
-        <Label>compare1</Label>
-        <SelectPosition
-          total={9}
-          value={comparePositions[0]}
-          setValue={(value) =>
-            setComparePositions([value, comparePositions[1]])
-          }
-        />
-
-        <Label>compare2</Label>
-        <SelectPosition
-          total={9}
-          value={comparePositions[1]}
-          setValue={(value) =>
-            setComparePositions([comparePositions[0], value])
-          }
-        />
+        <div>
+          <Label className="font-bold">あなたのハンドレンジ</Label>
+          <SelectPosition
+            total={9}
+            value={comparePositions[0]}
+            setValue={(value) =>
+              setComparePositions([value, comparePositions[1]])
+            }
+          />
+        </div>
+        <div>
+          <Label className="font-bold">相手のハンドレンジ</Label>
+          <SelectPosition
+            total={9}
+            value={comparePositions[1]}
+            setValue={(value) =>
+              setComparePositions([comparePositions[0], value])
+            }
+          />
+        </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <Button
-          size="lg"
-          onClick={() => {
-            const deck = getShuffledDeck();
-            setBoard(deck.slice(0, 3).join(" "));
-          }}
-        >
-          set random board
-        </Button>
-        <Button
-          size="lg"
-          onClick={() => {
-            // ペアボードとなる3枚とランダムに生成
-            const deck = getShuffledDeck();
-            const pairRank = CARD_RANKS[Math.floor(Math.random() * 13)];
-            const pairCards = deck.filter((card) => card.startsWith(pairRank));
-            const otherCards = deck.filter((card) => !pairCards.includes(card));
-            const boardCards = [pairCards[0], pairCards[1], otherCards[0]];
-            setBoard(boardCards.join(" "));
-          }}
-        >
-          set pair board
-        </Button>
-        <Button
-          size="lg"
-          onClick={() => {
-            const deck = getShuffledDeck();
-            // 2〜7の数字をランダムに並べる
-            const ramLowRanks = CARD_RANKS.slice(7, 13)
-              .sort(() => Math.random() - 0.5)
-              .slice(0, 3);
-            const lowCards = ramLowRanks.map(
-              (rank) => deck.filter((card) => card.startsWith(rank))[0],
-            );
+      <Button
+        className="w-full rounded-full"
+        size="lg"
+        onClick={runSimulation}
+        disabled={
+          loading ||
+          splitCards(board).length < 3 ||
+          comparePositions.length !== 2
+        }
+      >
+        {loading ? "Running..." : "Run Simulation"}
+      </Button>
 
-            setBoard(lowCards.slice(0, 3).join(" "));
-          }}
-        >
-          set low board
-        </Button>
-      </div>
-      <div className="flex">
-        <Button
-          className="w-full rounded-full"
-          variant="outline"
-          size="lg"
-          onClick={runSimulation}
-          disabled={loading}
-        >
-          {loading ? "Running..." : "Run Simulation"}
-        </Button>
-        {error && (
-          <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
+          {error}
+        </div>
+      )}
+
+      <div className="py-4">
+        <PresetCollapse>
+          <Button
+            size="lg"
+            onClick={() => {
+              const deck = getShuffledDeck();
+              setBoard(deck.slice(0, 3).join(" "));
+            }}
+          >
+            ランダム
+          </Button>
+          <Button
+            size="lg"
+            onClick={() => {
+              // ペアボードとなる3枚とランダムに生成
+              const deck = getShuffledDeck();
+              const pairRank = CARD_RANKS[Math.floor(Math.random() * 13)];
+              const pairCards = deck.filter((card) =>
+                card.startsWith(pairRank),
+              );
+              const otherCards = deck.filter(
+                (card) => !pairCards.includes(card),
+              );
+              const boardCards = [pairCards[0], pairCards[1], otherCards[0]];
+              setBoard(boardCards.join(" "));
+            }}
+          >
+            ペア・ボード
+          </Button>
+          <Button
+            size="lg"
+            onClick={() => {
+              const deck = getShuffledDeck();
+              // 2〜7の数字をランダムに並べる
+              const ramLowRanks = CARD_RANKS.slice(7, 13)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 3);
+              const lowCards = ramLowRanks.map(
+                (rank) => deck.filter((card) => card.startsWith(rank))[0],
+              );
+
+              setBoard(lowCards.slice(0, 3).join(" "));
+            }}
+          >
+            ロー・ボード
+          </Button>
+        </PresetCollapse>
       </div>
 
       {/* Progress */}
@@ -219,24 +234,39 @@ export function Main() {
 
       {/* Summary */}
       {result && (
-        <div>
-          {getPositionLabel(comparePositions[0], 9)} vs{" "}
-          {getPositionLabel(comparePositions[1], 9)} | EQ Ave:{" "}
-          {(
-            result.reduce((sum, r) => sum + r.equity * 100, 0) / result.length
-          ).toFixed(2)}
-          % |{" "}
-          {(
-            (result.filter((r) => r.equity > 0.5).length / result.length) *
-            100
-          ).toFixed(2)}
-          %
+        <div className="flex flex-col items-center">
+          <div>
+            {getPositionLabel(comparePositions[0], 9)} vs{" "}
+            {getPositionLabel(comparePositions[1], 9)}
+          </div>
+          <div>
+            Range EQ :{" "}
+            {(
+              result.reduce(
+                (sum, r) => sum + r.equity * r.compareWeight * 100,
+                0,
+              ) / result.reduce((sum, r) => sum + r.compareWeight, 0)
+            ).toFixed(2)}
+            %
+          </div>
+          <div>
+            勝率が50%を上回っている割合:{" "}
+            {(
+              (result.reduce(
+                (sum, r) => sum + (r.equity > 0.5 ? r.compareWeight : 0),
+                0,
+              ) /
+                result.reduce((sum, r) => sum + r.compareWeight, 0)) *
+              100
+            ).toFixed(2)}
+            %
+          </div>
         </div>
       )}
 
       {/* Results */}
       {result && (
-        <div className="grid w-fit grid-cols-13 border-r border-b">
+        <div className="mx-auto grid w-fit grid-cols-13 border-r border-b">
           {CARD_RANKS.map((_rank, rowIndex) => {
             const prefixRank = CARD_RANKS[rowIndex];
             return CARD_RANKS.map((rank, column) => {
@@ -250,14 +280,18 @@ export function Main() {
                 (res) => toHandSymbol(res.hand.split(" ")) === ranksString,
               );
               const totalEquity =
-                totalEquities.reduce((sum, r) => sum + r.equity, 0) /
-                (totalEquities.length || 1);
+                totalEquities.reduce(
+                  (sum, r) => sum + r.equity * r.compareWeight,
+                  0,
+                ) /
+                (totalEquities.reduce((sum, r) => sum + r.compareWeight, 0) ||
+                  1);
 
               return (
                 <div
                   key={rank}
                   className={cn(
-                    "relative grid h-6 w-8 place-items-center border-t border-l text-[11px] text-foreground",
+                    "relative grid h-5 w-7 place-items-center border-t border-l text-[10px] text-foreground",
                   )}
                 >
                   <span className="relative z-10">{ranksString}</span>

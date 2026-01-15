@@ -12,8 +12,7 @@ export const StoryViewer = ({ className }: Props) => {
     <div className={cn("flex gap-x-2", className)}>
       {resultHistories.map(({ equity, rankOutcome, count }, index) => (
         <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-          key={index}
+          key={equity}
           className={cn("flex w-18 flex-col items-center justify-end")}
         >
           {rankOutcome && count && (

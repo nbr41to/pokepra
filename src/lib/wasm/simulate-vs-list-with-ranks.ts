@@ -5,6 +5,7 @@ import {
 import { DEFAULT_WASM_URL } from "./constants";
 import type {
   CombinedPayload,
+  MonteCarloTraceEntry,
   SimulateParams,
   SimulateWithProgressParams,
 } from "./types";
@@ -32,4 +33,17 @@ export async function simulateVsListWithRanksWithProgress(
     },
   };
   return runWorkerRequest<CombinedPayload>(request, { onProgress });
+}
+
+export async function simulateVsListWithRanksTrace(
+  params: SimulateParams,
+): Promise<MonteCarloTraceEntry[]> {
+  const request = {
+    type: "simulateVsListWithRanksTrace",
+    params: {
+      ...params,
+      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
+    },
+  };
+  return runWorkerRequest<MonteCarloTraceEntry[]>(request);
 }

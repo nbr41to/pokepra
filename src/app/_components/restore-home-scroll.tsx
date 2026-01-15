@@ -1,10 +1,12 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useLayoutEffect } from "react";
 
 const HOME_SCROLL_KEY = "mcpt:home-scroll";
 const HOME_WINDOW_SCROLL_KEY = "mcpt:home-window-scroll";
-const HOME_SCROLL_CONTAINER_ID = "home-scroll-container";
+export const HOME_TAB_KEY = "mcpt:home-tab";
+export const HOME_SCROLL_CONTAINER_ID = "home-scroll-container";
 
 const readScrollValue = (key: string) => {
   const raw = sessionStorage.getItem(key);
@@ -12,11 +14,23 @@ const readScrollValue = (key: string) => {
   return Number.isNaN(y) ? 0 : y;
 };
 
+type RestoreHomeScrollProps = {
+  onRestoreTab?: (value: string) => void;
+  tabValue?: string;
+};
+
 /**
- * Homeのスクロール位置を保存して復元する
+ * Homeのスクロール位置とTabを保存して復元する
  */
-export const RestoreHomeScroll = () => {
+export const RestoreHomeScroll = ({
+  onRestoreTab,
+  tabValue,
+}: RestoreHomeScrollProps) => {
+  const pathname = usePathname();
+
   useLayoutEffect(() => {
+    if (pathname !== "/") return;
+
     const container = document.getElementById(HOME_SCROLL_CONTAINER_ID);
 
     const restore = () => {
@@ -29,6 +43,13 @@ export const RestoreHomeScroll = () => {
         window.scrollTo(0, readScrollValue(HOME_WINDOW_SCROLL_KEY));
       }
     };
+
+    if (onRestoreTab) {
+      const storedTab = sessionStorage.getItem(HOME_TAB_KEY);
+      if (storedTab) {
+        onRestoreTab(storedTab);
+      }
+    }
 
     restore();
     const raf = requestAnimationFrame(restore);
@@ -57,7 +78,24 @@ export const RestoreHomeScroll = () => {
       container?.removeEventListener("scroll", handleContainerScroll);
       window.removeEventListener("scroll", handleWindowScroll);
     };
-  }, []);
+  }, [onRestoreTab, pathname]);
+
+  useEffect(() => {
+    if (!tabValue) return;
+    sessionStorage.setItem(HOME_TAB_KEY, tabValue);
+  }, [tabValue]);
+
+  useEffect(() => {
+    if (!tabValue || pathname !== "/") return;
+    const container = document.getElementById(HOME_SCROLL_CONTAINER_ID);
+    if (container && container.scrollHeight > container.clientHeight) {
+      container.scrollTo({ top: 0, behavior: "auto" });
+      sessionStorage.setItem(HOME_SCROLL_KEY, "0");
+      return;
+    }
+    window.scrollTo(0, 0);
+    sessionStorage.setItem(HOME_WINDOW_SCROLL_KEY, "0");
+  }, [tabValue, pathname]);
 
   return null;
 };

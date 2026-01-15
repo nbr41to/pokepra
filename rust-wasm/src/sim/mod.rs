@@ -12,6 +12,7 @@ pub(crate) use rng::Lcg64;
 
 pub use simulate_vs_list::{
   simulate_vs_list_with_ranks,
+  simulate_vs_list_with_ranks_trace,
   simulate_vs_list_with_ranks_with_progress,
 };
 

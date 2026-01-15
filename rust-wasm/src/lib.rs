@@ -16,6 +16,7 @@ use rs_poker_native::{
 use sim::{
   eval::best_of,
   simulate_vs_list_with_ranks as simulate_vs_list_with_ranks_internal,
+  simulate_vs_list_with_ranks_trace as simulate_vs_list_with_ranks_trace_internal,
   simulate_vs_list_with_ranks_with_progress as simulate_vs_list_with_ranks_with_progress_internal,
 };
 use sim::{parse_board, parse_hands_min1, Card as SimCard};
@@ -123,6 +124,57 @@ fn run_simulation(
     chunk[5..14].copy_from_slice(rank_wins);
     chunk[14..23].copy_from_slice(rank_ties);
     chunk[23..32].copy_from_slice(rank_lose_counts);
+  }
+
+  results.len() as i32
+}
+
+fn run_simulation_trace(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+  mut runner: impl FnMut(&str, &str, &str) -> Result<Vec<[u32; 11]>, i32>,
+) -> i32 {
+  let _ = (trials, seed);
+  if hero_ptr.is_null() || out_ptr.is_null() || compare_ptr.is_null() {
+    return -1;
+  }
+  let hero_slice = unsafe { std::slice::from_raw_parts(hero_ptr, hero_len) };
+  let board_slice = unsafe { std::slice::from_raw_parts(board_ptr, board_len) };
+  let compare_slice = unsafe { std::slice::from_raw_parts(compare_ptr, compare_len) };
+  let hero_str = match std::str::from_utf8(hero_slice) {
+    Ok(s) => s,
+    Err(_) => return -2,
+  };
+  let board_str = match std::str::from_utf8(board_slice) {
+    Ok(s) => s,
+    Err(_) => return -3,
+  };
+  let compare_str = match std::str::from_utf8(compare_slice) {
+    Ok(s) => s,
+    Err(_) => return -4,
+  };
+
+  let results = match runner(hero_str, board_str, compare_str) {
+    Ok(v) => v,
+    Err(code) => return code,
+  };
+
+  let needed = results.len() * 11;
+  if out_len < needed {
+    return -6;
+  }
+
+  let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
+  for (row, chunk) in results.iter().zip(out.chunks_exact_mut(11)) {
+    chunk.copy_from_slice(row);
   }
 
   results.len() as i32
@@ -438,6 +490,40 @@ pub extern "C" fn simulate_vs_list_with_ranks_with_progress(
         }),
       )
       .map_err(|_| -5)
+    },
+  )
+}
+
+/// Hero vs provided opponent list, returning per-trial outcomes with winner ranks.
+/// Output per record: [hero1, hero2, board1..board5, opp1, opp2, outcome, rankIndex]
+/// out_len must be >= records * 11 (compareCount * trials * 11). Returns record count or negative error.
+#[no_mangle]
+pub extern "C" fn simulate_vs_list_with_ranks_trace(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  compare_ptr: *const u8,
+  compare_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_simulation_trace(
+    hero_ptr,
+    hero_len,
+    board_ptr,
+    board_len,
+    compare_ptr,
+    compare_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, board_str, compare_str| {
+      simulate_vs_list_with_ranks_trace_internal(hero_str, board_str, compare_str, trials, seed)
+        .map_err(|_| -5)
     },
   )
 }

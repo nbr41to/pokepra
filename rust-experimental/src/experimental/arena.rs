@@ -5,11 +5,15 @@ use rs_poker::arena::{
   HoldemSimulationBuilder,
   action::{Action, AgentAction, ForcedBetType},
   agent::{
-    CallingAgent,
     CallingAgentGenerator,
     FoldingAgentGenerator,
-    RandomAgent,
     RandomAgentGenerator,
+  },
+  cfr::{
+    BasicCFRActionGenerator,
+    CFRAgent,
+    PerRoundFixedGameStateIteratorGen,
+    StateStore,
   },
   competition::{HoldemCompetition, StandardSimulationIterator},
   game_state::{GameState, Round},
@@ -23,13 +27,27 @@ pub fn run() {
 
   run_full_street_demo();
 
+  let cfr_iterator = PerRoundFixedGameStateIteratorGen::new(1, 1, 1, 1);
   let stacks = vec![100.0, 100.0];
-  let agents: Vec<Box<dyn rs_poker::arena::Agent>> = vec![
-    Box::<CallingAgent>::default(),
-    Box::<RandomAgent>::default(),
-  ];
   let mut rng = StdRng::seed_from_u64(42);
   let game_state = GameState::new_starting(stacks, 10.0, 5.0, 0.0, 0);
+  let mut state_store = StateStore::new();
+  let states = (0..game_state.num_players)
+    .map(|idx| state_store.new_state(game_state.clone(), idx))
+    .collect::<Vec<_>>();
+  let agents: Vec<Box<dyn rs_poker::arena::Agent>> = states
+    .iter()
+    .map(|(cfr_state, traversal_state)| {
+      Box::new(
+        CFRAgent::<BasicCFRActionGenerator, PerRoundFixedGameStateIteratorGen>::new(
+          state_store.clone(),
+          cfr_state.clone(),
+          traversal_state.clone(),
+          cfr_iterator.clone(),
+        ),
+      ) as Box<dyn rs_poker::arena::Agent>
+    })
+    .collect();
   let mut sim = HoldemSimulationBuilder::default()
     .game_state(game_state)
     .agents(agents)
@@ -68,14 +86,29 @@ pub fn run() {
 fn run_full_street_demo() {
   println!("\n-- arena: フルストリート 1ハンド (9プレイヤー) --");
 
-  let num_players = 9;
+  let num_players = 6;
   let player_labels = build_player_labels(num_players);
   let stacks = vec![100.0; num_players];
-  let agents: Vec<Box<dyn rs_poker::arena::Agent>> = (0..num_players)
-    .map(|_| Box::<CallingAgent>::default() as Box<dyn rs_poker::arena::Agent>)
-    .collect();
   let mut rng = StdRng::seed_from_u64(777);
   let game_state = GameState::new_starting(stacks, 10.0, 5.0, 0.0, 0);
+  let cfr_iterator = PerRoundFixedGameStateIteratorGen::new(1, 1, 1, 1);
+  let mut state_store = StateStore::new();
+  let states = (0..game_state.num_players)
+    .map(|idx| state_store.new_state(game_state.clone(), idx))
+    .collect::<Vec<_>>();
+  let agents: Vec<Box<dyn rs_poker::arena::Agent>> = states
+    .iter()
+    .map(|(cfr_state, traversal_state)| {
+      Box::new(
+        CFRAgent::<BasicCFRActionGenerator, PerRoundFixedGameStateIteratorGen>::new(
+          state_store.clone(),
+          cfr_state.clone(),
+          traversal_state.clone(),
+          cfr_iterator.clone(),
+        ),
+      ) as Box<dyn rs_poker::arena::Agent>
+    })
+    .collect();
 
   let hands: Rc<RefCell<Vec<Vec<Card>>>> =
     Rc::new(RefCell::new(vec![Vec::new(); num_players]));

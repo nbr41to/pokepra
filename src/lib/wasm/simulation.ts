@@ -13,6 +13,7 @@ export {
 } from "./simulate-vs-list-equity";
 export {
   simulateVsListWithRanks,
+  simulateVsListWithRanksTrace,
   simulateVsListWithRanksWithProgress,
 } from "./simulate-vs-list-with-ranks";
 export type {
@@ -21,6 +22,7 @@ export type {
   EquityPayload,
   EvaluateHandsRankingParams,
   HandRankingEntry,
+  MonteCarloTraceEntry,
   ParseRangeParams,
   RankDistributionEntry,
   RankOutcome,

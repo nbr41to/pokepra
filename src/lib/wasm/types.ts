@@ -88,6 +88,18 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_vs_list_with_ranks_trace?: (
+    heroPtr: number,
+    heroLen: number,
+    boardPtr: number,
+    boardLen: number,
+    comparePtr: number,
+    compareLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   parse_range_to_hands?: (
     rangePtr: number,
     rangeLen: number,
@@ -150,6 +162,15 @@ export type EquityPayload = {
   hand: string;
   equity: number;
   data: EquityEntry[];
+};
+
+export type MonteCarloTraceEntry = {
+  hero: string;
+  board: string;
+  villain: string;
+  outcome: "hero" | "villain" | "tie";
+  rankIndex: number;
+  rankName: string;
 };
 
 export type SimulateParams = {

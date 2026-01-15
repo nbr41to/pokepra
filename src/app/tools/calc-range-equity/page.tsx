@@ -5,8 +5,9 @@ export default function Page() {
   return (
     <div className="flex w-full flex-col items-center gap-y-3 px-6 py-12">
       <HeaderTitle
-        title="Range Compare"
-        description={"ボードに対して2つのレンジ内のハンドの勝率を比較します。"}
+        title="Calculate Range Equity"
+        description={"指定したボードに対してレンジ単位の勝率を計算します。"}
+        hidable
       />
       <Main />
     </div>

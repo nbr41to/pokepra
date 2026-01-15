@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { SuitIcon } from "./ui/suit-icon";
 
 const variants = cva(
-  "flex flex-col items-center justify-center bg-background border data-[suit=s]:text-blue-400 dark:data-[suit=s]:text-blue-600 data-[suit=h]:text-pink-400 dark:data-[suit=h]:text-pink-600 data-[suit=d]:text-orange-400 dark:data-[suit=d]:text-orange-600 data-[suit=c]:text-green-400 dark:data-[suit=c]:text-green-600",
+  "flex flex-col items-center justify-center bg-background border data-[suit=s]:text-suit-spade data-[suit=h]:text-suit-heart data-[suit=d]:text-suit-diamond data-[suit=c]:text-suit-club",
   {
     variants: {
       variant: {

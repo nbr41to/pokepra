@@ -3,15 +3,21 @@
 import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
 import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
 import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
+import { runSimulateVsListWithRanksTrace } from "./simulate-vs-list-with-ranks-trace-core";
 import type {
   CombinedPayload,
   EquityPayload,
+  MonteCarloTraceEntry,
   RankDistributionEntry,
   RankDistributionParams,
   SimulateParams,
 } from "./types";
 
-type SimulateResult = CombinedPayload | EquityPayload | RankDistributionEntry[];
+type SimulateResult =
+  | CombinedPayload
+  | EquityPayload
+  | RankDistributionEntry[]
+  | MonteCarloTraceEntry[];
 
 type WorkerRequest =
   | { id: number; type: "simulateVsListWithRanks"; params: SimulateParams }
@@ -20,6 +26,7 @@ type WorkerRequest =
       type: "simulateVsListWithRanksMonteCarlo";
       params: SimulateParams;
     }
+  | { id: number; type: "simulateVsListWithRanksTrace"; params: SimulateParams }
   | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
   | {
       id: number;
@@ -89,6 +96,16 @@ ctx.onmessage = async (event) => {
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
       const data = await runSimulateVsListWithRanks(params, {});
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateVsListWithRanksTrace") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateVsListWithRanksTrace(params);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
