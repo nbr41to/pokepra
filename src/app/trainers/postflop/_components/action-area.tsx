@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
+import { SituationCopyButton } from "@/components/situation-copy-button";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -15,7 +16,6 @@ import {
 } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 import { BetSlider } from "./bet-slider";
-import { SituationCopyButton } from "./situation-copy-button";
 
 export const ActionArea = () => {
   const {
@@ -124,7 +124,7 @@ export const ActionArea = () => {
           rankPromise={rankPromise}
           disabled={disabledAnalysis}
         />
-        <SituationCopyButton board={board} />
+        <SituationCopyButton hero={hero} board={board} />
       </div>
     </div>
   );

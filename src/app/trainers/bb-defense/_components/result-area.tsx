@@ -38,7 +38,10 @@ export const ResultArea = () => {
           </span>
         </p>
         <div className="col-span-4 text-muted-foreground">
-          SB: 0.5, BB: 1, BB ANTE: 1, RAISE: {openRaise.toFixed(1)}
+          SB: 0.5, BB: 1, BB ANTE: 1,{" "}
+          <span className="font-bold text-foreground">
+            RAISE: {openRaise.toFixed(1)}
+          </span>
         </div>
       </div>
     </div>

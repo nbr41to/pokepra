@@ -67,7 +67,6 @@ export function Main({
           board: board.split(" "),
         }),
       ]);
-      console.log(ranking);
       const sortedResult = {
         ...result,
         data: result.data.sort(

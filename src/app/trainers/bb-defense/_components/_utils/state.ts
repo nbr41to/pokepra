@@ -141,7 +141,7 @@ const useActionStore = create<Store>((set, get) => ({
     set(() => ({ showedHand: true }));
   },
 
-  // プリフロップのアクション
+  // アクション時の計算
   calcResult: async (action: PreflopAction) => {
     const {
       villainPosition,
@@ -152,6 +152,7 @@ const useActionStore = create<Store>((set, get) => ({
       rakeAmount,
       requiredEquity,
     } = get();
+
     const result = await simulateVsListEquity({
       hero: hero,
       board: [],

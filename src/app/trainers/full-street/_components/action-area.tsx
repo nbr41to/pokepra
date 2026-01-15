@@ -11,8 +11,8 @@ import {
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
+import { SituationCopyButton } from "../../../../components/situation-copy-button";
 import { useHoldemStore } from "./_utils/state";
-import { SituationCopyButton } from "./situation-copy-button";
 
 export const ActionArea = () => {
   const {
@@ -21,7 +21,6 @@ export const ActionArea = () => {
     street,
     hero,
     board,
-    actions,
     confirmHand,
     preflopAction,
     postflopAction,
