@@ -13,10 +13,7 @@ export const FooterTablist = ({ className }: Props) => {
         className,
       )}
     >
-      <TabsTrigger
-        value="introduction"
-        className="size-14 rounded-full bg-transparent/20"
-      >
+      <TabsTrigger value="introduction" className="size-14 rounded-full">
         <Home className="size-6!" />
       </TabsTrigger>
       <TabsTrigger value="trainer" className="size-14 rounded-full">

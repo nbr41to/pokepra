@@ -17,11 +17,11 @@ export function TipsContent() {
 
       <NavigationSection title="Guide" description="はじめて使う方へ">
         <div className="flex flex-col items-center justify-center gap-y-3">
-          <Button className="w-60" variant="outline" size="lg" disabled>
-            <Link href="/tips/hand-probability">ポーカーのルール説明</Link>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/rules">ポーカーのルール説明</Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" disabled>
-            <Link href="/tips/hand-probability">ポーカーの楽しさ</Link>
+            <Link href="/tips/fans">ポーカーの楽しさ</Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/experience-monte-carlo">
@@ -39,7 +39,7 @@ export function TipsContent() {
         </div>
       </NavigationSection>
 
-      <NavigationSection title="Tips" description="はじめて使う方へ">
+      <NavigationSection title="Knowledge" description="用語・基本知識">
         <div className="flex flex-col items-center justify-center gap-y-3">
           <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/hand-probability">役が完成する確率</Link>
@@ -49,6 +49,17 @@ export function TipsContent() {
               スターティングハンドの勝率
             </Link>
           </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/hand-probability">役が完成する確率</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/board-textures">ボードの種類</Link>
+          </Button>
+        </div>
+      </NavigationSection>
+
+      <NavigationSection title="Tips" description="役に立つ知識集">
+        <div className="flex flex-col items-center justify-center gap-y-3">
           <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/flop-check">フロップでチェックする理由</Link>
           </Button>

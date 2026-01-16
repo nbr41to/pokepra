@@ -1,4 +1,4 @@
-'use client";';
+"use client";
 
 import { CircleX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";

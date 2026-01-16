@@ -4,6 +4,7 @@ import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
+import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
 import { InputHands } from "@/components/input-hands";
 import { SetRangeHands } from "@/components/set-range-hands";
@@ -125,7 +126,7 @@ export function Main({
             banCards={usedCards}
           />
           <Label className="font-bold">ボード（0 ~ 5枚）</Label>
-          <InputCards
+          <InputBoard
             value={board}
             onChange={setBoard}
             limit={5}

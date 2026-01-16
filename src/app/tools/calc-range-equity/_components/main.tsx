@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { InputCards } from "@/components/input-cards";
+import { InputBoard } from "@/components/input-board";
 import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -9,14 +9,12 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { simulateVsListEquityWithProgress } from "@/lib/wasm/simulation";
 import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
-import { getShuffledDeck } from "@/utils/dealer";
 import {
   getHandsInRange,
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
 import { getPositionLabel } from "@/utils/position";
-import { PresetCollapse } from "./preset-collapse";
 
 export function Main() {
   const [board, setBoard] = useState("");
@@ -126,7 +124,7 @@ export function Main() {
     <div className="w-full space-y-3">
       <div className="space-y-3">
         <Label className="font-bold">ボード（0 ~ 5枚）</Label>
-        <InputCards
+        <InputBoard
           value={board}
           onChange={setBoard}
           limit={5}
@@ -172,55 +170,6 @@ export function Main() {
           {error}
         </div>
       )}
-
-      <div className="py-4">
-        <PresetCollapse>
-          <Button
-            size="lg"
-            onClick={() => {
-              const deck = getShuffledDeck();
-              setBoard(deck.slice(0, 3).join(" "));
-            }}
-          >
-            ランダム
-          </Button>
-          <Button
-            size="lg"
-            onClick={() => {
-              // ペアボードとなる3枚とランダムに生成
-              const deck = getShuffledDeck();
-              const pairRank = CARD_RANKS[Math.floor(Math.random() * 13)];
-              const pairCards = deck.filter((card) =>
-                card.startsWith(pairRank),
-              );
-              const otherCards = deck.filter(
-                (card) => !pairCards.includes(card),
-              );
-              const boardCards = [pairCards[0], pairCards[1], otherCards[0]];
-              setBoard(boardCards.join(" "));
-            }}
-          >
-            ペア・ボード
-          </Button>
-          <Button
-            size="lg"
-            onClick={() => {
-              const deck = getShuffledDeck();
-              // 2〜7の数字をランダムに並べる
-              const ramLowRanks = CARD_RANKS.slice(7, 13)
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 3);
-              const lowCards = ramLowRanks.map(
-                (rank) => deck.filter((card) => card.startsWith(rank))[0],
-              );
-
-              setBoard(lowCards.slice(0, 3).join(" "));
-            }}
-          >
-            ロー・ボード
-          </Button>
-        </PresetCollapse>
-      </div>
 
       {/* Progress */}
       {loading ? (

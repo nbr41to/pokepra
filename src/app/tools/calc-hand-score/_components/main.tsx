@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
-import { InputCards } from "@/components/input-cards";
+import { InputBoard } from "@/components/input-board";
 import { InputHands } from "@/components/input-hands";
 import { SetRangeHands } from "@/components/set-range-hands";
 import { Button } from "@/components/ui/button";
@@ -120,7 +120,7 @@ export function Main() {
       <div className="space-y-2 pb-6">
         <div className="space-y-3">
           <Label>board (3 ~ 5)</Label>
-          <InputCards
+          <InputBoard
             value={board}
             onChange={setBoard}
             limit={5}
