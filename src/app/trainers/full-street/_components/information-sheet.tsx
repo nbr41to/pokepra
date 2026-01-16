@@ -1,8 +1,6 @@
 "use client";
 
-import { CircleQuestionMark, X } from "lucide-react";
-import Link from "next/link";
-import { Combo } from "@/components/combo";
+import { ChartColumn, CircleQuestionMark, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -16,7 +14,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { VillainHands } from "./villain-hands";
 
 type Props = {
   className?: string;
@@ -38,47 +35,43 @@ export const InformationSheet = ({ className }: Props) => {
       <SheetContent className="h-dvh" side="bottom">
         <ScrollArea className="h-dvh">
           <SheetHeader>
-            <SheetTitle>Preflop Equity Simulator</SheetTitle>
+            <SheetTitle>Full Street Simulator</SheetTitle>
             <SheetDescription className="">
-              プリフロップ参加時の勝率を計算します。
+              1ハンドのフルストリートをシュミレーションします。
             </SheetDescription>
           </SheetHeader>
 
           <div className="space-y-3 px-5 font-noto-sans-jp">
-            <h1 className="font-bold">これはなんですか？</h1>
+            <h2 className="font-bold">これはなんですか？</h2>
             <p>
-              これは、任意のポジション・ハンドにおいて参加した場合の後ろのポジションのプレイヤー全員との対戦をシュミレーションします。
+              プリフロップからリバーまでのストリートの間の様々な局面における勝率の感覚を養います。アクション後にボードの上に勝率の情報表示されます。
             </p>
             <p>
-              1000回シュミレーションした結果から勝率を計算し、勝率が50%を上回っていた相手1人につき数字が赤く表示されて1点が減点されます。全プレイヤーの勝率が50%を下回っていた場合には3点の加点となります。
-            </p>
-            <p>フォールドした場合は点数の変動はありません。</p>
-            <p>
-              当然後ろに控えている相手が多いほど自分の勝率を上回るハンドを持っている相手がいる確率は増えます。任意のポジション・ハンドにおいての参加の良し悪しを体感できるゲームとなっています。
+              勝率の情報はBBを想定した対戦相手と1000回のシュミレーションした結果から勝率と勝ったときの役を計算しています。
             </p>
             <p>
-              ※このシュミレーションは、プリフロップ時点での勝率を計算して表示しているだけであり、よく使用されているプリフロップのハンドレンジ表との厳密な関連性はありません
-              <Link
-                className="px-1 font-bold underline"
-                href="/tips/starting-hand-equity"
-              >
-                スターティングハンドの勝率
-              </Link>
-              を把握する目的程度のものになります。
+              BBを想定した対戦相手を1プレイヤーおいています。これは実践をイメージしやすくするためであり、勝ち負けはさほど重要ではありません。
+            </p>
+
+            <p>
+              ※注意すべき点は勝率を参考にアクションをすることはGTOに反するプレイであるということです。GTOの戦略は勝率に関わらず毎回バランス取れたアクションをすることが重要になります。あくまで勝率の感覚を養うためのツールとして使用してください。
             </p>
           </div>
 
-          <VillainHands
-            className="mt-8 h-72"
-            people={9}
-            position={1}
-            villains={EXAMPLE_VILLAINS}
-            result={EXAMPLE_RESULT}
-          />
-
-          <div className="mx-auto my-4 grid w-fit place-items-center gap-y-1 pb-32">
-            <Combo hand={["3h", "3s"]} />
-            <p className="font-noto-sans-jp text-xs">自分のハンド</p>
+          <div className="mt-5 space-y-3 px-5 pb-24 font-noto-sans-jp">
+            <h2 className="font-bold">
+              各シチュエーションごとに分析を確認できます。
+            </h2>
+            <p>
+              下にある
+              <Button size="icon-sm" className="mx-1 rounded-full">
+                <ChartColumn />
+              </Button>
+              のボタンを押すと分析結果を確認できます。勝率の情報同様の1000回のシュミレーションした結果の詳細を確認できます。
+            </p>
+            <p>
+              レンジごとの勝率の分布を確認したり、自分のコンボはナッツから何番目なのかを確認することができます。
+            </p>
           </div>
 
           <SheetFooter className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">

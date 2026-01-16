@@ -45,7 +45,7 @@ export function TipsContent() {
             <Link href="/tips/hand-probability">役が完成する確率</Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
-            <Link href="/tips/starting-hand-winrate">
+            <Link href="/tips/starting-hand-equity">
               スターティングハンドの勝率
             </Link>
           </Button>

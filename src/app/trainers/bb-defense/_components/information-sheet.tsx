@@ -41,7 +41,7 @@ export const InformationSheet = ({ className }: Props) => {
             </SheetDescription>
           </SheetHeader>
 
-          <div className="space-y-3 px-5 font-noto-sans-jp">
+          <div className="space-y-3 px-5 pb-24 font-noto-sans-jp">
             <h1 className="font-bold">これはなんですか？</h1>
             <p>
               BBアンティあり・レーキありの9人プレイで、相手のポジションと

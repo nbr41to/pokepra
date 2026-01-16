@@ -72,7 +72,7 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
 
   return (
     <Tabs defaultValue="equity" className="relative h-[calc(100dvh-120px)]">
-      <div className="absolute -top-2 left-1/2 z-20 w-full -translate-x-1/2">
+      <div className="absolute -top-1.5 left-1/2 z-20 w-full -translate-x-1/2">
         <SelectPosition
           total={9}
           value={selectedRange}
@@ -83,7 +83,7 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
         <EquityChart result={filteredResult} />
       </TabsContent>
       <TabsContent value="ranking">
-        <ScrollArea ref={scrollAreaRef} className="h-[calc(100dvh-120px)]">
+        <ScrollArea ref={scrollAreaRef} className="h-[calc(100dvh-140px)]">
           <ComboRanking
             result={filteredResult}
             ranking={ranking}

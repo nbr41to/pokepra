@@ -373,18 +373,19 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
       pot,
       actionHistory,
     } = get();
+    const safeStack = Number.isFinite(stack) ? stack : 0;
     const rawBetValue =
-      bet === "fold" ? 0 : clampNumber(bet, 0, Math.max(stack, 0));
+      bet === "fold" ? 0 : clampNumber(Number(bet), 0, Math.max(safeStack, 0));
     let betValue = rawBetValue;
     if (villainOpenAction !== "bet" && betValue > 0) {
-      betValue = Math.min(Math.max(betValue, 1), stack);
+      betValue = Math.min(Math.max(betValue, 1), safeStack);
     }
     if (villainOpenAction === "bet" && betValue > villainBet) {
       const minRaiseTo = villainBet * 2;
-      if (stack >= minRaiseTo) {
+      if (safeStack >= minRaiseTo) {
         betValue = Math.max(betValue, minRaiseTo);
       } else {
-        betValue = Math.min(villainBet, stack);
+        betValue = Math.min(villainBet, safeStack);
       }
     }
     const heroAction = resolveHeroAction(
@@ -395,12 +396,12 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
     );
     const heroContribution =
       heroAction === "call"
-        ? Math.min(villainBet, stack)
+        ? Math.min(villainBet, safeStack)
         : heroAction === "bet" || heroAction === "raise"
           ? betValue
           : 0;
     let nextPot = pot + heroContribution;
-    const nextStack = stack - heroContribution;
+    const nextStack = safeStack - heroContribution;
     const baseHistoryId = Date.now();
     const historyEntries: ActionHistoryEntry[] = [];
     if (heroAction === "bet" || heroAction === "raise") {
@@ -436,12 +437,14 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
         : heroAction === "check"
           ? 0
           : betValue;
-    const rare =
-      result.data.findIndex((data) => data.hand === result.hand) /
-      result.data.length;
-    const compareEquityAverage =
-      result.data.reduce((acc, cur) => acc + cur.equity, 0) /
-      result.data.length;
+    const compareCount = result.data.length;
+    const rare = compareCount
+      ? result.data.findIndex((data) => data.hand === result.hand) /
+        compareCount
+      : 1;
+    const compareEquityAverage = compareCount
+      ? result.data.reduce((acc, cur) => acc + cur.equity, 0) / compareCount
+      : 0;
     const villainRequiredEq = scoreBetValue / (pot + scoreBetValue); // 相手の必要勝率
     const canFold = compareEquityAverage < villainRequiredEq;
 
@@ -521,6 +524,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
     if (villainReaction === "fold") {
       newStack += nextPot;
     }
+    const finalStack = Number.isFinite(newStack) ? newStack : 0;
 
     const handEnded = currentStreet === "river" || villainReaction === "fold";
     const nextStreet =
@@ -532,7 +536,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
 
     set(() => ({
       street: handEnded ? currentStreet : nextStreet,
-      stack: newStack,
+      stack: finalStack,
       delta: deltaScore,
       actions: {
         ...actions,

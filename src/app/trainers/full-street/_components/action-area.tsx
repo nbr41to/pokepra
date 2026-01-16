@@ -13,6 +13,7 @@ import {
 } from "@/utils/hand-range";
 import { SituationCopyButton } from "../../../../components/situation-copy-button";
 import { useHoldemStore } from "./_utils/state";
+import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
@@ -115,6 +116,7 @@ export const ActionArea = () => {
           onOpenChange={setAnalyticsOpen}
         />
         <SituationCopyButton hero={hero} board={board} />
+        <InformationSheet />
       </div>
     </div>
   );

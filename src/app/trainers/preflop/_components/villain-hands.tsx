@@ -89,7 +89,7 @@ export const VillainHands = ({
                       : "opacity-0 transition-none",
                   )}
                   style={{
-                    transitionDelay: `${200 * (seatNumber - position)}ms`,
+                    transitionDelay: `${200 * (seatNumber - position + 2)}ms`,
                   }}
                 >
                   {(equity * 100).toFixed(1)}%
