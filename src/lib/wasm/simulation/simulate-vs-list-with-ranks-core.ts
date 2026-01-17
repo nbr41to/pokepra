@@ -1,11 +1,11 @@
-import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm, setProgressListener } from "./loader";
+import { DEFAULT_WASM_URL } from "../constants";
+import { createHeap, loadWasm, setProgressListener } from "../loader";
 import type {
   CombinedEntry,
   CombinedPayload,
   RankOutcomeResults,
   SimulateParams,
-} from "./types";
+} from "../types";
 
 export async function runSimulateVsListWithRanks(
   {

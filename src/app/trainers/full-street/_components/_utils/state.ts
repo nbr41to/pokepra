@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import PREFLOP_RANKING from "@/data/preflop-hand-ranking.json";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulate-vs-list-with-ranks";
 import type { RankOutcomeResults } from "@/lib/wasm/simulation";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { shuffleAndDeal } from "@/utils/dealer";
 import {
   getHandsInRange,

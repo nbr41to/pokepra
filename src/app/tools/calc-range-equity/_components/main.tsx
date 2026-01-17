@@ -1,20 +1,27 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { InputBoard } from "@/components/input-board";
 import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
-import { simulateVsListEquityWithProgress } from "@/lib/wasm/simulation";
+import { simulateRangeVsRangeEquityWithProgress } from "@/lib/wasm/simulation";
 import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
-import {
-  getHandsInRange,
-  getRangeStrengthByPosition,
-  toHandSymbol,
-} from "@/utils/hand-range";
+import { getRangeStrengthByPosition, toHandSymbol } from "@/utils/hand-range";
 import { getPositionLabel } from "@/utils/position";
+
+const HAND_RANGE_SYMBOLS = [
+  "QQ+,AKo,AKs",
+  "99+,ATs+,AQo+,KQs",
+  "77+,ATs+,AJo+,KJs+,QJ-JTs,KQo",
+  "55+,A2s+,K9s+,ATo+,QTs+,KJo+,JT-T9s",
+  "22+,A2s+,A9o+,K9s+,Q9s+,KTo+,J9s+,T8s+,QJ-JTo,98s",
+  "22+,A2s+,K2s+,A7o+,Q6s+,J7s+,K9o+,Q9o+,T8s+,97s+,J9o+,87-65s,T9o",
+  "22+,A2s+,K2s+,Q2s+,A6o+,J6s+,K9o+,Q9o+,T7s+,96s+,J9o+,86s+,75s+,64s+,T9-98o,54s",
+  "22+,A2s+,A2o+,K2s+,Q2s+,J2s+,K5o+,T3s+,Q7o+,95s+,85s+,74s+,63s+,J8o+,53s+,T8o+,97o+,87o,43s",
+];
 
 export function Main() {
   const [board, setBoard] = useState("");
@@ -41,8 +48,6 @@ export function Main() {
   >(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
-  const progressByHandRef = useRef<number[]>([]);
-  const progressRafRef = useRef<number | null>(null);
 
   const runSimulation = async () => {
     if (comparePositions.length !== 2) {
@@ -53,70 +58,32 @@ export function Main() {
     setLoading(true);
     setProgress(0);
 
-    const btnRangeHands = getHandsInRange(
-      getRangeStrengthByPosition(comparePositions[0]),
-      splitCards(board),
-    );
-    const utgRangeHands = getHandsInRange(
-      getRangeStrengthByPosition(comparePositions[1]),
-      splitCards(board),
-    );
+    const heroRangeStrings =
+      HAND_RANGE_SYMBOLS[getRangeStrengthByPosition(comparePositions[0], 9)];
+    const villainRangeStrings =
+      HAND_RANGE_SYMBOLS[getRangeStrengthByPosition(comparePositions[1], 9)];
 
     try {
-      progressByHandRef.current = new Array(btnRangeHands.length).fill(0);
-      const updateProgress = (index: number, pct: number) => {
-        progressByHandRef.current[index] = pct;
-        if (progressRafRef.current !== null) {
-          return;
-        }
-        progressRafRef.current = requestAnimationFrame(() => {
-          progressRafRef.current = null;
-          const total = progressByHandRef.current.reduce(
-            (sum, value) => sum + value,
-            0,
-          );
-          setProgress(
-            progressByHandRef.current.length === 0
-              ? 0
-              : total / progressByHandRef.current.length,
-          );
-        });
-      };
+      const result = await simulateRangeVsRangeEquityWithProgress({
+        board: splitCards(board),
+        heroRange: heroRangeStrings,
+        villainRange: villainRangeStrings,
+        trials: 100,
+        onProgress: (pct) => setProgress(pct),
+      });
 
-      const equities = await Promise.all(
-        btnRangeHands.map(async (btnHand, index) => {
-          const filteredUtgHands = utgRangeHands.filter(
-            (hand) => !hand.some((card) => btnHand.includes(card)),
-          );
-          const compareWeight = filteredUtgHands.length;
-
-          const result = await simulateVsListEquityWithProgress({
-            hero: btnHand,
-            board: splitCards(board),
-            compare: filteredUtgHands,
-            trials: 1000,
-            onProgress: (pct) => {
-              updateProgress(index, pct);
-            },
-          });
-          return {
-            hand: btnHand.join(" "),
-            equity: result.equity,
-            compareWeight,
-          };
-        }),
+      setResult(
+        result.hero.map((entry) => ({
+          hand: entry.hand,
+          equity: entry.equity,
+          compareWeight: 1,
+        })),
       );
-
-      setResult(equities);
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setLoading(false);
       setProgress(0);
-      if (progressRafRef.current !== null) {
-        cancelAnimationFrame(progressRafRef.current);
-        progressRafRef.current = null;
-      }
     }
   };
 
@@ -194,7 +161,7 @@ export function Main() {
               result.reduce(
                 (sum, r) => sum + r.equity * r.compareWeight * 100,
                 0,
-              ) / result.reduce((sum, r) => sum + r.compareWeight, 0)
+              ) / result.length
             ).toFixed(2)}
             %
           </div>

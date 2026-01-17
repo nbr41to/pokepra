@@ -1,6 +1,6 @@
-import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm } from "./loader";
-import type { MonteCarloTraceEntry, SimulateParams } from "./types";
+import { DEFAULT_WASM_URL } from "../constants";
+import { createHeap, loadWasm } from "../loader";
+import type { MonteCarloTraceEntry, SimulateParams } from "../types";
 
 const RANK_LABELS = [
   "High Card",

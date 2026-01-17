@@ -1,6 +1,6 @@
-import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm, setProgressListener } from "./loader";
-import type { EquityEntry, EquityPayload, SimulateParams } from "./types";
+import { DEFAULT_WASM_URL } from "../constants";
+import { createHeap, loadWasm, setProgressListener } from "../loader";
+import type { EquityEntry, EquityPayload, SimulateParams } from "../types";
 
 export async function runSimulateVsListEquity(
   {

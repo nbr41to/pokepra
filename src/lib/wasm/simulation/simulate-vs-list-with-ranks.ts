@@ -2,13 +2,13 @@ import {
   resolveWorkerWasmUrl,
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
-import { DEFAULT_WASM_URL } from "./constants";
+import { DEFAULT_WASM_URL } from "../constants";
 import type {
   CombinedPayload,
   MonteCarloTraceEntry,
   SimulateParams,
   SimulateWithProgressParams,
-} from "./types";
+} from "../types";
 
 export async function simulateVsListWithRanks(params: SimulateParams) {
   const request = {

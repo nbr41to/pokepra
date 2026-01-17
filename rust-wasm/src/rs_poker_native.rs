@@ -30,6 +30,160 @@ pub fn simulate_vs_list_equity(
   )
 }
 
+/// Range vs range equity. Returns per-hand equity for hero/villain.
+/// Output per record: [card1, card2, equity_scaled, role] (role: 0 hero, 1 villain).
+pub fn simulate_range_vs_range_equity(
+  hero_range_str: &str,
+  villain_range_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<Vec<(u32, u32, u32, u32)>, String> {
+  simulate_range_vs_range_equity_inner::<fn(u32)>(
+    hero_range_str,
+    villain_range_str,
+    board_str,
+    trials,
+    seed,
+    None,
+  )
+}
+
+pub fn simulate_range_vs_range_equity_with_progress<F: FnMut(u32)>(
+  hero_range_str: &str,
+  villain_range_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32)>, String> {
+  simulate_range_vs_range_equity_inner(
+    hero_range_str,
+    villain_range_str,
+    board_str,
+    trials,
+    seed,
+    progress,
+  )
+}
+
+fn simulate_range_vs_range_equity_inner<F: FnMut(u32)>(
+  hero_range_str: &str,
+  villain_range_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32, u32)>, String> {
+  let _ = seed;
+  let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() > 5 {
+    return Err("board must be <=5 cards".into());
+  }
+
+  let hero_hands = parse_range_hands(hero_range_str)?;
+  let villain_hands = parse_range_hands(villain_range_str)?;
+  if hero_hands.is_empty() || villain_hands.is_empty() {
+    return Err("range must include at least 1 hand".into());
+  }
+
+  let hero_hands = filter_board_overlaps(hero_hands, &board);
+  let villain_hands = filter_board_overlaps(villain_hands, &board);
+  if hero_hands.is_empty() || villain_hands.is_empty() {
+    return Err("range overlaps board".into());
+  }
+
+  let total_work = (hero_hands.len() as u64)
+    .saturating_mul(villain_hands.len() as u64)
+    .saturating_mul(trials.max(1) as u64)
+    .max(1);
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
+
+  let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
+
+  let mut hero_stats = vec![(0u64, 0u64, 0u64); hero_hands.len()];
+  let mut villain_stats = vec![(0u64, 0u64, 0u64); villain_hands.len()];
+
+  for (h_idx, hero) in hero_hands.iter().enumerate() {
+    for (v_idx, villain) in villain_hands.iter().enumerate() {
+      if hands_overlap(hero, villain) {
+        continue;
+      }
+
+      let mut hero_rs = to_rs_hand(hero);
+      let mut villain_rs = to_rs_hand(villain);
+      for c in &board_rs {
+        hero_rs.insert(*c);
+        villain_rs.insert(*c);
+      }
+
+      let mut game =
+        MonteCarloGame::new(vec![hero_rs, villain_rs]).map_err(|e| format!("{e:?}"))?;
+
+      for _ in 0..trials.max(1) {
+        let (winners, _) = game.simulate();
+        hero_stats[h_idx].2 = hero_stats[h_idx].2.saturating_add(1);
+        villain_stats[v_idx].2 = villain_stats[v_idx].2.saturating_add(1);
+
+        let hero_win = winners.get(0);
+        let villain_win = winners.get(1);
+        if hero_win && villain_win {
+          hero_stats[h_idx].1 = hero_stats[h_idx].1.saturating_add(1);
+          villain_stats[v_idx].1 = villain_stats[v_idx].1.saturating_add(1);
+        } else if hero_win {
+          hero_stats[h_idx].0 = hero_stats[h_idx].0.saturating_add(1);
+        } else if villain_win {
+          villain_stats[v_idx].0 = villain_stats[v_idx].0.saturating_add(1);
+        }
+
+        game.reset();
+        completed = completed.saturating_add(1);
+        update_progress(completed);
+      }
+    }
+  }
+
+  let mut out = Vec::with_capacity(hero_hands.len() + villain_hands.len());
+  let scale = 1_000_000u64;
+  for (idx, hand) in hero_hands.iter().enumerate() {
+    let encoded = decode_hand_pair(hand);
+    let stats = hero_stats[idx];
+    let equity_scaled = if stats.2 == 0 {
+      0
+    } else {
+      ((stats.0.saturating_mul(2) + stats.1).saturating_mul(scale))
+        / (stats.2.saturating_mul(2))
+    };
+    out.push((encoded.0, encoded.1, equity_scaled as u32, 0));
+  }
+  for (idx, hand) in villain_hands.iter().enumerate() {
+    let encoded = decode_hand_pair(hand);
+    let stats = villain_stats[idx];
+    let equity_scaled = if stats.2 == 0 {
+      0
+    } else {
+      ((stats.0.saturating_mul(2) + stats.1).saturating_mul(scale))
+        / (stats.2.saturating_mul(2))
+    };
+    out.push((encoded.0, encoded.1, equity_scaled as u32, 1));
+  }
+
+  update_progress(total_work);
+  Ok(out)
+}
+
 pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
   hero_hand_str: &str,
   board_str: &str,
@@ -483,6 +637,50 @@ fn validate_inputs(
     }
   }
   Ok(())
+}
+
+fn parse_range_hands(range_str: &str) -> Result<Vec<[SimCard; 2]>, String> {
+  let hands = RangeParser::parse_many(range_str).map_err(|e| format!("{e:?}"))?;
+  let mut out = Vec::with_capacity(hands.len());
+  for hand in hands {
+    if hand.len() != 2 {
+      return Err("range hand must have 2 cards".into());
+    }
+    let c1 = rs_card_to_sim(&hand[0]);
+    let c2 = rs_card_to_sim(&hand[1]);
+    out.push([c1, c2]);
+  }
+  Ok(out)
+}
+
+fn rs_card_to_sim(card: &Card) -> SimCard {
+  SimCard {
+    rank: value_to_rank(card.value) as u8,
+    suit: suit_to_index(card.suit) as u8,
+  }
+}
+
+fn filter_board_overlaps(hands: Vec<[SimCard; 2]>, board: &[SimCard]) -> Vec<[SimCard; 2]> {
+  hands
+    .into_iter()
+    .filter(|hand| !hand_overlaps_board(hand, board))
+    .collect()
+}
+
+fn hand_overlaps_board(hand: &[SimCard; 2], board: &[SimCard]) -> bool {
+  for c in hand {
+    if board.iter().any(|b| b.rank == c.rank && b.suit == c.suit) {
+      return true;
+    }
+  }
+  false
+}
+
+fn hands_overlap(a: &[SimCard; 2], b: &[SimCard; 2]) -> bool {
+  (a[0].rank == b[0].rank && a[0].suit == b[0].suit)
+    || (a[0].rank == b[1].rank && a[0].suit == b[1].suit)
+    || (a[1].rank == b[0].rank && a[1].suit == b[0].suit)
+    || (a[1].rank == b[1].rank && a[1].suit == b[1].suit)
 }
 
 fn to_rs_card(card: &SimCard) -> Card {

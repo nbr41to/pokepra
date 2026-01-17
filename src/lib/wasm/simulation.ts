@@ -1,21 +1,22 @@
 export { DEFAULT_WASM_URL } from "./constants";
-// Main-thread APIs (direct WASM calls)
-export { evaluateHandsRanking } from "./evaluate-hands-ranking";
-export { parseRangeToHands } from "./parse-range";
+export {
+  simulateRangeVsRangeEquity,
+  simulateRangeVsRangeEquityWithProgress,
+} from "./simulation/simulate-range-vs-range-equity";
 // Worker-backed APIs (see simulation.worker.ts)
 export {
   simulateRankDistribution,
   simulateRankDistributionWithProgress,
-} from "./simulate-rank-distribution";
+} from "./simulation/simulate-rank-distribution";
 export {
   simulateVsListEquity,
   simulateVsListEquityWithProgress,
-} from "./simulate-vs-list-equity";
+} from "./simulation/simulate-vs-list-equity";
 export {
   simulateVsListWithRanks,
   simulateVsListWithRanksTrace,
   simulateVsListWithRanksWithProgress,
-} from "./simulate-vs-list-with-ranks";
+} from "./simulation/simulate-vs-list-with-ranks";
 export type {
   CombinedPayload,
   EquityEntry,
@@ -24,8 +25,15 @@ export type {
   HandRankingEntry,
   MonteCarloTraceEntry,
   ParseRangeParams,
+  RangeEquityEntry,
+  RangeVsRangeParams,
+  RangeVsRangePayload,
+  RangeVsRangeWithProgressParams,
   RankDistributionEntry,
   RankOutcome,
   RankOutcomeResults,
   RankResults,
 } from "./types";
+// Main-thread APIs (direct WASM calls)
+export { evaluateHandsRanking } from "./utils/evaluate-hands-ranking";
+export { parseRangeToHands } from "./utils/parse-range";

@@ -1,10 +1,10 @@
-import { DEFAULT_WASM_URL } from "./constants";
-import { createHeap, loadWasm, setProgressListener } from "./loader";
+import { DEFAULT_WASM_URL } from "../constants";
+import { createHeap, loadWasm, setProgressListener } from "../loader";
 import type {
   RankDistributionEntry,
   RankDistributionParams,
   RankResults,
-} from "./types";
+} from "../types";
 
 export async function runSimulateRankDistribution(
   {

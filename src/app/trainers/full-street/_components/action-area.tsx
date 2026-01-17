@@ -4,8 +4,8 @@ import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawe
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulate-vs-list-with-ranks";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import {
   getHandsInRange,
   getRangeStrengthByPosition,

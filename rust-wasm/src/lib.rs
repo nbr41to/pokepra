@@ -7,6 +7,8 @@ mod sim;
 
 use rs_poker_native::{
   parse_range_to_hands as parse_range_to_hands_internal,
+  simulate_range_vs_range_equity as simulate_range_vs_range_equity_internal,
+  simulate_range_vs_range_equity_with_progress as simulate_range_vs_range_equity_with_progress_internal,
   simulate_rank_distribution as simulate_rank_distribution_internal,
   simulate_rank_distribution_with_progress as simulate_rank_distribution_with_progress_internal,
   simulate_vs_list_equity as simulate_vs_list_equity_internal,
@@ -274,6 +276,60 @@ fn run_equity(
     chunk[2] = *w;
     chunk[3] = *t;
     chunk[4] = *p;
+  }
+
+  results.len() as i32
+}
+
+fn run_range_equity(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  villain_ptr: *const u8,
+  villain_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+  mut runner: impl FnMut(&str, &str, &str) -> Result<Vec<(u32, u32, u32, u32)>, i32>,
+) -> i32 {
+  let _ = (trials, seed);
+  if hero_ptr.is_null() || villain_ptr.is_null() || board_ptr.is_null() || out_ptr.is_null() {
+    return -1;
+  }
+  let hero_slice = unsafe { std::slice::from_raw_parts(hero_ptr, hero_len) };
+  let villain_slice = unsafe { std::slice::from_raw_parts(villain_ptr, villain_len) };
+  let board_slice = unsafe { std::slice::from_raw_parts(board_ptr, board_len) };
+  let hero_str = match std::str::from_utf8(hero_slice) {
+    Ok(s) => s,
+    Err(_) => return -2,
+  };
+  let villain_str = match std::str::from_utf8(villain_slice) {
+    Ok(s) => s,
+    Err(_) => return -3,
+  };
+  let board_str = match std::str::from_utf8(board_slice) {
+    Ok(s) => s,
+    Err(_) => return -4,
+  };
+
+  let results = match runner(hero_str, villain_str, board_str) {
+    Ok(v) => v,
+    Err(code) => return code,
+  };
+
+  let needed = results.len() * 4;
+  if out_len < needed {
+    return -6;
+  }
+
+  let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
+  for ((c1, c2, equity, role), chunk) in results.iter().zip(out.chunks_exact_mut(4)) {
+    chunk[0] = *c1;
+    chunk[1] = *c2;
+    chunk[2] = *equity;
+    chunk[3] = *role;
   }
 
   results.len() as i32
@@ -632,6 +688,84 @@ pub extern "C" fn simulate_vs_list_equity_with_progress(
         hero_str,
         board_str,
         compare_str,
+        trials,
+        seed,
+        Some(|p| emit_progress(p)),
+      )
+      .map_err(|_| -5)
+    },
+  )
+}
+
+/// Range vs range equity (per-hand wins/ties/plays for hero and villain).
+/// Output per record: [card1, card2, wins, ties, plays, role].
+#[no_mangle]
+pub extern "C" fn simulate_range_vs_range_equity(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  villain_ptr: *const u8,
+  villain_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_range_equity(
+    hero_ptr,
+    hero_len,
+    villain_ptr,
+    villain_len,
+    board_ptr,
+    board_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, villain_str, board_str| {
+      simulate_range_vs_range_equity_internal(
+        hero_str,
+        villain_str,
+        board_str,
+        trials,
+        seed,
+      )
+      .map_err(|_| -5)
+    },
+  )
+}
+
+/// Range vs range equity with progress. Emits progress via `report_progress`.
+#[no_mangle]
+pub extern "C" fn simulate_range_vs_range_equity_with_progress(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  villain_ptr: *const u8,
+  villain_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_range_equity(
+    hero_ptr,
+    hero_len,
+    villain_ptr,
+    villain_len,
+    board_ptr,
+    board_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hero_str, villain_str, board_str| {
+      simulate_range_vs_range_equity_with_progress_internal(
+        hero_str,
+        villain_str,
+        board_str,
         trials,
         seed,
         Some(|p| emit_progress(p)),

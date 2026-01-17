@@ -2,12 +2,12 @@ import {
   resolveWorkerWasmUrl,
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
-import { DEFAULT_WASM_URL } from "./constants";
+import { DEFAULT_WASM_URL } from "../constants";
 import type {
   RankDistributionEntry,
   RankDistributionParams,
   RankDistributionWithProgressParams,
-} from "./types";
+} from "../types";
 
 export async function simulateRankDistribution(params: RankDistributionParams) {
   const request = {

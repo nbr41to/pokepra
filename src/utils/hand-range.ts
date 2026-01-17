@@ -383,6 +383,8 @@ function getRangeStrengthByHand(
 
 /**
  * Positionから対応するHAND_RANGE_STRENGTHSを返す
+ * @param position number
+ * @param people number
  */
 function getRangeStrengthByPosition(position: number, people: number = 9) {
   const preflopPosition = [8, 9, 1, 2, 3, 4, 5, 6, 7]; // TODO: 動的なpeople対応

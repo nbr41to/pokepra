@@ -52,6 +52,30 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_range_vs_range_equity?: (
+    heroPtr: number,
+    heroLen: number,
+    villainPtr: number,
+    villainLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
+  simulate_range_vs_range_equity_with_progress?: (
+    heroPtr: number,
+    heroLen: number,
+    villainPtr: number,
+    villainLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_vs_list_with_ranks?: (
     heroPtr: number,
     heroLen: number,
@@ -164,6 +188,16 @@ export type EquityPayload = {
   data: EquityEntry[];
 };
 
+export type RangeEquityEntry = {
+  hand: string;
+  equity: number;
+};
+
+export type RangeVsRangePayload = {
+  hero: RangeEquityEntry[];
+  villain: RangeEquityEntry[];
+};
+
 export type MonteCarloTraceEntry = {
   hero: string;
   board: string;
@@ -195,6 +229,19 @@ export type RankDistributionParams = {
 };
 
 export type RankDistributionWithProgressParams = RankDistributionParams & {
+  onProgress?: (pct: number) => void;
+};
+
+export type RangeVsRangeParams = {
+  heroRange: string;
+  villainRange: string;
+  board: string[];
+  trials: number;
+  seed?: bigint;
+  wasmUrl?: string;
+};
+
+export type RangeVsRangeWithProgressParams = RangeVsRangeParams & {
   onProgress?: (pct: number) => void;
 };
 

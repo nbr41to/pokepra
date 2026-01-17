@@ -2,12 +2,12 @@ import {
   resolveWorkerWasmUrl,
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
-import { DEFAULT_WASM_URL } from "./constants";
+import { DEFAULT_WASM_URL } from "../constants";
 import type {
   EquityPayload,
   SimulateParams,
   SimulateWithProgressParams,
-} from "./types";
+} from "../types";
 
 export async function simulateVsListEquity(
   params: SimulateParams,

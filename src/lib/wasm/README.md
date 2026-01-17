@@ -1,19 +1,30 @@
-# WASM module overview
+# WASM モジュール概要
 
-This folder contains two kinds of WASM entry points:
+このフォルダには、WASM のエントリーポイントが2系統あります。
 
-- Worker-backed APIs (run in `simulation.worker.ts` via `wasm-worker-client`)
-  - `simulateVsListEquity`
-  - `simulateVsListEquityWithProgress`
-  - `simulateVsListWithRanks`
-  - `simulateVsListWithRanksWithProgress`
-  - `simulateRankDistribution`
-  - `simulateRankDistributionWithProgress`
-- Main-thread APIs (run via `loadWasm` directly)
-  - `evaluateHandsRanking`
-  - `parseRangeToHands`
+## Worker 経由 API (`simulation/simulation.worker.ts` を `wasm-worker-client` から呼ぶ)
 
-Implementation notes:
-- `*-core.ts` files are the main-thread WASM callers.
-- Worker requests are defined in `simulation.worker.ts`.
-- Exports are centralized in `simulation.ts`.
+Equity / ranks:
+- `simulateVsListEquity`: hero vs list の勝率（進捗なし）
+- `simulateVsListEquityWithProgress`: hero vs list の勝率（進捗あり）
+- `simulateVsListWithRanks`: hero vs list の役内訳つき（進捗なし）
+- `simulateVsListWithRanksWithProgress`: hero vs list の役内訳つき（進捗あり）
+- `simulateVsListWithRanksTrace`: hero vs list のトレース出力（モンテカルロ）
+- `simulateRangeVsRangeEquity`: range vs range の勝率（進捗なし）
+- `simulateRangeVsRangeEquityWithProgress`: range vs range の勝率（進捗あり）
+
+Distribution:
+- `simulateRankDistribution`: 複数ハンドの役分布（進捗なし）
+- `simulateRankDistributionWithProgress`: 複数ハンドの役分布（進捗あり）
+
+## Main-thread 直叩き API (`loadWasm` で直接呼ぶ)
+
+Utilities:
+- `evaluateHandsRanking`: ボードに対する複数ハンドの評価と順位付け
+- `parseRangeToHands`: レンジ文字列を具体的なハンドへ展開
+
+実装メモ:
+- `simulation/*.ts` に worker API と worker エントリ
+- `simulation/*-core.ts` は worker が使う WASM 直呼び
+- `utils/*.ts` は worker を使わない WASM ユーティリティ
+- エクスポートは `simulation.ts` に集約

@@ -20,8 +20,8 @@ export function SettingsContent() {
         >
           マイレンジ表
         </label>
-        <Button disabled>
-          <Link href="/settings/open-range">Coming Soon</Link>
+        <Button asChild>
+          <Link href="/settings/open-range">設定</Link>
         </Button>
       </div>
     </TabsContent>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { simulateVsListEquity } from "@/lib/wasm/simulate-vs-list-equity";
+import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import type { EquityPayload } from "@/lib/wasm/types";
 import { genHands, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";

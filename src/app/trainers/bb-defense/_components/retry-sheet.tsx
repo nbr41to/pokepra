@@ -18,7 +18,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulate-vs-list-with-ranks";
+import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import type { CombinedPayload, EquityPayload } from "@/lib/wasm/types";
 
 const TRIAL_ITERATIONS = 100000;

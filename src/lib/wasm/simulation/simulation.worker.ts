@@ -1,21 +1,28 @@
 /// <reference lib="webworker" />
 
-import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
-import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
-import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
-import { runSimulateVsListWithRanksTrace } from "./simulate-vs-list-with-ranks-trace-core";
 import type {
   CombinedPayload,
   EquityPayload,
   MonteCarloTraceEntry,
+  RangeVsRangeParams,
+  RangeVsRangePayload,
   RankDistributionEntry,
   RankDistributionParams,
   SimulateParams,
-} from "./types";
+} from "../types";
+import {
+  runSimulateRangeVsRangeEquity,
+  runSimulateRangeVsRangeEquityWithProgress,
+} from "./simulate-range-vs-range-equity-core";
+import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
+import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
+import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
+import { runSimulateVsListWithRanksTrace } from "./simulate-vs-list-with-ranks-trace-core";
 
 type SimulateResult =
   | CombinedPayload
   | EquityPayload
+  | RangeVsRangePayload
   | RankDistributionEntry[]
   | MonteCarloTraceEntry[];
 
@@ -47,6 +54,16 @@ type WorkerRequest =
       id: number;
       type: "simulateVsListWithRanksWithProgress";
       params: SimulateParams;
+    }
+  | {
+      id: number;
+      type: "simulateRangeVsRangeEquity";
+      params: RangeVsRangeParams;
+    }
+  | {
+      id: number;
+      type: "simulateRangeVsRangeEquityWithProgress";
+      params: RangeVsRangeParams;
     };
 
 type WorkerResponse =
@@ -166,6 +183,36 @@ ctx.onmessage = async (event) => {
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
       const data = await runSimulateRankDistribution(params, {});
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateRangeVsRangeEquity") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateRangeVsRangeEquity(params);
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateRangeVsRangeEquityWithProgress") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateRangeVsRangeEquityWithProgress({
+        ...params,
+        onProgress: (pct) => {
+          const response: WorkerResponse = {
+            id: message.id,
+            type: "progress",
+            pct,
+          };
+          ctx.postMessage(response);
+        },
+      });
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;

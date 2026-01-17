@@ -20,8 +20,6 @@ type Props = {
 
 const GRID_SIZE = 13;
 const CELL_COUNT = GRID_SIZE * GRID_SIZE;
-const RATE_STEPS = [1, 0.75, 0.5, 0.25, 0] as const;
-const STORAGE_RATE_ORDER = [1, 0.75, 0.5, 0.25, 0] as const;
 const STORAGE_KEY = "mcpt:open-range-tables";
 
 const createTable = (index: number): RangeTable => ({
@@ -40,37 +38,36 @@ const buildHandGrid = () =>
     }),
   );
 
-const serializeTable = (cells: number[], handGrid: string[]) =>
-  STORAGE_RATE_ORDER.map((rate) => {
-    const labels = handGrid.filter((_, index) => cells[index] === rate);
-    return labels.length === 0 ? [] : [compressStartingHands(labels)];
+const serializeTable = (cells: number[], handGrid: string[]) => {
+  const labels = handGrid.filter((_, index) => cells[index] === 1);
+  return labels.length === 0 ? "" : compressStartingHands(labels);
+};
+
+const normalizeStoredRanges = (raw: unknown): string[] | null => {
+  if (!Array.isArray(raw)) return null;
+  return raw.map((entry) => {
+    if (Array.isArray(entry)) {
+      return entry.flat().join(",");
+    }
+    return typeof entry === "string" ? entry : "";
   });
+};
 
 const deserializeTables = (raw: string, handGrid: string[]) => {
-  const parsed = JSON.parse(raw) as Array<Array<string[] | string>>;
-  if (!Array.isArray(parsed)) return null;
+  const parsed = normalizeStoredRanges(JSON.parse(raw));
+  if (!parsed) return null;
   const labelToIndex = new Map(handGrid.map((label, index) => [label, index]));
 
   const tables: RangeTable[] = [];
   for (let tableIndex = 0; tableIndex < parsed.length; tableIndex += 1) {
-    const table = parsed[tableIndex] ?? [];
+    const rangeString = parsed[tableIndex] ?? "";
     const cells = Array.from({ length: CELL_COUNT }, () => 0);
-    for (
-      let rateIndex = 0;
-      rateIndex < STORAGE_RATE_ORDER.length;
-      rateIndex += 1
-    ) {
-      const rate = STORAGE_RATE_ORDER[rateIndex] ?? 0;
-      const entry = table?.[rateIndex];
-      const rangeString = Array.isArray(entry)
-        ? entry.join(",")
-        : (entry ?? "");
-      if (!rangeString) continue;
+    if (rangeString) {
       const labels = expandStartingHands(rangeString);
       for (const label of labels) {
         const index = labelToIndex.get(label);
         if (index === undefined) continue;
-        cells[index] = rate;
+        cells[index] = 1;
       }
     }
     tables.push({ id: `range-${Date.now()}-${tableIndex}`, cells });
@@ -119,13 +116,7 @@ export const Main = ({ maxTables }: Props) => {
       prev.map((table) => {
         if (table.id !== activeTable.id) return table;
         const nextCells = [...table.cells];
-        const current = nextCells[index] ?? 0;
-        const currentIndex = RATE_STEPS.indexOf(
-          current as (typeof RATE_STEPS)[number],
-        );
-        const nextIndex =
-          currentIndex === -1 ? 1 : (currentIndex + 1) % RATE_STEPS.length;
-        nextCells[index] = RATE_STEPS[nextIndex] ?? 0;
+        nextCells[index] = nextCells[index] === 1 ? 0 : 1;
         return { ...table, cells: nextCells };
       }),
     );
@@ -154,7 +145,7 @@ export const Main = ({ maxTables }: Props) => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-muted-foreground text-sm">
-              参加率は1→0.75→0.5→0.25→0の順で切り替わります。
+              ハンドをクリックして選択/解除できます。
             </p>
             <p className="text-muted-foreground text-xs">
               最大{maxTables}個まで作成可能です。
@@ -198,22 +189,19 @@ export const Main = ({ maxTables }: Props) => {
           <div className="grid w-max min-w-max grid-cols-13 border-r border-b">
             {handGrid.map((label, index) => {
               const value = activeTable?.cells[index] ?? 0;
-              const fillPct = Math.round(value * 100);
               return (
                 <button
                   key={label}
                   type="button"
                   className={cn(
                     "relative grid h-10 min-h-10 w-12 min-w-12 place-items-center overflow-hidden border-t border-l font-bold text-[11px] transition",
-                    "bg-muted/40 text-foreground",
+                    value === 1
+                      ? "bg-emerald-500/80 text-white"
+                      : "bg-muted/40 text-foreground",
                     !isEditing && "cursor-default",
                   )}
                   onClick={() => handleToggle(index)}
                 >
-                  <div
-                    className="absolute inset-y-0 left-0 bg-emerald-500/80"
-                    style={{ width: `${fillPct}%` }}
-                  />
                   <span className="relative z-10">{label}</span>
                 </button>
               );
