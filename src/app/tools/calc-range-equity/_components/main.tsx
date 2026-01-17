@@ -6,22 +6,12 @@ import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
+import INITIAL_OPEN_RANGES from "@/data/initial-open-ranges.json";
 import { cn } from "@/lib/utils";
 import { simulateRangeVsRangeEquityWithProgress } from "@/lib/wasm/simulation";
 import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
 import { getRangeStrengthByPosition, toHandSymbol } from "@/utils/hand-range";
 import { getPositionLabel } from "@/utils/position";
-
-const HAND_RANGE_SYMBOLS = [
-  "QQ+,AKo,AKs",
-  "99+,ATs+,AQo+,KQs",
-  "77+,ATs+,AJo+,KJs+,QJ-JTs,KQo",
-  "55+,A2s+,K9s+,ATo+,QTs+,KJo+,JT-T9s",
-  "22+,A2s+,A9o+,K9s+,Q9s+,KTo+,J9s+,T8s+,QJ-JTo,98s",
-  "22+,A2s+,K2s+,A7o+,Q6s+,J7s+,K9o+,Q9o+,T8s+,97s+,J9o+,87-65s,T9o",
-  "22+,A2s+,K2s+,Q2s+,A6o+,J6s+,K9o+,Q9o+,T7s+,96s+,J9o+,86s+,75s+,64s+,T9-98o,54s",
-  "22+,A2s+,A2o+,K2s+,Q2s+,J2s+,K5o+,T3s+,Q7o+,95s+,85s+,74s+,63s+,J8o+,53s+,T8o+,97o+,87o,43s",
-];
 
 export function Main() {
   const [board, setBoard] = useState("");
@@ -59,9 +49,13 @@ export function Main() {
     setProgress(0);
 
     const heroRangeStrings =
-      HAND_RANGE_SYMBOLS[getRangeStrengthByPosition(comparePositions[0], 9)];
+      INITIAL_OPEN_RANGES[
+        getRangeStrengthByPosition(comparePositions[0], 9) - 1
+      ];
     const villainRangeStrings =
-      HAND_RANGE_SYMBOLS[getRangeStrengthByPosition(comparePositions[1], 9)];
+      INITIAL_OPEN_RANGES[
+        getRangeStrengthByPosition(comparePositions[1], 9) - 1
+      ];
 
     try {
       const result = await simulateRangeVsRangeEquityWithProgress({

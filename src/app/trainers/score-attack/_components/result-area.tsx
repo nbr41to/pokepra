@@ -5,7 +5,7 @@ import { judgeInRange } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 
 export const ResultArea = () => {
-  const { phase, position, hero, delta, preflop, flop } = useActionStore();
+  const { street, position, hero, delta, preflop, flop } = useActionStore();
 
   if (hero.length === 0 || !preflop) return <div className="h-8" />;
 
@@ -23,7 +23,7 @@ export const ResultArea = () => {
           )
         ) : (
           <span
-            key={phase + delta} // deltaが変わるたびにアニメーションを再実行するためのkey
+            key={street + delta} // deltaが変わるたびにアニメーションを再実行するためのkey
             className={cn(
               "inline-block origin-top animate-score-bounce font-bold text-2xl",
               delta > 0 ? "text-green-500" : "text-red-500",

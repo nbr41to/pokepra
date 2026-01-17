@@ -19,12 +19,12 @@ import { BetSlider } from "./bet-slider";
 
 export const ActionArea = () => {
   const {
-    phase,
+    street,
     position,
     hero,
     board,
-    showedHand,
-    showHand,
+    confirmedHand,
+    confirmHand,
     flop,
     turn,
     river,
@@ -47,12 +47,12 @@ export const ActionArea = () => {
       trials: 1000,
     });
     postflopAction(
-      phase,
+      street,
       action,
       result,
       action === "commit" ? bet : undefined,
     );
-    if (phase === "river") {
+    if (street === "river") {
       setBet(0);
     }
     setLoading(false);
@@ -69,9 +69,9 @@ export const ActionArea = () => {
   });
 
   const disabled =
-    (phase === "flop" && !!flop) ||
-    (phase === "turn" && !!turn) ||
-    (phase === "river" && !!river);
+    (street === "flop" && !!flop) ||
+    (street === "turn" && !!turn) ||
+    (street === "river" && !!river);
 
   const disabledAnalysis = board.length < 3;
 
@@ -81,7 +81,7 @@ export const ActionArea = () => {
         <HeroActionArea
           key={hero.join("-")}
           hand={hero}
-          onOpenHand={showHand}
+          onOpenHand={confirmHand}
           onDoubleTap={() => handleOnAction("commit")}
           doubleTapActionName="Bet"
           onFold={() => handleOnAction("fold")}
@@ -89,7 +89,7 @@ export const ActionArea = () => {
           className="bg bg-green-50 dark:bg-green-950/60"
         />
 
-        {showedHand && !disabled && (
+        {confirmedHand && !disabled && (
           <BetSlider
             className="absolute bottom-0 left-0"
             step={5}

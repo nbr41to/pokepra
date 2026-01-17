@@ -6,7 +6,7 @@ import { genPositionNumber } from "@/utils/position";
 const PEOPLE = 9;
 const DEFAULT_TIER = 6;
 
-type Phase = "flop" | "turn" | "river";
+type Street = "flop" | "turn" | "river";
 
 type History = {
   hand: string[];
@@ -21,7 +21,7 @@ type History = {
 type State = {
   initialized: boolean;
 
-  phase: Phase; // ストリート
+  street: Street; // ストリート
   stack: number; // 持ち点
   delta: number; // 前回のスコア変動
 
@@ -29,7 +29,7 @@ type State = {
 
   position: number; // ポジション番号
   hero: string[]; // 自分のハンド
-  showedHand: boolean; // ハンドを見たかどうか
+  confirmedHand: boolean; // ハンドを見たかどうか
   board: string[]; // ボード
 
   // action
@@ -44,9 +44,9 @@ type State = {
 type Actions = {
   reset: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
-  showHand: () => void;
+  confirmHand: () => void;
   postflopAction: (
-    phase: Phase,
+    street: Street,
     action: "commit" | "fold",
     result: EquityPayload,
     betAmount?: number,
@@ -57,7 +57,7 @@ type Store = State & Actions;
 
 const INITIAL_STATE: State = {
   initialized: false,
-  phase: "flop",
+  street: "flop",
   stack: 100,
   delta: 0,
   position: 1,
@@ -65,7 +65,7 @@ const INITIAL_STATE: State = {
   deck: [],
   board: [],
 
-  showedHand: false,
+  confirmedHand: false,
   flop: null,
   turn: null,
   river: null,
@@ -100,22 +100,22 @@ const useActionStore = create<Store>((set, get) => ({
     }));
   },
   // ハンドを確認
-  showHand: () => {
+  confirmHand: () => {
     const { deck } = get();
     const board = deck.splice(0, 3);
-    set({ showedHand: true, board, deck });
+    set({ confirmedHand: true, board, deck });
   },
   postflopAction: (
-    phase: Phase,
+    street: Street,
     action: "commit" | "fold",
     result: EquityPayload,
     betAmount?: number,
   ) => {
-    if (phase === "flop") {
+    if (street === "flop") {
       set(() => ({ flop: action }));
-    } else if (phase === "turn") {
+    } else if (street === "turn") {
       set(() => ({ turn: action }));
-    } else if (phase === "river") {
+    } else if (street === "river") {
       set(() => ({ river: action }));
     }
 
@@ -127,7 +127,7 @@ const useActionStore = create<Store>((set, get) => ({
     const betValue = Math.max(0, Math.min(100, betAmount ?? 0));
     const distance = Math.abs(betValue - targetBet);
     const accuracy = 1 - Math.min(distance / 100, 1);
-    const deltaScore = Math.round(accuracy * 10 * STREET_W[phase]);
+    const deltaScore = Math.round(accuracy * 10 * STREET_W[street]);
 
     const newStack = stack + deltaScore;
 
@@ -141,10 +141,11 @@ const useActionStore = create<Store>((set, get) => ({
     }
 
     set(() => ({
-      phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
+      street:
+        street === "flop" ? "turn" : street === "turn" ? "river" : "river",
       stack: newStack,
       delta: deltaScore,
-      ...(phase === "river" ? {} : { board: [...board, newCard] }),
+      ...(street === "river" ? {} : { board: [...board, newCard] }),
     }));
   },
 }));

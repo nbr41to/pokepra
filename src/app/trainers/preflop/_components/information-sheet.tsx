@@ -50,14 +50,36 @@ export const InformationSheet = ({ className }: Props) => {
               これは、任意のポジション・ハンドにおいて参加した場合の後ろのポジションのプレイヤー全員との対戦をシュミレーションします。
             </p>
             <p>
-              1000回シュミレーションした結果から勝率を計算し、勝率が50%を上回っていた相手1人につき数字が赤く表示されて1点が減点されます。全プレイヤーの勝率が50%を下回っていた場合には3点の加点となります。
+              当然後ろに控えている相手が多いほど自分の勝率（EQ）を上回るハンドを持っている相手がいる確率は増えます。任意のポジション・ハンドにおいての参加の良し悪しを体感できるゲームとなっています。
+            </p>
+          </div>
+
+          <VillainHands
+            className="mt-8 h-72"
+            people={9}
+            position={4}
+            villains={EXAMPLE_VILLAINS}
+            result={EXAMPLE_RESULT}
+          />
+          <div className="mx-auto my-4 grid w-fit place-items-center gap-y-1">
+            <Combo hand={["3h", "3s"]} />
+            <p className="font-noto-sans-jp text-xs">自分のハンド</p>
+          </div>
+
+          <div className="space-y-3 px-5 pb-32 font-noto-sans-jp">
+            <p>
+              相手のハンドには1000回シュミレーションした結果から勝率を計算して表示しています。あくまでの自分のハンドとの勝率であることに注意してください。
+            </p>
+            <p>
+              このトレーナーではEVと言われる期待値を簡略化して学べます。POTの500点をを250点を支払って獲りにいくと仮定しています。その場合のEVは単純に計算すると
+              <span className="block py-2 text-center font-bold">
+                EV = (勝つ確率) × 500 - (負ける確率) × 250
+              </span>
+              となります。このゲームではEVが勝率50%のときとの差分を点数として表示しています。
             </p>
             <p>フォールドした場合は点数の変動はありません。</p>
             <p>
-              当然後ろに控えている相手が多いほど自分の勝率を上回るハンドを持っている相手がいる確率は増えます。任意のポジション・ハンドにおいての参加の良し悪しを体感できるゲームとなっています。
-            </p>
-            <p>
-              ※このシュミレーションは、プリフロップ時点での勝率を計算して表示しているだけであり、よく使用されているプリフロップのハンドレンジ表との厳密な関連性はありません
+              ※このシュミレーションは、プリフロップ時点での勝率を計算して表示しているだけであり、よく使用されているプリフロップのハンドレンジ表との厳密な関連性はありません。
               <Link
                 className="px-1 font-bold underline"
                 href="/tips/starting-hand-equity"
@@ -66,19 +88,6 @@ export const InformationSheet = ({ className }: Props) => {
               </Link>
               を把握する目的程度のものになります。
             </p>
-          </div>
-
-          <VillainHands
-            className="mt-8 h-72"
-            people={9}
-            position={1}
-            villains={EXAMPLE_VILLAINS}
-            result={EXAMPLE_RESULT}
-          />
-
-          <div className="mx-auto my-4 grid w-fit place-items-center gap-y-1 pb-32">
-            <Combo hand={["3h", "3s"]} />
-            <p className="font-noto-sans-jp text-xs">自分のハンド</p>
           </div>
 
           <SheetFooter className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">

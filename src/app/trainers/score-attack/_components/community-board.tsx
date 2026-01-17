@@ -2,9 +2,9 @@ import { Board } from "@/components/board";
 import { useActionStore } from "./_utils/state";
 
 export const CommunityBoard = () => {
-  const { phase, board } = useActionStore();
+  const { street, board } = useActionStore();
 
-  if (board.length === 0 || phase === "preflop") return null;
+  if (board.length === 0 || street === "preflop") return null;
 
   return (
     <div className="mx-auto h-20 w-fit">

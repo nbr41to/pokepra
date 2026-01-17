@@ -63,6 +63,7 @@ async function runRangeVsRange(
     useProgressExport = false,
   }: { onProgress?: (pct: number) => void; useProgressExport?: boolean } = {},
 ): Promise<RangeVsRangePayload> {
+  const start = performance.now(); // For performance measurement
   const heroTrimmed = heroRange.trim();
   const villainTrimmed = villainRange.trim();
   const boardTrimmed = board.join(" ").trim();
@@ -152,6 +153,9 @@ async function runRangeVsRange(
 
   hero.sort((a, b) => b.equity - a.equity);
   villain.sort((a, b) => b.equity - a.equity);
+
+  const end = performance.now();
+  console.log(`runSimulateRangeVsRangeEquity took ${end - start} ms`);
 
   return { hero, villain };
 }

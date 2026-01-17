@@ -7,16 +7,16 @@ import { InformationSheet } from "./information-sheet";
 import { RetrySheet } from "./retry-sheet";
 
 export const ActionArea = () => {
-  const { hero, showHand, preflop, result, preflopAction, shuffleAndDeal } =
+  const { hero, confirmHand, preflop, result, preflopAction, shuffleAndDeal } =
     useActionStore();
 
   return (
-    <div className="pt-8">
+    <div className="">
       <div className="relative">
         <HeroActionArea
           key={hero.join("-")}
           hand={hero}
-          onOpenHand={showHand}
+          onOpenHand={confirmHand}
           onDoubleTap={() => preflopAction("open-raise")}
           doubleTapActionName="Open"
           onFold={() => preflopAction("fold")}

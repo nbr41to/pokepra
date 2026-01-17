@@ -7,7 +7,7 @@ import { genPositionNumber } from "@/utils/position";
 const PEOPLE = 9;
 const DEFAULT_TIER = 6;
 
-type Phase = "preflop" | "flop" | "turn" | "river";
+type Street = "preflop" | "flop" | "turn" | "river";
 type PreflopAction = "open-raise" | "fold";
 
 type History = {
@@ -24,7 +24,7 @@ type History = {
 type State = {
   initialized: boolean;
 
-  phase: Phase; // ストリート
+  street: Street; // ストリート
   stack: number; // 持ち点
   delta: number; // 前回のスコア変動
 
@@ -32,7 +32,7 @@ type State = {
 
   position: number; // ポジション番号
   hero: string[]; // 自分のハンド
-  showedHand: boolean; // ハンドを見たかどうか
+  confirmedHand: boolean; // ハンドを見たかどうか
   board: string[]; // ボード
 
   // action
@@ -48,10 +48,10 @@ type State = {
 type Actions = {
   reset: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
-  showHand: () => void;
+  confirmHand: () => void;
   preflopAction: (action: PreflopAction) => void;
   postflopAction: (
-    phase: Phase,
+    street: Street,
     action: "commit" | "fold",
     result: EquityPayload,
   ) => void;
@@ -61,7 +61,7 @@ type Store = State & Actions;
 
 const INITIAL_STATE: State = {
   initialized: false,
-  phase: "preflop",
+  street: "preflop",
   stack: 100,
   delta: 0,
   position: 1,
@@ -69,7 +69,7 @@ const INITIAL_STATE: State = {
   deck: [],
   board: [],
 
-  showedHand: false,
+  confirmedHand: false,
   preflop: null,
   flop: null,
   turn: null,
@@ -105,8 +105,8 @@ const useActionStore = create<Store>((set, get) => ({
     }));
   },
   // ハンドを確認
-  showHand: () => {
-    set({ showedHand: true });
+  confirmHand: () => {
+    set({ confirmedHand: true });
   },
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
@@ -126,7 +126,7 @@ const useActionStore = create<Store>((set, get) => ({
       set({
         preflop: action,
         stack: stack + amount,
-        phase: "flop",
+        street: "flop",
         deck,
         board,
         delta: amount,
@@ -134,15 +134,15 @@ const useActionStore = create<Store>((set, get) => ({
     }
   },
   postflopAction: (
-    phase: Phase,
+    street: Street,
     action: "commit" | "fold",
     result: EquityPayload,
   ) => {
-    if (phase === "flop") {
+    if (street === "flop") {
       set(() => ({ flop: action }));
-    } else if (phase === "turn") {
+    } else if (street === "turn") {
       set(() => ({ turn: action }));
-    } else if (phase === "river") {
+    } else if (street === "river") {
       set(() => ({ river: action }));
     }
 
@@ -158,7 +158,7 @@ const useActionStore = create<Store>((set, get) => ({
       result.data.reduce((acc, cur) => acc + cur.equity, 0) /
       result.data.length;
     const deltaScore = Math.floor(
-      ((result.equity - compareEquityAveage) * 10 * STREET_W[phase]) /
+      ((result.equity - compareEquityAveage) * 10 * STREET_W[street]) /
         (rare < 0.1 ? 0.5 : rare < 0.3 ? 0.7 : 1),
     );
 
@@ -174,10 +174,11 @@ const useActionStore = create<Store>((set, get) => ({
     }
 
     set(() => ({
-      phase: phase === "flop" ? "turn" : phase === "turn" ? "river" : "river",
+      street:
+        street === "flop" ? "turn" : street === "turn" ? "river" : "river",
       stack: newStack,
       delta: deltaScore,
-      ...(phase === "river" ? {} : { board: [...board, newCard] }),
+      ...(street === "river" ? {} : { board: [...board, newCard] }),
     }));
   },
 }));

@@ -22,7 +22,7 @@ type PreflopAction = "call" | "fold";
 
 type State = {
   initialized: boolean;
-  showedHand: boolean; // ハンドを見たかどうか
+  confirmedHand: boolean; // ハンドを見たかどうか
 
   delta: number; // 変動点数
   stack: number; // 持ち点
@@ -44,7 +44,7 @@ type Actions = {
   reset: () => void;
   retry: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
-  showHand: () => void;
+  confirmHand: () => void;
   calcResult: (action: PreflopAction) => void;
 };
 
@@ -61,7 +61,7 @@ const INITIAL_STATE: State = {
   pot: 0,
   rakeAmount: 0,
   requiredEquity: 0,
-  showedHand: false,
+  confirmedHand: false,
   action: null,
   result: null,
 };
@@ -137,8 +137,8 @@ const useActionStore = create<Store>((set, get) => ({
     }));
   },
   // ハンドを確認
-  showHand: () => {
-    set(() => ({ showedHand: true }));
+  confirmHand: () => {
+    set(() => ({ confirmedHand: true }));
   },
 
   // アクション時の計算

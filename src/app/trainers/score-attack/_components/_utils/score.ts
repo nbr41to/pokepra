@@ -1,11 +1,11 @@
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 
 const _calcScore = ({
-  phase,
+  street,
   action,
   eqData,
 }: {
-  phase: "flop" | "turn" | "river";
+  street: "flop" | "turn" | "river";
   action: "commit" | "fold";
   eqData: CombinedPayload;
 }) => {
@@ -17,7 +17,7 @@ const _calcScore = ({
 
   const needWinRate = BET / (POT + BET); // 必要勝率
   const ev = eqData.equity * POT - needWinRate * BET; // 期待値
-  const score = Math.floor((ev / BET) * 10 * STREET_W[phase]);
+  const score = Math.floor((ev / BET) * 10 * STREET_W[street]);
 
   return score;
 };

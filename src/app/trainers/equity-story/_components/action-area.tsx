@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
+import { Combo } from "@/components/combo";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
-import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
@@ -17,12 +17,10 @@ import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
-    gameId,
     finished,
     street,
     hero,
     board,
-    confirmHand,
     preflopAction,
     postflopAction,
     shuffleAndDeal,
@@ -33,16 +31,6 @@ export const ActionArea = () => {
   const [rankPromise, setRankPromise] =
     useState<Promise<CombinedPayload> | null>(null);
   const rankPromiseCache = useRef(new Map<string, Promise<CombinedPayload>>());
-
-  const handleOnFold = async () => {
-    if (street === "preflop") {
-      preflopAction("fold");
-    } else {
-      setLoading(true);
-      await postflopAction({ street, bet: "fold" });
-      setLoading(false);
-    }
-  };
 
   const handleOnDoubleTap = async () => {
     if (street === "preflop") {
@@ -55,7 +43,7 @@ export const ActionArea = () => {
   };
 
   const compareHands = useMemo(
-    () => getHandsInRange(getRangeStrengthByPosition(2), [...hero, ...board]),
+    () => getHandsInRange(getRangeStrengthByPosition(9), [...hero, ...board]),
     [hero, board],
   );
 
@@ -80,14 +68,18 @@ export const ActionArea = () => {
   return (
     <div className="">
       <div className="relative">
-        <HeroActionArea
+        {/* <HeroActionArea
           key={hero.join("-") + gameId} // ハンドごとにレンダリングするように
           hand={hero}
           onOpenHand={confirmHand}
           onDoubleTap={handleOnDoubleTap}
           onFold={handleOnFold}
           disabled={finished || loading}
-        />
+        /> */}
+        <div className="flex justify-center gap-x-8">
+          <Combo hand={hero} className="scale-120" />
+          <Button onClick={handleOnDoubleTap}>Next</Button>
+        </div>
         {finished && (
           <div className="absolute top-0 left-0 z-10 grid h-full w-full place-content-center bg-background/30">
             <Button

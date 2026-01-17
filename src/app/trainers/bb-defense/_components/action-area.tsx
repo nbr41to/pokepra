@@ -4,7 +4,7 @@ import { useActionStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
-  const { hero, showHand, action, calcResult, shuffleAndDeal } =
+  const { hero, confirmHand, action, calcResult, shuffleAndDeal } =
     useActionStore();
 
   return (
@@ -13,7 +13,7 @@ export const ActionArea = () => {
         <HeroActionArea
           key={hero.join("-")}
           hand={hero}
-          onOpenHand={showHand}
+          onOpenHand={confirmHand}
           onDoubleTap={() => calcResult("call")}
           doubleTapActionName="Call"
           onFold={() => calcResult("fold")}

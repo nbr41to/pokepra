@@ -6,6 +6,7 @@ import { ActionArea } from "./action-area";
 import { FailureOverlay } from "./failure-overlay";
 import { OtherPlayers } from "./other-players";
 import { ResultArea } from "./result-area";
+import { SituationInfoArea } from "./situation-info-area";
 
 export function Main() {
   const { initialized, stack, shuffleAndDeal, reset, retry } = useActionStore();
@@ -26,10 +27,9 @@ export function Main() {
   return (
     <div className="relative w-full">
       <OtherPlayers />
+      <ResultArea className="-mt-8" />
+      <SituationInfoArea />
       <ActionArea />
-      <div className="absolute right-15 bottom-80 z-1">
-        <ResultArea />
-      </div>
       <FailureOverlay visible={stack < 1} onRetry={retry} />
     </div>
   );

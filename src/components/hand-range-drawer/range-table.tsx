@@ -1,6 +1,6 @@
+import INITIAL_HAND_RANGES from "@/data/initial-hand-ranges.json";
 import { cn } from "@/lib/utils";
 import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";
-import { getInitialHandRangeArray } from "@/utils/hand-range";
 
 type Props = {
   mark?: string;
@@ -19,9 +19,9 @@ export const RangeTable = ({ mark }: Props) => {
             const ranksString =
               orderedRanks +
               (rank !== prefixRank ? (column < rowIndex ? "o" : "s") : "");
-            const tier = getInitialHandRangeArray().findIndex((tier) =>
-              tier.includes(ranksString),
-            );
+            const tier = INITIAL_HAND_RANGES.map((range) =>
+              range.split(","),
+            ).findIndex((tier) => tier.includes(ranksString));
 
             return (
               <div

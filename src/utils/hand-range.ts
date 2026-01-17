@@ -1,4 +1,4 @@
-import INITIAL_HAND_RANGES from "@/data/initial-hand-ranges.json";
+import INITIAL_OPEN_RANGES from "@/data/initial-open-ranges.json";
 import { CARD_RANK_ORDER, CARD_RANKS, toHandArray } from "@/utils/card";
 import { getAllCombos } from "./dealer";
 
@@ -111,6 +111,8 @@ const expandPlus = (hand: HandCode): string[] => {
 
 /**
  * スターティングハンドをレンジ文字列に圧縮する
+ * @param hands string[]
+ * 例: ["QQ","KK","AA","KQs","QJs","JTs","A5s","A4s","A3s","A2s"] -> "QQ+,KQs-JTs,A5s+"
  */
 function compressStartingHands(hands: string[]) {
   const normalized = new Set<string>();
@@ -333,11 +335,29 @@ function expandStartingHands(range: string): string[] {
 }
 
 /**
- * Hand Rangeの2次元配列を返す
- * TODO: その打ち消したい
+ * Local Storageから設定されているOpen Rangeを取得する
+ * @return string[][]
  */
-function getInitialHandRangeArray() {
-  return INITIAL_HAND_RANGES.map((range) => range.split(","));
+function getSettingOpenRange(): string[][] {
+  let raw = localStorage.getItem("mcpt:open-range-tables");
+
+  if (!raw) {
+    raw = JSON.stringify(INITIAL_OPEN_RANGES);
+  }
+
+  const parsed = JSON.parse(raw);
+  if (!Array.isArray(parsed)) {
+    throw new Error("Invalid stored open range format");
+  }
+
+  const rangeStrings = parsed.map((entry: string) => {
+    if (typeof entry === "string") {
+      return expandStartingHands(entry);
+    }
+    return [];
+  });
+
+  return rangeStrings;
 }
 
 /**
@@ -351,9 +371,9 @@ function getHandsInRange(strength: number, exclude: string[] = []): string[][] {
     throw new Error("Invalid strength value");
   }
   const allHands = getAllCombos(exclude);
-  const allowedHandStrings = INITIAL_HAND_RANGES.slice(0, strength).flatMap(
-    (str) => str.split(","),
-  );
+  const allowedHandStrings = INITIAL_OPEN_RANGES.map(expandStartingHands)
+    .slice(0, strength)
+    .flat();
 
   return allHands.filter((hand) => {
     const handString = toHandSymbol(hand);
@@ -369,13 +389,12 @@ function getHandsInRange(strength: number, exclude: string[] = []): string[][] {
  */
 function getRangeStrengthByHand(
   hand: string | string[],
-  ranges = INITIAL_HAND_RANGES,
+  ranges = INITIAL_OPEN_RANGES.map(expandStartingHands),
 ) {
   const handArray = Array.isArray(hand) ? hand : toHandArray(hand);
   const handSymbol = toHandSymbol(handArray);
   const strengthIndex = ranges.findIndex((range) => {
-    const hands = range.split(",");
-    return hands.includes(handSymbol);
+    return range.includes(handSymbol);
   });
 
   return strengthIndex;
@@ -387,33 +406,18 @@ function getRangeStrengthByHand(
  * @param people number
  */
 function getRangeStrengthByPosition(position: number, people: number = 9) {
-  const preflopPosition = [8, 9, 1, 2, 3, 4, 5, 6, 7]; // TODO: 動的なpeople対応
-  const rangeStrengthRank = preflopPosition[position - 1];
-  // SB(people - 1) を除外した 1-based seat number を受け取る
+  // TODO: 動的なpeople対応
   if (people < 2 || people > 9) return -1;
   if (position < 1 || position > people) return -1;
-  // if (position === 1) return -1; // SB は対象外
-  if (rangeStrengthRank < 1 || rangeStrengthRank > people) return -1;
 
-  // position をもとに Tier Index を引く (9max 想定)
-  const afterPositions = people - rangeStrengthRank;
-
-  // SB を除外するため afterPositions が people - 1 になるパターンはスキップされている
-  const positionToTierIndexes = [7, 7, 7, 6, 5, 5, 4, 4, 3];
-  const strength = positionToTierIndexes[afterPositions];
-  if (typeof strength !== "number") {
-    return -1;
-  }
-
-  return strength;
+  return position < 3 ? position + people - 2 : position - 2;
 }
 
 function judgeInRange(hands: string[], position: number, people = 9) {
   const tierIndex = getRangeStrengthByPosition(position, people);
   const tierIndexes = Array.from({ length: tierIndex }, (_, i) => i);
-  const openRaiseHands = tierIndexes.flatMap(
-    (index) => getInitialHandRangeArray()[index],
-  );
+  const ranges = INITIAL_OPEN_RANGES.map(expandStartingHands);
+  const openRaiseHands = tierIndexes.flatMap((index) => ranges[index]);
   const handString = toHandSymbol(hands);
 
   return openRaiseHands.includes(handString);
@@ -434,10 +438,10 @@ const _HAND_RANGE_SYMBOLS = [
 export {
   compressStartingHands,
   expandStartingHands,
-  getInitialHandRangeArray,
   getHandsInRange,
   getRangeStrengthByPosition,
   getRangeStrengthByHand,
+  getSettingOpenRange,
   toHandSymbol,
   judgeInRange,
 };

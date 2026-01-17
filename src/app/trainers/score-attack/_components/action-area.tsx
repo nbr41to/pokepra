@@ -17,7 +17,7 @@ import { useActionStore } from "./_utils/state";
 
 export const ActionArea = () => {
   const {
-    phase,
+    street,
     position,
     hero,
     board,
@@ -25,7 +25,7 @@ export const ActionArea = () => {
     flop,
     turn,
     river,
-    showHand,
+    confirmHand,
     preflopAction,
     postflopAction,
     shuffleAndDeal,
@@ -43,11 +43,11 @@ export const ActionArea = () => {
       ]),
       trials: 1000,
     });
-    postflopAction(phase, answer, result);
+    postflopAction(street, answer, result);
     setLoading(false);
   };
   const handleOnDoubleTapAction = async () => {
-    if (phase === "preflop") {
+    if (street === "preflop") {
       preflopAction("open-raise");
     } else {
       handleOnPostflopAction("commit");
@@ -55,7 +55,7 @@ export const ActionArea = () => {
   };
 
   const handleFoldAction = () => {
-    if (phase === "preflop") {
+    if (street === "preflop") {
       preflopAction("fold");
     } else {
       handleOnPostflopAction("fold");
@@ -73,10 +73,10 @@ export const ActionArea = () => {
   });
 
   const disabled =
-    (phase === "preflop" && preflop === "fold") ||
-    (phase === "flop" && !!flop) ||
-    (phase === "turn" && !!turn) ||
-    (phase === "river" && !!river);
+    (street === "preflop" && preflop === "fold") ||
+    (street === "flop" && !!flop) ||
+    (street === "turn" && !!turn) ||
+    (street === "river" && !!river);
   const disabledAnalysis = board.length < 3;
 
   return (
@@ -85,7 +85,7 @@ export const ActionArea = () => {
         <HeroActionArea
           key={hero.join("-")}
           hand={hero}
-          onOpenHand={showHand}
+          onOpenHand={confirmHand}
           onFold={handleFoldAction}
           onDoubleTap={handleOnDoubleTapAction}
           disabled={disabled || loading}

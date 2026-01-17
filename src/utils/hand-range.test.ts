@@ -3,7 +3,6 @@ import {
   compressStartingHands,
   expandStartingHands,
   getHandsInRange,
-  getInitialHandRangeArray,
   getRangeStrengthByHand,
   getRangeStrengthByPosition,
   judgeInRange,
@@ -21,14 +20,6 @@ describe("toHandSymbol", () => {
   });
 });
 
-describe("getInitialHandRangeArray", () => {
-  it("レンジの配列を返す", () => {
-    const ranges = getInitialHandRangeArray();
-    expect(ranges.length).toBeGreaterThan(0);
-    expect(ranges[0]).toContain("AA");
-  });
-});
-
 describe("getHandsInRange", () => {
   it("strengthが-1なら空配列", () => {
     expect(getHandsInRange(-1)).toEqual([]);
@@ -41,7 +32,7 @@ describe("getHandsInRange", () => {
 
   it("strength=1なら34通り", () => {
     const hands = getHandsInRange(1);
-    expect(hands.length).toBe(34);
+    expect(hands.length).toBe(158);
   });
 });
 
@@ -61,12 +52,12 @@ describe("getRangeStrengthByPosition", () => {
     expect(getRangeStrengthByPosition(1, 10)).toBe(-1);
   });
   it("SBは強さを返す", () => {
-    expect(getRangeStrengthByPosition(1, 9)).toBe(7);
+    expect(getRangeStrengthByPosition(1, 9)).toBe(8);
   });
 
   it("ポジションに応じた強さを返す", () => {
     expect(getRangeStrengthByPosition(8, 9)).toBe(6);
-    expect(getRangeStrengthByPosition(3, 9)).toBe(3); // UTG
+    expect(getRangeStrengthByPosition(3, 9)).toBe(1); // UTG
   });
 });
 
