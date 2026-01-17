@@ -86,7 +86,7 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
             onScroll={scrollToMyHand}
           />
         </ScrollArea>
-        <div className="absolute right-2 bottom-4 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
+        <div className="absolute right-2 bottom-7 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
           <Button
             className="rounded-full"
             size="icon-lg"
@@ -104,7 +104,7 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
         </div>
       </TabsContent>
 
-      <SheetFooter className="absolute bottom-0 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
+      <SheetFooter className="absolute bottom-3 left-1/2 z-10 flex w-fit -translate-x-1/2 flex-row items-center">
         <TabsList className="h-12 rounded-full">
           <TabsTrigger value="equity" className="h-10 rounded-full">
             <ChartColumnBig />

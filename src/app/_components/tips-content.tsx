@@ -50,10 +50,26 @@ export function TipsContent() {
             </Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/ev-odds-required-winrate">
+              EV・オッズ・必要勝率
+            </Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/hand-probability">役が完成する確率</Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/board-textures">ボードの種類</Link>
+          </Button>
+        </div>
+      </NavigationSection>
+
+      <NavigationSection title="GTO" description="ゲーム理論">
+        <div className="flex flex-col items-center justify-center gap-y-3">
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/gto-nash-equilibrium">ナッシュ均衡を感じる</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/exploit-rps">エクスプロイト戦略を体感</Link>
           </Button>
         </div>
       </NavigationSection>

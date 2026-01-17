@@ -1,16 +1,39 @@
 import { useMemo } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
+  CartesianGrid,
+  Label,
+  Line,
+  LineChart,
+  ReferenceDot,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { toHandSymbol } from "@/utils/hand-range";
 import { useHoldemStore } from "./_utils/state";
 
-export const StoryReport = () => {
-  const { story, street } = useHoldemStore();
+const chartConfig = {
+  hero: {
+    label: "hero",
+    color: "hsl(0 72% 51%)",
+  },
+  villain: {
+    label: "villain",
+    color: "hsl(210 85% 45%)",
+  },
+} satisfies ChartConfig;
+const bucketSize = 5;
 
-  const chartData = useMemo(() => {
+export const StoryReport = () => {
+  const { story, street, hero } = useHoldemStore();
+
+  const { data, heroPoint } = useMemo(() => {
     const targetIndex =
       street === "flop"
         ? 0
@@ -20,9 +43,8 @@ export const StoryReport = () => {
             ? 2
             : -1;
     const latest = targetIndex >= 0 ? story[targetIndex] : undefined;
-    if (!latest) return [];
+    if (!latest) return { data: [], heroPoint: null };
 
-    const bucketSize = 10;
     const bucketCount = 100 / bucketSize;
     const heroBuckets = Array.from({ length: bucketCount }, () => 0);
     const villainBuckets = Array.from({ length: bucketCount }, () => 0);
@@ -45,17 +67,40 @@ export const StoryReport = () => {
     const villainTotal =
       villainBuckets.reduce((sum, value) => sum + value, 0) || 1;
 
-    return Array.from({ length: bucketCount }, (_, index) => {
-      const start = index * bucketSize;
+    let heroAccum = 0;
+    let villainAccum = 0;
+
+    const rows = Array.from({ length: bucketCount }, (_, index) => {
+      heroAccum += heroBuckets[index] / heroTotal;
+      villainAccum += villainBuckets[index] / villainTotal;
       return {
-        bucket: `${start}%-`,
-        hero: (heroBuckets[index] / heroTotal) * 100,
-        villain: (villainBuckets[index] / villainTotal) * 100,
+        equity: (index + 1) * bucketSize,
+        hero: heroAccum * 100,
+        villain: villainAccum * 100,
       };
     });
-  }, [story, street]);
 
-  if (chartData.length === 0) {
+    const heroSymbol = toHandSymbol(hero);
+    const heroRangeEntry = latest.range.hero.find(
+      (entry) => toHandSymbol(entry.hand) === heroSymbol,
+    );
+    const heroEquity = (heroRangeEntry?.equity ?? latest.hero.equity) * 100;
+    const heroBucket = Math.min(
+      bucketCount - 1,
+      Math.max(0, Math.floor(heroEquity / bucketSize)),
+    );
+    const heroCdf =
+      (heroBuckets.slice(0, heroBucket + 1).reduce((sum, v) => sum + v, 0) /
+        heroTotal) *
+      100;
+
+    return {
+      data: rows,
+      heroPoint: { equity: (heroBucket + 1) * bucketSize, cdf: heroCdf },
+    };
+  }, [story, street, hero]);
+
+  if (data.length === 0) {
     return (
       <div className="rounded-lg border bg-card p-4 text-muted-foreground text-sm">
         チャートを表示するためのデータがありません。
@@ -64,49 +109,78 @@ export const StoryReport = () => {
   }
 
   return (
-    <div className="rounded-lg border bg-card p-4 shadow-sm">
-      <p className="mb-2 text-center font-semibold text-sm">エクイティ分布</p>
-      <ChartContainer
-        className="h-72 w-full"
-        config={{
-          hero: { label: "Hero", color: "hsl(0 72% 51%)" },
-          villain: { label: "Villain", color: "hsl(210 85% 45%)" },
-        }}
-      >
-        <LineChart data={chartData} margin={{ left: -16, right: 8, top: 8 }}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="bucket" tickMargin={6} type="category" />
-          <YAxis
-            domain={[0, 100]}
-            tickMargin={6}
-            tickFormatter={(value) => `${value}%`}
-          />
-          <ChartTooltip
-            content={
-              <ChartTooltipContent
-                formatter={(value, _name, item) => [
-                  `${Number(value).toFixed(1)}%`,
-                  item.name,
-                ]}
+    <Card>
+      <CardHeader>
+        <CardTitle>エクイティ分布</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ChartContainer className="px-2" config={chartConfig}>
+          <LineChart
+            accessibilityLayer
+            data={data}
+            layout="vertical"
+            margin={{
+              top: 20,
+              left: -8,
+              right: 16,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              type="number"
+              domain={[0, 100]}
+              ticks={Array.from({ length: 6 }, (_, i) => i * 20)}
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => `${value}%`}
+            ></XAxis>
+            <YAxis
+              type="number"
+              dataKey="equity"
+              domain={[0, 100]}
+              reversed
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => `${value}%`}
+            >
+              <Label value="EQ" angle={0} position="top" offset={10} />
+            </YAxis>
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  formatter={(value) => [`${Number(value).toFixed(2)}%`, ""]}
+                />
+              }
+            />
+            <Line
+              dataKey="hero"
+              type="monotone"
+              stroke="var(--color-hero)"
+              strokeWidth={2}
+              dot={false}
+            />
+            <Line
+              dataKey="villain"
+              type="monotone"
+              stroke="var(--color-villain)"
+              strokeWidth={2}
+              dot={false}
+            />
+            {heroPoint && (
+              <ReferenceDot
+                x={heroPoint.cdf}
+                y={heroPoint.equity}
+                r={3}
+                fill="var(--color-hero)"
+                stroke="var(--color-hero)"
               />
-            }
-          />
-          <Line
-            type="monotone"
-            dataKey="hero"
-            stroke="var(--color-hero)"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="villain"
-            stroke="var(--color-villain)"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </ChartContainer>
-    </div>
+            )}
+          </LineChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 };
