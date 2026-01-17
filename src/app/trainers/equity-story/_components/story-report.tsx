@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -8,10 +8,18 @@ import {
 import { useHoldemStore } from "./_utils/state";
 
 export const StoryReport = () => {
-  const { story } = useHoldemStore();
+  const { story, street } = useHoldemStore();
 
   const chartData = useMemo(() => {
-    const latest = story.at(-1);
+    const targetIndex =
+      street === "flop"
+        ? 0
+        : street === "turn"
+          ? 1
+          : street === "river"
+            ? 2
+            : -1;
+    const latest = targetIndex >= 0 ? story[targetIndex] : undefined;
     if (!latest) return [];
 
     const bucketSize = 10;
@@ -45,7 +53,7 @@ export const StoryReport = () => {
         villain: (villainBuckets[index] / villainTotal) * 100,
       };
     });
-  }, [story]);
+  }, [story, street]);
 
   if (chartData.length === 0) {
     return (
@@ -57,22 +65,17 @@ export const StoryReport = () => {
 
   return (
     <div className="rounded-lg border bg-card p-4 shadow-sm">
-      <p className="mb-2 font-semibold text-sm">エクイティ分布</p>
+      <p className="mb-2 text-center font-semibold text-sm">エクイティ分布</p>
       <ChartContainer
-        className="h-64 w-full"
+        className="h-72 w-full"
         config={{
-          hero: { label: "Hero", color: "hsl(var(--primary))" },
-          villain: { label: "Villain", color: "hsl(0 72% 51%)" },
+          hero: { label: "Hero", color: "hsl(0 72% 51%)" },
+          villain: { label: "Villain", color: "hsl(210 85% 45%)" },
         }}
       >
-        <BarChart
-          data={chartData}
-          margin={{ left: 8, right: 16, top: 8 }}
-          barCategoryGap="20%"
-          barGap={4}
-        >
+        <LineChart data={chartData} margin={{ left: -16, right: 8, top: 8 }}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="bucket" tickMargin={6} />
+          <XAxis dataKey="bucket" tickMargin={6} type="category" />
           <YAxis
             domain={[0, 100]}
             tickMargin={6}
@@ -88,19 +91,21 @@ export const StoryReport = () => {
               />
             }
           />
-          <Bar
+          <Line
+            type="monotone"
             dataKey="hero"
-            fill="var(--color-hero)"
-            radius={[4, 4, 0, 0]}
-            barSize={12}
+            stroke="var(--color-hero)"
+            strokeWidth={2}
+            dot={false}
           />
-          <Bar
+          <Line
+            type="monotone"
             dataKey="villain"
-            fill="var(--color-villain)"
-            radius={[4, 4, 0, 0]}
-            barSize={12}
+            stroke="var(--color-villain)"
+            strokeWidth={2}
+            dot={false}
           />
-        </BarChart>
+        </LineChart>
       </ChartContainer>
     </div>
   );

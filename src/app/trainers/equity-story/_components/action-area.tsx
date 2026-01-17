@@ -1,3 +1,4 @@
+import { RefreshCcw } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { Combo } from "@/components/combo";
@@ -23,6 +24,7 @@ export const ActionArea = () => {
     board,
     preflopAction,
     postflopAction,
+    rewindStreet,
     shuffleAndDeal,
   } = useHoldemStore();
 
@@ -36,6 +38,18 @@ export const ActionArea = () => {
     if (street === "preflop") {
       preflopAction("open-raise");
     } else {
+      setLoading(true);
+      await postflopAction({ street, bet: 50 });
+      setLoading(false);
+    }
+  };
+
+  const handleNextStreet = async () => {
+    if (street === "preflop") {
+      preflopAction("open-raise");
+      return;
+    }
+    if (street === "flop" || street === "turn") {
       setLoading(true);
       await postflopAction({ street, bet: 50 });
       setLoading(false);
@@ -76,21 +90,34 @@ export const ActionArea = () => {
           onFold={handleOnFold}
           disabled={finished || loading}
         /> */}
-        <div className="flex justify-center gap-x-8">
-          <Combo hand={hero} className="scale-120" />
-          <Button onClick={handleOnDoubleTap}>Next</Button>
-        </div>
-        {finished && (
-          <div className="absolute top-0 left-0 z-10 grid h-full w-full place-content-center bg-background/30">
+        <div className="flex w-full items-center justify-between gap-x-4 px-5">
+          <div className="flex items-center gap-2">
+            <Combo hand={hero} className="mr-4 scale-120" />
             <Button
               size="lg"
-              className="rounded-lg text-base shadow"
-              onClick={() => shuffleAndDeal()}
+              variant="outline"
+              onClick={rewindStreet}
+              disabled={street === "preflop" || street === "flop" || loading}
+            >
+              Prev
+            </Button>
+            <Button
+              size="lg"
+              onClick={handleNextStreet}
+              disabled={street === "river" || loading}
             >
               Next
             </Button>
           </div>
-        )}
+          <Button
+            size="icon"
+            className="rounded-full"
+            variant="outline"
+            onClick={() => shuffleAndDeal()}
+          >
+            <RefreshCcw />
+          </Button>
+        </div>
 
         {loading && (
           <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/20">

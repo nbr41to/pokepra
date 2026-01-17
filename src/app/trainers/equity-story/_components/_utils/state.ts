@@ -59,6 +59,7 @@ type State = {
     hero: EquityPayload;
     range: RangeVsRangePayload;
   }[];
+  disableBoardAnimation: boolean;
 };
 
 type Actions = {
@@ -70,6 +71,7 @@ type Actions = {
     street: Street;
     bet: number | "fold";
   }) => Promise<void>;
+  rewindStreet: () => void;
   clear: () => void;
 };
 
@@ -103,6 +105,7 @@ const INITIAL_STATE: State = {
 
   histories: [],
   story: [],
+  disableBoardAnimation: false,
 };
 
 const useHoldemStore = create<Store>((set, get) => ({
@@ -120,6 +123,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       ...shuffleAndDeal({ people, heroStrength }),
       settings,
       gameId: Date.now(),
+      disableBoardAnimation: false,
     });
   },
 
@@ -139,6 +143,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       delta: 0,
       actions: INITIAL_STATE.actions,
       story: [],
+      disableBoardAnimation: false,
     });
   },
 
@@ -175,7 +180,7 @@ const useHoldemStore = create<Store>((set, get) => ({
    * プリフロップのアクション
    */
   preflopAction: async (action: PreflopAction) => {
-    const { position, hero, deck, actions, analyzeEquity } = get();
+    const { position, hero, deck, actions, analyzeEquity, story } = get();
     const inRange = judgeInRange(hero, position); // 今のPositionのレンジ強さで判定
     const correct = action === "open-raise" ? inRange : !inRange;
 
@@ -183,16 +188,20 @@ const useHoldemStore = create<Store>((set, get) => ({
       set({
         actions: { ...actions, preflop: { action, correct } },
         finished: true,
+        disableBoardAnimation: false,
       });
     } else {
       const board = deck.splice(0, 3);
-      await analyzeEquity(board);
+      if (!story[0]) {
+        await analyzeEquity(board);
+      }
 
       set({
         actions: { ...actions, preflop: { action, correct } },
         street: "flop",
         deck,
         board,
+        disableBoardAnimation: false,
       });
     }
   },
@@ -202,9 +211,12 @@ const useHoldemStore = create<Store>((set, get) => ({
    */
   postflopAction: async (params) => {
     const { street: currentStreet, bet } = params;
-    const { deck, board, actions, analyzeEquity } = get();
+    const { deck, board, actions, analyzeEquity, story } = get();
     const newCard = deck.splice(0, 1)[0];
-    await analyzeEquity([...board, newCard]);
+    const targetIndex = currentStreet === "flop" ? 1 : 2;
+    if (!story[targetIndex]) {
+      await analyzeEquity([...board, newCard]);
+    }
 
     if (bet === "fold") {
       set(() => ({
@@ -225,11 +237,35 @@ const useHoldemStore = create<Store>((set, get) => ({
           : currentStreet === "turn"
             ? "river"
             : "river",
+      ...(currentStreet === "river"
+        ? {}
+        : { board: [...board, newCard], deck }),
       actions: {
         ...actions,
         [currentStreet]: "commit",
       },
       finished: currentStreet === "river",
+      disableBoardAnimation: false,
+    }));
+  },
+
+  rewindStreet: () => {
+    const { street, deck, board, actions, finished } = get();
+    if (street === "preflop" || street === "flop") return;
+    const nextBoard = [...board];
+    const removed = nextBoard.pop();
+    const nextDeck = removed ? [removed, ...deck] : deck;
+
+    set(() => ({
+      street: street === "river" ? "turn" : "flop",
+      board: nextBoard,
+      deck: nextDeck,
+      actions: {
+        ...actions,
+        [street]: null,
+      },
+      finished: finished && street === "river" ? false : finished,
+      disableBoardAnimation: true,
     }));
   },
 

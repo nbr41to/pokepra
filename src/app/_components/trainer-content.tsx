@@ -50,7 +50,9 @@ export function TrainerContent() {
           <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/score-attack">Score Attack</Link>
           </Button>
-
+          <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/equity-story">Story Report</Link>
+          </Button>
           <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
           </Button>

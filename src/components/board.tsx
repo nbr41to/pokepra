@@ -6,9 +6,10 @@ import { PlayCard } from "@/components/play-card";
 
 type Props = {
   cards: string[];
+  disableAnimation?: boolean;
 };
 
-export const Board = ({ cards }: Props) => {
+export const Board = ({ cards, disableAnimation = false }: Props) => {
   const [cardStates, setCardStates] = useState<
     { card: string; delay: number; instant: boolean; animKey: string }[]
   >([]);
@@ -23,6 +24,9 @@ export const Board = ({ cards }: Props) => {
       prevCards.every((card, idx) => cards[idx] === card);
 
     const nextStates = cards.map((card, idx) => {
+      if (disableAnimation) {
+        return { card, delay: 0, instant: true, animKey: `${card}-static` };
+      }
       if (isSingleAppend && idx < prevCards.length) {
         // keep existing cards face up immediately
         return { card, delay: 0, instant: true, animKey: `${card}-static` };
@@ -42,7 +46,7 @@ export const Board = ({ cards }: Props) => {
     setCardStates(nextStates);
 
     prevCardsRef.current = cards;
-  }, [cards]);
+  }, [cards, disableAnimation]);
 
   return (
     <div className="flex w-81 gap-x-1.5">
