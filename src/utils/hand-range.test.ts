@@ -1,5 +1,7 @@
 import { describe, expect, it } from "bun:test";
 import {
+  compressStartingHands,
+  expandStartingHands,
   getHandsInRange,
   getInitialHandRangeArray,
   getRangeStrengthByHand,
@@ -75,5 +77,33 @@ describe("judgeInRange", () => {
 
   it("レンジ外ならfalse", () => {
     expect(judgeInRange(["7s", "2h"], 3, 9)).toBe(false);
+  });
+});
+
+describe("compressStartingHands", () => {
+  it("連続したペアをプラス表記で圧縮する", () => {
+    expect(compressStartingHands(["AA", "KK", "QQ"])).toBe("QQ+");
+  });
+
+  it("スーテッドコネクターのレンジをまとめる", () => {
+    expect(compressStartingHands(["KQs", "QJs", "JTs"])).toBe("KQs-JTs");
+  });
+
+  it("Axsのプラス表記にまとめる", () => {
+    expect(compressStartingHands(["A5s", "A4s", "A3s", "A2s"])).toBe("A5s+");
+  });
+});
+
+describe("expandStartingHands", () => {
+  it("プラス表記を展開する", () => {
+    expect(expandStartingHands("QQ+")).toEqual(["QQ", "KK", "AA"]);
+  });
+
+  it("レンジ表記を展開する", () => {
+    expect(expandStartingHands("KQs-JTs")).toEqual(["KQs", "QJs", "JTs"]);
+  });
+
+  it("Axsのプラス表記を展開する", () => {
+    expect(expandStartingHands("A5s+")).toEqual(["A5s", "A4s", "A3s", "A2s"]);
   });
 });

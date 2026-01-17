@@ -33,6 +33,11 @@ export function TrainerContent() {
           title="BB Defense"
           description="BBでのディフェンスを体感できます。"
         />
+        <LinkCard
+          href="/trainers/equity-quiz"
+          title="Equity Quiz"
+          description="フロップにおける勝率のクイズができます。"
+        />
       </div>
 
       <Separator />
@@ -45,6 +50,7 @@ export function TrainerContent() {
           <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/score-attack">Score Attack</Link>
           </Button>
+
           <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
           </Button>

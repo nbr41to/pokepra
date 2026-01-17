@@ -194,10 +194,7 @@ export const SuitConfettiOverlay = () => {
         >
           {pieces.map((piece, index) => (
             <span
-              key={`cross-${burstId}-${
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                index
-              }`}
+              key={`cross-${burstId + index}`}
               className={cn(
                 "confetti-piece",
                 "confetti-cross",
@@ -229,10 +226,7 @@ export const SuitConfettiOverlay = () => {
         >
           {fallPieces.map((piece, index) => (
             <span
-              key={`fall-${burstId}-${
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                index
-              }`}
+              key={`fall-${burstId + index}`}
               className={cn("confetti-piece", "confetti-fall", piece.className)}
               style={
                 {

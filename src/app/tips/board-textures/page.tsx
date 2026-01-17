@@ -79,7 +79,7 @@ export default function BoardTypesPage() {
         next[boardType.id] = buildBoardExample(boardType.id);
       }
       return next;
-    } catch (caught) {
+    } catch (_caught) {
       return {};
     }
   });
