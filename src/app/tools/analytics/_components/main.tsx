@@ -19,9 +19,9 @@ export default function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="flex min-h-0 w-full flex-1 flex-col justify-between">
+    <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-y-2">
       <AnalyticsArea className="min-h-0 flex-1" />
-      <div>
+      <div className="space-y-2">
         <CommunityArea />
         <HeroArea />
         <ConfirmPositionArea />

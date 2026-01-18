@@ -28,12 +28,12 @@ export const AnalyticsArea = ({ className }: Props) => {
   const rankingPromise = getHandRankingInRange(getAllCombos(board), board);
   const simHandVsRangeEquityWithRanksPromise = simHandVsRangeEquityWithRanks(
     hero,
-    ranges[1],
+    ranges[8],
     board,
   );
   const simRangeVsRangeEquityPromise = simRangeVsRangeEquity(
     ranges[getRangeStrengthByPosition(position)],
-    ranges[1],
+    ranges[8],
     board,
   );
 
@@ -77,14 +77,17 @@ export const AnalyticsArea = ({ className }: Props) => {
         </Suspense>
       </div>
 
-      <TabsList>
-        <TabsTrigger value="hero-equity">
+      <TabsList className="mx-auto h-12 w-fit rounded-full">
+        <TabsTrigger value="hero-equity" className="size-12 rounded-full">
           <ChartColumnStacked />
         </TabsTrigger>
-        <TabsTrigger value="compare-equity-distribution">
+        <TabsTrigger
+          value="compare-equity-distribution"
+          className="size-12 rounded-full"
+        >
           <ChartSpline />
         </TabsTrigger>
-        <TabsTrigger value="equity-ranking">
+        <TabsTrigger value="equity-ranking" className="size-12 rounded-full">
           <Crown />
         </TabsTrigger>
       </TabsList>

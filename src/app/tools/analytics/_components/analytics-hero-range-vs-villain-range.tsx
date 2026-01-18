@@ -1,5 +1,13 @@
 import { use, useMemo } from "react";
-import { CartesianGrid, Label, Line, LineChart, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Label,
+  Line,
+  LineChart,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -34,7 +42,10 @@ export const AnalyticsHeroRangeVsVillainRange = ({
 
   // 勝率だけ抽出
   const heroEquity =
-    result.hero.find((entry) => hero.join(" ") === entry.hand)?.equity || 0;
+    result.hero.find((entry) => {
+      return entry.hand.split(" ").every((card) => hero.includes(card));
+    })?.equity || 0;
+
   const heroRangeEquity =
     result.hero.reduce((acc, entry) => acc + entry.equity, 0) /
     result.hero.length;
@@ -85,10 +96,16 @@ export const AnalyticsHeroRangeVsVillainRange = ({
       value="compare-equity-distribution"
       className="flex h-full flex-col justify-end"
     >
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className="h-80">
         <LineChart
-          width={600}
+          width={400}
           height={400}
+          margin={{
+            top: 32,
+            left: -24,
+            right: 16,
+            bottom: 16,
+          }}
           data={heroBuckets.map((_heroCount, idx) => ({
             distribution: (idx + 1) * BUCKET_SIZE,
             hero:
@@ -102,13 +119,21 @@ export const AnalyticsHeroRangeVsVillainRange = ({
           }))}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <YAxis
+          <XAxis
             dataKey="distribution"
+            type="number"
+            domain={[0, 100]}
+            ticks={[0, 20, 40, 60, 80, 100]}
+            tick={{ fontSize: 12 }}
+            tickFormatter={(value) => `${value}%`}
+          />
+          <YAxis
+            dataKey="equity"
             type="number"
             domain={[0, 100]}
             tick={{ fontSize: 12 }}
           >
-            <Label value="Equity (%)" offset={-8} position="insideBottom" />
+            <Label value="EQ(%)" offset={16} position="top" dx={16} />
           </YAxis>
           <YAxis
             tick={{ fontSize: 12 }}
@@ -133,6 +158,27 @@ export const AnalyticsHeroRangeVsVillainRange = ({
                 ]}
               />
             }
+          />
+          <ReferenceLine
+            y={heroEquity * 100}
+            stroke="var(--color-hero)"
+            strokeDasharray="6 4"
+            ifOverflow="extendDomain"
+            label="Hero EQ"
+          />
+          <ReferenceLine
+            y={heroRangeEquity * 100}
+            stroke="var(--color-hero)"
+            strokeDasharray="2 4"
+            ifOverflow="extendDomain"
+            label="Hero Range EQ"
+          />
+          <ReferenceLine
+            y={villainRangeEquity * 100}
+            stroke="var(--color-villain)"
+            strokeDasharray="2 4"
+            ifOverflow="extendDomain"
+            label="Villain Range EQ"
           />
           <Line
             type="monotone"
