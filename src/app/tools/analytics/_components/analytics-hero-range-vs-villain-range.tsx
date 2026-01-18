@@ -96,15 +96,13 @@ export const AnalyticsHeroRangeVsVillainRange = ({
       value="compare-equity-distribution"
       className="flex h-full flex-col justify-end"
     >
-      <ChartContainer config={chartConfig} className="h-80">
+      <ChartContainer config={chartConfig} className="h-60 w-[calc(100%-16px)]">
         <LineChart
-          width={400}
-          height={400}
           margin={{
             top: 32,
             left: -24,
-            right: 16,
-            bottom: 16,
+            right: 0,
+            bottom: 0,
           }}
           data={heroBuckets.map((_heroCount, idx) => ({
             distribution: (idx + 1) * BUCKET_SIZE,
