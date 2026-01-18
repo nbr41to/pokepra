@@ -11,7 +11,11 @@ import { use, useCallback, useRef, useState } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
-import { getSettingOpenRange, toHandSymbol } from "@/utils/hand-range";
+import {
+  expandStartingHands,
+  getSettingOpenRange,
+  toHandSymbol,
+} from "@/utils/hand-range";
 import { SelectPosition } from "../select-position";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
@@ -40,7 +44,10 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
       const isHeroHand = hand === result.hand;
 
       return (
-        isHeroHand || selectedRangeHandStrings.includes(toHandSymbol(hand))
+        isHeroHand ||
+        expandStartingHands(selectedRangeHandStrings).includes(
+          toHandSymbol(hand),
+        )
       );
     }),
   };

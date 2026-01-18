@@ -248,6 +248,7 @@ export type RangeVsRangeWithProgressParams = RangeVsRangeParams & {
 export type ParseRangeParams = {
   range: string;
   wasmUrl?: string;
+  excludedCards?: string[];
 };
 
 export type EvaluateHandsRankingParams = {

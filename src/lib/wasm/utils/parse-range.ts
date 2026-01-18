@@ -12,9 +12,23 @@ const decodeCard = (v: number) => {
   return `${rankChar}${suitChar}`;
 };
 
+const normalizeCard = (card: string) => {
+  const trimmed = card.trim();
+  if (trimmed.length === 3 && trimmed.startsWith("10")) {
+    return `T${trimmed[2]?.toLowerCase() ?? ""}`;
+  }
+  if (trimmed.length < 2) {
+    return trimmed;
+  }
+  const rank = trimmed[0]?.toUpperCase() ?? "";
+  const suit = trimmed.slice(1).toLowerCase();
+  return `${rank}${suit}`;
+};
+
 export async function parseRangeToHands({
   range,
   wasmUrl = DEFAULT_WASM_URL,
+  excludedCards = [],
 }: ParseRangeParams): Promise<string[][]> {
   const trimmed = range.trim();
   if (!trimmed) {
@@ -40,12 +54,17 @@ export async function parseRangeToHands({
     return [];
   }
 
+  const excludedSet =
+    excludedCards.length > 0 ? new Set(excludedCards.map(normalizeCard)) : null;
   const out = new Uint32Array(memory.buffer, outPtr, rc * 2);
   const hands: string[][] = [];
   for (let i = 0; i < rc; i += 1) {
     const base = i * 2;
     const c1 = decodeCard(out[base] ?? 0);
     const c2 = decodeCard(out[base + 1] ?? 0);
+    if (excludedSet && (excludedSet.has(c1) || excludedSet.has(c2))) {
+      continue;
+    }
     hands.push([c1, c2]);
   }
   return hands;

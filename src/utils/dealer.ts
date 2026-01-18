@@ -107,6 +107,19 @@ function getShortRankName(handName: string) {
 }
 
 /**
+ * カードを指定枚数ランダムに取得する
+ */
+const getRandomCards = (
+  count: number = 5,
+  excludes: string[] = [],
+): string[] => {
+  const allCards = getAllCards().filter((card) => !excludes.includes(card));
+  const shuffled = shuffleArray(allCards);
+
+  return shuffled.slice(0, count);
+};
+
+/**
  * 新しいゲームを開始する最初の準備
  */
 
@@ -127,5 +140,6 @@ export {
   getAllCombos,
   genHands,
   getShortRankName,
+  getRandomCards,
   shuffleAndDeal,
 };

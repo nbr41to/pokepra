@@ -338,7 +338,7 @@ function expandStartingHands(range: string): string[] {
  * Local Storageから設定されているOpen Rangeを取得する
  * @return string[][]
  */
-function getSettingOpenRange(): string[][] {
+function getSettingOpenRange(): string[] {
   let raw = localStorage.getItem("mcpt:open-range-tables");
 
   if (!raw) {
@@ -350,14 +350,7 @@ function getSettingOpenRange(): string[][] {
     throw new Error("Invalid stored open range format");
   }
 
-  const rangeStrings = parsed.map((entry: string) => {
-    if (typeof entry === "string") {
-      return expandStartingHands(entry);
-    }
-    return [];
-  });
-
-  return rangeStrings;
+  return parsed as string[];
 }
 
 /**

@@ -90,7 +90,7 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
   return (
     <div>
       <p className="text-center text-sm">EQ Ave. {eqAve.toFixed(1)}%</p>
-      <div className="mx-auto flex w-fit pt-4 pb-24">
+      <div className="mx-auto flex w-fit pt-4 pb-12">
         <div className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">
           {buckets.map((bucket, idx) => {
             const value = eqThresholds[bucket].count;

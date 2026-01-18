@@ -55,9 +55,6 @@ export function TipsContent() {
             </Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
-            <Link href="/tips/hand-probability">役が完成する確率</Link>
-          </Button>
-          <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/board-textures">ボードの種類</Link>
           </Button>
         </div>

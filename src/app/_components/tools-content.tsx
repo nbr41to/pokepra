@@ -43,6 +43,9 @@ export function ToolsContent() {
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
           <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/tools/analytics">Analytics</Link>
+          </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/tools/calc-hand-score">Hand Score</Link>
           </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>

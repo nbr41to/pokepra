@@ -45,38 +45,45 @@ export const StoryReport = () => {
     const latest = targetIndex >= 0 ? story[targetIndex] : undefined;
     if (!latest) return { data: [], heroPoint: null };
 
-    const bucketCount = 100 / bucketSize;
-    const heroBuckets = Array.from({ length: bucketCount }, () => 0);
-    const villainBuckets = Array.from({ length: bucketCount }, () => 0);
+    const heroEquities = latest.range.hero
+      .map((entry) => entry.equity * 100)
+      .sort((a, b) => a - b);
+    const villainEquities = latest.range.villain
+      .map((entry) => entry.equity * 100)
+      .sort((a, b) => a - b);
 
-    const fillBuckets = (entries: { equity: number }[], target: number[]) => {
-      for (const entry of entries) {
-        const pct = entry.equity * 100;
-        const bucket = Math.min(
-          bucketCount - 1,
-          Math.max(0, Math.floor(pct / bucketSize)),
-        );
-        target[bucket] += 1;
-      }
+    const getEquityAtCdf = (cdf: number, equities: number[]) => {
+      const count = equities.length;
+      if (count === 0) return 0;
+      if (count === 1) return equities[0];
+      const pos = (cdf / 100) * (count - 1);
+      const low = Math.floor(pos);
+      const high = Math.ceil(pos);
+      const ratio = pos - low;
+      return equities[low] + (equities[high] - equities[low]) * ratio;
     };
 
-    fillBuckets(latest.range.hero, heroBuckets);
-    fillBuckets(latest.range.villain, villainBuckets);
+    const getCdfAtEquity = (equity: number, equities: number[]) => {
+      const count = equities.length;
+      if (count === 0) return 0;
+      if (count === 1) return 100;
+      if (equity <= equities[0]) return 0;
+      if (equity >= equities[count - 1]) return 100;
+      const idx = equities.findIndex((value) => value >= equity);
+      const prev = equities[idx - 1];
+      const next = equities[idx];
+      const ratio = (equity - prev) / (next - prev || 1);
+      const pos = idx - 1 + ratio;
+      return (pos / (count - 1)) * 100;
+    };
 
-    const heroTotal = heroBuckets.reduce((sum, value) => sum + value, 0) || 1;
-    const villainTotal =
-      villainBuckets.reduce((sum, value) => sum + value, 0) || 1;
-
-    let heroAccum = 0;
-    let villainAccum = 0;
-
-    const rows = Array.from({ length: bucketCount }, (_, index) => {
-      heroAccum += heroBuckets[index] / heroTotal;
-      villainAccum += villainBuckets[index] / villainTotal;
+    const pointCount = 100 / bucketSize;
+    const rows = Array.from({ length: pointCount }, (_, index) => {
+      const cdf = (index + 1) * bucketSize;
       return {
-        equity: (index + 1) * bucketSize,
-        hero: heroAccum * 100,
-        villain: villainAccum * 100,
+        cdf,
+        hero: getEquityAtCdf(cdf, heroEquities),
+        villain: getEquityAtCdf(cdf, villainEquities),
       };
     });
 
@@ -85,18 +92,11 @@ export const StoryReport = () => {
       (entry) => toHandSymbol(entry.hand) === heroSymbol,
     );
     const heroEquity = (heroRangeEntry?.equity ?? latest.hero.equity) * 100;
-    const heroBucket = Math.min(
-      bucketCount - 1,
-      Math.max(0, Math.floor(heroEquity / bucketSize)),
-    );
-    const heroCdf =
-      (heroBuckets.slice(0, heroBucket + 1).reduce((sum, v) => sum + v, 0) /
-        heroTotal) *
-      100;
+    const heroCdf = getCdfAtEquity(heroEquity, heroEquities);
 
     return {
       data: rows,
-      heroPoint: { equity: (heroBucket + 1) * bucketSize, cdf: heroCdf },
+      heroPoint: { equity: heroEquity, cdf: heroCdf },
     };
   }, [story, street, hero]);
 
@@ -118,7 +118,7 @@ export const StoryReport = () => {
           <LineChart
             accessibilityLayer
             data={data}
-            layout="vertical"
+            layout="horizontal"
             margin={{
               top: 20,
               left: -8,
@@ -128,30 +128,36 @@ export const StoryReport = () => {
             <CartesianGrid vertical={false} />
             <XAxis
               type="number"
+              dataKey="cdf"
               domain={[0, 100]}
               ticks={Array.from({ length: 6 }, (_, i) => i * 20)}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => `${value}%`}
-            ></XAxis>
+            >
+              <Label value="CDF" angle={0} position="top" offset={5} />
+            </XAxis>
             <YAxis
               type="number"
-              dataKey="equity"
-              domain={[0, 100]}
-              reversed
+              domain={[100, 0]}
+              ticks={Array.from({ length: 6 }, (_, i) => i * 20)}
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => `${value}%`}
             >
-              <Label value="EQ" angle={0} position="top" offset={10} />
+              <Label value="EQ" angle={0} position="top" offset={5} />
             </YAxis>
             <ChartTooltip
               cursor={false}
               content={
                 <ChartTooltipContent
-                  formatter={(value) => [`${Number(value).toFixed(2)}%`, ""]}
+                  labelFormatter={(label) => `CDF ${Number(label).toFixed(0)}%`}
+                  formatter={(value, name) => [
+                    `EQ ${Number(value).toFixed(0)}%`,
+                    name,
+                  ]}
                 />
               }
             />
@@ -161,6 +167,9 @@ export const StoryReport = () => {
               stroke="var(--color-hero)"
               strokeWidth={2}
               dot={false}
+              isAnimationActive
+              animationDuration={400}
+              animationEasing="ease-out"
             />
             <Line
               dataKey="villain"
@@ -168,6 +177,9 @@ export const StoryReport = () => {
               stroke="var(--color-villain)"
               strokeWidth={2}
               dot={false}
+              isAnimationActive
+              animationDuration={400}
+              animationEasing="ease-out"
             />
             {heroPoint && (
               <ReferenceDot
@@ -176,6 +188,8 @@ export const StoryReport = () => {
                 r={3}
                 fill="var(--color-hero)"
                 stroke="var(--color-hero)"
+                isFront
+                ifOverflow="extendDomain"
               />
             )}
           </LineChart>
