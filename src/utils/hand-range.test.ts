@@ -32,7 +32,7 @@ describe("getHandsInRange", () => {
 
   it("strength=1なら34通り", () => {
     const hands = getHandsInRange(1);
-    expect(hands.length).toBe(158);
+    expect(hands.length).toBe(154);
   });
 });
 
@@ -81,7 +81,19 @@ describe("compressStartingHands", () => {
   });
 
   it("Axsのプラス表記にまとめる", () => {
-    expect(compressStartingHands(["A5s", "A4s", "A3s", "A2s"])).toBe("A5s+");
+    expect(
+      compressStartingHands([
+        "AKs",
+        "AQs",
+        "AJs",
+        "ATs",
+        "A9s",
+        "A8s",
+        "A7s",
+        "A6s",
+        "A5s",
+      ]),
+    ).toBe("A5s+");
   });
 });
 
@@ -95,6 +107,16 @@ describe("expandStartingHands", () => {
   });
 
   it("Axsのプラス表記を展開する", () => {
-    expect(expandStartingHands("A5s+")).toEqual(["A5s", "A4s", "A3s", "A2s"]);
+    expect(expandStartingHands("A5s+")).toEqual([
+      "AKs",
+      "AQs",
+      "AJs",
+      "ATs",
+      "A9s",
+      "A8s",
+      "A7s",
+      "A6s",
+      "A5s",
+    ]);
   });
 });

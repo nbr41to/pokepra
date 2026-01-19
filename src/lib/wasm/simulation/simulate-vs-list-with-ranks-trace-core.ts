@@ -1,3 +1,4 @@
+import { CARD_RANK_ORDER } from "@/utils/card";
 import { DEFAULT_WASM_URL } from "../constants";
 import { createHeap, loadWasm } from "../loader";
 import type { MonteCarloTraceEntry, SimulateParams } from "../types";
@@ -20,6 +21,15 @@ const decodeCard = (v: number) => {
   const rankChar = "23456789TJQKA"[rank] ?? "?";
   const suitChar = ["s", "h", "d", "c"][suit] ?? "?";
   return `${rankChar}${suitChar}`;
+};
+const sortByRankDesc = (a: string, b: string) => {
+  const aRank = CARD_RANK_ORDER[a[0] ?? ""] ?? 0;
+  const bRank = CARD_RANK_ORDER[b[0] ?? ""] ?? 0;
+  return bRank - aRank;
+};
+const formatHand = (a: string, b: string) => {
+  const [high, low] = [a, b].sort(sortByRankDesc);
+  return `${high} ${low}`;
 };
 
 const outcomeLabel = (outcome: number) => {
@@ -101,7 +111,7 @@ export async function runSimulateVsListWithRanksTrace({
   for (let i = 0; i < rc; i += 1) {
     const base = i * 11;
     const chunk = out.subarray(base, base + 11);
-    const heroCards = `${decodeCard(chunk[0])} ${decodeCard(chunk[1])}`;
+    const heroCards = formatHand(decodeCard(chunk[0]), decodeCard(chunk[1]));
     const boardCards = [
       decodeCard(chunk[2]),
       decodeCard(chunk[3]),
@@ -109,7 +119,7 @@ export async function runSimulateVsListWithRanksTrace({
       decodeCard(chunk[5]),
       decodeCard(chunk[6]),
     ].join(" ");
-    const villainCards = `${decodeCard(chunk[7])} ${decodeCard(chunk[8])}`;
+    const villainCards = formatHand(decodeCard(chunk[7]), decodeCard(chunk[8]));
     const outcome = outcomeLabel(chunk[9]);
     const rankIndex = chunk[10];
     const rankName = RANK_LABELS[rankIndex] ?? "Unknown";

@@ -1,3 +1,4 @@
+import { CARD_RANK_ORDER } from "@/utils/card";
 import { DEFAULT_WASM_URL } from "../constants";
 import { createHeap, loadWasm, setProgressListener } from "../loader";
 import type {
@@ -128,6 +129,11 @@ async function runRangeVsRange(
     const suitChar = ["s", "h", "d", "c"][suit] ?? "?";
     return `${rankChar}${suitChar}`;
   };
+  const sortByRankDesc = (a: string, b: string) => {
+    const aRank = CARD_RANK_ORDER[a[0] ?? ""] ?? 0;
+    const bRank = CARD_RANK_ORDER[b[0] ?? ""] ?? 0;
+    return bRank - aRank;
+  };
 
   const out = new Uint32Array(memory.buffer, outPtr, rc * 4);
   const hero: RangeEquityEntry[] = [];
@@ -138,10 +144,11 @@ async function runRangeVsRange(
     const chunk = out.subarray(base, base + 4);
     const card1 = decodeCard(chunk[0] ?? 0);
     const card2 = decodeCard(chunk[1] ?? 0);
+    const [high, low] = [card1, card2].sort(sortByRankDesc);
     const equity = (chunk[2] ?? 0) / 1_000_000;
     const role = chunk[3] ?? 0;
     const entry = {
-      hand: `${card1} ${card2}`,
+      hand: `${high} ${low}`,
       equity,
     };
     if (role === 1) {

@@ -18,7 +18,6 @@ import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
-    finished,
     street,
     hero,
     board,
@@ -33,16 +32,6 @@ export const ActionArea = () => {
   const [rankPromise, setRankPromise] =
     useState<Promise<CombinedPayload> | null>(null);
   const rankPromiseCache = useRef(new Map<string, Promise<CombinedPayload>>());
-
-  const handleOnDoubleTap = async () => {
-    if (street === "preflop") {
-      preflopAction("open-raise");
-    } else {
-      setLoading(true);
-      await postflopAction({ street, bet: 50 });
-      setLoading(false);
-    }
-  };
 
   const handleNextStreet = async () => {
     if (street === "preflop") {

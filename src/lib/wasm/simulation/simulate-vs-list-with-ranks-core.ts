@@ -1,3 +1,4 @@
+import { CARD_RANK_ORDER } from "@/utils/card";
 import { DEFAULT_WASM_URL } from "../constants";
 import { createHeap, loadWasm, setProgressListener } from "../loader";
 import type {
@@ -120,6 +121,11 @@ export async function runSimulateVsListWithRanks(
     const suitChar = ["s", "h", "d", "c"][suit] ?? "?";
     return `${rankChar}${suitChar}`;
   };
+  const sortByRankDesc = (a: string, b: string) => {
+    const aRank = CARD_RANK_ORDER[a[0] ?? ""] ?? 0;
+    const bRank = CARD_RANK_ORDER[b[0] ?? ""] ?? 0;
+    return bRank - aRank;
+  };
 
   const data: CombinedEntry[] = [];
   let heroEntry: CombinedEntry | null = null;
@@ -131,6 +137,7 @@ export async function runSimulateVsListWithRanks(
     const raw2 = chunk[1];
     const card1 = decodeCard(raw1);
     const card2 = decodeCard(raw2);
+    const [high, low] = [card1, card2].sort(sortByRankDesc);
     const heroWins = chunk[2];
     const ties = chunk[3];
     const plays = chunk[4];
@@ -160,7 +167,7 @@ export async function runSimulateVsListWithRanks(
       const oppWins = Math.max(0, plays - heroWins - ties);
       const oppLosses = Math.max(0, plays - oppWins - ties);
       data.push({
-        hand: handList[i] ?? `${card1} ${card2}`,
+        hand: handList[i] ?? `${high} ${low}`,
         count: plays,
         win: oppWins,
         tie: ties,

@@ -1,3 +1,4 @@
+import { CARD_RANK_ORDER } from "@/utils/card";
 import { DEFAULT_WASM_URL } from "../constants";
 import { createHeap, loadWasm } from "../loader";
 import type { EvaluateHandsRankingParams, HandRankingEntry } from "../types";
@@ -20,6 +21,12 @@ const decodeCard = (v: number) => {
   const rankChar = "23456789TJQKA"[rank] ?? "?";
   const suitChar = ["s", "h", "d", "c"][suit] ?? "?";
   return `${rankChar}${suitChar}`;
+};
+
+const sortByRankDesc = (a: string, b: string) => {
+  const aRank = CARD_RANK_ORDER[a[0] ?? ""] ?? 0;
+  const bRank = CARD_RANK_ORDER[b[0] ?? ""] ?? 0;
+  return bRank - aRank;
 };
 
 // Main-thread WASM call (not worker-backed).
@@ -68,11 +75,12 @@ export async function evaluateHandsRanking({
     const base = i * 9;
     const card1 = decodeCard(out[base] ?? 0);
     const card2 = decodeCard(out[base + 1] ?? 0);
+    const [high, low] = [card1, card2].sort(sortByRankDesc);
     const rankIndex = out[base + 2] ?? 0;
     const encoded = out[base + 3] ?? 0;
     const kickers = Array.from(out.slice(base + 4, base + 9));
     entries.push({
-      hand: `${card1} ${card2}`,
+      hand: `${high} ${low}`,
       rankIndex,
       rankName: RANK_LABELS[rankIndex] ?? "Unknown",
       encoded,

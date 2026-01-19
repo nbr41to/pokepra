@@ -45,6 +45,9 @@ export function TrainerContent() {
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
           <Button className="w-full" variant="default" size="lg" asChild>
+            <Link href="/trainers/preflop-stricter">Preflop Stricter</Link>
+          </Button>
+          <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/postflop">Postflop</Link>
           </Button>
           <Button className="w-full" variant="default" size="lg" asChild>

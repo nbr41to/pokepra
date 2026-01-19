@@ -83,7 +83,7 @@ const expandPlus = (hand: HandCode): string[] => {
   }
   if (hand.hi === "A") {
     const out: string[] = [];
-    for (let i = loIdx; i < CARD_RANKS.length; i += 1) {
+    for (let i = 1; i <= loIdx; i += 1) {
       const lo = CARD_RANKS[i];
       if (!lo || lo === "A") continue;
       out.push(buildHandCode(hand.hi, lo, hand.suitedness));
@@ -334,6 +334,12 @@ function expandStartingHands(range: string): string[] {
   return expanded;
 }
 
+function normalizeRangeString(range: string): string {
+  const trimmed = range.trim();
+  if (!trimmed) return "";
+  return compressStartingHands(expandStartingHands(trimmed));
+}
+
 /**
  * Local Storageから設定されているOpen Rangeを取得する
  * @return string[][]
@@ -350,7 +356,7 @@ function getSettingOpenRange(): string[] {
     throw new Error("Invalid stored open range format");
   }
 
-  return parsed as string[];
+  return (parsed as string[]).map(normalizeRangeString);
 }
 
 /**
@@ -431,6 +437,7 @@ const _HAND_RANGE_SYMBOLS = [
 export {
   compressStartingHands,
   expandStartingHands,
+  normalizeRangeString,
   getHandsInRange,
   getRangeStrengthByPosition,
   getRangeStrengthByHand,

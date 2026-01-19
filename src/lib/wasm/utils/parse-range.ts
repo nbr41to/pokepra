@@ -1,3 +1,4 @@
+import { CARD_RANK_ORDER } from "@/utils/card";
 import { DEFAULT_WASM_URL } from "../constants";
 import { createHeap, loadWasm } from "../loader";
 import type { ParseRangeParams } from "../types";
@@ -23,6 +24,12 @@ const normalizeCard = (card: string) => {
   const rank = trimmed[0]?.toUpperCase() ?? "";
   const suit = trimmed.slice(1).toLowerCase();
   return `${rank}${suit}`;
+};
+
+const sortByRankDesc = (a: string, b: string) => {
+  const aRank = CARD_RANK_ORDER[a[0] ?? ""] ?? 0;
+  const bRank = CARD_RANK_ORDER[b[0] ?? ""] ?? 0;
+  return bRank - aRank;
 };
 
 export async function parseRangeToHands({
@@ -65,7 +72,8 @@ export async function parseRangeToHands({
     if (excludedSet && (excludedSet.has(c1) || excludedSet.has(c2))) {
       continue;
     }
-    hands.push([c1, c2]);
+    const [high, low] = [c1, c2].sort(sortByRankDesc);
+    hands.push([high, low]);
   }
   return hands;
 }
