@@ -8,13 +8,14 @@ import { ConfirmPositionArea } from "./confirm-position-area";
 import { HeroArea } from "./hero-area";
 
 export default function Main() {
-  const { initialize, initialized, clear } = useHoldemStore();
+  const { initialize, initialized, shuffleAndDeal, clear } = useHoldemStore();
 
   useEffect(() => {
     initialize({ people: 9, heroStrengthLimit: 7 });
+    shuffleAndDeal();
 
     return clear;
-  }, [initialize, clear]);
+  }, [initialize, shuffleAndDeal, clear]);
 
   if (!initialized) return null;
 

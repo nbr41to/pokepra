@@ -1,4 +1,3 @@
-import { use } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
 import { TabsContent } from "@/components/ui/tabs";
@@ -6,16 +5,11 @@ import { cn } from "@/lib/utils";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/types";
 
 type Props = {
-  rankingPromise: Promise<HandRankingEntry[]>;
-  simHandVsRangeEquityWithRanksPromise: Promise<CombinedPayload>;
+  ranking: HandRankingEntry[];
+  heroEquity: CombinedPayload;
 };
-export const AnalyticsEquityRanking = ({
-  rankingPromise,
-  simHandVsRangeEquityWithRanksPromise,
-}: Props) => {
-  const ranking = use(rankingPromise);
-  const result = use(simHandVsRangeEquityWithRanksPromise);
-  console.log(ranking.filter((r) => r.hand === result.hand));
+export const AnalyticsEquityRanking = ({ ranking, heroEquity }: Props) => {
+  const result = heroEquity;
 
   return (
     <TabsContent value="equity-ranking">

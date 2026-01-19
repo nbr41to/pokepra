@@ -1,8 +1,17 @@
 import { create } from "zustand";
-import type { EquityPayload, RangeVsRangePayload } from "@/lib/wasm/simulation";
+import type {
+  CombinedPayload,
+  HandRankingEntry,
+  RangeVsRangePayload,
+} from "@/lib/wasm/simulation";
 import { genHand, getRandomCards, shuffleAndDeal } from "@/utils/dealer";
 
 type Street = "preflop" | "flop" | "turn" | "river";
+type AnalyticsHistory = {
+  ranking: HandRankingEntry[];
+  heroEquity: CombinedPayload;
+  rangeEquity: RangeVsRangePayload;
+};
 
 type State = {
   initialized: boolean;
@@ -22,11 +31,7 @@ type State = {
   disableBoardAnimation: boolean;
 
   // history
-  analyticsHistory: {
-    heroEquity: EquityPayload;
-    heroRange: EquityPayload;
-    villainRange: RangeVsRangePayload;
-  }[];
+  analyticsHistory: AnalyticsHistory[];
 };
 
 type Actions = {
@@ -34,6 +39,7 @@ type Actions = {
   shuffleAndDeal: () => void;
   onAdvance: () => void;
   onRetreat: () => void;
+  setResult: ({ ranking, heroEquity, rangeEquity }: AnalyticsHistory) => void;
   setSituation: (hero: string[], board: string[], position: number) => void;
   clear: () => void;
 };
@@ -47,7 +53,7 @@ const INITIAL_STATE: State = {
     heroStrengthLimit: 0,
   },
 
-  street: "preflop",
+  street: "flop",
   position: 1,
   hero: [],
   villains: [],
@@ -84,11 +90,23 @@ const useHoldemStore = create<Store>((set, get) => ({
       settings: { people, heroStrengthLimit },
     } = get();
 
+    const { position, hero, villains, deck } = shuffleAndDeal({
+      people,
+      heroStrength: heroStrengthLimit,
+    });
+
+    const boardHistory = deck.slice(0, 5);
+    const board = boardHistory.slice(0, 3);
+
     set({
       ...INITIAL_STATE,
-      ...shuffleAndDeal({ people, heroStrength: heroStrengthLimit }),
-      street: "preflop",
       initialized: true,
+      position,
+      hero,
+      villains,
+      street: "flop",
+      board,
+      boardHistory,
       settings: { people, heroStrengthLimit },
     });
   },
@@ -96,38 +114,38 @@ const useHoldemStore = create<Store>((set, get) => ({
   /**
    * 次のストリートへ進む
    */
-
   onAdvance: () => {
-    const { street, hero, villains, boardHistory } = get();
+    const { street, boardHistory, analyticsHistory } = get();
 
     if (street === "river") return;
 
     let nextStreet: Street;
-    const newBoardHistory = [...boardHistory];
-    // boardHistoryが5枚になるまでnewCardsから追加
-    while (newBoardHistory.length < 5) {
-      const newCards = getRandomCards(5, [
-        ...hero,
-        ...villains.flat(),
-        ...newBoardHistory,
-      ]);
-      newBoardHistory.push(newCards[newBoardHistory.length]);
-    }
+    // const newBoardHistory = [...boardHistory];
+    // // boardHistoryが5枚になるまでnewCardsから追加
+    // while (newBoardHistory.length < 5) {
+    //   const newCards = getRandomCards(5, [
+    //     ...hero,
+    //     ...villains.flat(),
+    //     ...newBoardHistory,
+    //   ]);
+    //   newBoardHistory.push(newCards[newBoardHistory.length]);
+    // }
 
     if (street === "preflop") {
       nextStreet = "flop";
-      set({ board: newBoardHistory.slice(0, 3) });
+      set({ board: boardHistory.slice(0, 3) });
     } else if (street === "flop") {
       nextStreet = "turn";
-      set({ board: newBoardHistory.slice(0, 4) });
+      set({ board: boardHistory.slice(0, 4) });
     } else {
       nextStreet = "river";
-      set({ board: newBoardHistory.slice(0, 5) });
+      set({ board: boardHistory.slice(0, 5) });
     }
 
     set({
       street: nextStreet,
-      boardHistory: newBoardHistory,
+      // boardHistory: newBoardHistory,
+
       disableBoardAnimation: false,
     });
   },
@@ -160,6 +178,21 @@ const useHoldemStore = create<Store>((set, get) => ({
       disableBoardAnimation: true,
     });
   },
+
+  /**
+   *
+   */
+  setResult: ({ ranking, heroEquity, rangeEquity }) => {
+    const { analyticsHistory } = get();
+
+    set({
+      analyticsHistory: [
+        ...analyticsHistory,
+        { ranking, heroEquity, rangeEquity },
+      ],
+    });
+  },
+
   /**
    * シチュエーションを変更
    */
@@ -192,6 +225,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       boardHistory,
       street,
       villains: [villains],
+      analyticsHistory: [],
       disableBoardAnimation: true,
     });
   },

@@ -1,4 +1,3 @@
-import { use } from "react";
 import {
   CartesianGrid,
   Label,
@@ -40,15 +39,15 @@ const getEquityAtPercentile = (pct: number, equities: number[]) => {
 };
 
 type Props = {
-  simHandVsRangeEquityWithRanksPromise: Promise<CombinedPayload>;
-  simRangeVsRangeEquityPromise: Promise<RangeVsRangePayload>;
+  heroEquity: CombinedPayload;
+  rangeEquity: RangeVsRangePayload;
 };
 export const AnalyticsHeroRangeVsVillainRange = ({
-  simHandVsRangeEquityWithRanksPromise,
-  simRangeVsRangeEquityPromise,
+  heroEquity,
+  rangeEquity,
 }: Props) => {
-  const eqResult = use(simHandVsRangeEquityWithRanksPromise);
-  const result = use(simRangeVsRangeEquityPromise);
+  const eqResult = heroEquity;
+  const result = rangeEquity;
 
   // 勝率だけ抽出
   const heroRangeEquity =

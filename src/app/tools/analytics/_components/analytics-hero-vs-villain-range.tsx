@@ -1,22 +1,17 @@
-import { use } from "react";
 import { EquityChart } from "@/components/analytics-sheet/equity-chart";
 import { TabsContent } from "@/components/ui/tabs";
-import type { CombinedPayload } from "@/lib/wasm/types";
+import type { CombinedPayload } from "@/lib/wasm/simulation";
 
 type Props = {
-  simHandVsRangeEquityWithRanksPromise: Promise<CombinedPayload>;
+  heroEquity: CombinedPayload;
 };
-export const AnalyticsHeroVsVillainRange = ({
-  simHandVsRangeEquityWithRanksPromise,
-}: Props) => {
-  const result = use(simHandVsRangeEquityWithRanksPromise);
-
+export const AnalyticsHeroVsVillainRange = ({ heroEquity }: Props) => {
   return (
     <TabsContent
       value="hero-equity"
       className="flex min-h-full flex-col justify-end"
     >
-      <EquityChart result={result} />
+      <EquityChart result={heroEquity} />
     </TabsContent>
   );
 };

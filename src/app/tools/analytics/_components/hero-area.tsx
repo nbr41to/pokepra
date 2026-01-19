@@ -24,7 +24,7 @@ export const HeroArea = () => {
           className=""
           size="icon-lg"
           variant="outline"
-          disabled={street === "preflop"}
+          disabled={street === "flop"}
           onClick={onRetreat}
         >
           <ArrowBigLeft />
