@@ -19,7 +19,7 @@ export function TrainerContent() {
 
       <div className="grid w-full grid-cols-2 gap-4 px-2">
         <LinkCard
-          href="/trainers/preflop"
+          href="/trainers/preflop-equity"
           title="Preflop Equity"
           description="プリフロップで参加するハンドの勝率を体感できます。"
         />

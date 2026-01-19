@@ -124,6 +124,16 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_open_ranges_monte_carlo?: (
+    heroPtr: number,
+    heroLen: number,
+    opponentsPtr: number,
+    opponentsLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   parse_range_to_hands?: (
     rangePtr: number,
     rangeLen: number,
@@ -268,4 +278,26 @@ export type HandRankingEntry = {
 export type RankDistributionEntry = {
   hand: string;
   results: RankResults;
+};
+
+export type OpenRangesParams = {
+  heroRange: string;
+  opponentRanges: string[];
+  trials: number;
+  seed?: bigint;
+  wasmUrl?: string;
+};
+
+export type OpenRangesWithProgressParams = OpenRangesParams & {
+  onProgress?: (pct: number) => void;
+};
+
+export type OpenRangesPayload = {
+  heroRange: string;
+  opponentRanges: string[];
+  wins: number;
+  ties: number;
+  plays: number;
+  equity: number;
+  rankWins: RankResults;
 };

@@ -4,12 +4,15 @@ import type {
   CombinedPayload,
   EquityPayload,
   MonteCarloTraceEntry,
+  OpenRangesParams,
+  OpenRangesPayload,
   RangeVsRangeParams,
   RangeVsRangePayload,
   RankDistributionEntry,
   RankDistributionParams,
   SimulateParams,
 } from "../types";
+import { runSimulateOpenRangesMonteCarlo } from "./simulate-open-ranges-monte-carlo-core";
 import {
   runSimulateRangeVsRangeEquity,
   runSimulateRangeVsRangeEquityWithProgress,
@@ -22,6 +25,7 @@ import { runSimulateVsListWithRanksTrace } from "./simulate-vs-list-with-ranks-t
 type SimulateResult =
   | CombinedPayload
   | EquityPayload
+  | OpenRangesPayload
   | RangeVsRangePayload
   | RankDistributionEntry[]
   | MonteCarloTraceEntry[];
@@ -64,6 +68,11 @@ type WorkerRequest =
       id: number;
       type: "simulateRangeVsRangeEquityWithProgress";
       params: RangeVsRangeParams;
+    }
+  | {
+      id: number;
+      type: "simulateOpenRangesMonteCarlo";
+      params: OpenRangesParams;
     };
 
 type WorkerResponse =
@@ -213,6 +222,28 @@ ctx.onmessage = async (event) => {
           ctx.postMessage(response);
         },
       });
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateOpenRangesMonteCarlo") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const progressStart: WorkerResponse = {
+        id: message.id,
+        type: "progress",
+        pct: 0,
+      };
+      ctx.postMessage(progressStart);
+      const data = await runSimulateOpenRangesMonteCarlo(params);
+      const progressEnd: WorkerResponse = {
+        id: message.id,
+        type: "progress",
+        pct: 100,
+      };
+      ctx.postMessage(progressEnd);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;

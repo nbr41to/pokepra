@@ -43,7 +43,7 @@ const INITIAL_STATE: State = {
   initialized: false,
   finished: false,
   street: "preflop",
-  stack: 1000,
+  stack: 100,
   delta: 0,
   position: 0,
   hero: [],
@@ -118,8 +118,7 @@ const useActionStore = create<Store>((set, get) => ({
   },
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
-    const RAISE = 250;
-    const POT = 500;
+    const POT = 100;
 
     const { stack, result } = get();
     const heroEq = result?.equity ?? 0;
@@ -127,10 +126,10 @@ const useActionStore = create<Store>((set, get) => ({
       result?.data
         .filter((v) => v.hand !== result?.hand)
         .reduce((a, b) => Math.max(a, b.equity), 0) ?? 0;
+
     // EVの計算
-    const expandValue = heroEq * POT - villainsMaxEq * RAISE;
-    const avgExpandValue = 0.5 * POT - 0.5 * RAISE;
-    const delta = Math.floor(expandValue - avgExpandValue);
+    const expandValue = (heroEq - villainsMaxEq) * POT;
+    const delta = Math.floor(expandValue);
 
     if (action === "fold") {
       set({

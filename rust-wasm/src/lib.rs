@@ -7,6 +7,7 @@ mod sim;
 
 use rs_poker_native::{
   parse_range_to_hands as parse_range_to_hands_internal,
+  simulate_open_ranges_monte_carlo as simulate_open_ranges_monte_carlo_internal,
   simulate_range_vs_range_equity as simulate_range_vs_range_equity_internal,
   simulate_range_vs_range_equity_with_progress as simulate_range_vs_range_equity_with_progress_internal,
   simulate_rank_distribution as simulate_rank_distribution_internal,
@@ -622,6 +623,56 @@ pub extern "C" fn simulate_vs_list_with_ranks_monte_carlo(
       .map_err(|_| -5)
     },
   )
+}
+
+/// Hero range vs 1-8 opponent ranges (semicolon-separated), Monte Carlo with hero win ranks.
+/// Output layout: [wins, ties, plays, rankWin0..rankWin8].
+/// out_len must be >= 12. Returns 1 on success or negative error.
+#[no_mangle]
+pub extern "C" fn simulate_open_ranges_monte_carlo(
+  hero_ptr: *const u8,
+  hero_len: usize,
+  opponents_ptr: *const u8,
+  opponents_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  if hero_ptr.is_null() || opponents_ptr.is_null() || out_ptr.is_null() {
+    return -1;
+  }
+  let hero_slice = unsafe { std::slice::from_raw_parts(hero_ptr, hero_len) };
+  let opponents_slice = unsafe { std::slice::from_raw_parts(opponents_ptr, opponents_len) };
+  let hero_str = match std::str::from_utf8(hero_slice) {
+    Ok(s) => s,
+    Err(_) => return -2,
+  };
+  let opponents_str = match std::str::from_utf8(opponents_slice) {
+    Ok(s) => s,
+    Err(_) => return -3,
+  };
+
+  if out_len < 12 {
+    return -6;
+  }
+
+  let result = match simulate_open_ranges_monte_carlo_internal(
+    hero_str,
+    opponents_str,
+    trials,
+    seed,
+  ) {
+    Ok(v) => v,
+    Err(_) => return -5,
+  };
+
+  let out = unsafe { std::slice::from_raw_parts_mut(out_ptr, out_len) };
+  out[0] = result.0;
+  out[1] = result.1;
+  out[2] = result.2;
+  out[3..12].copy_from_slice(&result.3);
+  1
 }
 
 /// Hero vs provided opponent list, returning equity-only stats (wins/ties/plays).

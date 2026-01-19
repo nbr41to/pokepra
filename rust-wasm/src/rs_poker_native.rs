@@ -10,7 +10,8 @@ use crate::sim::{
   parse_hands_min1,
   Card as SimCard,
 };
-use crate::sim::{build_deck, shuffle_slice, Lcg64};
+use crate::sim::{build_deck, eval::best_of, shuffle_slice, Lcg64};
+use std::collections::HashSet;
 
 /// Hero vs provided opponent list, returning wins/ties/plays per opponent and hero aggregate.
 pub fn simulate_vs_list_equity(
@@ -466,6 +467,124 @@ fn simulate_vs_list_with_ranks_monte_carlo_inner<F: FnMut(u32)>(
   Ok(stats)
 }
 
+/// Hero range vs 1-8 opponent ranges (semicolon-separated), Monte Carlo with hero win ranks.
+/// Returns (wins, ties, plays, hero_rank_wins).
+pub fn simulate_open_ranges_monte_carlo(
+  hero_range_str: &str,
+  opponent_ranges_str: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<(u32, u32, u32, [u32; 9]), String> {
+  let hero_range = parse_range_hands(hero_range_str)?;
+  if hero_range.is_empty() {
+    return Err("hero range must include at least 1 hand".into());
+  }
+
+  let opponent_ranges = parse_range_list(opponent_ranges_str)?;
+  if opponent_ranges.is_empty() {
+    return Err("must provide at least 1 opponent range".into());
+  }
+  if opponent_ranges.len() > 8 {
+    return Err("opponent ranges must be <= 8".into());
+  }
+
+  let hero_set = build_range_set(&hero_range);
+  let opponent_sets: Vec<HashSet<(u32, u32)>> =
+    opponent_ranges.iter().map(|range| build_range_set(range)).collect();
+
+  let trials = trials.max(1);
+  let mut rng = Lcg64::new(seed);
+  let mut wins = 0u32;
+  let mut ties = 0u32;
+  let mut plays = 0u32;
+  let mut hero_rank_wins = [0u32; 9];
+
+  let opponent_count = opponent_sets.len();
+  for _ in 0..trials {
+    let mut deck = build_deck(&[]);
+    shuffle_slice(&mut deck, &mut rng);
+
+    let hero_hand = [deck[0], deck[1]];
+    let hero_key = decode_hand_pair(&hero_hand);
+    if !hero_set.contains(&hero_key) {
+      continue;
+    }
+
+    let mut participants: Vec<[SimCard; 2]> = Vec::with_capacity(opponent_count);
+    let mut offset = 2usize;
+    for opp_set in &opponent_sets {
+      let opp_hand = [deck[offset], deck[offset + 1]];
+      offset += 2;
+      let opp_key = decode_hand_pair(&opp_hand);
+      if opp_set.contains(&opp_key) {
+        participants.push(opp_hand);
+      }
+    }
+
+    if participants.is_empty() {
+      continue;
+    }
+
+    let board = [
+      deck[offset],
+      deck[offset + 1],
+      deck[offset + 2],
+      deck[offset + 3],
+      deck[offset + 4],
+    ];
+
+    let hero_cards = [
+      hero_hand[0],
+      hero_hand[1],
+      board[0],
+      board[1],
+      board[2],
+      board[3],
+      board[4],
+    ];
+    let hero_score = best_of(&hero_cards);
+
+    let mut max_score = hero_score.encoded;
+    let mut max_count = 1u32;
+    let mut hero_in_max = true;
+
+    for opp in &participants {
+      let opp_cards = [
+        opp[0],
+        opp[1],
+        board[0],
+        board[1],
+        board[2],
+        board[3],
+        board[4],
+      ];
+      let opp_score = best_of(&opp_cards);
+      if opp_score.encoded > max_score {
+        max_score = opp_score.encoded;
+        max_count = 1;
+        hero_in_max = false;
+      } else if opp_score.encoded == max_score {
+        max_count = max_count.saturating_add(1);
+      }
+    }
+
+    plays = plays.saturating_add(1);
+    if hero_in_max {
+      if max_count == 1 {
+        wins = wins.saturating_add(1);
+        let idx = hero_score.rank as usize;
+        if idx < 9 {
+          hero_rank_wins[idx] = hero_rank_wins[idx].saturating_add(1);
+        }
+      } else {
+        ties = ties.saturating_add(1);
+      }
+    }
+  }
+
+  Ok((wins, ties, plays, hero_rank_wins))
+}
+
 /// Rank distribution for multiple hands given partial board using rs_poker evaluation.
 pub fn simulate_rank_distribution(
   hands_str: &str,
@@ -651,6 +770,30 @@ fn parse_range_hands(range_str: &str) -> Result<Vec<[SimCard; 2]>, String> {
     out.push([c1, c2]);
   }
   Ok(out)
+}
+
+fn parse_range_list(range_list_str: &str) -> Result<Vec<Vec<[SimCard; 2]>>, String> {
+  let mut ranges = Vec::new();
+  for raw in range_list_str.split(';') {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+      continue;
+    }
+    let hands = parse_range_hands(trimmed)?;
+    if hands.is_empty() {
+      return Err("range must include at least 1 hand".into());
+    }
+    ranges.push(hands);
+  }
+  Ok(ranges)
+}
+
+fn build_range_set(range: &[[SimCard; 2]]) -> HashSet<(u32, u32)> {
+  let mut set = HashSet::with_capacity(range.len());
+  for hand in range {
+    set.insert(decode_hand_pair(hand));
+  }
+  set
 }
 
 fn rs_card_to_sim(card: &Card) -> SimCard {
