@@ -211,12 +211,12 @@ export const HeroActionArea = ({
       actionGuideTimerRef.current = null;
     }
 
-    if (disabled) {
+    if (disabled || folded) {
       setShowActionGuide(false);
       return;
     }
 
-    if (locked && flipProgress >= 1) {
+    if (locked && flipProgress >= 1 && !folded) {
       actionGuideTimerRef.current = setTimeout(() => {
         setShowActionGuide(true);
       }, ACTION_GUIDE_DELAY_MS);
@@ -230,7 +230,7 @@ export const HeroActionArea = ({
         actionGuideTimerRef.current = null;
       }
     };
-  }, [disabled, locked, flipProgress]);
+  }, [disabled, folded, locked, flipProgress]);
 
   useEffect(() => {
     if (locked && flipProgress >= 1) {
@@ -252,7 +252,7 @@ export const HeroActionArea = ({
       onPointerCancel={resetGesture}
     >
       <ActionGuide
-        visible={showActionGuide && !disabled}
+        visible={showActionGuide && !disabled && !folded}
         showFold={foldEnabled}
         showDoubleTap={Boolean(onDoubleTap) && !disabled}
         doubleTapActionName={doubleTapActionName}

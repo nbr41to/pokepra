@@ -5,7 +5,7 @@ import { PlayCard } from "./play-card";
 const meta = {
   component: PlayCard,
   parameters: {
-    layout: "centered",
+    chromatic: { disableSnapshot: true },
   },
   tags: ["autodocs"],
   argTypes: {
@@ -34,6 +34,9 @@ export const Medium: Story = {
   },
 };
 export const Large: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
   args: {
     size: "lg",
   },
@@ -44,6 +47,9 @@ export const Reversed: Story = {
   },
 };
 export const AllCards: Story = {
+  parameters: {
+    chromatic: { disableSnapshot: false },
+  },
   render: () => {
     const suits = ["s", "h", "d", "c"];
     const ranks = [

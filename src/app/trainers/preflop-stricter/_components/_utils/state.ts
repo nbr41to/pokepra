@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { parseRangeToHands } from "@/lib/wasm/simulation";
-import type { EquityPayload } from "@/lib/wasm/types";
 import { genHand } from "@/utils/dealer";
 import { getRangeStrengthByPosition } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";
@@ -23,9 +22,9 @@ type State = {
 
   position: number; // ポジション番号
   hero: string[]; // ハンド
-  result: EquityPayload | null; // 結果一覧
 
   confirmedHand: boolean; // ハンドを見たかどうか
+  correctRange: string[][]; // 正しいレンジ
 };
 
 type Actions = {
@@ -51,7 +50,7 @@ const INITIAL_STATE: State = {
   delta: 0,
   position: 0,
   hero: [],
-  result: null,
+  correctRange: [],
 
   confirmedHand: false,
 };
@@ -66,7 +65,7 @@ const useTrainerStore = create<Store>((set, get) => ({
   },
   retry: () => {
     const people = PEOPLE;
-    const position = genPositionNumber(people, [2]);
+    const position = genPositionNumber(people, [1, 2]);
 
     const hero = genHand(0);
     const villains: string[][] = [];
@@ -93,6 +92,10 @@ const useTrainerStore = create<Store>((set, get) => ({
     }
     const hero = genHand(0);
 
+    const ranges = getSettingOpenRange();
+    const range = ranges[getRangeStrengthByPosition(newPosition, 9) - 1];
+    const correctRange = await parseRangeToHands({ range });
+
     set(() => ({
       ...INITIAL_STATE,
       initialized: true,
@@ -101,6 +104,7 @@ const useTrainerStore = create<Store>((set, get) => ({
       stack,
       preflop: null,
       settings,
+      correctRange,
     }));
   },
   // ハンドを確認

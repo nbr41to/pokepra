@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { TipsCard } from "@/features/tips/tips-card";
+import { TipsText } from "@/features/tips/tips-text";
 
 const FACES = [1, 2, 3, 4, 5, 6] as const;
 const ROLL_OPTIONS = [100, 1000, 10000] as const;
@@ -35,15 +37,15 @@ export const DiceExperiment = () => {
   return (
     <>
       <section className="space-y-8">
-        <p className="text-muted-foreground text-sm">
+        <TipsText>
           モンテカルロ法とは、ひたすらその試行を繰り返すことで確率や期待値を推定する方法のことです。
           つまり、むずかしい計算式を考えずにゴリ押しで確率を求めることができます！
           当然試行回数が少ないと、推定した確率の正確さは低くなります。
           試しにサイコロを100回、1000回、10000回と振ったときの出目の数を見てみましょう
           🎲
-        </p>
+        </TipsText>
 
-        <div className="rounded-xl border bg-card/80 p-4 shadow-sm">
+        <TipsCard size="sm" className="rounded-xl bg-card/80">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-semibold text-sm">試行回数を選ぶ</p>
@@ -82,11 +84,11 @@ export const DiceExperiment = () => {
               偏りの最大値: {maxDeviation.toFixed(0)} 回
             </p>
           </div>
-        </div>
+        </TipsCard>
       </section>
 
       <section className="grid gap-6 md:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-4 rounded-lg border bg-card p-5 shadow-sm">
+        <TipsCard className="space-y-4">
           <h2 className="font-semibold">出目の分布 (実験結果)</h2>
           <div className="space-y-3">
             {FACES.map((face, index) => {
@@ -108,9 +110,9 @@ export const DiceExperiment = () => {
               );
             })}
           </div>
-        </div>
+        </TipsCard>
 
-        <div className="space-y-4 rounded-lg border bg-card p-5 shadow-sm">
+        <TipsCard className="space-y-4">
           <h2 className="font-semibold">理論値との比較</h2>
           <ul className="list-disc space-y-2 pl-5 text-sm">
             <li>
@@ -128,7 +130,7 @@ export const DiceExperiment = () => {
           <div className="rounded-md bg-muted/60 p-3 text-muted-foreground text-xs">
             実戦での意思決定では、同じ確率でも短期的にブレることを前提に考えるのがコツです。
           </div>
-        </div>
+        </TipsCard>
       </section>
     </>
   );

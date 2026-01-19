@@ -19,7 +19,7 @@ export const HandProbability = ({
         ? "bg-green-500 dark:bg-green-900"
         : Number(probability) >= 40
           ? "bg-green-400 dark:bg-green-800"
-          : "bg-green-200 dark:bg-green-700";
+          : "bg-green-300 dark:bg-green-700";
   return (
     <div
       className={cn(

@@ -4,6 +4,8 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { TipsCard } from "@/features/tips/tips-card";
+import { TipsText } from "@/features/tips/tips-text";
 import { CARD_RANK_ORDER, getAllCards } from "@/utils/card";
 
 const TRIALS = 1_000_000;
@@ -202,16 +204,16 @@ export const PokerHandProbabilitySection = () => {
   return (
     <section className="space-y-4">
       <div className="space-y-2">
-        <p className="text-muted-foreground text-sm">
+        <TipsText>
           試行回数を増やすほど、結果は「理論上の確率」に近づいていくことがわかりました。
           そして、回数が多いほど運の偏りが平均化され、確率通りに出来事が発生するようになるということもわかりました。
-        </p>
-        <p className="text-muted-foreground text-sm">
+        </TipsText>
+        <TipsText>
           試しにポーカーの7枚で完成する役の確率をモンテカルロ法で体験してみましょう。
-        </p>
+        </TipsText>
       </div>
       <div className="space-y-6">
-        <div className="rounded-lg border bg-card p-4 shadow-sm">
+        <TipsCard size="sm">
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={run} disabled={running}>
               100万回シミュレーションする
@@ -219,17 +221,19 @@ export const PokerHandProbabilitySection = () => {
             <Button variant="outline" onClick={stop} disabled={!running}>
               停止
             </Button>
-            <div className="text-muted-foreground text-sm">
-              進捗 {completed.toLocaleString()} / {TRIALS.toLocaleString()} (
-              {completed === 0 ? 0 : Math.floor((completed / TRIALS) * 100)}%)
-            </div>
-            <div className="text-muted-foreground text-sm">
-              経過 {Math.floor(elapsedMs / 1000)}s
-            </div>
+            <TipsText asChild>
+              <div>
+                進捗 {completed.toLocaleString()} / {TRIALS.toLocaleString()} (
+                {completed === 0 ? 0 : Math.floor((completed / TRIALS) * 100)}%)
+              </div>
+            </TipsText>
+            <TipsText asChild>
+              <div>経過 {Math.floor(elapsedMs / 1000)}s</div>
+            </TipsText>
           </div>
-        </div>
+        </TipsCard>
 
-        <div className="rounded-lg border bg-card p-4 shadow-sm">
+        <TipsCard size="sm">
           <h2 className="mb-3 font-semibold">役の出現回数（強い順）</h2>
           <div className="grid gap-2 text-xs">
             <div className="grid grid-cols-[1fr_90px_70px_70px] items-center gap-2 border-b pb-2 text-[11px] text-muted-foreground">
@@ -253,16 +257,16 @@ export const PokerHandProbabilitySection = () => {
           <p className="mt-3 text-muted-foreground text-xs">
             ※ロイヤルフラッシュはストレートフラッシュの最上位として別枠で集計しています。
           </p>
-        </div>
+        </TipsCard>
       </div>
       <div className="space-y-2">
-        <p className="text-muted-foreground text-sm">
+        <TipsText>
           100万回のシミュレーションを実行すると、各役の出現確率が理論上の確率に非常に近い値になることがわかります。
-        </p>
-        <p className="text-muted-foreground text-sm">
+        </TipsText>
+        <TipsText>
           モンテカルロポーカー（MCPT）は、このようなシミュレーターを提供します。
           加えて、これを使ってポーカーの確率や期待値を計算して、ゲームをしたり分析をしたりする機能を提供します。
-        </p>
+        </TipsText>
       </div>
       <div className="flex justify-end">
         <Button asChild variant="link" className="rounded-full underline">

@@ -24,6 +24,11 @@ export function TrainerContent() {
           description="プリフロップで参加するハンドの勝率を体感できます。"
         />
         <LinkCard
+          href="/trainers/preflop-stricter"
+          title="Preflop Stricter"
+          description="プリフロップのオープンレンジをより厳格に覚えることができます。"
+        />
+        <LinkCard
           href="/trainers/full-street"
           title="Full Street"
           description="様々なシチュエーションにおける勝率を体感できます。"
@@ -44,9 +49,6 @@ export function TrainerContent() {
 
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <Button className="w-full" variant="default" size="lg" asChild>
-            <Link href="/trainers/preflop-stricter">Preflop Stricter</Link>
-          </Button>
           <Button className="w-full" variant="default" size="lg" asChild>
             <Link href="/trainers/postflop">Postflop</Link>
           </Button>

@@ -2,6 +2,7 @@ import { LockIcon, LockOpen } from "lucide-react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/ui/button";
 import { useTrainerStore } from "./_utils/state";
+import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
@@ -42,7 +43,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center py-2">
+      <div className="flex justify-center gap-x-4 py-2">
         <Button
           className="rounded-full"
           size="icon-lg"
@@ -50,6 +51,7 @@ export const ActionArea = () => {
         >
           {lockedPosition ? <LockIcon /> : <LockOpen />}
         </Button>
+        <InformationSheet />
       </div>
     </div>
   );

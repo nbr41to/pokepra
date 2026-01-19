@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { TipsCard } from "@/features/tips/tips-card";
+import { TipsText } from "@/features/tips/tips-text";
 import { cn } from "@/lib/utils";
 import { simulateVsListWithRanksTrace } from "@/lib/wasm/simulation";
 import type { MonteCarloTraceEntry } from "@/lib/wasm/types";
@@ -78,48 +80,50 @@ export const Main = () => {
 
   return (
     <div className="space-y-8">
-      <section className="space-y-6 rounded-2xl border border-black/10 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
-        <p className="text-slate-700 text-sm dark:text-slate-200">
-          今回は実際のポーカープレイ中のとある状況に固定して、そこから先（ターン・リバー）をシミュレーションするモンテカルロ法を体験します。
-          対戦相手は全ハンドからランダムに選ばれるものとして、100回の試行を繰り返して見ましょう。
-        </p>
-        <div className="space-y-3 rounded-xl bg-slate-900/5 p-4 dark:bg-white/10">
-          <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
-            Situation
-          </div>
-          <div className="grid gap-4 text-slate-700 text-sm sm:grid-cols-2 dark:text-slate-200">
-            <div>
-              <p className="font-semibold">あなたのハンド</p>
-              <div className="mt-2 flex items-center gap-2">
-                {HERO_HAND.map((card) => (
-                  <PlayCard key={card} rs={card} size="sm" />
-                ))}
+      <TipsCard variant="glass" asChild className="space-y-6">
+        <section>
+          <TipsText className="text-slate-700 dark:text-slate-200">
+            今回は実際のポーカープレイ中のとある状況に固定して、そこから先（ターン・リバー）をシミュレーションするモンテカルロ法を体験します。
+            対戦相手は全ハンドからランダムに選ばれるものとして、100回の試行を繰り返して見ましょう。
+          </TipsText>
+          <div className="space-y-3 rounded-xl bg-slate-900/5 p-4 dark:bg-white/10">
+            <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
+              Situation
+            </div>
+            <div className="grid gap-4 text-slate-700 text-sm sm:grid-cols-2 dark:text-slate-200">
+              <div>
+                <p className="font-semibold">あなたのハンド</p>
+                <div className="mt-2 flex items-center gap-2">
+                  {HERO_HAND.map((card) => (
+                    <PlayCard key={card} rs={card} size="sm" />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p className="font-semibold">フロップ</p>
+                <div className="mt-2 flex items-center gap-2">
+                  {FLOP_BOARD.map((card) => (
+                    <PlayCard key={card} rs={card} size="sm" />
+                  ))}
+                </div>
               </div>
             </div>
-            <div>
-              <p className="font-semibold">フロップ</p>
-              <div className="mt-2 flex items-center gap-2">
-                {FLOP_BOARD.map((card) => (
-                  <PlayCard key={card} rs={card} size="sm" />
-                ))}
-              </div>
+          </div>
+          <Button
+            className="w-full rounded-full font-bold"
+            size="lg"
+            onClick={runSimulation}
+            disabled={loading}
+          >
+            {loading ? "Simulating..." : "100回シミュレーションする"}
+          </Button>
+          {error && (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
+              {error}
             </div>
-          </div>
-        </div>
-        <Button
-          className="w-full rounded-full font-bold"
-          size="lg"
-          onClick={runSimulation}
-          disabled={loading}
-        >
-          {loading ? "Simulating..." : "100回シミュレーションする"}
-        </Button>
-        {error && (
-          <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-            {error}
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      </TipsCard>
 
       {trace && (
         <section className="space-y-4">
@@ -129,80 +133,82 @@ export const Main = () => {
               実際に引かれたターン・リバーと完成した役を確認した後、勝率をまとめています。
             </p>
           </div>
-          <ScrollArea className="h-92 rounded-2xl border border-black/10 bg-white/80 p-4 dark:border-white/10 dark:bg-slate-900/70">
-            <div className="space-y-3">
-              {trace.map((entry, index) => {
-                const boardCards = splitCards(entry.board);
-                const heroCards = splitCards(entry.hero);
-                const villainCards = splitCards(entry.villain);
+          <TipsCard variant="glass" asChild size="sm" className="h-92">
+            <ScrollArea>
+              <div className="space-y-3">
+                {trace.map((entry, index) => {
+                  const boardCards = splitCards(entry.board);
+                  const heroCards = splitCards(entry.hero);
+                  const villainCards = splitCards(entry.villain);
 
-                return (
-                  <div
-                    key={`${entry.board}-${entry.villain}-${index}`}
-                    className="rounded-xl border border-black/5 bg-white/70 p-3 text-slate-700 text-xs shadow-sm dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-200"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-semibold text-slate-500 text-xs">
-                        #{index + 1}
-                      </span>
-                      <span
-                        className={cn(
-                          "rounded-full px-2 py-0.5 font-semibold",
-                          entry.outcome === "hero" &&
-                            "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200",
-                          entry.outcome === "villain" &&
-                            "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
-                          entry.outcome === "tie" &&
-                            "bg-slate-200 text-slate-700 dark:bg-slate-500/40 dark:text-slate-100",
-                        )}
-                      >
-                        {outcomeLabel(entry.outcome)}
-                      </span>
-                      <span className="text-slate-500 dark:text-slate-300">
-                        完成した役: {entry.rankName}
-                      </span>
-                    </div>
-                    <div className="mt-3 space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex items-center gap-2">
-                          {boardCards.slice(0, 3).map((card) => (
-                            <PlayCard key={card} rs={card} size="sm" />
-                          ))}
+                  return (
+                    <div
+                      key={`${entry.board}-${entry.villain}-${index}`}
+                      className="rounded-xl border border-black/5 bg-white/70 p-3 text-slate-700 text-xs shadow-sm dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-200"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-semibold text-slate-500 text-xs">
+                          #{index + 1}
+                        </span>
+                        <span
+                          className={cn(
+                            "rounded-full px-2 py-0.5 font-semibold",
+                            entry.outcome === "hero" &&
+                              "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-200",
+                            entry.outcome === "villain" &&
+                              "bg-rose-100 text-rose-700 dark:bg-rose-500/20 dark:text-rose-200",
+                            entry.outcome === "tie" &&
+                              "bg-slate-200 text-slate-700 dark:bg-slate-500/40 dark:text-slate-100",
+                          )}
+                        >
+                          {outcomeLabel(entry.outcome)}
+                        </span>
+                        <span className="text-slate-500 dark:text-slate-300">
+                          完成した役: {entry.rankName}
+                        </span>
+                      </div>
+                      <div className="mt-3 space-y-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <div className="flex items-center gap-2">
+                            {boardCards.slice(0, 3).map((card) => (
+                              <PlayCard key={card} rs={card} size="sm" />
+                            ))}
+                            <div className={cn(cardPairClass, randomCardClass)}>
+                              {boardCards.slice(3, 5).map((card) => (
+                                <PlayCard key={card} rs={card} size="sm" />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
+                            あなたのハンド
+                          </span>
+                          <div className={cardPairClass}>
+                            {heroCards.map((card) => (
+                              <PlayCard key={card} rs={card} size="sm" />
+                            ))}
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
+                            相手のハンド
+                          </span>
                           <div className={cn(cardPairClass, randomCardClass)}>
-                            {boardCards.slice(3, 5).map((card) => (
+                            {villainCards.map((card) => (
                               <PlayCard key={card} rs={card} size="sm" />
                             ))}
                           </div>
                         </div>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
-                          あなたのハンド
-                        </span>
-                        <div className={cardPairClass}>
-                          {heroCards.map((card) => (
-                            <PlayCard key={card} rs={card} size="sm" />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
-                          相手のハンド
-                        </span>
-                        <div className={cn(cardPairClass, randomCardClass)}>
-                          {villainCards.map((card) => (
-                            <PlayCard key={card} rs={card} size="sm" />
-                          ))}
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </ScrollArea>
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          </TipsCard>
           {resultSummary && (
-            <div className="rounded-2xl border border-black/10 bg-white/80 p-5 text-sm shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+            <TipsCard variant="glass" className="text-sm">
               <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
                 Equity Summary
               </div>
@@ -233,17 +239,17 @@ export const Main = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </TipsCard>
           )}
 
           <div className="space-y-2">
-            <p className="text-muted-foreground text-sm">
+            <TipsText>
               状況的には10が落ちてストレートが完成すればという局面ですが、今回求めた勝率は「ストレートを引く確率」だけでなく、相手の手やその後のターン・リバーの様々なパターンを含めた総合的な結果です。
               同じフロップでも、相手のレンジやボードの質感によって勝率は大きく変わります。今回の試行回数100回と少なかったので、正確さに欠けましたが、特定の状況における勝率を求めることができました！
-            </p>
-            <p className="text-muted-foreground text-sm">
+            </TipsText>
+            <TipsText>
               実際のポーカーではベッティングラウンドがあるため考えることが増えますが、この状況における勝率であることに変わりはありません。
-            </p>
+            </TipsText>
           </div>
         </section>
       )}

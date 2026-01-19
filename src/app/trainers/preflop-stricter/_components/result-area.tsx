@@ -1,29 +1,21 @@
-import { Suspense } from "react";
+import { RangeTable } from "@/components/range-table";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
-import { parseRangeToHands } from "@/lib/wasm/simulation";
-import { getRangeStrengthByPosition } from "@/utils/hand-range";
-import { getSettingOpenRange } from "@/utils/setting";
+import { toHandSymbol } from "@/utils/hand-range";
 import { useTrainerStore } from "./_utils/state";
-import { RangeTable, RangeTableSkeleton } from "./range-table";
 
 export const ResultArea = () => {
-  const { finished, position, hero, delta } = useTrainerStore();
-
-  const ranges = getSettingOpenRange();
-  const range = ranges[getRangeStrengthByPosition(position, 9) - 1];
-  const rangeCombos = parseRangeToHands({ range });
+  const { finished, hero, delta, correctRange } = useTrainerStore();
 
   return (
     <div className="grid w-full place-items-center gap-y-2">
-      {finished && (
-        <Suspense fallback={<RangeTableSkeleton />}>
-          <RangeTable combosPromise={rangeCombos} hero={hero} />
-        </Suspense>
-      )}
+      <RangeTable
+        data={finished ? correctRange.map((hand) => toHandSymbol(hand)) : []}
+        mark={finished ? toHandSymbol(hero) : undefined}
+      />
       <div className="h-8">
-        {delta > 0 && <ResultGood delta={delta} />}
-        {delta < 0 && <ResultBad delta={delta} />}
+        {delta > 0 && <ResultGood />}
+        {delta < 0 && <ResultBad />}
       </div>
     </div>
   );

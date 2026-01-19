@@ -1,11 +1,16 @@
+import { TipsCard } from "@/features/tips/tips-card";
+import { TipsText } from "@/features/tips/tips-text";
+
 export function ChipsGameSection() {
   return (
-    <section className="space-y-2 rounded-lg border bg-card p-4 shadow-sm">
-      <h2 className="font-semibold">チップを奪い合うゲーム</h2>
-      <p className="text-muted-foreground text-sm">
-        役の競い合いを何度も繰り返し、より多くのチップを獲得することが目的です。
-        勝負に参加するか降りるかの判断が重要になります。
-      </p>
-    </section>
+    <TipsCard asChild size="sm" className="space-y-2">
+      <section>
+        <h2 className="font-semibold">チップを奪い合うゲーム</h2>
+        <TipsText>
+          役の競い合いを何度も繰り返し、より多くのチップを獲得することが目的です。
+          勝負に参加するか降りるかの判断が重要になります。
+        </TipsText>
+      </section>
+    </TipsCard>
   );
 }
