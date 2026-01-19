@@ -1,4 +1,4 @@
-import { use, useMemo } from "react";
+import { use } from "react";
 import {
   CartesianGrid,
   Label,
@@ -15,9 +15,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TabsContent } from "@/components/ui/tabs";
-import type { RangeVsRangePayload } from "@/lib/wasm/types";
-
-const BUCKET_SIZE = 5;
+import type { CombinedPayload, RangeVsRangePayload } from "@/lib/wasm/types";
 
 const chartConfig = {
   hero: {
@@ -30,22 +28,29 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+const getEquityAtPercentile = (pct: number, equities: number[]) => {
+  const count = equities.length;
+  if (count === 0) return 0;
+  if (count === 1) return equities[0] * 100;
+  const pos = (pct / 100) * (count - 1);
+  const low = Math.floor(pos);
+  const high = Math.ceil(pos);
+  const ratio = pos - low;
+  return (equities[low] + (equities[high] - equities[low]) * ratio) * 100;
+};
+
 type Props = {
-  hero: string[];
+  simHandVsRangeEquityWithRanksPromise: Promise<CombinedPayload>;
   simRangeVsRangeEquityPromise: Promise<RangeVsRangePayload>;
 };
 export const AnalyticsHeroRangeVsVillainRange = ({
-  hero,
+  simHandVsRangeEquityWithRanksPromise,
   simRangeVsRangeEquityPromise,
 }: Props) => {
+  const eqResult = use(simHandVsRangeEquityWithRanksPromise);
   const result = use(simRangeVsRangeEquityPromise);
 
   // 勝率だけ抽出
-  const heroEquity =
-    result.hero.find((entry) => {
-      return entry.hand.split(" ").every((card) => hero.includes(card));
-    })?.equity || 0;
-
   const heroRangeEquity =
     result.hero.reduce((acc, entry) => acc + entry.equity, 0) /
     result.hero.length;
@@ -55,46 +60,10 @@ export const AnalyticsHeroRangeVsVillainRange = ({
   const heroEquities = result.hero.map((entry) => entry.equity).sort();
   const villainEquities = result.villain.map((entry) => entry.equity).sort();
 
-  // 累積分布データを作成
-  const heroData = useMemo(() => {
-    return heroEquities.map((equity) => {
-      const rank = heroEquities.findIndex((e) => e >= equity);
-      const pct = (rank / heroEquities.length) * 100;
-      return { equity: equity * 100, pct };
-    });
-  }, [heroEquities]);
-
-  const villainData = useMemo(() => {
-    return villainEquities.map((equity) => {
-      const rank = villainEquities.findIndex((e) => e >= equity);
-      const pct = (rank / villainEquities.length) * 100;
-      return { equity: equity * 100, pct };
-    });
-  }, [villainEquities]);
-
-  // バケット集計
-  const heroBuckets = useMemo(() => {
-    const buckets = new Array(100 / BUCKET_SIZE).fill(0);
-    heroData.forEach(({ equity }) => {
-      const bucketIndex = Math.floor(equity / BUCKET_SIZE);
-      buckets[bucketIndex]++;
-    });
-    return buckets;
-  }, [heroData]);
-
-  const villainBuckets = useMemo(() => {
-    const buckets = new Array(100 / BUCKET_SIZE).fill(0);
-    villainData.forEach(({ equity }) => {
-      const bucketIndex = Math.floor(equity / BUCKET_SIZE);
-      buckets[bucketIndex]++;
-    });
-    return buckets;
-  }, [villainData]);
-
   return (
     <TabsContent
       value="compare-equity-distribution"
-      className="flex h-full flex-col justify-end"
+      className="flex min-h-full flex-col justify-end"
     >
       <ChartContainer config={chartConfig} className="h-60 w-[calc(100%-16px)]">
         <LineChart
@@ -104,17 +73,14 @@ export const AnalyticsHeroRangeVsVillainRange = ({
             right: 0,
             bottom: 0,
           }}
-          data={heroBuckets.map((_heroCount, idx) => ({
-            distribution: (idx + 1) * BUCKET_SIZE,
-            hero:
-              (heroBuckets.slice(0, idx + 1).reduce((a, b) => a + b, 0) /
-                heroData.length) *
-              100,
-            villain:
-              (villainBuckets.slice(0, idx + 1).reduce((a, b) => a + b, 0) /
-                villainData.length) *
-              100,
-          }))}
+          data={Array.from({ length: 100 }, (_, index) => {
+            const distribution = index + 1;
+            return {
+              distribution,
+              hero: getEquityAtPercentile(distribution, heroEquities),
+              villain: getEquityAtPercentile(distribution, villainEquities),
+            };
+          })}
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
@@ -133,22 +99,13 @@ export const AnalyticsHeroRangeVsVillainRange = ({
           >
             <Label value="EQ(%)" offset={16} position="top" dx={16} />
           </YAxis>
-          <YAxis
-            tick={{ fontSize: 12 }}
-            domain={[0, 100]}
-            tickFormatter={(value) => `${value}%`}
-          >
-            <Label
-              value="Cumulative Frequency (%)"
-              angle={-90}
-              position="insideLeft"
-              offset={-8}
-            />
-          </YAxis>
           <ChartTooltip
             content={
               <ChartTooltipContent
-                labelFormatter={() => "Equity"}
+                labelFormatter={(_value, payload) => {
+                  const distribution = payload?.[0]?.payload?.distribution;
+                  return `Distribution ${Number(distribution ?? 0)}%`;
+                }}
                 formatter={(value, name) => [
                   name,
                   ": ",
@@ -158,7 +115,7 @@ export const AnalyticsHeroRangeVsVillainRange = ({
             }
           />
           <ReferenceLine
-            y={heroEquity * 100}
+            y={eqResult.equity * 100}
             stroke="var(--color-hero)"
             strokeDasharray="6 4"
             ifOverflow="extendDomain"

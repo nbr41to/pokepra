@@ -68,9 +68,13 @@ function genHands(strength = 0, excludes: string[] = []) {
   // rankの大きい順に並び替え
   const rankOrder = (rank: string) =>
     CARD_RANKS.indexOf(rank as (typeof CARD_RANKS)[number]);
+  const suitOrder = (suit: string) =>
+    CARD_SUITS.indexOf(suit as (typeof CARD_SUITS)[number]);
 
   const handArray = [hand1, hand2].sort((a, b) => {
-    return rankOrder(a[0]) - rankOrder(b[0]);
+    const rankDiff = rankOrder(a[0]) - rankOrder(b[0]);
+    if (rankDiff !== 0) return rankDiff;
+    return suitOrder(a[1]) - suitOrder(b[1]);
   });
 
   return handArray;

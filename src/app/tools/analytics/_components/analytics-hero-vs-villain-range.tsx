@@ -14,7 +14,7 @@ export const AnalyticsHeroVsVillainRange = ({
   return (
     <TabsContent
       value="hero-equity"
-      className="flex h-full flex-col justify-end"
+      className="flex min-h-full flex-col justify-end"
     >
       <EquityChart result={result} />
     </TabsContent>

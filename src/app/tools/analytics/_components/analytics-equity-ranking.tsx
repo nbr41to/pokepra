@@ -15,6 +15,7 @@ export const AnalyticsEquityRanking = ({
 }: Props) => {
   const ranking = use(rankingPromise);
   const result = use(simHandVsRangeEquityWithRanksPromise);
+  console.log(ranking.filter((r) => r.hand === result.hand));
 
   return (
     <TabsContent value="equity-ranking">

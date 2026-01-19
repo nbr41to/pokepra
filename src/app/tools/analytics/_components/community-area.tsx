@@ -8,7 +8,7 @@ export const CommunityArea = () => {
     return <div className="h-20" />;
 
   return (
-    <div className="mx-auto h-20 w-81">
+    <div className="mx-auto h-20 w-81 scale-90">
       <Board cards={board} disableAnimation={disableBoardAnimation} />
     </div>
   );

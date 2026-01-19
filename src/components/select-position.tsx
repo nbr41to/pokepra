@@ -6,11 +6,17 @@ type Props = {
   total: number;
   value: number;
   setValue: (value: number) => void;
+  className?: string;
 };
 
-export function SelectPosition({ total, value, setValue }: Props) {
+export function SelectPosition({ total, value, setValue, className }: Props) {
   return (
-    <div className="flex w-full flex-wrap justify-center gap-x-1 pt-2">
+    <div
+      className={cn(
+        "flex w-full flex-wrap justify-center gap-x-1 pt-2",
+        className,
+      )}
+    >
       {Array.from({ length: total }).map((_, index) => {
         const positionValue =
           index + 3 > total ? (index + 3) % total : index + 3;

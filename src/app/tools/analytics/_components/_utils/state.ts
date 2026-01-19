@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { EquityPayload, RangeVsRangePayload } from "@/lib/wasm/simulation";
-import { getRandomCards, shuffleAndDeal } from "@/utils/dealer";
+import { genHands, getRandomCards, shuffleAndDeal } from "@/utils/dealer";
 
 type Street = "preflop" | "flop" | "turn" | "river";
 
@@ -34,6 +34,7 @@ type Actions = {
   shuffleAndDeal: () => void;
   onAdvance: () => void;
   onRetreat: () => void;
+  setSituation: (hero: string[], board: string[], position: number) => void;
   clear: () => void;
 };
 
@@ -97,15 +98,19 @@ const useHoldemStore = create<Store>((set, get) => ({
    */
 
   onAdvance: () => {
-    const { street, hero, villains, board, boardHistory } = get();
+    const { street, hero, villains, boardHistory } = get();
 
     if (street === "river") return;
 
     let nextStreet: Street;
-    const newCards = getRandomCards(5, [...hero, ...villains.flat(), ...board]);
-    // boardHistoryが5枚になるまでnewCardsから追加
     const newBoardHistory = [...boardHistory];
+    // boardHistoryが5枚になるまでnewCardsから追加
     while (newBoardHistory.length < 5) {
+      const newCards = getRandomCards(5, [
+        ...hero,
+        ...villains.flat(),
+        ...newBoardHistory,
+      ]);
       newBoardHistory.push(newCards[newBoardHistory.length]);
     }
 
@@ -152,6 +157,41 @@ const useHoldemStore = create<Store>((set, get) => ({
     set({
       street: prevStreet,
       board: newBoard,
+      disableBoardAnimation: true,
+    });
+  },
+  /**
+   * シチュエーションを変更
+   */
+  setSituation: (hero, board, position) => {
+    const street: Street =
+      board.length < 3
+        ? "preflop"
+        : board.length === 3
+          ? "flop"
+          : board.length === 4
+            ? "turn"
+            : "river";
+    const villains = genHands(2, [...hero, ...board]);
+    const boardHistory = [...board];
+
+    // boardHistoryが5枚になるまでnewCardsから追加
+    while (boardHistory.length < 5) {
+      const newCards = getRandomCards(5, [
+        ...hero,
+        ...villains.flat(),
+        ...boardHistory,
+      ]);
+      boardHistory.push(newCards[boardHistory.length]);
+    }
+
+    set({
+      position,
+      hero,
+      board,
+      boardHistory,
+      street,
+      villains: [villains],
       disableBoardAnimation: true,
     });
   },

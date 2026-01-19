@@ -10,7 +10,7 @@ import {
   simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
 
-const ITERATIONS = 100;
+const ITERATIONS = 10;
 /**
  * get hand ranking
  */

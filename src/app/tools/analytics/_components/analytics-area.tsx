@@ -32,7 +32,7 @@ export const AnalyticsArea = ({ className }: Props) => {
     board,
   );
   const simRangeVsRangeEquityPromise = simRangeVsRangeEquity(
-    ranges[getRangeStrengthByPosition(position)],
+    ranges[getRangeStrengthByPosition(position) - 1],
     ranges[8],
     board,
   );
@@ -48,7 +48,7 @@ export const AnalyticsArea = ({ className }: Props) => {
             fallback={
               <TabsContent
                 value="hero-equity"
-                className="flex h-full flex-col justify-end"
+                className="flex min-h-full flex-col justify-end"
               >
                 <EquityChartSkeleton />
               </TabsContent>
@@ -63,7 +63,9 @@ export const AnalyticsArea = ({ className }: Props) => {
         </Activity>
         <Suspense fallback={"aaaa"}>
           <AnalyticsHeroRangeVsVillainRange
-            hero={hero}
+            simHandVsRangeEquityWithRanksPromise={
+              simHandVsRangeEquityWithRanksPromise
+            }
             simRangeVsRangeEquityPromise={simRangeVsRangeEquityPromise}
           />
         </Suspense>

@@ -36,15 +36,18 @@ export function ToolsContent() {
           description="任意のポットに対するベットサイズと必要勝率の計算。"
           buttonLabel="使う"
         />
+        <LinkCard
+          href="/tools/analytics"
+          title="Analytics"
+          description="分析のオールインワンツールです。"
+          buttonLabel="使う"
+        />
       </div>
 
       <Separator />
 
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/analytics">Analytics</Link>
-          </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/tools/calc-hand-score">Hand Score</Link>
           </Button>
