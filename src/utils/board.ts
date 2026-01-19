@@ -21,6 +21,8 @@ type GenerateBoardOptions = {
   maxAttempts?: number;
 };
 
+const DEFAULT_MAX_ATTEMPTS = 5000;
+
 const getRankValue = (card: string) => CARD_RANK_ORDER[card[0] ?? ""] ?? 0;
 const getSuit = (card: string) => card[1] ?? "";
 
@@ -122,11 +124,11 @@ const normalizeExcludes = (excludes?: string[]) =>
  * @param conditions ボード条件 (複数指定可)
  * @param maxAttempts 探索の試行回数
  */
-export function generateBoardByConditions({
+function generateBoardByConditions({
   count = 3,
   excludes = [],
   conditions = [],
-  maxAttempts = 5000,
+  maxAttempts = DEFAULT_MAX_ATTEMPTS,
 }: GenerateBoardOptions = {}): string[] {
   if (count < 3 || count > 5) {
     throw new Error("Board count must be between 3 and 5.");
@@ -155,3 +157,4 @@ export function generateBoardByConditions({
 }
 
 export type { BoardCondition, GenerateBoardOptions };
+export { generateBoardByConditions, DEFAULT_MAX_ATTEMPTS };

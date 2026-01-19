@@ -26,6 +26,10 @@ const outcomeLabel = (outcome: MonteCarloTraceEntry["outcome"]) => {
   return "Tie";
 };
 
+const randomCardClass =
+  "rounded-md bg-amber-100/70 p-1.5 shadow-sm ring-1 ring-amber-200/70 dark:bg-amber-500/15 dark:ring-amber-400/30";
+const cardPairClass = "flex items-center gap-2";
+
 export const Main = () => {
   const [loading, setLoading] = useState(false);
   const [trace, setTrace] = useState<MonteCarloTraceEntry[] | null>(null);
@@ -76,7 +80,8 @@ export const Main = () => {
     <div className="space-y-8">
       <section className="space-y-6 rounded-2xl border border-black/10 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
         <p className="text-slate-700 text-sm dark:text-slate-200">
-          フロップまでの状況を固定して、そこから先（ターン・リバー）をランダムに配るモンテカルロ法を体験します。対戦相手は全ハンドから無作為に選ばれ、100回分の結果を一覧で確認できます。
+          今回は実際のポーカープレイ中のとある状況に固定して、そこから先（ターン・リバー）をシミュレーションするモンテカルロ法を体験します。
+          対戦相手は全ハンドからランダムに選ばれるものとして、100回の試行を繰り返して見ましょう。
         </p>
         <div className="space-y-3 rounded-xl bg-slate-900/5 p-4 dark:bg-white/10">
           <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
@@ -124,7 +129,7 @@ export const Main = () => {
               実際に引かれたターン・リバーと完成した役を確認した後、勝率をまとめています。
             </p>
           </div>
-          <ScrollArea className="h-[420px] rounded-2xl border border-black/10 bg-white/80 p-4 dark:border-white/10 dark:bg-slate-900/70">
+          <ScrollArea className="h-92 rounded-2xl border border-black/10 bg-white/80 p-4 dark:border-white/10 dark:bg-slate-900/70">
             <div className="space-y-3">
               {trace.map((entry, index) => {
                 const boardCards = splitCards(entry.board);
@@ -159,17 +164,22 @@ export const Main = () => {
                     </div>
                     <div className="mt-3 space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex items-center gap-1.5">
-                          {boardCards.map((card) => (
+                        <div className="flex items-center gap-2">
+                          {boardCards.slice(0, 3).map((card) => (
                             <PlayCard key={card} rs={card} size="sm" />
                           ))}
+                          <div className={cn(cardPairClass, randomCardClass)}>
+                            {boardCards.slice(3, 5).map((card) => (
+                              <PlayCard key={card} rs={card} size="sm" />
+                            ))}
+                          </div>
                         </div>
                       </div>
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
                           あなたのハンド
                         </span>
-                        <div className="flex items-center gap-1.5">
+                        <div className={cardPairClass}>
                           {heroCards.map((card) => (
                             <PlayCard key={card} rs={card} size="sm" />
                           ))}
@@ -179,7 +189,7 @@ export const Main = () => {
                         <span className="w-24 font-semibold text-[0.7rem] text-slate-500 uppercase tracking-[0.2em]">
                           相手のハンド
                         </span>
-                        <div className="flex items-center gap-1.5">
+                        <div className={cn(cardPairClass, randomCardClass)}>
                           {villainCards.map((card) => (
                             <PlayCard key={card} rs={card} size="sm" />
                           ))}
@@ -225,9 +235,14 @@ export const Main = () => {
               </div>
             </div>
           )}
-          <div className="rounded-2xl border border-black/10 bg-white/80 p-5 text-slate-700 text-sm shadow-sm dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-200">
-            <p>
-              この勝率は「ストレートを引く確率」だけでなく、相手の手やその後のターン・リバーの分布も含めた総合的な結果です。同じフロップでも、相手のレンジやボードの質感によって勝率は大きく変わります。試行回数を増やすほどブレは小さくなりますが、短期的には上下に揺れやすいのもモンテカルロ法の特徴です。
+
+          <div className="space-y-2">
+            <p className="text-muted-foreground text-sm">
+              状況的には10が落ちてストレートが完成すればという局面ですが、今回求めた勝率は「ストレートを引く確率」だけでなく、相手の手やその後のターン・リバーの様々なパターンを含めた総合的な結果です。
+              同じフロップでも、相手のレンジやボードの質感によって勝率は大きく変わります。今回の試行回数100回と少なかったので、正確さに欠けましたが、特定の状況における勝率を求めることができました！
+            </p>
+            <p className="text-muted-foreground text-sm">
+              実際のポーカーではベッティングラウンドがあるため考えることが増えますが、この状況における勝率であることに変わりはありません。
             </p>
           </div>
         </section>

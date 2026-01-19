@@ -37,7 +37,7 @@ export const InformationSheet = ({ className }: Props) => {
           <SheetHeader>
             <SheetTitle>Full Street Simulator</SheetTitle>
             <SheetDescription className="">
-              1ハンドのフルストリートをシュミレーションします。
+              1ハンドのフルストリートをシミュレーションします。
             </SheetDescription>
           </SheetHeader>
 
@@ -47,7 +47,7 @@ export const InformationSheet = ({ className }: Props) => {
               プリフロップからリバーまでのストリートの間の様々な局面における勝率の感覚を養います。アクション後にボードの上に勝率の情報表示されます。
             </p>
             <p>
-              勝率の情報はBBを想定した対戦相手と1000回のシュミレーションした結果から勝率と勝ったときの役を計算しています。
+              勝率の情報はBBを想定した対戦相手と1000回のシミュレーションした結果から勝率と勝ったときの役を計算しています。
             </p>
             <p>
               BBを想定した対戦相手を1プレイヤーおいています。これは実践をイメージしやすくするためであり、勝ち負けはさほど重要ではありません。
@@ -67,7 +67,7 @@ export const InformationSheet = ({ className }: Props) => {
               <Button size="icon-sm" className="mx-1 rounded-full">
                 <ChartColumn />
               </Button>
-              のボタンを押すと分析結果を確認できます。勝率の情報同様の1000回のシュミレーションした結果の詳細を確認できます。
+              のボタンを押すと分析結果を確認できます。勝率の情報同様の1000回のシミュレーションした結果の詳細を確認できます。
             </p>
             <p>
               レンジごとの勝率の分布を確認したり、自分のコンボはナッツから何番目なのかを確認することができます。

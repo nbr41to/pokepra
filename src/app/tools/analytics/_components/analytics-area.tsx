@@ -4,10 +4,8 @@ import { EquityChartSkeleton } from "@/components/analytics-sheet/equity-chart.s
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { getAllCombos } from "@/utils/dealer";
-import {
-  getRangeStrengthByPosition,
-  getSettingOpenRange,
-} from "@/utils/hand-range";
+import { getRangeStrengthByPosition } from "@/utils/hand-range";
+import { getSettingOpenRange } from "@/utils/setting";
 import {
   getHandRankingInRange,
   simHandVsRangeEquityWithRanks,

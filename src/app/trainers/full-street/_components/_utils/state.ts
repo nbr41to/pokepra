@@ -4,7 +4,7 @@ import type { RankOutcomeResults } from "@/lib/wasm/simulation";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import { shuffleAndDeal } from "@/utils/dealer";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   judgeInRange,
   toHandSymbol,
@@ -200,7 +200,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       board: board,
       compare: Array.from(
         new Set([
-          ...getHandsInRange(getRangeStrengthByPosition(position), [
+          ...getHandsByStrength(getRangeStrengthByPosition(position), [
             ...hero,
             ...board,
           ]),

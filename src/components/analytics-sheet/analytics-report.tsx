@@ -11,11 +11,8 @@ import { use, useCallback, useRef, useState } from "react";
 import { SheetClose, SheetFooter } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
-import {
-  expandStartingHands,
-  getSettingOpenRange,
-  toHandSymbol,
-} from "@/utils/hand-range";
+import { expandStartingHands, toHandSymbol } from "@/utils/hand-range";
+import { getSettingOpenRange } from "@/utils/setting";
 import { SelectPosition } from "../select-position";
 import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";

@@ -12,7 +12,7 @@ import {
 import { getShuffledDeck } from "@/utils/dealer";
 import { shuffleArray } from "@/utils/general";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
 } from "@/utils/hand-range";
 
@@ -78,7 +78,7 @@ export function Main() {
       const deck = getShuffledDeck();
       const heroHand = deck.slice(0, 2);
       const flopBoard = deck.slice(2, 5);
-      const compare = getHandsInRange(getRangeStrengthByPosition(2, 9), [
+      const compare = getHandsByStrength(getRangeStrengthByPosition(2, 9), [
         ...heroHand,
         ...flopBoard,
       ]);

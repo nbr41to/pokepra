@@ -7,7 +7,7 @@ import {
 } from "@/lib/wasm/simulation";
 import { shuffleAndDeal } from "@/utils/dealer";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   judgeInRange,
 } from "@/utils/hand-range";
@@ -158,7 +158,7 @@ const useHoldemStore = create<Store>((set, get) => ({
       simulateVsListEquity({
         board: board,
         hero: hero,
-        compare: getHandsInRange(2, [...hero, ...board]),
+        compare: getHandsByStrength(2, [...hero, ...board]),
         trials: 100,
       }),
       // Range vs Range

@@ -2,10 +2,8 @@ import { Suspense } from "react";
 import { ResultBad } from "@/components/result-bad";
 import { ResultGood } from "@/components/result-good";
 import { parseRangeToHands } from "@/lib/wasm/simulation";
-import {
-  getRangeStrengthByPosition,
-  getSettingOpenRange,
-} from "@/utils/hand-range";
+import { getRangeStrengthByPosition } from "@/utils/hand-range";
+import { getSettingOpenRange } from "@/utils/setting";
 import { useTrainerStore } from "./_utils/state";
 import { RangeTable, RangeTableSkeleton } from "./range-table";
 

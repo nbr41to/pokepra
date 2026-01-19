@@ -2,7 +2,7 @@ import { describe, expect, it } from "bun:test";
 import {
   compressStartingHands,
   expandStartingHands,
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByHand,
   getRangeStrengthByPosition,
   judgeInRange,
@@ -20,18 +20,18 @@ describe("toHandSymbol", () => {
   });
 });
 
-describe("getHandsInRange", () => {
+describe("getHandsByStrength", () => {
   it("strengthが-1なら空配列", () => {
-    expect(getHandsInRange(-1)).toEqual([]);
+    expect(getHandsByStrength(-1)).toEqual([]);
   });
 
   it("strengthが範囲外ならエラー", () => {
-    expect(() => getHandsInRange(0)).toThrow();
-    expect(() => getHandsInRange(99)).toThrow();
+    expect(() => getHandsByStrength(0)).toThrow();
+    expect(() => getHandsByStrength(99)).toThrow();
   });
 
   it("strength=1なら34通り", () => {
-    const hands = getHandsInRange(1);
+    const hands = getHandsByStrength(1);
     expect(hands.length).toBe(154);
   });
 });

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
@@ -111,7 +111,7 @@ export const ActionArea = () => {
   const resultPromise = simulateVsListWithRanks({
     hero,
     board,
-    compare: getHandsInRange(getRangeStrengthByPosition(9), [
+    compare: getHandsByStrength(getRangeStrengthByPosition(9), [
       ...hero,
       ...board,
     ]),

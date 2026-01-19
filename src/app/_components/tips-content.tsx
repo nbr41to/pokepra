@@ -60,7 +60,7 @@ export function TipsContent() {
         </div>
       </NavigationSection>
 
-      <NavigationSection title="GTO" description="ゲーム理論">
+      <NavigationSection title="やさしいゲーム理論" description="GTO">
         <div className="flex flex-col items-center justify-center gap-y-3">
           <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/gto-nash-equilibrium">ナッシュ均衡を感じる</Link>

@@ -9,7 +9,7 @@ import {
   simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
@@ -37,7 +37,7 @@ export const ActionArea = () => {
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
-      compare: getHandsInRange(getRangeStrengthByPosition(position), [
+      compare: getHandsByStrength(getRangeStrengthByPosition(position), [
         ...hero,
         ...board,
       ]),
@@ -65,7 +65,7 @@ export const ActionArea = () => {
   const rankPromise = simulateVsListWithRanks({
     hero,
     board,
-    compare: getHandsInRange(getRangeStrengthByPosition(9), [
+    compare: getHandsByStrength(getRangeStrengthByPosition(9), [
       ...hero,
       ...board,
     ]),

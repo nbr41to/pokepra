@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import type { EquityPayload } from "@/lib/wasm/simulation";
 import { simulateVsListEquity } from "@/lib/wasm/simulation";
-import { genHands } from "@/utils/dealer";
+import { genHand } from "@/utils/dealer";
 import { genRandomInt } from "@/utils/general";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
 } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";
@@ -94,7 +94,7 @@ const useActionStore = create<Store>((set, get) => ({
   retry: () => {
     const people = PEOPLE;
     const villainPosition = genPositionNumber(people, [2]);
-    const hero = genHands(0);
+    const hero = genHand(0);
     const openRaise = getRandomOpenRaise();
     const { callAmount, pot, rakeAmount, requiredEquity } =
       calcPreflopMeta(openRaise);
@@ -117,7 +117,7 @@ const useActionStore = create<Store>((set, get) => ({
     const { stack } = get();
     const people = PEOPLE;
     const villainPosition = genPositionNumber(people, [2]);
-    const hero = genHands(0);
+    const hero = genHand(0);
     const openRaise = getRandomOpenRaise();
     const { callAmount, pot, rakeAmount, requiredEquity } =
       calcPreflopMeta(openRaise);
@@ -156,7 +156,7 @@ const useActionStore = create<Store>((set, get) => ({
     const result = await simulateVsListEquity({
       hero: hero,
       board: [],
-      compare: getHandsInRange(
+      compare: getHandsByStrength(
         getRangeStrengthByPosition(villainPosition),
         hero,
       ),

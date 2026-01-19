@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { EquityPayload } from "@/lib/wasm/simulation";
-import { genHands, getShuffledDeck } from "@/utils/dealer";
+import { genHand, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 
 const PEOPLE = 9;
@@ -87,7 +87,7 @@ const useActionStore = create<Store>((set, get) => ({
 
     const { stack } = get();
 
-    const hero = genHands(tier);
+    const hero = genHand(tier);
     const deck = getShuffledDeck(hero);
 
     set(() => ({

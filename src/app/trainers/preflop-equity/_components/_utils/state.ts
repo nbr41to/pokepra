@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import type { EquityPayload } from "@/lib/wasm/types";
-import { genHands, getShuffledDeck } from "@/utils/dealer";
+import { genHand, getShuffledDeck } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 
 const PEOPLE = 9;
@@ -66,10 +66,10 @@ const useActionStore = create<Store>((set, get) => ({
     const people = PEOPLE;
     const position = genPositionNumber(people, [2]);
 
-    const hero = genHands(0);
+    const hero = genHand(0);
     const villains: string[][] = [];
     for (let i = 1; i < people - position + 1; i++) {
-      const hands = genHands(0, [...hero, ...villains.flat()]);
+      const hands = genHand(0, [...hero, ...villains.flat()]);
       villains.push(hands);
     }
     set(() => ({

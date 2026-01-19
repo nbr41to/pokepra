@@ -1,6 +1,7 @@
 import INITIAL_OPEN_RANGES from "@/data/initial-open-ranges.json";
-import { CARD_RANK_ORDER, CARD_RANKS, toHandArray } from "@/utils/card";
+import { CARD_RANK_ORDER, CARD_RANKS, toCardsArray } from "@/utils/card";
 import { getAllCombos } from "./dealer";
+import { getSettingOpenRange } from "./setting";
 
 /**
  * Hand Rangeに関するutils
@@ -25,7 +26,7 @@ function getSuited(hand1: string, hand2: string) {
  * 例: "As Kh" | ["As", "Kh"] -> "AKo"
  */
 function toHandSymbol(hand: string | string[]) {
-  const handArray = Array.isArray(hand) ? hand : toHandArray(hand);
+  const handArray = Array.isArray(hand) ? hand : toCardsArray(hand);
 
   const rankString = getSortedRank(handArray[0], handArray[1]);
   const suited = getSuited(handArray[0], handArray[1]);
@@ -34,16 +35,16 @@ function toHandSymbol(hand: string | string[]) {
     : rankString + (suited ? "s" : "o");
 }
 
+/** レンジ文字列に圧縮する */
+// internal
 type HandCode = {
   hi: string;
   lo: string;
   suitedness: "s" | "o" | null;
   raw: string;
 };
-
 const rankIndex = (rank: string) =>
   CARD_RANKS.indexOf(rank as (typeof CARD_RANKS)[number]);
-
 const parseHandCode = (raw: string): HandCode | null => {
   const trimmed = raw.trim();
   if (trimmed.length < 2) return null;
@@ -341,36 +342,22 @@ function normalizeRangeString(range: string): string {
 }
 
 /**
- * Local Storageから設定されているOpen Rangeを取得する
- * @return string[][]
- */
-function getSettingOpenRange(): string[] {
-  let raw = localStorage.getItem("mcpt:open-range-tables");
-
-  if (!raw) {
-    raw = JSON.stringify(INITIAL_OPEN_RANGES);
-  }
-
-  const parsed = JSON.parse(raw);
-  if (!Array.isArray(parsed)) {
-    throw new Error("Invalid stored open range format");
-  }
-
-  return (parsed as string[]).map(normalizeRangeString);
-}
-
-/**
  * 指定したRange内のハンドをすべて取得
  * @param strength RANGE_STRENGTHSの値（1 〜 9）
  * @param exclude 除外するカードの配列
  */
-function getHandsInRange(strength: number, exclude: string[] = []): string[][] {
+function getHandsByStrength(
+  strength: number,
+  exclude: string[] = [],
+): string[][] {
   if (strength === -1) return [];
   if (strength < 1 || strength > HAND_RANGE_STRENGTHS.length) {
     throw new Error("Invalid strength value");
   }
   const allHands = getAllCombos(exclude);
-  const allowedHandStrings = INITIAL_OPEN_RANGES.map(expandStartingHands)
+  const ranges = getSettingOpenRange();
+  const allowedHandStrings = ranges
+    .map(expandStartingHands)
     .slice(0, strength)
     .flat();
 
@@ -390,7 +377,7 @@ function getRangeStrengthByHand(
   hand: string | string[],
   ranges = INITIAL_OPEN_RANGES.map(expandStartingHands),
 ) {
-  const handArray = Array.isArray(hand) ? hand : toHandArray(hand);
+  const handArray = Array.isArray(hand) ? hand : toCardsArray(hand);
   const handSymbol = toHandSymbol(handArray);
   const strengthIndex = ranges.findIndex((range) => {
     return range.includes(handSymbol);
@@ -412,6 +399,12 @@ function getRangeStrengthByPosition(position: number, people: number = 9) {
   return position < 3 ? position + people - 2 : position - 2;
 }
 
+/**
+ * ハンドがレンジ内にあるかを判定する
+ * @param hands string[]
+ * @param position number
+ * @param people number
+ */
 function judgeInRange(hands: string[], position: number, people = 9) {
   const tierIndex = getRangeStrengthByPosition(position, people);
   const tierIndexes = Array.from({ length: tierIndex }, (_, i) => i);
@@ -422,26 +415,13 @@ function judgeInRange(hands: string[], position: number, people = 9) {
   return openRaiseHands.includes(handString);
 }
 
-/** 用途検討 */
-const _HAND_RANGE_SYMBOLS = [
-  "QQ+,AKo,AKs",
-  "99+,ATs+,AQo+,KQs",
-  "77+,ATs+,AJo+,KJs+,QJ-JTs,KQo",
-  "55+,A2s+,K9s+,ATo+,QTs+,KJo+,JT-T9s",
-  "22+,A2s+,A9o+,K9s+,Q9s+,KTo+,J9s+,T8s+,QJ-JTo,98s",
-  "22+,A2s+,K2s+,A7o+,Q6s+,J7s+,K9o+,Q9o+,T8s+,97s+,J9o+,87-65s,T9o",
-  "22+,A2s+,K2s+,Q2s+,A6o+,J6s+,K9o+,Q9o+,T7s+,96s+,J9o+,86s+,75s+,64s+,T9-98o,54s",
-  "22+,A2s+,A2o+,K2s+,Q2s+,J2s+,K5o+,T3s+,Q7o+,95s+,85s+,74s+,63s+,J8o+,53s+,T8o+,97o+,87o,43s",
-];
-
 export {
   compressStartingHands,
   expandStartingHands,
   normalizeRangeString,
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   getRangeStrengthByHand,
-  getSettingOpenRange,
   toHandSymbol,
   judgeInRange,
 };

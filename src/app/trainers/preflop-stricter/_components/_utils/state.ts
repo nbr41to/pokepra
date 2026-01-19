@@ -1,12 +1,10 @@
 import { create } from "zustand";
 import { parseRangeToHands } from "@/lib/wasm/simulation";
 import type { EquityPayload } from "@/lib/wasm/types";
-import { genHands } from "@/utils/dealer";
-import {
-  getRangeStrengthByPosition,
-  getSettingOpenRange,
-} from "@/utils/hand-range";
+import { genHand } from "@/utils/dealer";
+import { getRangeStrengthByPosition } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";
+import { getSettingOpenRange } from "@/utils/setting";
 
 const PEOPLE = 9;
 
@@ -70,10 +68,10 @@ const useTrainerStore = create<Store>((set, get) => ({
     const people = PEOPLE;
     const position = genPositionNumber(people, [2]);
 
-    const hero = genHands(0);
+    const hero = genHand(0);
     const villains: string[][] = [];
     for (let i = 1; i < people - position + 1; i++) {
-      const hands = genHands(0, [...hero, ...villains.flat()]);
+      const hands = genHand(0, [...hero, ...villains.flat()]);
       villains.push(hands);
     }
     set(() => ({
@@ -93,7 +91,7 @@ const useTrainerStore = create<Store>((set, get) => ({
     } else if (!settings.lockedPosition) {
       newPosition = position === people ? 3 : position + 1;
     }
-    const hero = genHands(0);
+    const hero = genHand(0);
 
     set(() => ({
       ...INITIAL_STATE,

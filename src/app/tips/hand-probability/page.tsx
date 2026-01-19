@@ -10,6 +10,25 @@ export default function HandProbabilityPage() {
           実戦ではアウト数を数えて「ターン・リバーで届くか」を目安にしてください。
         </p>
         <div className="space-y-3 rounded-lg border bg-card p-4 shadow-sm">
+          <h2 className="font-semibold">
+            7枚見たときの役の完成確率（初心者向け）
+          </h2>
+          <p className="text-muted-foreground text-xs">
+            ホール2枚＋ボード5枚の7枚から、最終的にできる役の確率の目安です。
+          </p>
+          <ul className="list-disc space-y-1 pl-5 text-sm">
+            <li>ハイカード: 約 17.4%</li>
+            <li>ワンペア: 約 43.8%</li>
+            <li>ツーペア: 約 23.5%</li>
+            <li>スリーカード: 約 4.83%</li>
+            <li>ストレート: 約 4.62%</li>
+            <li>フラッシュ: 約 3.03%</li>
+            <li>フルハウス: 約 2.60%</li>
+            <li>フォーカード: 約 0.168%</li>
+            <li>ストレートフラッシュ: 約 0.031%</li>
+          </ul>
+        </div>
+        <div className="space-y-3 rounded-lg border bg-card p-4 shadow-sm">
           <h2 className="font-semibold">代表的なアウト数と確率</h2>
           <ul className="list-disc space-y-1 pl-5 text-sm">
             <li>4 枚ストレート (8 outs): ターン+リバーで約 31.5%</li>

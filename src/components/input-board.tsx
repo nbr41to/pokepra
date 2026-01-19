@@ -11,7 +11,7 @@ import {
   SelectTrigger,
 } from "@/components/ui/select";
 import { type BoardCondition, generateBoardByConditions } from "@/utils/board";
-import { toHandString } from "@/utils/card";
+import { toCardsString } from "@/utils/card";
 import { InputCards } from "./input-cards";
 
 export const InputBoard = (props: ComponentProps<typeof InputCards>) => {
@@ -25,7 +25,7 @@ export const InputBoard = (props: ComponentProps<typeof InputCards>) => {
         conditions: texture as BoardCondition,
         excludes: props.banCards,
       });
-      props.onChange?.(toHandString(board));
+      props.onChange?.(toCardsString(board));
       setOpened(false);
       setValue("");
       setError(null);

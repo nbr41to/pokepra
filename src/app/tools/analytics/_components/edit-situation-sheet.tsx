@@ -19,7 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { toHandArray, toHandString } from "@/utils/card";
+import { toCardsArray, toCardsString } from "@/utils/card";
 import { useHoldemStore } from "./_utils/state";
 
 type Props = {
@@ -73,14 +73,14 @@ export const EditSituationSheet = ({
               </span>
             </Label>
             <InputCards
-              value={toHandString(hero)}
-              onChange={(value) => setHero(toHandArray(value))}
+              value={toCardsString(hero)}
+              onChange={(value) => setHero(toCardsArray(value))}
               limit={2}
               banCards={board}
             />
             <Label className="font-bold">ボード（0 ~ 5枚）</Label>
             <InputBoard
-              value={toHandString(board)}
+              value={toCardsString(board)}
               onChange={(value) => setBoard(value.split(" "))}
               limit={5}
               banCards={hero}

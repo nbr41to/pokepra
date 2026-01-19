@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "bun:test";
 import { getAllCards } from "./card";
 import {
-  genHands,
+  genHand,
   getAllCombos,
-  getShortRankName,
   getShuffledDeck,
   shuffleAndDeal,
+  sortCardsByRankAndSuit,
 } from "./dealer";
 
 const mockRandomSequence = (values: number[], maxCalls = 5000) => {
@@ -49,44 +49,41 @@ describe("getAllCombos", () => {
     const combos = getAllCombos(["As"]);
     expect(combos.length).toBe(1275);
   });
+
+  it("各コンボはrank/suit順に並んでいる", () => {
+    const combos = getAllCombos();
+    for (const combo of combos) {
+      const sorted = sortCardsByRankAndSuit([...combo]);
+      expect(combo).toEqual(sorted);
+    }
+  });
 });
 
-describe("genHands", () => {
+describe("genHand", () => {
   it("2枚の異なるカードを返す", () => {
     mockRandomSequence([0, 0, 0.1, 0.3]);
-    const hand = genHands(0);
+    const hand = genHand(0);
     expect(hand.length).toBe(2);
     expect(hand[0]).not.toBe(hand[1]);
   });
 
   it("ランクの強い順に並ぶ", () => {
     mockRandomSequence([0, 0, 0.1, 0.3]);
-    const hand = genHands(0);
+    const hand = genHand(0);
     expect(hand).toEqual(["As", "Kh"]);
   });
   it("除外カードを含まない", () => {
     mockRandomSequence([0, 0.5, 0.2, 0.3]);
-    const hand = genHands(0, ["As", "Kh"]);
+    const hand = genHand(0, ["As", "Kh"]);
     expect(hand).toEqual(["Ad", "Qh"]);
   });
 });
 
-describe("getShortRankName", () => {
-  it("役名を省略形に変換する", () => {
-    expect(getShortRankName("High Card")).toBe("HC");
-    expect(getShortRankName("One Pair")).toBe("1P");
-    expect(getShortRankName("Pair")).toBe("1P");
-    expect(getShortRankName("Two Pair")).toBe("2P");
-    expect(getShortRankName("Three of a Kind")).toBe("3K");
-    expect(getShortRankName("Straight")).toBe("ST");
-    expect(getShortRankName("Flush")).toBe("FL");
-    expect(getShortRankName("Full House")).toBe("FH");
-    expect(getShortRankName("Four of a Kind")).toBe("4K");
-    expect(getShortRankName("Straight Flush")).toBe("SF");
-  });
-
-  it("未知の役名はそのまま返す", () => {
-    expect(getShortRankName("Unknown")).toBe("Unknown");
+describe("sortCardsByRankAndSuit", () => {
+  it("ランク優先でスート順(s>h>d>c)に並ぶ", () => {
+    const cards = ["9c", "As", "9s", "Ah", "9d", "9h"];
+    const sorted = sortCardsByRankAndSuit([...cards]);
+    expect(sorted).toEqual(["As", "Ah", "9s", "9h", "9d", "9c"]);
   });
 });
 

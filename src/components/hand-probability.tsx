@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { getShortRankName } from "@/utils/dealer";
+import { getShortRankName } from "@/utils/analytics";
 
 type Props = {
   handName: string;

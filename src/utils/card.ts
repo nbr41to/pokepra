@@ -45,6 +45,13 @@ enum CARD_SUIT {
   CLUB = "c",
 }
 
+enum CARD_SUIT_ORDER {
+  SPADE = 1,
+  HEART = 2,
+  DIAMOND = 3,
+  CLUB = 4,
+}
+
 const CARD_SUITS: CARD_SUIT[] = [
   CARD_SUIT.SPADE,
   CARD_SUIT.HEART,
@@ -67,50 +74,58 @@ function getAllCards(): string[] {
 }
 
 /**
+ * 文字列を配列に変換
  * "As Kh" -> ["As", "Kh"]
+ * "Kh 4s Td" -> ["Kh", "4s", "Td"]
  * @param handString string
  */
-function toHandArray(handString: string): string[] {
+function toCardsArray(handString: string): string[] {
   const trimmed = handString.trim().replace(/\s+/g, "");
 
-  return [trimmed.slice(0, 2), trimmed.slice(2, 4)];
+  return trimmed.match(/.{1,2}/g) || [];
 }
 
 /**
+ * 文字列を複数のハンドの配列に変換
  * "As Kh; Td 9c" -> [ ["As", "Kh"], ["Td", "9c"] ]
  * @param handString string
+ * ※ハンドのみ
  */
 function toHandsArray(handString: string): string[][] {
   const trimmed = handString.trim();
   const handStrings = trimmed.split(/\s*;\s*/);
 
-  return handStrings.map((hand) => toHandArray(hand));
+  return handStrings.map((hand) => toCardsArray(hand));
 }
 
 /**
+ * 配列を文字列に変換
  * ["As", "Kh"] -> "As Kh"
+ * ["Kh", "4s", "Td"] -> "Kh 4s Td"
  * @param handArray string[]
  */
-function toHandString(handArray: string[]): string {
+function toCardsString(handArray: string[]): string {
   return handArray.join(" ");
 }
 
 /**
+ * 配列を複数のハンドの文字列に変換
  * [ ["As", "Kh"], ["Td", "9c"] ] -> "As Kh; Td 9c"
  * @param handsArray string[][]
  */
 function toHandsString(handsArray: string[][]): string {
-  return handsArray.map((hand) => toHandString(hand)).join("; ");
+  return handsArray.map((hand) => toCardsString(hand)).join("; ");
 }
 
 export {
   CARD_RANKS,
   CARD_RANK_ORDER,
   CARD_SUIT,
+  CARD_SUIT_ORDER,
   CARD_SUITS,
   getAllCards,
-  toHandArray,
+  toCardsArray,
   toHandsArray,
-  toHandString,
+  toCardsString,
   toHandsString,
 };

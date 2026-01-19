@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import type { EquityPayload, RangeVsRangePayload } from "@/lib/wasm/simulation";
-import { genHands, getRandomCards, shuffleAndDeal } from "@/utils/dealer";
+import { genHand, getRandomCards, shuffleAndDeal } from "@/utils/dealer";
 
 type Street = "preflop" | "flop" | "turn" | "river";
 
@@ -172,7 +172,7 @@ const useHoldemStore = create<Store>((set, get) => ({
           : board.length === 4
             ? "turn"
             : "river";
-    const villains = genHands(2, [...hero, ...board]);
+    const villains = genHand(2, [...hero, ...board]);
     const boardHistory = [...board];
 
     // boardHistoryが5枚になるまでnewCardsから追加

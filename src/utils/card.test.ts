@@ -5,8 +5,8 @@ import {
   CARD_SUIT,
   CARD_SUITS,
   getAllCards,
-  toHandArray,
-  toHandString,
+  toCardsArray,
+  toCardsString,
   toHandsArray,
   toHandsString,
 } from "./card";
@@ -56,17 +56,24 @@ describe("getAllCards", () => {
   });
 });
 
-describe("toHandArray", () => {
-  it("2枚を配列に変換する", () => {
-    expect(toHandArray("AsKh")).toEqual(["As", "Kh"]);
-    expect(toHandArray(" AsKh ")).toEqual(["As", "Kh"]);
-    expect(toHandArray("As Kh")).toEqual(["As", "Kh"]);
+describe("toCardsArray", () => {
+  it("ハンド2枚を配列に変換する", () => {
+    expect(toCardsArray("AsKh")).toEqual(["As", "Kh"]);
+    expect(toCardsArray(" AsKh ")).toEqual(["As", "Kh"]);
+    expect(toCardsArray("As Kh")).toEqual(["As", "Kh"]);
+  });
+  it("ボードを配列に変換する", () => {
+    expect(toCardsArray("Kh4sTd")).toEqual(["Kh", "4s", "Td"]);
+    expect(toCardsArray(" Kh 4s Td ")).toEqual(["Kh", "4s", "Td"]);
+    expect(toCardsArray("Kh 4s Td")).toEqual(["Kh", "4s", "Td"]);
+    expect(toCardsArray("Kh 4s Td 7s")).toEqual(["Kh", "4s", "Td", "7s"]);
   });
 });
 
-describe("toHandString", () => {
+describe("toCardsString", () => {
   it("配列を文字列に戻す", () => {
-    expect(toHandString(["As", "Kh"])).toBe("As Kh");
+    expect(toCardsString(["As", "Kh"])).toBe("As Kh");
+    expect(toCardsString(["Kh", "4s", "Td"])).toBe("Kh 4s Td");
   });
 });
 

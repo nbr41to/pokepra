@@ -67,7 +67,7 @@ export const RetrySheet = ({
           <SheetHeader>
             <SheetTitle>Retry</SheetTitle>
             <SheetDescription className="">
-              指定した相手と再シュミレーションできます。
+              指定した相手と再シミュレーションできます。
             </SheetDescription>
           </SheetHeader>
 

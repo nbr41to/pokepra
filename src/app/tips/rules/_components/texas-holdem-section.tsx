@@ -5,7 +5,7 @@ import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 
 export function TexasHoldemSection() {
-  const boardCards = ["8h", "9h", "Th", "2c", "Kd"];
+  const boardCards = ["8h", "9h", "2c", "Kd", "Th"];
   const players = [
     {
       id: "hero",
@@ -39,13 +39,11 @@ export function TexasHoldemSection() {
     <section className="space-y-2 rounded-lg border bg-card p-4 shadow-sm">
       <h2 className="font-semibold">テキサスホールデム</h2>
       <p className="text-muted-foreground text-sm">
-        自分だけが見られる2枚(ハンド)と、全員共通の5枚(ボード)の合計7枚から、
-        最強の5枚を選んで勝負します。
+        自分だけが見ることができる2枚(ハンド)と、全員が見ることができる共通の5枚(ボード)の合計7枚から、
+        5枚を選んだときのもっとも強い役で勝負をします。
       </p>
       <div className="space-y-3 rounded-md border bg-muted/30 p-3 text-sm">
-        <p className="font-semibold">
-          勝負の例: フラッシュ vs ストレート vs ツーペア
-        </p>
+        <p className="font-semibold">勝負の例:</p>
         <div className="grid grid-cols-3 grid-rows-3 place-items-center gap-3">
           {players.map((player, index) => {
             const positionClass =
@@ -111,7 +109,7 @@ export function TexasHoldemSection() {
         </div>
       </div>
       <p className="text-muted-foreground text-sm">
-        この中では、フラッシュが最も強いのであなたの勝ちです。
+        この中では、フラッシュが最も強いのであなたの勝ちです。なかなか激アツな展開です。
       </p>
     </section>
   );

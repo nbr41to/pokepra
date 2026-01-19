@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { simulateVsListEquity } from "@/lib/wasm/simulation";
-import { genHands, getShuffledDeck } from "@/utils/dealer";
+import { genHand, getShuffledDeck } from "@/utils/dealer";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   judgeInRange,
 } from "@/utils/hand-range";
@@ -189,13 +189,13 @@ const dealOpenRaiseVsBb = (settings: {
 }) => {
   const { people, heroStrength } = settings;
   const position = genPositionNumber(people, [BB_POSITION]);
-  let hero = genHands(heroStrength);
+  let hero = genHand(heroStrength);
 
   while (!judgeInRange(hero, position, people)) {
-    hero = genHands(heroStrength);
+    hero = genHand(heroStrength);
   }
 
-  const villain = genHands(heroStrength, hero);
+  const villain = genHand(heroStrength, hero);
   const deck = getShuffledDeck([...hero, ...villain]);
 
   return {
@@ -325,7 +325,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
     const result = await simulateVsListEquity({
       hero: hero,
       board: board,
-      compare: getHandsInRange(
+      compare: getHandsByStrength(
         getRangeStrengthByPosition(BB_POSITION, settings.people),
         [...hero, ...board],
       ),
@@ -419,7 +419,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
       board: board,
       compare: Array.from(
         new Set([
-          ...getHandsInRange(
+          ...getHandsByStrength(
             getRangeStrengthByPosition(BB_POSITION, settings.people),
             [...hero, ...board],
           ),

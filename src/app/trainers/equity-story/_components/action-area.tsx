@@ -8,7 +8,7 @@ import { Spinner } from "@/components/ui/spinner";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
@@ -46,7 +46,8 @@ export const ActionArea = () => {
   };
 
   const compareHands = useMemo(
-    () => getHandsInRange(getRangeStrengthByPosition(9), [...hero, ...board]),
+    () =>
+      getHandsByStrength(getRangeStrengthByPosition(9), [...hero, ...board]),
     [hero, board],
   );
 

@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import { cn } from "@/lib/utils";
 import {
-  getHandsInRange,
+  getHandsByStrength,
   getRangeStrengthByPosition,
 } from "@/utils/hand-range";
 import { getPositionLabel } from "@/utils/position";
@@ -22,7 +22,7 @@ export function SetRangeHands({ total, setValue, excludes = [] }: Props) {
 
         const strength = getRangeStrengthByPosition(positionValue, total);
         const hands =
-          strength === -1 ? [] : getHandsInRange(strength, excludes);
+          strength === -1 ? [] : getHandsByStrength(strength, excludes);
 
         return (
           <Fragment key={index + label}>
