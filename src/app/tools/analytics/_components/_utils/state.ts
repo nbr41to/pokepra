@@ -4,13 +4,49 @@ import type {
   HandRankingEntry,
   RangeVsRangePayload,
 } from "@/lib/wasm/simulation";
-import { genHand, getRandomCards, shuffleAndDeal } from "@/utils/dealer";
+import {
+  genHand,
+  getAllCombos,
+  getRandomCards,
+  shuffleAndDeal,
+} from "@/utils/dealer";
+import { getRangeStrengthByPosition } from "@/utils/hand-range";
+import {
+  getHandRankingInRange,
+  simHandVsRangeEquityWithRanks,
+  simRangeVsRangeEquity,
+} from "./monte-carlo";
 
 type Street = "preflop" | "flop" | "turn" | "river";
+type CachedStreet = Exclude<Street, "preflop">;
 type AnalyticsHistory = {
   ranking: HandRankingEntry[];
   heroEquity: CombinedPayload;
   rangeEquity: RangeVsRangePayload;
+};
+type AnalysisCacheEntry = {
+  key: string;
+  result: AnalyticsHistory;
+};
+type AnalysisCache = [
+  AnalysisCacheEntry | null,
+  AnalysisCacheEntry | null,
+  AnalysisCacheEntry | null,
+];
+type AnalysisPromiseCacheEntry = {
+  key: string;
+  promise: Promise<AnalyticsHistory>;
+};
+type AnalysisPromiseCache = [
+  AnalysisPromiseCacheEntry | null,
+  AnalysisPromiseCacheEntry | null,
+  AnalysisPromiseCacheEntry | null,
+];
+type AnalysisInput = {
+  hero: string[];
+  board: string[];
+  position: number;
+  ranges: string[];
 };
 
 type State = {
@@ -32,6 +68,8 @@ type State = {
 
   // history
   analyticsHistory: AnalyticsHistory[];
+  analysisCache: AnalysisCache;
+  analysisPromiseCache: AnalysisPromiseCache;
 };
 
 type Actions = {
@@ -40,11 +78,54 @@ type Actions = {
   onAdvance: () => void;
   onRetreat: () => void;
   setResult: ({ ranking, heroEquity, rangeEquity }: AnalyticsHistory) => void;
+  getAnalysisResult: (
+    params: AnalysisInput & { street: Street },
+  ) => Promise<AnalyticsHistory>;
   setSituation: (hero: string[], board: string[], position: number) => void;
   clear: () => void;
 };
 
 type Store = State & Actions;
+
+const createAnalysisCache = (): AnalysisCache => [null, null, null];
+const createAnalysisPromiseCache = (): AnalysisPromiseCache => [
+  null,
+  null,
+  null,
+];
+const getAnalysisCacheIndex = (street: CachedStreet) =>
+  street === "flop" ? 0 : street === "turn" ? 1 : 2;
+const createAnalysisKey = (
+  hero: string[],
+  board: string[],
+  position: number,
+  ranges: string[],
+) => {
+  const heroKey = hero.join("-");
+  const boardKey = board.join("-");
+  const rangesKey = ranges.join("|");
+  return `${heroKey}:${boardKey}:${position}:${rangesKey}`;
+};
+const analyze = ({
+  hero,
+  board,
+  position,
+  ranges,
+}: AnalysisInput): Promise<AnalyticsHistory> => {
+  return Promise.all([
+    getHandRankingInRange(getAllCombos(board), board),
+    simHandVsRangeEquityWithRanks(hero, ranges[8], board),
+    simRangeVsRangeEquity(
+      ranges[getRangeStrengthByPosition(position) - 1],
+      ranges[8],
+      board,
+    ),
+  ]).then(([ranking, heroEquity, rangeEquity]) => ({
+    ranking,
+    heroEquity,
+    rangeEquity,
+  }));
+};
 
 const INITIAL_STATE: State = {
   initialized: false,
@@ -62,6 +143,8 @@ const INITIAL_STATE: State = {
   disableBoardAnimation: false,
 
   analyticsHistory: [],
+  analysisCache: createAnalysisCache(),
+  analysisPromiseCache: createAnalysisPromiseCache(),
 };
 
 const useHoldemStore = create<Store>((set, get) => ({
@@ -79,6 +162,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       initialized: true,
       ...shuffleAndDeal({ people, heroStrength: heroStrengthLimit }),
       settings,
+      analysisCache: createAnalysisCache(),
+      analysisPromiseCache: createAnalysisPromiseCache(),
     });
   },
 
@@ -108,6 +193,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       board,
       boardHistory,
       settings: { people, heroStrengthLimit },
+      analysisCache: createAnalysisCache(),
+      analysisPromiseCache: createAnalysisPromiseCache(),
     });
   },
 
@@ -120,16 +207,6 @@ const useHoldemStore = create<Store>((set, get) => ({
     if (street === "river") return;
 
     let nextStreet: Street;
-    // const newBoardHistory = [...boardHistory];
-    // // boardHistoryが5枚になるまでnewCardsから追加
-    // while (newBoardHistory.length < 5) {
-    //   const newCards = getRandomCards(5, [
-    //     ...hero,
-    //     ...villains.flat(),
-    //     ...newBoardHistory,
-    //   ]);
-    //   newBoardHistory.push(newCards[newBoardHistory.length]);
-    // }
 
     if (street === "preflop") {
       nextStreet = "flop";
@@ -144,8 +221,6 @@ const useHoldemStore = create<Store>((set, get) => ({
 
     set({
       street: nextStreet,
-      // boardHistory: newBoardHistory,
-
       disableBoardAnimation: false,
     });
   },
@@ -193,6 +268,55 @@ const useHoldemStore = create<Store>((set, get) => ({
     });
   },
 
+  getAnalysisResult: ({ hero, board, position, ranges, street }) => {
+    const analysisKey = createAnalysisKey(hero, board, position, ranges);
+    if (street === "preflop") {
+      return analyze({ hero, board, position, ranges });
+    }
+
+    const cacheIndex = getAnalysisCacheIndex(street);
+    const { analysisCache, analysisPromiseCache } = get();
+    const cached = analysisCache[cacheIndex];
+    if (cached?.key === analysisKey) {
+      return Promise.resolve(cached.result);
+    }
+
+    const cachedPromise = analysisPromiseCache[cacheIndex];
+    if (cachedPromise?.key === analysisKey) {
+      return cachedPromise.promise;
+    }
+
+    const promise = analyze({ hero, board, position, ranges })
+      .then((result) => {
+        const { analysisPromiseCache: currentPromiseCache } = get();
+        if (currentPromiseCache[cacheIndex]?.key !== analysisKey) {
+          return result;
+        }
+
+        const { analysisCache: currentCache } = get();
+        const nextCache = [...currentCache] as AnalysisCache;
+        nextCache[cacheIndex] = { key: analysisKey, result };
+        set({ analysisCache: nextCache });
+        return result;
+      })
+      .finally(() => {
+        const { analysisPromiseCache: currentPromiseCache } = get();
+        if (currentPromiseCache[cacheIndex]?.key !== analysisKey) {
+          return;
+        }
+        const nextPromiseCache = [
+          ...currentPromiseCache,
+        ] as AnalysisPromiseCache;
+        nextPromiseCache[cacheIndex] = null;
+        set({ analysisPromiseCache: nextPromiseCache });
+      });
+
+    const nextPromiseCache = [...analysisPromiseCache] as AnalysisPromiseCache;
+    nextPromiseCache[cacheIndex] = { key: analysisKey, promise };
+    set({ analysisPromiseCache: nextPromiseCache });
+    return promise;
+  },
+
   /**
    * シチュエーションを変更
    */
@@ -226,6 +350,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       street,
       villains: [villains],
       analyticsHistory: [],
+      analysisCache: createAnalysisCache(),
+      analysisPromiseCache: createAnalysisPromiseCache(),
       disableBoardAnimation: true,
     });
   },
@@ -234,7 +360,11 @@ const useHoldemStore = create<Store>((set, get) => ({
    * 初期化
    */
   clear: () => {
-    set(INITIAL_STATE);
+    set({
+      ...INITIAL_STATE,
+      analysisCache: createAnalysisCache(),
+      analysisPromiseCache: createAnalysisPromiseCache(),
+    });
   },
 }));
 

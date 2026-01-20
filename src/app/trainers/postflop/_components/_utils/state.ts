@@ -8,16 +8,6 @@ const DEFAULT_TIER = 6;
 
 type Street = "flop" | "turn" | "river";
 
-type History = {
-  hand: string[];
-  position: number;
-  board: string[];
-  flop: "commit" | "fold" | null;
-  turn: "commit" | "fold" | null;
-  river: "commit" | "fold" | null;
-  equity: number;
-};
-
 type State = {
   initialized: boolean;
 
@@ -36,9 +26,6 @@ type State = {
   flop: "commit" | "fold" | null;
   turn: "commit" | "fold" | null;
   river: "commit" | "fold" | null;
-
-  // history
-  histories: History[];
 };
 
 type Actions = {
@@ -69,8 +56,6 @@ const INITIAL_STATE: State = {
   flop: null,
   turn: null,
   river: null,
-
-  histories: [],
 };
 
 const useActionStore = create<Store>((set, get) => ({

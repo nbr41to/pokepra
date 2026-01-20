@@ -74,7 +74,14 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
       offset += percent;
     }
     setHeroOffsetPct(offset);
-  }, [buckets, eqThresholds, heroBucketStart, heroEq, result.data.length, step]);
+  }, [
+    buckets,
+    eqThresholds,
+    heroBucketStart,
+    heroEq,
+    result.data.length,
+    step,
+  ]);
 
   useEffect(() => {
     if (hasAnimated || result.data.length === 0) return;
