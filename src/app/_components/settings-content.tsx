@@ -1,3 +1,4 @@
+import { Heart } from "lucide-react";
 import Link from "next/link";
 import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,13 @@ export function SettingsContent() {
       className="flex w-full flex-col items-center gap-y-16"
     >
       <HeaderTitle title="Settings" description="設定用のページです。" />
+      <Heart
+        size={320}
+        fill="currentColor"
+        strokeWidth={3}
+        className="fixed bottom-20 left-2/5 -z-10 rotate-12 text-pink-400 dark:text-pink-950"
+      />
+
       <SwitchDarkMode />
 
       <div className="flex w-full max-w-md items-center justify-between rounded-2xl border border-black/10 bg-white/80 px-6 py-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/70">

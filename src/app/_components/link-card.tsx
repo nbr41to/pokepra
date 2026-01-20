@@ -20,7 +20,7 @@ export function LinkCard({
     <Link
       href={href}
       className={cn(
-        "flex min-h-40 w-full flex-col justify-between gap-6 rounded-xl border bg-card px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm",
+        "flex min-h-40 w-full flex-col justify-between gap-6 rounded-xl border bg-background/80 px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm",
         className,
       )}
     >

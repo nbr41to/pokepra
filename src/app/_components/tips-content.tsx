@@ -1,3 +1,4 @@
+import { BookText, Club } from "lucide-react";
 import Link from "next/link";
 import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
@@ -8,11 +9,21 @@ export function TipsContent() {
   return (
     <TabsContent
       value="tips"
-      className="flex w-full flex-col items-center gap-y-16"
+      className="relative flex w-full flex-col items-center gap-y-16"
     >
+      <BookText
+        size={240}
+        className="fixed top-2 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
+      />
+      <Club
+        size={320}
+        fill="currentColor"
+        strokeWidth={3}
+        className="fixed bottom-20 left-2/5 -z-10 rotate-12 text-green-400 dark:text-green-950"
+      />
       <HeaderTitle
         title="Tips"
-        description="便利なポーカー用ツールを集めました。"
+        description="このアプリとポーカーに関する知識をまとめました。"
       />
 
       <NavigationSection title="Guide" description="はじめて使う方へ">

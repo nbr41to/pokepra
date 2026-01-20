@@ -5,9 +5,11 @@ import {
   ChevronRight,
   CircleStar,
   CircleX,
+  Gamepad2,
   Grid3X3,
   MessageCircleQuestion,
   Percent,
+  Spade,
   Swords,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +25,16 @@ import { RichLinkCard } from "./rich-link-card";
 export function TrainerContent() {
   return (
     <TabsContent value="trainer" className="flex w-full flex-col items-center">
+      <Gamepad2
+        size={240}
+        className="fixed -top-2 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
+      />
+      <Spade
+        size={320}
+        fill="currentColor"
+        strokeWidth={3}
+        className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-blue-400 dark:text-blue-950"
+      />
       <HeaderTitle
         title="Trainer"
         description="ゲームを通して確率を体感することができます。"

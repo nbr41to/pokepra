@@ -8,7 +8,6 @@ type Props = {
   title: string;
   description: string;
   icon?: ReactNode;
-  buttonLabel?: string;
   className?: string;
 };
 export function RichLinkCard({
@@ -23,7 +22,7 @@ export function RichLinkCard({
     <Link
       href={href}
       className={cn(
-        "relative flex min-h-24 w-full overflow-hidden rounded-xl border bg-background/80 px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm",
+        "relative flex min-h-24 w-full overflow-hidden rounded-xl border bg-background/60 px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm backdrop-blur-sm",
         className,
       )}
     >
@@ -37,7 +36,7 @@ export function RichLinkCard({
 
       <ChevronRight className="relative z-10 my-auto size-6 shrink-0 text-muted-foreground" />
 
-      <div className="absolute top-1 -right-3 mt-1 rotate-12 text-muted [&_svg]:size-28 [&_svg]:stroke-2">
+      <div className="absolute top-1 -right-3 mt-1 rotate-12 text-muted-foreground brightness-200 dark:brightness-20 [&_svg]:size-28 [&_svg]:stroke-2">
         {icon}
       </div>
     </Link>
