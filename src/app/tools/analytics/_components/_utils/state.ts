@@ -115,7 +115,7 @@ const useHoldemStore = create<Store>((set, get) => ({
    * 次のストリートへ進む
    */
   onAdvance: () => {
-    const { street, boardHistory, analyticsHistory } = get();
+    const { street, boardHistory } = get();
 
     if (street === "river") return;
 

@@ -14,6 +14,7 @@ import { useHoldemStore } from "./_utils/state";
 import { AnalyticsEquityRanking } from "./analytics-equity-ranking";
 import { AnalyticsHeroRangeVsVillainRange } from "./analytics-hero-range-vs-villain-range";
 import { AnalyticsHeroVsVillainRange } from "./analytics-hero-vs-villain-range";
+import { AnalyticsRangeEquity } from "./analytics-range-equity";
 
 type AnalysisResult = {
   ranking: Awaited<ReturnType<typeof getHandRankingInRange>>;
@@ -142,23 +143,34 @@ export const AnalyticsArea = ({ className }: Props) => {
           ranking={data.ranking}
           heroEquity={data.heroEquity}
         />
+        <AnalyticsRangeEquity
+          tabValue="hero-range"
+          rangeEquity={data.rangeEquity.hero}
+        />
+        <AnalyticsRangeEquity
+          tabValue="villain-range"
+          rangeEquity={data.rangeEquity.villain}
+        />
       </div>
 
       <TabsList className="mx-auto h-12 w-fit rounded-full">
         <TabsTrigger value="hero-equity" className="size-12 rounded-full">
-          <ChartColumnStacked />
+          <ChartColumnStacked className="text-green-600" />
         </TabsTrigger>
         <TabsTrigger
           value="compare-equity-distribution"
           className="size-12 rounded-full"
         >
-          <ChartSpline />
+          <ChartSpline className="text-indigo-600" />
         </TabsTrigger>
         <TabsTrigger value="equity-ranking" className="size-12 rounded-full">
-          <Crown />
+          <Crown className="text-yellow-600" />
         </TabsTrigger>
         <TabsTrigger value="hero-range" className="size-12 rounded-full">
-          <Grid3X3 />
+          <Grid3X3 className="text-red-600" />
+        </TabsTrigger>
+        <TabsTrigger value="villain-range" className="size-12 rounded-full">
+          <Grid3X3 className="text-blue-600" />
         </TabsTrigger>
       </TabsList>
     </Tabs>

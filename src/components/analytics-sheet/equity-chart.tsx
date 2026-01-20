@@ -55,12 +55,11 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
   }, [result.data]);
 
   const [heroOffsetPct, setHeroOffsetPct] = useState(0);
-  const [animateHero, setAnimateHero] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
     if (result.data.length === 0) {
       setHeroOffsetPct(0);
-      setAnimateHero(false);
       return;
     }
     let offset = 0;
@@ -75,17 +74,15 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
       offset += percent;
     }
     setHeroOffsetPct(offset);
-    setAnimateHero(false);
-    const frame = requestAnimationFrame(() => setAnimateHero(true));
-    return () => cancelAnimationFrame(frame);
-  }, [
-    buckets,
-    eqThresholds,
-    heroBucketStart,
-    heroEq,
-    result.data.length,
-    step,
-  ]);
+  }, [buckets, eqThresholds, heroBucketStart, heroEq, result.data.length, step]);
+
+  useEffect(() => {
+    if (hasAnimated || result.data.length === 0) return;
+    const timer = setTimeout(() => {
+      setHasAnimated(true);
+    }, 1100);
+    return () => clearTimeout(timer);
+  }, [hasAnimated, result.data.length]);
 
   return (
     <div>
@@ -94,14 +91,14 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
         <div className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">
           {buckets.map((bucket, idx) => {
             const value = eqThresholds[bucket].count;
-            if (value === 0) return null;
-            const percent = (value / result.data.length) * 100;
+            const percent =
+              result.data.length === 0 ? 0 : (value / result.data.length) * 100;
 
             return (
               <div
                 key={bucket}
                 className={cn(
-                  "relative flex w-full items-center justify-center text-xs",
+                  "relative flex w-full items-center justify-center text-xs transition-[height] duration-500 ease-out",
                   bgColors[idx % bgColors.length],
                   idx === 0 ? "rounded-t-xs" : "",
                   idx === buckets.length - 1 ? "rounded-b-xs" : "",
@@ -115,6 +112,7 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
                   className={cn(
                     "absolute top-1/2 left-0 z-10 -translate-x-full -translate-y-1/2 pr-2 font-bold",
                     colors[idx % colors.length],
+                    value === 0 && "opacity-0",
                   )}
                 >
                   {bucket}%~
@@ -125,13 +123,13 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
           {heroEntry && (
             <div
               className={cn(
-                "absolute -right-28 flex items-center gap-1 text-foreground text-sm",
-                animateHero && "hero-eq-indicator",
+                "absolute -right-28 flex items-center gap-1 text-foreground text-sm transition-[top] duration-500 ease-out",
+                !hasAnimated && "hero-eq-indicator",
               )}
               style={
                 {
                   "--hero-target": `${heroOffsetPct}%`,
-                  // top: `${heroOffsetPct}%`,
+                  top: `${heroOffsetPct}%`,
                 } as CSSProperties
               }
             >
