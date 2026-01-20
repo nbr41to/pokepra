@@ -177,6 +177,7 @@ const useHoldemStore = create<Store>((set, get) => ({
 
     const { position, hero, villains, deck } = shuffleAndDeal({
       people,
+      ignorePosition: [2],
       heroStrength: heroStrengthLimit,
     });
 

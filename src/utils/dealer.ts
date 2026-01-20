@@ -115,12 +115,18 @@ const getRandomCards = (
 
 function shuffleAndDeal(setting: {
   people: number;
+  ignorePosition?: number[];
   heroStrength?: number;
   villainCount?: number;
 }) {
-  const { people, heroStrength = 0, villainCount = 1 } = setting;
+  const {
+    people,
+    ignorePosition = [],
+    heroStrength = 0,
+    villainCount = 1,
+  } = setting;
 
-  const position = genPositionNumber(people);
+  const position = genPositionNumber(people, ignorePosition);
   const hero = genHand(heroStrength);
   const villains = Array.from({ length: villainCount }, () =>
     genHand(people, hero),
