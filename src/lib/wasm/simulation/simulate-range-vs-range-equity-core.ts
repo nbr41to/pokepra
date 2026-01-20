@@ -162,7 +162,9 @@ async function runRangeVsRange(
   villain.sort((a, b) => b.equity - a.equity);
 
   const end = performance.now();
-  console.log(`runSimulateRangeVsRangeEquity took ${end - start} ms`);
+  console.log(
+    `runSimulateRangeVsRangeEquity took ${(end - start).toFixed(2)} ms`,
+  );
 
   return { hero, villain };
 }

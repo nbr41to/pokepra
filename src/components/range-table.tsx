@@ -63,16 +63,14 @@ export const RangeTable = ({ data, mark }: Props) => {
                   probability === 0 &&
                     "bg-gray-300 opacity-40 dark:bg-gray-800",
                   mark === ranksString &&
-                    "z-10 animate-pulse rounded outline-3 outline-red-500 outline-offset-1",
+                    "z-10 animate-pulse rounded outline-3 outline-red-500/80 outline-offset-1",
                 )}
               >
                 <div
                   className={cn(
-                    "absolute top-0 left-0 h-full bg-green-400 dark:bg-green-700",
-                    probability > 0 && "bg-green-100",
-                    probability > 0.25 && "bg-green-200",
-                    probability > 0.5 && "bg-green-300",
-                    probability > 0.75 && "bg-green-500",
+                    "absolute top-0 left-0 h-full",
+                    probability > 0 && "bg-green-300 dark:bg-green-900",
+                    probability > 0.5 && "bg-green-500 dark:bg-green-700",
                   )}
                   style={{
                     width: `${probability * 100}%`,

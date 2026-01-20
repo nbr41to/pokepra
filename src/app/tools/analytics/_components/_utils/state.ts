@@ -70,6 +70,8 @@ type State = {
   analyticsHistory: AnalyticsHistory[];
   analysisCache: AnalysisCache;
   analysisPromiseCache: AnalysisPromiseCache;
+  simulationLoading: boolean;
+  simulationLoadingKey: string | null;
 };
 
 type Actions = {
@@ -145,6 +147,8 @@ const INITIAL_STATE: State = {
   analyticsHistory: [],
   analysisCache: createAnalysisCache(),
   analysisPromiseCache: createAnalysisPromiseCache(),
+  simulationLoading: false,
+  simulationLoadingKey: null,
 };
 
 const useHoldemStore = create<Store>((set, get) => ({
@@ -164,6 +168,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       settings,
       analysisCache: createAnalysisCache(),
       analysisPromiseCache: createAnalysisPromiseCache(),
+      simulationLoading: false,
+      simulationLoadingKey: null,
     });
   },
 
@@ -196,6 +202,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       settings: { people, heroStrengthLimit },
       analysisCache: createAnalysisCache(),
       analysisPromiseCache: createAnalysisPromiseCache(),
+      simulationLoading: false,
+      simulationLoadingKey: null,
     });
   },
 
@@ -272,21 +280,29 @@ const useHoldemStore = create<Store>((set, get) => ({
   getAnalysisResult: ({ hero, board, position, ranges, street }) => {
     const analysisKey = createAnalysisKey(hero, board, position, ranges);
     if (street === "preflop") {
-      return analyze({ hero, board, position, ranges });
+      set({ simulationLoading: true, simulationLoadingKey: analysisKey });
+      return analyze({ hero, board, position, ranges }).finally(() => {
+        const { simulationLoadingKey } = get();
+        if (simulationLoadingKey !== analysisKey) return;
+        set({ simulationLoading: false, simulationLoadingKey: null });
+      });
     }
 
     const cacheIndex = getAnalysisCacheIndex(street);
     const { analysisCache, analysisPromiseCache } = get();
     const cached = analysisCache[cacheIndex];
     if (cached?.key === analysisKey) {
+      set({ simulationLoading: false, simulationLoadingKey: null });
       return Promise.resolve(cached.result);
     }
 
     const cachedPromise = analysisPromiseCache[cacheIndex];
     if (cachedPromise?.key === analysisKey) {
+      set({ simulationLoading: true, simulationLoadingKey: analysisKey });
       return cachedPromise.promise;
     }
 
+    set({ simulationLoading: true, simulationLoadingKey: analysisKey });
     const promise = analyze({ hero, board, position, ranges })
       .then((result) => {
         const { analysisPromiseCache: currentPromiseCache } = get();
@@ -309,7 +325,16 @@ const useHoldemStore = create<Store>((set, get) => ({
           ...currentPromiseCache,
         ] as AnalysisPromiseCache;
         nextPromiseCache[cacheIndex] = null;
-        set({ analysisPromiseCache: nextPromiseCache });
+        const { simulationLoadingKey } = get();
+        set({
+          analysisPromiseCache: nextPromiseCache,
+          simulationLoading:
+            simulationLoadingKey === analysisKey
+              ? false
+              : get().simulationLoading,
+          simulationLoadingKey:
+            simulationLoadingKey === analysisKey ? null : simulationLoadingKey,
+        });
       });
 
     const nextPromiseCache = [...analysisPromiseCache] as AnalysisPromiseCache;
@@ -353,6 +378,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       analyticsHistory: [],
       analysisCache: createAnalysisCache(),
       analysisPromiseCache: createAnalysisPromiseCache(),
+      simulationLoading: false,
+      simulationLoadingKey: null,
       disableBoardAnimation: true,
     });
   },
@@ -365,6 +392,8 @@ const useHoldemStore = create<Store>((set, get) => ({
       ...INITIAL_STATE,
       analysisCache: createAnalysisCache(),
       analysisPromiseCache: createAnalysisPromiseCache(),
+      simulationLoading: false,
+      simulationLoadingKey: null,
     });
   },
 }));

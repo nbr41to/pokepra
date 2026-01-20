@@ -10,7 +10,7 @@ import {
   simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
 
-const ITERATIONS = 10;
+const ITERATIONS = 1000;
 /**
  * get hand ranking
  */
@@ -115,7 +115,7 @@ const simRangeVsRangeEquity = async (
     heroRange,
     villainRange,
     board,
-    trials: ITERATIONS,
+    trials: ITERATIONS / 25,
   });
 
   return result;

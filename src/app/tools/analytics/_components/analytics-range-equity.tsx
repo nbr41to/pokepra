@@ -8,8 +8,13 @@ import { toHandSymbol } from "@/utils/hand-range";
 type Props = {
   tabValue: "hero-range" | "villain-range";
   rangeEquity: RangeEquityEntry[];
+  hero?: string;
 };
-export const AnalyticsRangeEquity = ({ tabValue, rangeEquity }: Props) => {
+export const AnalyticsRangeEquity = ({
+  tabValue,
+  rangeEquity,
+  hero,
+}: Props) => {
   const [equity, setEquity] = useState(0);
 
   const data = rangeEquity
@@ -55,7 +60,7 @@ export const AnalyticsRangeEquity = ({ tabValue, rangeEquity }: Props) => {
         />
         <div className="w-12 text-right">{equity.toFixed(0)}%</div>
       </div>
-      <RangeTable data={data} />
+      <RangeTable data={data} mark={hero ? toHandSymbol(hero) : undefined} />
       <div>Range EQ: {(eqAve * 100).toFixed(2)}%</div>
     </TabsContent>
   );
