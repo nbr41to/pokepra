@@ -1,9 +1,8 @@
 "use client";
 
+import { Spade } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import { Tabs } from "@/components/ui/tabs";
-
 import { FooterTablist } from "./footer-navigation";
 import { IntroductionContent } from "./introduction-content";
 import {
@@ -37,10 +36,14 @@ export const HomeTabs = () => {
   return (
     <div
       id={HOME_SCROLL_CONTAINER_ID}
-      className="h-dvh w-full overflow-scroll px-2 py-8"
+      className="relative h-dvh w-full overflow-scroll px-2 py-8"
     >
       <RestoreHomeScroll tabValue={tabValue} />
-      <Tabs value={tabValue} onValueChange={setTabValue} className="pb-24">
+      <Tabs
+        value={tabValue}
+        onValueChange={setTabValue}
+        className="relative z-10 pb-24"
+      >
         <IntroductionContent />
         <TrainerContent />
         <ToolsContent />
@@ -48,6 +51,15 @@ export const HomeTabs = () => {
         <SettingsContent />
         <FooterTablist className="fixed bottom-5 left-1/2 z-10 -translate-x-1/2" />
       </Tabs>
+
+      {tabValue === "trainer" && (
+        <Spade
+          size={400}
+          fill="currentColor"
+          strokeWidth={3}
+          className="fixed bottom-20 left-1/5 rotate-12 text-blue-400 dark:text-blue-950"
+        />
+      )}
     </div>
   );
 };

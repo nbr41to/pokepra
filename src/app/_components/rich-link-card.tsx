@@ -23,7 +23,7 @@ export function RichLinkCard({
     <Link
       href={href}
       className={cn(
-        "relative flex min-h-24 w-full overflow-hidden rounded-xl border bg-card px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm",
+        "relative flex min-h-24 w-full overflow-hidden rounded-xl border bg-background/80 px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm",
         className,
       )}
     >
