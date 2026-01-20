@@ -3,13 +3,19 @@
 import { useEffect, useRef, useState } from "react";
 
 import { PlayCard } from "@/components/play-card";
+import { cn } from "@/lib/utils";
 
 type Props = {
   cards: string[];
   disableAnimation?: boolean;
+  className?: string;
 };
 
-export const Board = ({ cards, disableAnimation = false }: Props) => {
+export const Board = ({
+  cards,
+  disableAnimation = false,
+  className,
+}: Props) => {
   const [cardStates, setCardStates] = useState<
     { card: string; delay: number; instant: boolean; animKey: string }[]
   >([]);
@@ -49,7 +55,7 @@ export const Board = ({ cards, disableAnimation = false }: Props) => {
   }, [cards, disableAnimation]);
 
   return (
-    <div className="flex w-81 gap-x-1.5">
+    <div className={cn("flex w-81 gap-x-1.5", className)}>
       {cardStates.map(({ card, delay, instant, animKey }) => {
         return (
           <FlipCard key={animKey} rs={card} delayMs={delay} instant={instant} />
