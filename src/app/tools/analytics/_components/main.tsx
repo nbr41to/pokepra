@@ -20,7 +20,7 @@ export default function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-y-2 pb-4">
+    <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-y-2">
       <AnalyticsArea className="min-h-0 flex-1" />
       <div className="">
         <CommunityArea />
