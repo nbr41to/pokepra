@@ -21,9 +21,8 @@ export const HomeTabs = () => {
 
   useEffect(() => {
     const stored = sessionStorage.getItem(HOME_TAB_KEY);
-    if (stored) {
-      setTabValue(stored ? stored : DEFAULT_TAB);
-    }
+
+    setTabValue(stored ? stored : DEFAULT_TAB);
   }, []);
 
   return (
