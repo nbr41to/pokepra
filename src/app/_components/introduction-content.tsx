@@ -52,39 +52,41 @@ export function IntroductionContent() {
       <section className="relative w-full max-w-md px-4">
         <div className="pointer-events-none absolute -inset-3 w-full rounded-[32px] bg-[radial-gradient(circle_at_top,#38bdf8_0%,transparent_55%),radial-gradient(circle_at_30%_90%,#f472b6_0%,transparent_60%)] opacity-70 blur-2xl" />
         <div className="relative rounded-[28px] border border-black/10 bg-white/85 p-6 shadow-[0_20px_80px_-40px_rgba(15,23,42,0.6)] backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
-          <p className="font-montserrat text-[0.6rem] text-slate-500 uppercase tracking-[0.35em] dark:text-slate-300">
-            Concept
+          <p className="mt-3 font-noto-sans-jp text-slate-600 text-sm/normal dark:text-slate-200">
+            ポーカー始めた！楽しい！上手くなりたい！だけど、むずかしいこと考えるのが苦手で、GTOツールの使い方もわからない…
           </p>
-          <h2 className="mt-3 text-2xl text-slate-900 dark:text-slate-100">
-            モンテカルロで学ぶ、
+          <h2 className="mt-3 text-center text-2xl text-slate-900 dark:text-slate-100">
+            そんな人のための
             <br />
             体感型GTOトレーナー
           </h2>
-          <p className="mt-3 font-noto-sans-jp text-slate-600 text-sm dark:text-slate-200">
-            何度も回して統計を可視化。フィードバックをその場で受け取り、
-            スポット別に「強さの感覚」を育てます。
-          </p>
-
           <div className="mt-5 grid gap-3">
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              <span className="font-semibold text-suit-spade">Monte Carlo</span>{" "}
-              でアクションの妥当性を即フィードバック
+              何から学べばわからない人の
+              <span className="pl-1 font-bold text-suit-club">
+                入門をサポート
+              </span>
             </div>
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              スポット特化のミニゲームで状況別に反復練習
+              ポーカーの楽しさや
+              <span className="px-1 font-bold text-suit-diamond">ワクワク</span>
+              をそのままに
             </div>
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              勝率が計算できる複数のツールが使える
+              むずかしい理論
+              <span className="px-1 font-bold text-suit-spade">GTO</span>
+              を体で覚える
             </div>
             <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              むずかしいゲーム理論の話、
-              <span className="font-semibold text-suit-heart">GTO</span>{" "}
-              を体で覚える設計で初心者にもやさしい
-            </div>
-            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
-              ブラウザで完結、ダウンロード不要
+              ブラウザで完結、
+              <span className="font-bold text-suit-heart">
+                ダウンロード不要
+              </span>
             </div>
           </div>
+          <p className="mt-3 font-noto-sans-jp text-slate-600 text-sm dark:text-slate-200">
+            あらゆるシチュエーションにおける勝率を即座に計算できます。
+          </p>
 
           <div className="mt-5 rounded-full bg-[conic-gradient(at_50%_50%,#fb923c_0deg,#4ade80_90deg,#60a5fa_180deg,#f472b6_270deg,#fb923c_360deg)] p-[2px] dark:bg-[conic-gradient(at_50%_50%,#ea580c_0deg,#16a34a_90deg,#2563eb_180deg,#db2777_270deg,#ea580c_360deg)]">
             <Button
@@ -93,7 +95,7 @@ export function IntroductionContent() {
               variant="secondary"
               asChild
             >
-              <Link href="/tips/experience-monte-carlo-poker">
+              <Link href="/tips/experience-monte-carlo">
                 モンテカルロポーカーを体験する
               </Link>
             </Button>

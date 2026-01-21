@@ -17,20 +17,14 @@ import { TrainerContent } from "./trainer-content";
 const DEFAULT_TAB = "introduction";
 
 export const HomeTabs = () => {
-  const [tabValue, setTabValue] = useState(DEFAULT_TAB);
-  const [isReady, setIsReady] = useState(false);
+  const [tabValue, setTabValue] = useState("");
 
   useEffect(() => {
     const stored = sessionStorage.getItem(HOME_TAB_KEY);
     if (stored) {
-      setTabValue(stored);
+      setTabValue(stored ? stored : DEFAULT_TAB);
     }
-    setIsReady(true);
   }, []);
-
-  if (!isReady) {
-    return null;
-  }
 
   return (
     <div
