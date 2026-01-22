@@ -5,12 +5,7 @@ import { Button } from "@/components/ui/button";
 export const RangeSettingLink = () => {
   return (
     <div className="flex w-full items-center justify-between rounded-lg border p-4 shadow-sm backdrop-blur-xs">
-      <label
-        htmlFor="range-table-setting"
-        className="flex items-center gap-3 font-noto-sans-jp"
-      >
-        マイレンジ表
-      </label>
+      <label htmlFor="range-table-setting">マイレンジ表</label>
       <Button className="font-bold" size="lg" asChild>
         <Link href="/settings/open-range">
           設定

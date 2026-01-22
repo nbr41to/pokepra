@@ -1,6 +1,7 @@
 import { Heart } from "lucide-react";
 import { HeaderTitle } from "@/components/header-title";
 import { TabsContent } from "@/components/ui/tabs";
+import { InvitationLink } from "./invitation-link";
 import { RangeSettingLink } from "./range-setting-link";
 import { SwitchDarkMode } from "./switch-dark-mode";
 import { UpdateApp } from "./update-app";
@@ -23,6 +24,7 @@ export function SettingsContent() {
         <SwitchDarkMode />
         <RangeSettingLink />
         <UpdateApp />
+        <InvitationLink />
       </div>
     </TabsContent>
   );
