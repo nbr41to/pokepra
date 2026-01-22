@@ -2,10 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NavigationSection } from "../navigation-section";
+import { SuitConfettiOverlay } from "../suit-confetti-overlay";
+import { SwitchSuitIcon } from "../switch-suit-icon";
 import { CatchAccordion } from "./catch-accordion";
-import { NavigationSection } from "./navigation-section";
-import { SuitConfettiOverlay } from "./suit-confetti-overlay";
-import { SwitchSuitIcon } from "./switch-suit-icon";
 
 export function IntroductionContent() {
   return (
@@ -103,7 +103,7 @@ export function IntroductionContent() {
 
           <TabsList className="mt-6 grid h-auto w-full grid-cols-2 gap-3 bg-transparent p-0">
             <TabsTrigger
-              value="trainer"
+              value="trainers"
               className="h-12 rounded-full bg-slate-900 text-sm text-white shadow-lg shadow-slate-900/20 transition data-[state=active]:bg-slate-900 dark:bg-white dark:text-slate-900"
             >
               Trainer

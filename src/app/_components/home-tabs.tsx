@@ -3,16 +3,16 @@
 import { useEffect, useState } from "react";
 import { Tabs } from "@/components/ui/tabs";
 import { FooterTablist } from "./footer-navigation";
-import { IntroductionContent } from "./introduction-content";
+import { IntroductionContent } from "./introduction/introduction-content";
 import {
   HOME_SCROLL_CONTAINER_ID,
   HOME_TAB_KEY,
   RestoreHomeScroll,
 } from "./restore-home-scroll";
-import { SettingsContent } from "./settings-content";
-import { TipsContent } from "./tips-content";
-import { ToolsContent } from "./tools-content";
-import { TrainerContent } from "./trainer-content";
+import { SettingsContent } from "./settings/settings-content";
+import { TipsContent } from "./tips/tips-content";
+import { ToolsContent } from "./tools/tools-content";
+import { TrainersContent } from "./trainers/trainers-content";
 
 const DEFAULT_TAB = "introduction";
 
@@ -33,7 +33,7 @@ export const HomeTabs = () => {
       <RestoreHomeScroll tabValue={tabValue} />
       <Tabs value={tabValue} onValueChange={setTabValue} className="pb-24">
         <IntroductionContent />
-        <TrainerContent />
+        <TrainersContent />
         <ToolsContent />
         <TipsContent />
         <SettingsContent />

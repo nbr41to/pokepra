@@ -212,7 +212,7 @@ export function Main() {
         </div>
       )}
 
-      <div className="flex items-center justify-between text-muted-foreground text-xs">
+      <div className="flex items-center justify-end gap-2 text-muted-foreground text-xs">
         <span>{loading ? "計算中..." : "準備完了"}</span>
         <Button size="sm" variant="outline" onClick={loadScenario}>
           次の問題

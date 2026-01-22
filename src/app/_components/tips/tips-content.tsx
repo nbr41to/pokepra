@@ -3,7 +3,7 @@ import Link from "next/link";
 import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
-import { NavigationSection } from "./navigation-section";
+import { NavigationSection } from "../navigation-section";
 
 export function TipsContent() {
   return (
@@ -12,8 +12,8 @@ export function TipsContent() {
       className="relative flex w-full flex-col items-center gap-y-16"
     >
       <BookText
-        size={240}
-        className="fixed top-2 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
+        size={160}
+        className="fixed top-3 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
       />
       <Club
         size={320}

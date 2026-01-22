@@ -8,7 +8,7 @@ export default function Layout({
   return (
     <>
       {children}
-      <FooterLayout menuName="tips" className="fixed bottom-0 left-0" />
+      <FooterLayout menuName="tips" className="fixed bottom-2 left-4" />
     </>
   );
 }

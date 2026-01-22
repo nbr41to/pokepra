@@ -108,7 +108,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-4 p-2">
+      <div className="flex justify-end gap-4 p-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet
           board={board}

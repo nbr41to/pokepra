@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 
 type Props = {
-  menuName: "trainer" | "tools" | "tips" | "settings";
+  menuName: "trainers" | "tools" | "tips" | "settings";
   className?: string;
 };
 
 export const FooterLayout = ({ menuName, className }: Props) => {
   return (
-    <div className={cn("p-2", className)}>
+    <div className={cn("", className)}>
       <ViewTransition name={menuName}>
         <Button
           className="rounded-full"
@@ -20,7 +20,7 @@ export const FooterLayout = ({ menuName, className }: Props) => {
           asChild
         >
           <Link href="/">
-            <Gamepad2 className={`${menuName !== "trainer" && "hidden"}`} />
+            <Gamepad2 className={`${menuName !== "trainers" && "hidden"}`} />
             <Calculator className={`${menuName !== "tools" && "hidden"}`} />
             <BookText className={`${menuName !== "tips" && "hidden"}`} />
             <Settings2 className={`${menuName !== "settings" && "hidden"}`} />

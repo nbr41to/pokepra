@@ -11,14 +11,14 @@ import { HeaderTitle } from "@/components/header-title";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
-import { NavigationSection } from "./navigation-section";
-import { RichLinkCard } from "./rich-link-card";
+import { NavigationSection } from "../navigation-section";
+import { RichLinkCard } from "../rich-link-card";
 
 export function ToolsContent() {
   return (
     <TabsContent value="tools" className="flex w-full flex-col items-center">
       <Calculator
-        size={240}
+        size={160}
         className="fixed top-4 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
       />
       <Diamond

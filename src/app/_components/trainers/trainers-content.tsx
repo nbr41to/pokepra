@@ -19,14 +19,14 @@ import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { TabsContent } from "@/components/ui/tabs";
-import { NavigationSection } from "./navigation-section";
-import { RichLinkCard } from "./rich-link-card";
+import { NavigationSection } from "../navigation-section";
+import { RichLinkCard } from "../rich-link-card";
 
-export function TrainerContent() {
+export function TrainersContent() {
   return (
-    <TabsContent value="trainer" className="flex w-full flex-col items-center">
+    <TabsContent value="trainers" className="flex w-full flex-col items-center">
       <Gamepad2
-        size={240}
+        size={160}
         className="fixed -top-2 left-0 -z-10 -rotate-12 text-muted-foreground brightness-200 dark:brightness-20"
       />
       <Spade
@@ -36,7 +36,7 @@ export function TrainerContent() {
         className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-blue-400 dark:text-blue-950"
       />
       <HeaderTitle
-        title="Trainer"
+        title="Trainers"
         description="ゲームを通して確率を体感することができます。"
       />
 

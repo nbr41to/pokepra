@@ -17,8 +17,8 @@ export const FooterTablist = ({ className }: Props) => {
       <TabsTrigger value="introduction" className="size-14 rounded-full">
         <Home className="size-6!" />
       </TabsTrigger>
-      <ViewTransition name="trainer">
-        <TabsTrigger value="trainer" className="size-14 rounded-full">
+      <ViewTransition name="trainers">
+        <TabsTrigger value="trainers" className="size-14 rounded-full">
           <Gamepad2 className="size-6!" />
         </TabsTrigger>
       </ViewTransition>

@@ -43,7 +43,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-x-4 py-2">
+      <div className="flex justify-end gap-x-4 p-2">
         <Button
           className="rounded-full"
           size="icon-lg"

@@ -34,7 +34,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-4 px-2 py-2">
+      <div className="flex justify-end gap-4 p-2">
         <InformationSheet />
       </div>
     </div>

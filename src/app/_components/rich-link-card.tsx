@@ -1,4 +1,3 @@
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import type { PropsWithChildren, ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -33,8 +32,6 @@ export function RichLinkCard({
         </p>
         {children}
       </div>
-
-      <ChevronRight className="relative z-10 my-auto size-6 shrink-0 text-muted-foreground" />
 
       <div className="absolute top-1 -right-3 mt-1 rotate-12 text-muted-foreground brightness-200 dark:brightness-20 [&_svg]:size-28 [&_svg]:stroke-2">
         {icon}

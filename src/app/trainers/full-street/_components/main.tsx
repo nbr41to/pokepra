@@ -26,6 +26,7 @@ export default function Main() {
 
   return (
     <div className="w-full space-y-2">
+      <FailureOverlay visible={stack <= 0} onRetry={handleInitialize} />
       <div className="mx-auto flex w-76">
         <VillainHand className="pb-16" />
         <StoryViewer className="-ml-16" />
@@ -33,7 +34,6 @@ export default function Main() {
       <CommunityArea />
       <ConfirmPositionArea />
       <ActionArea />
-      <FailureOverlay visible={stack <= 0} onRetry={handleInitialize} />
     </div>
   );
 }

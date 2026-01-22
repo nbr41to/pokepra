@@ -16,12 +16,9 @@ export function SwitchDarkMode() {
   }, []);
 
   return (
-    <div className="flex w-full max-w-md items-center justify-between rounded-2xl border border-black/10 bg-white/80 px-6 py-4 shadow-sm backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
-      <label
-        htmlFor="dark-mode-switch"
-        className="flex items-center gap-3 font-noto-sans-jp text-slate-700 text-sm dark:text-slate-200"
-      >
-        <span className="text-xs uppercase tracking-[0.28em]">Dark mode</span>
+    <div className="flex w-full items-center justify-between rounded-lg border p-4 shadow-sm backdrop-blur-xs">
+      <label htmlFor="dark-mode-switch" className="flex items-center gap-3">
+        <span className="">ダークモード</span>
         <span className="flex items-center gap-2">
           <Sun
             className={cn(
