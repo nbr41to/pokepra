@@ -91,10 +91,12 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
     return () => clearTimeout(timer);
   }, [hasAnimated, result.data.length]);
 
+  const maxBetSize = (heroEq / (100 - heroEq)) * 100;
+
   return (
     <div>
       <p className="text-center text-sm">EQ Ave. {eqAve.toFixed(1)}%</p>
-      <div className="mx-auto flex w-fit pt-4 pb-12">
+      <div className="mx-auto flex w-fit pt-4 pb-6">
         <div className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">
           {buckets.map((bucket, idx) => {
             const value = eqThresholds[bucket].count;
@@ -169,6 +171,11 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
           ))}
         </div>
       </div>
+      <p className="pr-2 text-right text-muted-foreground text-xs">
+        POTの
+        <span className="px-px font-bold">{maxBetSize.toFixed(2)}%</span>
+        のベットまでEV+
+      </p>
     </div>
   );
 };

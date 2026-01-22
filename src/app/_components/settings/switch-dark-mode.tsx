@@ -2,22 +2,16 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function SwitchDarkMode() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const isDark = resolvedTheme === "dark";
 
   const handleOnClick = () => {
     setTheme(isDark ? "light" : "dark");
   };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div className="flex w-full items-center justify-between rounded-lg border p-4 shadow-sm backdrop-blur-xs">
