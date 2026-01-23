@@ -9,6 +9,7 @@ import {
   Grid3X3,
   MessageCircleQuestion,
   Percent,
+  ShieldPlus,
   Spade,
   Swords,
 } from "lucide-react";
@@ -96,7 +97,7 @@ export function TrainersContent() {
           href="/trainers/bb-defense"
           title="BB Defense"
           description="BBでのディフェンスを体感できます。"
-          icon={<ChessRook />}
+          icon={<ShieldPlus />}
         >
           <div className="flex items-center justify-center text-suit-diamond">
             <Combo className="origin-bottom scale-70" hand={["3d", "2d"]} />
