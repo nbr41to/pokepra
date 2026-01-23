@@ -7,11 +7,13 @@ type Props = {
   title: string;
   description: string;
   icon?: ReactNode;
+  isNew?: boolean;
   className?: string;
 };
 export function RichLinkCard({
   href,
   title,
+  isNew = false,
   description,
   icon,
   className,
@@ -25,6 +27,11 @@ export function RichLinkCard({
         className,
       )}
     >
+      {isNew && (
+        <span className="absolute top-0.5 left-2 animate-pulse font-bold text-[10px] text-green-500">
+          New!!
+        </span>
+      )}
       <div className="relative z-10 mr-2 flex-1">
         <h3 className="font-bold text-sm">{title}</h3>
         <p className="mt-1 whitespace-pre-wrap text-muted-foreground text-xs leading-snug">

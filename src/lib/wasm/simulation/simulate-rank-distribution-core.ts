@@ -19,6 +19,8 @@ export async function runSimulateRankDistribution(
     useProgressExport = false,
   }: { onProgress?: (pct: number) => void; useProgressExport?: boolean },
 ): Promise<RankDistributionEntry[]> {
+  const start = performance.now(); // 速度を計測するための開始時間
+
   const handsTrimmed = hands
     .map((hand) => hand.join(" ").trim())
     .filter(Boolean);
@@ -101,6 +103,11 @@ export async function runSimulateRankDistribution(
       results: resultsObject,
     });
   }
+
+  const end = performance.now();
+  console.log(
+    `runSimulateRankDistribution took ${(end - start).toFixed(2)} ms`,
+  );
 
   return data;
 }

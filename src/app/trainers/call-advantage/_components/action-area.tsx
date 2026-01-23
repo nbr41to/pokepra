@@ -1,0 +1,63 @@
+import { AnalyticsSheet2 } from "@/components/analytics-sheet-2";
+import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
+import { HeroActionArea } from "@/components/hero-action-area";
+import { SituationCopyButton } from "@/components/situation-copy-button";
+import { Button } from "@/components/ui/button";
+import { toHandSymbol } from "@/utils/hand-range";
+import { useActionStore } from "./_utils/state";
+
+export const ActionArea = () => {
+  const {
+    finished,
+    hero,
+    board,
+    villainPosition,
+    confirmedHand,
+    confirmHand,
+    heroAction,
+    shuffleAndDeal,
+  } = useActionStore();
+
+  const handleOnAction = (action: "call" | "fold") => {
+    heroAction(action);
+  };
+
+  return (
+    <div className="relative">
+      <div className="relative">
+        <HeroActionArea
+          key={hero.join("-")}
+          hand={hero}
+          onOpenHand={confirmHand}
+          onDoubleTap={() => handleOnAction("call")}
+          doubleTapActionName="Call"
+          onFold={() => handleOnAction("fold")}
+          className="bg bg-green-50 dark:bg-green-950/60"
+        />
+
+        {finished && (
+          <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/30">
+            <Button
+              size="lg"
+              className="rounded-lg text-base shadow"
+              onClick={() => shuffleAndDeal()}
+            >
+              Next
+            </Button>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-center gap-4 px-2 py-2">
+        <HandRangeDrawer mark={toHandSymbol(hero)} />
+        <AnalyticsSheet2
+          hero={hero}
+          board={board}
+          comparePosition={villainPosition}
+          disabled={!confirmedHand}
+        />
+        <SituationCopyButton hero={hero} board={board} />
+      </div>
+    </div>
+  );
+};

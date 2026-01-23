@@ -85,6 +85,14 @@ export function TrainersContent() {
           </div>
         </RichLinkCard>
         <RichLinkCard
+          href="/trainers/call-advantage"
+          title="Call Advantage"
+          description="勝率に応じたCallの判断を鍛えます。"
+          isNew
+          icon={<ChessRook />}
+        />
+
+        <RichLinkCard
           href="/trainers/bb-defense"
           title="BB Defense"
           description="BBでのディフェンスを体感できます。"
