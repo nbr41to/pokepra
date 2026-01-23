@@ -11,22 +11,20 @@ type Props = {
 
 export const FooterLayout = ({ menuName, className }: Props) => {
   return (
-    <div className={cn("", className)}>
-      <ViewTransition name={menuName}>
-        <Button
-          className="rounded-full"
-          variant="outline"
-          size="icon-lg"
-          asChild
-        >
-          <Link href="/">
-            <Gamepad2 className={`${menuName !== "trainers" && "hidden"}`} />
-            <Calculator className={`${menuName !== "tools" && "hidden"}`} />
-            <BookText className={`${menuName !== "tips" && "hidden"}`} />
-            <Settings2 className={`${menuName !== "settings" && "hidden"}`} />
-          </Link>
-        </Button>
-      </ViewTransition>
-    </div>
+    <ViewTransition name={menuName}>
+      <Button
+        className={cn("rounded-full", className)}
+        variant="outline"
+        size="icon-lg"
+        asChild
+      >
+        <Link href="/">
+          <Gamepad2 className={`${menuName !== "trainers" && "hidden"}`} />
+          <Calculator className={`${menuName !== "tools" && "hidden"}`} />
+          <BookText className={`${menuName !== "tips" && "hidden"}`} />
+          <Settings2 className={`${menuName !== "settings" && "hidden"}`} />
+        </Link>
+      </Button>
+    </ViewTransition>
   );
 };
