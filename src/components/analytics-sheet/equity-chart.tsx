@@ -94,7 +94,7 @@ export const EquityChart = ({ result, step = 10 }: Props) => {
   const maxBetSize = (heroEq / (100 - heroEq)) * 100;
 
   return (
-    <div>
+    <div className="w-full">
       <p className="text-center text-sm">EQ Ave. {eqAve.toFixed(1)}%</p>
       <div className="mx-auto flex w-fit pt-4 pb-6">
         <div className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600">

@@ -1,15 +1,15 @@
 "use client";
 
 import { RefreshCcw } from "lucide-react";
-import { useState } from "react";
+import {
+  HOME_SCROLL_KEY,
+  HOME_TAB_KEY,
+  HOME_WINDOW_SCROLL_KEY,
+} from "@/app/_components/restore-home-scroll";
 import { Button } from "@/components/ui/button";
 
 export function UpdateApp() {
-  const [updating, setUpdating] = useState(false);
-
   const reloadApp = async () => {
-    setUpdating(true);
-
     try {
       if ("caches" in window) {
         const keys = await caches.keys();
@@ -22,6 +22,10 @@ export function UpdateApp() {
           registrations.map((registration) => registration.unregister()),
         );
       }
+
+      sessionStorage.removeItem(HOME_TAB_KEY);
+      sessionStorage.removeItem(HOME_SCROLL_KEY);
+      sessionStorage.removeItem(HOME_WINDOW_SCROLL_KEY);
     } finally {
       window.location.reload();
     }
@@ -37,13 +41,8 @@ export function UpdateApp() {
           現在のバージョン v{process.env.NEXT_PUBLIC_APP_VERSION}
         </p>
       </div>
-      <Button
-        className="font-bold"
-        size="lg"
-        onClick={reloadApp}
-        disabled={updating}
-      >
-        {updating ? "更新中..." : "更新"} <RefreshCcw />
+      <Button className="font-bold" size="lg" onClick={reloadApp}>
+        更新 <RefreshCcw />
       </Button>
     </div>
   );

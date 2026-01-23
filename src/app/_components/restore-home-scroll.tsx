@@ -3,8 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef } from "react";
 
-const HOME_SCROLL_KEY = "mcpt:home-scroll";
-const HOME_WINDOW_SCROLL_KEY = "mcpt:home-window-scroll";
+export const HOME_SCROLL_KEY = "mcpt:home-scroll";
+export const HOME_WINDOW_SCROLL_KEY = "mcpt:home-window-scroll";
 export const HOME_TAB_KEY = "mcpt:home-tab";
 export const HOME_SCROLL_CONTAINER_ID = "home-scroll-container";
 
