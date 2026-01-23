@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { montserrat, notoSansJP } from "@/styles/fonts";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/features/setting";
+import { ServiceWorkerRegister } from "./_components/service-worker-register";
 import { SettingButton } from "./_components/setting-button";
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${notoSansJP.variable} ${montserrat.variable} mx-auto max-w-xl antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ServiceWorkerRegister />
           <SettingButton />
           {children}
         </ThemeProvider>
