@@ -1,3 +1,4 @@
+import { Eye, EyeClosed } from "lucide-react";
 import { AnalyticsSheet2 } from "@/components/analytics-sheet-2";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
@@ -13,6 +14,8 @@ export const ActionArea = () => {
     villainPosition,
     confirmedHand,
     confirmHand,
+    equityHidden,
+    toggleEquityHidden,
     heroAction,
     shuffleAndDeal,
   } = useActionStore();
@@ -55,6 +58,16 @@ export const ActionArea = () => {
           comparePosition={villainPosition}
           disabled={!confirmedHand}
         />
+        <Button
+          data-state={equityHidden ? "closed" : "open"}
+          className="group rounded-full"
+          size="icon-lg"
+          variant="outline"
+          onClick={toggleEquityHidden}
+        >
+          <Eye className='group-data-[state="open"]:block group-data-[state="closed"]:hidden' />
+          <EyeClosed className='group-data-[state="closed"]:block group-data-[state="open"]:hidden' />
+        </Button>
       </div>
     </div>
   );

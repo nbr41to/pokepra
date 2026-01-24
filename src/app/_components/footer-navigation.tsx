@@ -12,7 +12,7 @@ const TAB_LABELS: Record<string, string> = {
   introduction: "",
   trainers: "練習",
   tools: "計算",
-  tips: "学習",
+  tips: "知識",
   settings: "設定",
 };
 
@@ -30,7 +30,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       )}
     >
       <div
-        className="pointer-events-none absolute left-0.75 z-0 flex size-15 flex-col items-center justify-end rounded-full bg-background pb-1 text-[10px] text-muted-foreground transition-[transform,opacity] duration-300 ease-out will-change-transform"
+        className="pointer-events-none absolute left-0.75 z-0 flex size-15 flex-col items-center justify-end rounded-full bg-muted pb-1 text-[10px] text-muted-foreground shadow-sm transition-[transform,opacity] duration-300 ease-out will-change-transform"
         style={{
           transform: `translateX(calc(${activeIndex} * (3.75rem + 0.25rem)))`,
         }}
@@ -49,14 +49,14 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       </div>
       <TabsTrigger
         value="introduction"
-        className="group relative z-10 size-15 rounded-full bg-transparent!"
+        className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
       >
         <Home className="size-6!" />
       </TabsTrigger>
       <ViewTransition name="trainers">
         <TabsTrigger
           value="trainers"
-          className="group relative z-10 size-15 rounded-full bg-transparent!"
+          className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
         >
           <Gamepad2 className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -64,7 +64,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       <ViewTransition name="tools">
         <TabsTrigger
           value="tools"
-          className="group relative z-10 size-15 rounded-full bg-transparent!"
+          className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
         >
           <Calculator className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -72,7 +72,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       <ViewTransition name="tips">
         <TabsTrigger
           value="tips"
-          className="group relative z-10 size-15 rounded-full bg-transparent!"
+          className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
         >
           <BookText className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -80,7 +80,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       <ViewTransition name="settings">
         <TabsTrigger
           value="settings"
-          className="group relative z-10 size-15 rounded-full bg-transparent!"
+          className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
         >
           <Settings2 className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>

@@ -23,7 +23,6 @@ export function IntroductionContent() {
             width={120}
             height={120}
             priority
-            unoptimized
           />
         </div>
         <div className="flex items-center justify-center gap-x-3 pt-4">
@@ -61,23 +60,23 @@ export function IntroductionContent() {
             体感型GTOトレーナー
           </h2>
           <div className="mt-5 grid gap-3">
-            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
+            <div className="rounded-2xl bg-slate-900/5 px-5 py-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
               何から学べばわからない人の
               <span className="pl-1 font-bold text-suit-club">
                 入門をサポート
               </span>
             </div>
-            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
+            <div className="rounded-2xl bg-slate-900/5 px-5 py-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
               ポーカーの楽しさや
               <span className="px-1 font-bold text-suit-diamond">ワクワク</span>
               をそのままに
             </div>
-            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
+            <div className="rounded-2xl bg-slate-900/5 px-5 py-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
               むずかしい理論
               <span className="px-1 font-bold text-suit-spade">GTO</span>
               を体で覚える
             </div>
-            <div className="rounded-2xl bg-slate-900/5 p-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
+            <div className="rounded-2xl bg-slate-900/5 px-5 py-3 text-slate-700 text-xs dark:bg-white/10 dark:text-slate-100">
               ブラウザで完結、
               <span className="font-bold text-suit-heart">
                 ダウンロード不要

@@ -16,6 +16,7 @@ type State = {
   initialized: boolean;
   finished: boolean;
   confirmedHand: boolean; // ハンドを見たかどうか
+  equityHidden: boolean; // 勝率を隠すかどうか
 
   street: Street; // ストリート
   stack: number; // 持ち点
@@ -42,6 +43,7 @@ type Actions = {
   clear: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   confirmHand: () => void;
+  toggleEquityHidden: () => void;
   heroAction: (action: "call" | "fold") => void;
 };
 
@@ -52,6 +54,7 @@ const INITIAL_STATE: State = {
   initialized: false,
   finished: false,
   confirmedHand: false,
+  equityHidden: true,
 
   street: "flop",
   stack: 100,
@@ -113,6 +116,10 @@ const useActionStore = create<Store>((set, get) => ({
   // ハンドを確認
   confirmHand: () => {
     set({ confirmedHand: true });
+  },
+  // 勝率の表示/非表示切り替え
+  toggleEquityHidden: () => {
+    set((state) => ({ equityHidden: !state.equityHidden }));
   },
   heroAction: async (action: "call" | "fold") => {
     const {
@@ -226,6 +233,6 @@ const pickBetRate = (equity: number) => {
 };
 
 const pickBetSize = ({ pot, equity }: { pot: number; equity: number }) =>
-  pot * pickBetRate(equity);
+  Math.floor(pot * pickBetRate(equity));
 
 export { useActionStore };

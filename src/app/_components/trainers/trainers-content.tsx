@@ -117,16 +117,16 @@ export function TrainersContent() {
 
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <Button className="w-full" variant="default" size="lg" asChild>
+          <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/postflop">Postflop</Link>
           </Button>
-          <Button className="w-full" variant="default" size="lg" asChild>
+          <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/score-attack">Score Attack</Link>
           </Button>
-          <Button className="w-full" variant="default" size="lg" asChild>
+          <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/equity-story">Story Report</Link>
           </Button>
-          <Button className="w-full" variant="default" size="lg" asChild>
+          <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/open-raise-vs-bb">Open Raise vs BB</Link>
           </Button>
         </div>
