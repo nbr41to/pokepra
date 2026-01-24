@@ -11,7 +11,7 @@ export const CurrentBetting = () => {
         {confirmedHand && (
           <div className="space-y-2">
             <div
-              className="h-5 whitespace-nowrap rounded-full border bg-orange-300 pl-2 text-muted-foreground text-xs/[20px] transition-[width] duration-300 ease-out"
+              className="h-5 whitespace-nowrap rounded-full border bg-orange-400 pl-2 text-foreground text-xs/[20px] transition-[width] duration-300 ease-out dark:bg-orange-700"
               style={{
                 width: `${(bet / pot) * 96}px`,
               }}
@@ -19,7 +19,7 @@ export const CurrentBetting = () => {
               Bet: {bet}
             </div>
 
-            <div className="h-5 w-24 rounded-full border bg-amber-300 pl-2 text-muted-foreground text-xs/[20px]">
+            <div className="h-5 w-24 rounded-full border bg-amber-300 pl-2 text-foreground text-xs/[20px] dark:bg-yellow-700">
               Pot: {pot}
             </div>
           </div>
