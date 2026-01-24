@@ -1,7 +1,6 @@
 import { AnalyticsSheet2 } from "@/components/analytics-sheet-2";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
-import { SituationCopyButton } from "@/components/situation-copy-button";
 import { Button } from "@/components/ui/button";
 import { toHandSymbol } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
@@ -48,7 +47,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-4 px-2 py-2">
+      <div className="flex justify-end gap-4 px-2 py-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet2
           hero={hero}
@@ -56,7 +55,6 @@ export const ActionArea = () => {
           comparePosition={villainPosition}
           disabled={!confirmedHand}
         />
-        <SituationCopyButton hero={hero} board={board} />
       </div>
     </div>
   );

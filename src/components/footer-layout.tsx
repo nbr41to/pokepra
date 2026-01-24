@@ -13,7 +13,7 @@ export const FooterLayout = ({ menuName, className }: Props) => {
   return (
     <ViewTransition name={menuName}>
       <Button
-        className={cn("rounded-full", className)}
+        className={cn("rounded-full bg-background", className)}
         variant="outline"
         size="icon-lg"
         asChild

@@ -37,7 +37,10 @@ export const HomeTabs = () => {
         <ToolsContent />
         <TipsContent />
         <SettingsContent />
-        <FooterTablist className="fixed bottom-5 left-1/2 z-10 -translate-x-1/2" />
+        <FooterTablist
+          activeValue={tabValue}
+          className="fixed bottom-5 left-1/2 z-10 -translate-x-1/2"
+        />
       </Tabs>
     </div>
   );

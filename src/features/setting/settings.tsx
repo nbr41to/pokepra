@@ -1,5 +1,3 @@
-"use client";
-
 import { Settings } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -16,12 +14,6 @@ import {
 import { SwitchMode } from "./switch-mode";
 
 export const Setting = () => {
-  const reload = () => {
-    if (typeof window !== "undefined") {
-      window.location.reload();
-    }
-  };
-
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -38,7 +30,6 @@ export const Setting = () => {
           <DropdownMenuItem asChild>
             <Link href="/">トップへ戻る</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={reload}>アプリを更新</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-xs opacity-60">
             My Settings
