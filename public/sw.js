@@ -40,28 +40,21 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
 
   if (request.method !== "GET") return;
+  if (new URL(request.url).origin !== self.location.origin) return;
+
+  const fetchAndCache = () =>
+    fetch(request).then((response) => {
+      const responseClone = response.clone();
+      caches
+        .open(CACHE_NAME)
+        .then((cache) => cache.put(request, responseClone));
+      return response;
+    });
 
   if (request.mode === "navigate") {
-    event.respondWith(
-      caches.match("/").then((cached) => cached || fetch(request)),
-    );
+    event.respondWith(fetchAndCache().catch(() => caches.match("/")));
     return;
   }
 
-  if (new URL(request.url).origin !== self.location.origin) return;
-
-  event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
-          const responseClone = response.clone();
-          caches
-            .open(CACHE_NAME)
-            .then((cache) => cache.put(request, responseClone));
-          return response;
-        })
-        .catch(() => cached);
-    }),
-  );
+  event.respondWith(fetchAndCache().catch(() => caches.match(request)));
 });
