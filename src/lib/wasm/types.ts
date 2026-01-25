@@ -15,6 +15,7 @@ export type WasmExports = {
     boardLen: number,
     comparePtr: number,
     compareLen: number,
+    opponentsCount: number,
     trials: number,
     seed: bigint,
     outPtr: number,
@@ -27,6 +28,7 @@ export type WasmExports = {
     boardLen: number,
     comparePtr: number,
     compareLen: number,
+    opponentsCount: number,
     trials: number,
     seed: bigint,
     outPtr: number,
@@ -251,6 +253,7 @@ export type SimulateParams = {
   board: string[];
   compare: string[][];
   trials: number;
+  opponentsCount?: number;
   seed?: bigint;
   wasmUrl?: string;
 };

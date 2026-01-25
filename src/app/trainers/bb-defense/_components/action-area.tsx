@@ -1,11 +1,19 @@
+import { User, Users } from "lucide-react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { useActionStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
-  const { hero, confirmHand, action, calcResult, shuffleAndDeal } =
-    useActionStore();
+  const {
+    hero,
+    confirmHand,
+    action,
+    calcResult,
+    shuffleAndDeal,
+    multiEnabled,
+    toggleMulti,
+  } = useActionStore();
 
   return (
     <div className="pt-3">
@@ -34,7 +42,18 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-end gap-4 p-2">
+      <div className="flex items-center justify-end gap-4 p-2">
+        <Button
+          data-state={multiEnabled ? "open" : "closed"}
+          className="group rounded-full"
+          size="icon-lg"
+          variant="outline"
+          onClick={toggleMulti}
+          aria-label="Toggle multi"
+        >
+          <Users className='group-data-[state="open"]:block group-data-[state="closed"]:hidden' />
+          <User className='group-data-[state="closed"]:block group-data-[state="open"]:hidden' />
+        </Button>
         <InformationSheet />
       </div>
     </div>

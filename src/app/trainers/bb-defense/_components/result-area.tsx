@@ -2,10 +2,21 @@ import { cn } from "@/lib/utils";
 import { useActionStore } from "./_utils/state";
 
 export const ResultArea = () => {
-  const { result, openRaise, requiredEquity, pot, rakeAmount, callAmount } =
-    useActionStore();
+  const {
+    result,
+    hero,
+    openRaise,
+    requiredEquity,
+    pot,
+    rakeAmount,
+    callAmount,
+  } = useActionStore();
 
-  const equityWinCount = result?.data.filter((r) => r.equity < 0.5).length || 0;
+  const heroKey = hero.join(" ");
+  const heroEquity = result?.data.find((r) => r.hand === heroKey)?.equity ?? 0;
+  const opponentEntries = result?.data.filter((r) => r.hand !== heroKey) ?? [];
+  const equityWinCount =
+    opponentEntries.filter((r) => r.equity < 0.5).length || 0;
 
   return (
     <div className="mx-auto w-fit space-y-3 pb-6">
@@ -15,17 +26,17 @@ export const ResultArea = () => {
           <div
             className={cn(
               "font-bold text-xl",
-              result.equity >= requiredEquity
-                ? "text-green-500"
-                : "text-red-500",
+              heroEquity >= requiredEquity ? "text-green-500" : "text-red-500",
             )}
           >
-            {(result.equity * 100).toFixed(2)}%
+            {(heroEquity * 100).toFixed(2)}%
           </div>
           <div className="text-xs">
             レンジ内の勝率50%超えている割合:{" "}
-            {((equityWinCount / result.data.length) * 100).toFixed(2)}%（
-            {equityWinCount}/{result.data.length}）
+            {((equityWinCount / (opponentEntries.length || 1)) * 100).toFixed(
+              2,
+            )}
+            %（{equityWinCount}/{opponentEntries.length}）
           </div>
         </div>
       )}

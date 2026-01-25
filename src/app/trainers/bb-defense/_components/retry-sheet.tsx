@@ -19,13 +19,13 @@ import {
 } from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import type { CombinedPayload, EquityPayload } from "@/lib/wasm/types";
+import type { CombinedPayload, MultiHandEquityPayload } from "@/lib/wasm/types";
 
 const TRIAL_ITERATIONS = 100000;
 
 type Props = {
   hero: string[];
-  result: EquityPayload | null;
+  result: MultiHandEquityPayload | null;
   disabled: boolean;
   className?: string;
 };
@@ -72,27 +72,29 @@ export const RetrySheet = ({
           </SheetHeader>
 
           <div className="flex flex-wrap justify-evenly gap-3 px-2 py-4">
-            {prevResult?.data.map(({ hand, equity }) => (
-              <button
-                key={hand}
-                type="button"
-                className={cn(
-                  "grid place-items-center gap-1 rounded-md border-2 px-3 py-2 shadow",
-                  selected?.join(" ") === hand ? "border-blue-500" : "",
-                )}
-                onClick={() => setSelected(hand.split(" "))}
-              >
-                <Combo hand={hand.split(" ")} />
-                <div
+            {prevResult?.data
+              .filter((entry) => entry.hand !== hero.join(" "))
+              .map(({ hand, equity }) => (
+                <button
+                  key={hand}
+                  type="button"
                   className={cn(
-                    "font-bold text-sm",
-                    equity > 0.5 && "text-red-500 dark:text-red-600",
+                    "grid place-items-center gap-1 rounded-md border-2 px-3 py-2 shadow",
+                    selected?.join(" ") === hand ? "border-blue-500" : "",
                   )}
+                  onClick={() => setSelected(hand.split(" "))}
                 >
-                  {(equity * 100).toFixed(2)}%
-                </div>
-              </button>
-            ))}
+                  <Combo hand={hand.split(" ")} />
+                  <div
+                    className={cn(
+                      "font-bold text-sm",
+                      equity > 0.5 && "text-red-500 dark:text-red-600",
+                    )}
+                  >
+                    {(equity * 100).toFixed(2)}%
+                  </div>
+                </button>
+              ))}
           </div>
 
           <div className="mx-auto w-fit">

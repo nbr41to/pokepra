@@ -236,11 +236,12 @@ fn run_equity(
   board_len: usize,
   compare_ptr: *const u8,
   compare_len: usize,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
   out_ptr: *mut u32,
   out_len: usize,
-  mut runner: impl FnMut(&str, &str, &str) -> Result<Vec<(u32, u32, u32, u32, u32)>, i32>,
+  mut runner: impl FnMut(&str, &str, &str, u32) -> Result<Vec<(u32, u32, u32, u32, u32)>, i32>,
 ) -> i32 {
   let _ = (trials, seed);
   if hero_ptr.is_null() || out_ptr.is_null() || compare_ptr.is_null() {
@@ -262,7 +263,7 @@ fn run_equity(
     Err(_) => return -4,
   };
 
-  let results = match runner(hero_str, board_str, compare_str) {
+  let results = match runner(hero_str, board_str, compare_str, opponents_count) {
     Ok(v) => v,
     Err(code) => return code,
   };
@@ -734,6 +735,7 @@ pub extern "C" fn simulate_vs_list_equity(
   board_len: usize,
   compare_ptr: *const u8,
   compare_len: usize,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
   out_ptr: *mut u32,
@@ -746,13 +748,21 @@ pub extern "C" fn simulate_vs_list_equity(
     board_len,
     compare_ptr,
     compare_len,
+    opponents_count,
     trials,
     seed,
     out_ptr,
     out_len,
-    |hero_str, board_str, compare_str| {
-      simulate_vs_list_equity_internal(hero_str, board_str, compare_str, trials, seed)
-        .map_err(|_| -5)
+    |hero_str, board_str, compare_str, opponents_count| {
+      simulate_vs_list_equity_internal(
+        hero_str,
+        board_str,
+        compare_str,
+        opponents_count,
+        trials,
+        seed,
+      )
+      .map_err(|_| -5)
     },
   )
 }
@@ -829,6 +839,7 @@ pub extern "C" fn simulate_vs_list_equity_with_progress(
   board_len: usize,
   compare_ptr: *const u8,
   compare_len: usize,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
   out_ptr: *mut u32,
@@ -841,15 +852,17 @@ pub extern "C" fn simulate_vs_list_equity_with_progress(
     board_len,
     compare_ptr,
     compare_len,
+    opponents_count,
     trials,
     seed,
     out_ptr,
     out_len,
-    |hero_str, board_str, compare_str| {
+    |hero_str, board_str, compare_str, opponents_count| {
       simulate_vs_list_equity_with_progress_internal(
         hero_str,
         board_str,
         compare_str,
+        opponents_count,
         trials,
         seed,
         Some(|p| emit_progress(p)),

@@ -8,6 +8,7 @@ export async function runSimulateVsListEquity(
     board,
     compare,
     trials,
+    opponentsCount = 1,
     seed = 123456789n,
     wasmUrl = DEFAULT_WASM_URL,
   }: SimulateParams,
@@ -60,6 +61,9 @@ export async function runSimulateVsListEquity(
   if (compareCount === 0) {
     throw new Error("No compare hands provided");
   }
+  if (compareCount < opponentsCount) {
+    throw new Error("Not enough compare hands for opponents count");
+  }
 
   const outLen = (compareCount + 1) * 5;
   const outPtr = allocU32(outLen);
@@ -74,6 +78,7 @@ export async function runSimulateVsListEquity(
       boardBuf.len,
       compareBuf.ptr,
       compareBuf.len,
+      Math.max(1, Math.min(5, opponentsCount)),
       trials,
       seed,
       outPtr,

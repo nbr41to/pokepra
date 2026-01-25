@@ -18,6 +18,7 @@ pub fn simulate_vs_list_equity(
   hero_hand_str: &str,
   board_str: &str,
   compare_list: &str,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
@@ -25,6 +26,7 @@ pub fn simulate_vs_list_equity(
     hero_hand_str,
     board_str,
     compare_list,
+    opponents_count,
     trials,
     seed,
     None,
@@ -338,6 +340,7 @@ pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
   hero_hand_str: &str,
   board_str: &str,
   compare_list: &str,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
   progress: Option<F>,
@@ -346,6 +349,7 @@ pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
     hero_hand_str,
     board_str,
     compare_list,
+    opponents_count,
     trials,
     seed,
     progress,
@@ -356,11 +360,11 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
   hero_hand_str: &str,
   board_str: &str,
   compare_list: &str,
+  opponents_count: u32,
   trials: u32,
   seed: u64,
   mut progress: Option<F>,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
-  let _ = seed;
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
   let board = parse_board(board_str).ok_or("failed to parse board")?;
@@ -382,6 +386,11 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
 
   validate_inputs(&hero_hand, &board, &opponents)?;
 
+  let opponents_count = opponents_count.max(1).min(5) as usize;
+  if opponents.len() < opponents_count {
+    return Err("not enough compare hands for opponent count".into());
+  }
+
   let trials = trials.max(1);
   let total_work = (opponents.len() as u64).saturating_mul(trials as u64).max(1);
   let mut completed = 0u64;
@@ -399,6 +408,7 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
   update_progress(0);
 
   let board_rs: Vec<Card> = board.iter().map(to_rs_card).collect();
+  let mut rng = Lcg64::new(seed);
 
   let mut stats: Vec<(u32, u32, u32, u32, u32)> =
     vec![(0, 0, 0, 0, 0); opponents.len()];
@@ -414,26 +424,86 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
     let mut plays = 0u32;
 
     let mut hero_rs = to_rs_hand(&hero_hand);
-    let mut opp_rs = to_rs_hand(opp);
+    let mut base_opp_rs = to_rs_hand(opp);
     for c in &board_rs {
       hero_rs.insert(*c);
-      opp_rs.insert(*c);
+      base_opp_rs.insert(*c);
     }
 
-    let mut game =
-      MonteCarloGame::new(vec![hero_rs, opp_rs]).map_err(|e| format!("{e:?}"))?;
+    let candidates: Vec<usize> = opponents
+      .iter()
+      .enumerate()
+      .filter_map(|(c_idx, hand)| {
+        if c_idx == idx {
+          return None;
+        }
+        if hands_overlap(opp, hand) {
+          return None;
+        }
+        Some(c_idx)
+      })
+      .collect();
+    if opponents_count > 1 && candidates.len() < opponents_count - 1 {
+      return Err("not enough non-overlapping opponents for multiway".into());
+    }
 
     for _ in 0..trials {
+      let mut selected: Vec<usize> =
+        Vec::with_capacity(opponents_count.saturating_sub(1));
+      if opponents_count > 1 {
+        let mut pool = candidates.clone();
+        for i in (1..pool.len()).rev() {
+          let j = (rng.next_u32() as usize) % (i + 1);
+          pool.swap(i, j);
+        }
+        for c_idx in pool {
+          if selected.len() >= opponents_count - 1 {
+            break;
+          }
+          let candidate_hand = &opponents[c_idx];
+          if selected
+            .iter()
+            .any(|picked| hands_overlap(candidate_hand, &opponents[*picked]))
+          {
+            continue;
+          }
+          selected.push(c_idx);
+        }
+        if selected.len() < opponents_count - 1 {
+          return Err("not enough non-overlapping opponents for multiway".into());
+        }
+      }
+
+      let mut participants = Vec::with_capacity(1 + opponents_count);
+      participants.push(hero_rs.clone());
+      participants.push(base_opp_rs.clone());
+      for extra_idx in selected {
+        let mut opp_rs = to_rs_hand(&opponents[extra_idx]);
+        for c in &board_rs {
+          opp_rs.insert(*c);
+        }
+        participants.push(opp_rs);
+      }
+
+      let participants_len = participants.len();
+      let mut game =
+        MonteCarloGame::new(participants).map_err(|e| format!("{e:?}"))?;
       let (winners, _) = game.simulate();
       plays += 1;
       let hero_win = winners.get(0);
-      let opp_win = winners.get(1);
-      if hero_win && opp_win {
-        ties += 1;
-      } else if hero_win {
-        wins += 1;
+      if hero_win {
+        let mut winners_count = 0usize;
+        for i in 0..participants_len {
+          if winners.get(i) {
+            winners_count += 1;
+          }
+        }
+        if winners_count > 1 {
+          ties += 1;
+        } else {
+          wins += 1;
+        }
       }
-      game.reset();
       completed = completed.saturating_add(1);
       update_progress(completed);
     }
