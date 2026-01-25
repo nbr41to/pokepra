@@ -1,6 +1,6 @@
 import { Grid3X3 } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 
 export const RangeSettingLink = () => {
   return (

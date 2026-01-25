@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Grape } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SuitIcon } from "./ui/suit-icon";
+import { SuitIcon } from "./suit-icon";
 
 const variants = cva(
   "flex flex-col items-center justify-center bg-background border data-[suit=s]:text-suit-spade data-[suit=h]:text-suit-heart data-[suit=d]:text-suit-diamond data-[suit=c]:text-suit-club",

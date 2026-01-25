@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import {
   type CombinedPayload,
@@ -18,7 +18,7 @@ import {
 } from "@/lib/wasm/simulation";
 import { getAllCombos } from "@/utils/dealer";
 import { PlayCard } from "../play-card";
-import { Button } from "../ui/button";
+import { Button } from "../shadcn/button";
 import { AnalyticsReport } from "./analytics-report";
 import { EquityChartSkeleton } from "./equity-chart.skeleton";
 

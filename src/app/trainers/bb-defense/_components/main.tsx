@@ -27,7 +27,7 @@ export function Main() {
   if (!initialized || loading) return null;
 
   return (
-    <div className="relative w-full">
+    <div className="relative mt-auto w-full">
       <ResultArea />
       <ConfirmPosition />
       <div className="flex items-end justify-center gap-2">

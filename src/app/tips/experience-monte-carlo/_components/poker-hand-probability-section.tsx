@@ -3,7 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import { CARD_RANK_ORDER, getAllCards } from "@/utils/card";

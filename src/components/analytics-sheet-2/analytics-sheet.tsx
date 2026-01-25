@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import {
   evaluateHandsRanking,
@@ -22,7 +22,7 @@ import {
   getRangeStrengthByPosition,
 } from "@/utils/hand-range";
 import { PlayCard } from "../play-card";
-import { Button } from "../ui/button";
+import { Button } from "../shadcn/button";
 import { AnalyticsReport } from "./analytics-report";
 import { EquityChartSkeleton } from "./equity-chart.skeleton";
 

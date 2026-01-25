@@ -82,20 +82,17 @@ const useActionStore = create<Store>((set, get) => ({
   shuffleAndDeal: async (options?: { strength?: number; people?: number }) => {
     const tier = options?.strength ?? DEFAULT_TIER;
 
-    const { stack } = get();
-
+    const { stack, equityHidden } = get();
     const hero = genHand(tier);
     const villainPosition = genPositionNumber(options?.people ?? PEOPLE, []);
     const deck = getShuffledDeck([...hero]);
     const board = deck.splice(0, 3);
 
-    console.log(board);
     const equityPayload = await simulateEquity({
       hero,
       villainPosition,
       board,
     });
-    console.log(equityPayload);
     const betSize = pickBetSize({
       pot: INITIAL_STATE.pot,
       equity: equityPayload.equity,
@@ -104,6 +101,7 @@ const useActionStore = create<Store>((set, get) => ({
     set(() => ({
       ...INITIAL_STATE,
       initialized: true,
+      equityHidden,
       stack,
       deck,
       hero: hero,

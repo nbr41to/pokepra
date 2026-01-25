@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
 import { PlayCard } from "@/components/play-card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import {
   simulateRankDistribution,
   simulateVsListEquity,
@@ -118,7 +118,7 @@ export function Main() {
   }, [loadScenario]);
 
   return (
-    <div className="w-full max-w-md space-y-6 pb-6">
+    <div className="mt-auto w-full max-w-md space-y-6 pb-6">
       <div className="space-y-3 rounded-xl border bg-card p-4 shadow-sm">
         <p className="text-muted-foreground text-sm/normal">
           以下のフロップの状況を見て、あなたの勝率はどれでしょう。ただし、対戦相手のレンジはBBとします。

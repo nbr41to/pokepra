@@ -1,8 +1,8 @@
 import { ChartColumnStacked, ChartSpline, Crown, Grid3X3 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { EquityChartSkeleton } from "@/components/analytics-sheet/equity-chart.skeleton";
-import { Spinner } from "@/components/ui/spinner";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Spinner } from "@/components/shadcn/spinner";
+import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { cn } from "@/lib/utils";
 import type {
   CombinedPayload,

@@ -18,7 +18,7 @@ export const Main = () => {
   if (!initialized) return null;
 
   return (
-    <div className="w-full">
+    <div className="mt-auto w-full">
       <ResultArea />
       <ConfirmPosition />
       <ActionArea />

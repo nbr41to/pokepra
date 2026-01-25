@@ -3,8 +3,8 @@ import { BetSlider } from "@/app/trainers/postflop/_components/bet-slider";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/shadcn/button";
+import { Spinner } from "@/components/shadcn/spinner";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import {
   getHandsByStrength,
@@ -120,7 +120,7 @@ export const ActionArea = () => {
 
   return (
     <div className="">
-      <div className="mb-2 flex items-center justify-between px-3 text-muted-foreground text-xs">
+      <div className="flex items-center justify-between px-3 text-muted-foreground text-xs">
         <span>{villainStatus}</span>
         <div className="flex items-center gap-2">
           {minBetLabel && <span>{minBetLabel}</span>}
@@ -174,7 +174,7 @@ export const ActionArea = () => {
         )}
       </div>
 
-      <div className="flex justify-center gap-4 p-2">
+      <div className="flex justify-end gap-4 pt-2">
         <HandRangeDrawer
           mark={toHandSymbol(hero)}
           disabled={street === "preflop"}

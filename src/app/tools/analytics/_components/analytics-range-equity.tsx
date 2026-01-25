@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RangeTable } from "@/components/range-table";
-import { Slider } from "@/components/ui/slider";
-import { TabsContent } from "@/components/ui/tabs";
+import { Slider } from "@/components/shadcn/slider";
+import { TabsContent } from "@/components/shadcn/tabs";
 import type { RangeEquityEntry } from "@/lib/wasm/types";
 import { toHandSymbol } from "@/utils/hand-range";
 
@@ -44,8 +44,11 @@ export const AnalyticsRangeEquity = ({
     .filter((entry) => entry.prob * 100 >= equity);
 
   const eqAve =
-    rangeEquity.reduce((acc, entry) => acc + entry.equity, 0) /
-    rangeEquity.length;
+    data.length > 0
+      ? data
+          .filter((entry) => entry.prob * 100 >= equity)
+          .reduce((acc, entry) => acc + entry.prob, 0) / data.length
+      : 0;
 
   return (
     <TabsContent

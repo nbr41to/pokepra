@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/shadcn/button";
+import { ButtonGroup } from "@/components/shadcn/button-group";
+import { Label } from "@/components/shadcn/label";
 import initialOpenRanges from "@/data/initial-open-ranges.json";
 import { cn } from "@/lib/utils";
 import { CARD_RANK_ORDER, CARD_RANKS } from "@/utils/card";

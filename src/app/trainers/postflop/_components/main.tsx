@@ -19,7 +19,7 @@ export default function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="w-full">
+    <div className="mt-auto w-full">
       <CommunityBoard />
       <ConfirmPosition />
       <ResultArea />

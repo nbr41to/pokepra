@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/shadcn/button";
+import { Slider } from "@/components/shadcn/slider";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import { cn } from "@/lib/utils";

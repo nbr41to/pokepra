@@ -32,6 +32,16 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_multi_hand_equity?: (
+    handsPtr: number,
+    handsLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_rank_distribution?: (
     handsPtr: number,
     handsLen: number,
@@ -198,6 +208,15 @@ export type EquityPayload = {
   data: EquityEntry[];
 };
 
+export type MultiHandEquityEntry = {
+  hand: string;
+  equity: number;
+};
+
+export type MultiHandEquityPayload = {
+  data: MultiHandEquityEntry[];
+};
+
 export type RangeEquityEntry = {
   hand: string;
   equity: number;
@@ -231,6 +250,14 @@ export type SimulateWithProgressParams = SimulateParams & {
 };
 
 export type RankDistributionParams = {
+  hands: string[][];
+  board: string[];
+  trials: number;
+  seed?: bigint;
+  wasmUrl?: string;
+};
+
+export type MultiHandEquityParams = {
   hands: string[][];
   board: string[];
   trials: number;

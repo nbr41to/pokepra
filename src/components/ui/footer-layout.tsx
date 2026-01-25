@@ -2,7 +2,7 @@ import { BookText, Calculator, Gamepad2, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
+import { Button } from "../shadcn/button";
 
 type Props = {
   menuName: "trainers" | "tools" | "tips" | "settings";
@@ -13,8 +13,8 @@ export const FooterLayout = ({ menuName, className }: Props) => {
   return (
     <ViewTransition name={menuName}>
       <Button
-        className={cn("rounded-full bg-background", className)}
-        variant="outline"
+        className={cn("rounded-full border shadow", className)}
+        variant="secondary"
         size="icon-lg"
         asChild
       >

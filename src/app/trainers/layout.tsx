@@ -1,4 +1,5 @@
-import { FooterLayout } from "@/components/footer-layout";
+import { FooterLayout } from "@/components/ui/footer-layout";
+import { PageLayout } from "@/components/ui/page-layout";
 
 export default function Layout({
   children,
@@ -6,9 +7,12 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <PageLayout className="p-2 pb-0">
       {children}
-      <FooterLayout menuName="trainers" className="fixed bottom-2 left-4" />
-    </>
+      <FooterLayout
+        menuName="trainers"
+        className="fixed bottom-2 left-4 z-10"
+      />
+    </PageLayout>
   );
 }

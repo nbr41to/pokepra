@@ -12,8 +12,8 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
-import { TabsContent } from "@/components/ui/tabs";
+} from "@/components/shadcn/chart";
+import { TabsContent } from "@/components/shadcn/tabs";
 import type { CombinedPayload, RangeVsRangePayload } from "@/lib/wasm/types";
 
 const chartConfig = {

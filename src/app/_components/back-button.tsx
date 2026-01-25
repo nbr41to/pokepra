@@ -3,7 +3,7 @@
 import { ChevronsLeft } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 
 export const BackButton = () => {
   const pathname = usePathname();

@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { PlayCard } from "@/components/play-card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcn/button";
+import { ScrollArea } from "@/components/shadcn/scroll-area";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import { cn } from "@/lib/utils";

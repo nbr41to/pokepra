@@ -3,7 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { PlayCard } from "@/components/play-card";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import type { BoardCondition } from "@/utils/board";

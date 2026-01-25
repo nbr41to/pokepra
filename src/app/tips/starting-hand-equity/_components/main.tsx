@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/shadcn/button";
+import { Progress } from "@/components/shadcn/progress";
 import preflopHandRanking from "@/data/preflop-hand-ranking.json";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";

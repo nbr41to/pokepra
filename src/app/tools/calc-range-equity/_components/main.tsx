@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { InputBoard } from "@/components/input-board";
 import { SelectPosition } from "@/components/select-position";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/shadcn/button";
+import { Label } from "@/components/shadcn/label";
+import { Progress } from "@/components/shadcn/progress";
 import INITIAL_OPEN_RANGES from "@/data/initial-open-ranges.json";
 import { cn } from "@/lib/utils";
 import { simulateRangeVsRangeEquityWithProgress } from "@/lib/wasm/simulation";

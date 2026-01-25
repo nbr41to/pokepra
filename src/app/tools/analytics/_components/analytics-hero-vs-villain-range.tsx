@@ -1,5 +1,5 @@
 import { EquityChart } from "@/components/analytics-sheet/equity-chart";
-import { TabsContent } from "@/components/ui/tabs";
+import { TabsContent } from "@/components/shadcn/tabs";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 
 type Props = {

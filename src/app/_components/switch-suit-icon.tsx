@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SuitIcon } from "@/components/ui/suit-icon";
+import { SuitIcon } from "@/components/suit-icon";
 import { cn } from "@/lib/utils";
 import {
   SUIT_MATCH_EVENT,

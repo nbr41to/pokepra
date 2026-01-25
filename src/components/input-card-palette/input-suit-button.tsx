@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import type { CARD_SUIT } from "@/utils/card";
-import { SuitIcon } from "../ui/suit-icon";
+import { SuitIcon } from "../suit-icon";
 
 type Props = {
   suit: CARD_SUIT;

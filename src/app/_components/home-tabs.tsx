@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Tabs } from "@/components/ui/tabs";
+import { Tabs } from "@/components/shadcn/tabs";
 import { FooterTablist } from "./footer-navigation";
 import { IntroductionContent } from "./introduction/introduction-content";
 import {

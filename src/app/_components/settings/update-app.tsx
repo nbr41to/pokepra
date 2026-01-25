@@ -6,7 +6,7 @@ import {
   HOME_TAB_KEY,
   HOME_WINDOW_SCROLL_KEY,
 } from "@/app/_components/restore-home-scroll";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 
 export function UpdateApp() {
   const reloadApp = async () => {

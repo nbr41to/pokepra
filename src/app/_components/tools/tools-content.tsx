@@ -5,13 +5,10 @@ import {
   Diamond,
   Grid3X3,
   Percent,
+  UsersRound,
 } from "lucide-react";
-import Link from "next/link";
-import { HeaderTitle } from "@/components/header-title";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { TabsContent } from "@/components/ui/tabs";
-import { NavigationSection } from "../navigation-section";
+import { TabsContent } from "@/components/shadcn/tabs";
+import { PageTitle } from "@/components/ui/page-title";
 import { RichLinkCard } from "../rich-link-card";
 
 export function ToolsContent() {
@@ -27,17 +24,23 @@ export function ToolsContent() {
         strokeWidth={3}
         className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-orange-400 dark:text-orange-950"
       />
-      <HeaderTitle
+      <PageTitle
         title="Tools"
         description="便利なポーカー用ツールを集めました。"
       />
 
       <div className="w-full space-y-3 px-2 py-8">
         <RichLinkCard
-          href="/tools/calc-equities"
-          title="Calculate Equities"
-          description="指定したハンドとボードに対する勝率を計算します。"
+          href="/tools/calc-vs-range-equity"
+          title="Calculate Equity"
+          description="あなたのハンド・レンジと相手1人のレンジに対する勝率を計算できます。"
           icon={<Percent />}
+        />
+        <RichLinkCard
+          href="/tools/calc-multi-equity"
+          title="Calculate Multi Equity"
+          description="あなたのハンドと相手複数人のハンドに対する勝率を計算できます。"
+          icon={<UsersRound />}
         />
         <RichLinkCard
           href="/tools/calc-range-equity"
@@ -59,18 +62,10 @@ export function ToolsContent() {
         />
       </div>
 
-      <Separator />
-
+      {/* <Separator className="my-12" />
       <NavigationSection title="Experimental" description="開発中・試作">
-        <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/calc-hand-score">Hand Score</Link>
-          </Button>
-          <Button className="w-full" variant="outline" size="lg" asChild>
-            <Link href="/tools/range-setting">Range Setting</Link>
-          </Button>
-        </div>
-      </NavigationSection>
+        <div className="flex w-60 flex-col items-center justify-center gap-y-3"></div>
+      </NavigationSection> */}
     </TabsContent>
   );
 }

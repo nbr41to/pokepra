@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { HeaderTitle } from "@/components/header-title";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Slider } from "@/components/ui/slider";
+import { Input } from "@/components/shadcn/input";
+import { Label } from "@/components/shadcn/label";
+import { Separator } from "@/components/shadcn/separator";
+import { Slider } from "@/components/shadcn/slider";
+import { PageTitle } from "@/components/ui/page-title";
 
 export default function Page() {
   const [pot, setPot] = useState(100);
@@ -20,8 +20,8 @@ export default function Page() {
   const ev = (heroPct / 100) * (pot + betSize) - (villainPct / 100) * betSize;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-3xl flex-col gap-6 px-6 py-10">
-      <HeaderTitle title="ベットサイズと必要勝率" description="ポーカーは" />
+    <>
+      <PageTitle title="ベットサイズと必要勝率" description="ポーカーは" />
 
       <div className="space-y-2">
         <Label>ポットサイズ</Label>
@@ -97,6 +97,6 @@ export default function Page() {
           EV = 自分の勝率 × (ポット + ベット) - 相手の勝率 × ベット
         </p>
       </div>
-    </div>
+    </>
   );
 }

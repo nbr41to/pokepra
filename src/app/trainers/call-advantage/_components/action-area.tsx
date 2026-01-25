@@ -2,7 +2,7 @@ import { Eye, EyeClosed } from "lucide-react";
 import { AnalyticsSheet2 } from "@/components/analytics-sheet-2";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import { toHandSymbol } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 

@@ -25,7 +25,7 @@ export function Main() {
   if (!initialized || loading) return null;
 
   return (
-    <div className="relative w-full">
+    <div className="relative mt-auto w-full">
       <OtherPlayers />
       <ResultArea className="-mt-8" />
       <SituationInfoArea />

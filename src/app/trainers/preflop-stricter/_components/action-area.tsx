@@ -1,6 +1,6 @@
 import { LockIcon, LockOpen } from "lucide-react";
 import { HeroActionArea } from "@/components/hero-action-area";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import { useTrainerStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 

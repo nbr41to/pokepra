@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { InputCardPalette } from "./input-card-palette";
 import { PlayCard } from "./play-card";
-import { Button } from "./ui/button";
+import { Button } from "./shadcn/button";
 
 type Props = {
   value: string;

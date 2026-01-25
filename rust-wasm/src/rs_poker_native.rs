@@ -31,6 +31,117 @@ pub fn simulate_vs_list_equity(
   )
 }
 
+/// Multi-hand equity (3-6 players). Returns per-hand equity_scaled (1e6).
+/// Output per record: [card1, card2, equity_scaled].
+pub fn simulate_multi_hand_equity(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+) -> Result<Vec<(u32, u32, u32)>, String> {
+  let hands = parse_hands_min1(hands_str).ok_or("failed to parse hands")?;
+  if hands.len() < 3 || hands.len() > 6 {
+    return Err("hands must be between 3 and 6".into());
+  }
+  let board = parse_board(board_str).ok_or("failed to parse board")?;
+  if board.len() > 5 {
+    return Err("board must be <=5 cards".into());
+  }
+
+  let mut seen: HashSet<(u8, u8)> = HashSet::new();
+  for c in &board {
+    if !seen.insert((c.rank, c.suit)) {
+      return Err("duplicate cards detected in board".into());
+    }
+  }
+  for h in &hands {
+    if h[0].rank == h[1].rank && h[0].suit == h[1].suit {
+      return Err("duplicate cards inside a hand".into());
+    }
+    for c in h {
+      if !seen.insert((c.rank, c.suit)) {
+        return Err("duplicate cards detected across hands/board".into());
+      }
+    }
+  }
+
+  let missing_board = 5usize.saturating_sub(board.len());
+  let mut rng = Lcg64::new(seed);
+  let trials = trials.max(1);
+
+  let mut equity_shares = vec![0f64; hands.len()];
+  let mut plays = vec![0u32; hands.len()];
+
+  for _ in 0..trials {
+    let mut exclude = board.clone();
+    for hand in &hands {
+      exclude.push(hand[0]);
+      exclude.push(hand[1]);
+    }
+    let remaining_cards = 52usize.saturating_sub(exclude.len());
+    if remaining_cards < missing_board {
+      return Err("not enough cards to complete board".into());
+    }
+    let mut deck = build_deck(&exclude);
+    shuffle_slice(&mut deck, &mut rng);
+
+    let mut full_board = board.clone();
+    for i in 0..missing_board {
+      full_board.push(deck[i]);
+    }
+
+    let mut scores = Vec::with_capacity(hands.len());
+    for hand in &hands {
+      let cards = [
+        hand[0],
+        hand[1],
+        full_board[0],
+        full_board[1],
+        full_board[2],
+        full_board[3],
+        full_board[4],
+      ];
+      scores.push(best_of(&cards).encoded);
+    }
+
+    let mut max_score = scores[0];
+    for score in &scores {
+      if *score > max_score {
+        max_score = *score;
+      }
+    }
+    let winners: Vec<usize> = scores
+      .iter()
+      .enumerate()
+      .filter(|(_, score)| **score == max_score)
+      .map(|(idx, _)| idx)
+      .collect();
+    let share = 1.0 / winners.len() as f64;
+
+    for play in &mut plays {
+      *play = play.saturating_add(1);
+    }
+    for winner in winners {
+      equity_shares[winner] += share;
+    }
+  }
+
+  let mut out = Vec::with_capacity(hands.len());
+  let scale = 1_000_000f64;
+  for (idx, hand) in hands.iter().enumerate() {
+    let encoded = decode_hand_pair(hand);
+    let plays_count = plays[idx] as f64;
+    let equity_scaled = if plays_count == 0.0 {
+      0
+    } else {
+      ((equity_shares[idx] / plays_count) * scale).round() as u32
+    };
+    out.push((encoded.0, encoded.1, equity_scaled));
+  }
+
+  Ok(out)
+}
+
 /// Range vs range equity. Returns per-hand equity for hero/villain.
 /// Output per record: [card1, card2, equity_scaled, role] (role: 0 hero, 1 villain).
 pub fn simulate_range_vs_range_equity(

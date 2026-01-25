@@ -20,12 +20,12 @@ export default function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="flex min-h-0 w-full flex-1 flex-col justify-between gap-y-2">
+    <div className="mt-auto flex min-h-0 w-full flex-col justify-between gap-y-2">
       <AnalyticsArea className="min-h-0 flex-1" />
       <div className="">
         <CommunityArea />
-        <HeroArea />
         <ConfirmPositionArea />
+        <HeroArea />
       </div>
     </div>
   );

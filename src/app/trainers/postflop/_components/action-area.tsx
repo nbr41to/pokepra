@@ -2,9 +2,9 @@ import { useState } from "react";
 import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
+import { Button } from "@/components/shadcn/button";
+import { Spinner } from "@/components/shadcn/spinner";
 import { SituationCopyButton } from "@/components/situation-copy-button";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   simulateVsListEquity,
   simulateVsListWithRanks,

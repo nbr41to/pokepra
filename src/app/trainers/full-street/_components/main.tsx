@@ -25,7 +25,7 @@ export default function Main() {
   if (!gameId) return null;
 
   return (
-    <div className="w-full space-y-2">
+    <div className="mt-auto w-full space-y-2">
       <FailureOverlay visible={stack <= 0} onRetry={handleInitialize} />
       <div className="mx-auto flex w-76">
         <VillainHand className="pb-16" />

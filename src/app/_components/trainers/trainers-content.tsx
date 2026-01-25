@@ -15,11 +15,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Combo } from "@/components/combo";
-import { HeaderTitle } from "@/components/header-title";
 import { PlayCard } from "@/components/play-card";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/shadcn/button";
+import { Separator } from "@/components/shadcn/separator";
+import { TabsContent } from "@/components/shadcn/tabs";
+import { PageTitle } from "@/components/ui/page-title";
 import { NavigationSection } from "../navigation-section";
 import { RichLinkCard } from "../rich-link-card";
 
@@ -36,7 +36,7 @@ export function TrainersContent() {
         strokeWidth={3}
         className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-blue-400 dark:text-blue-950"
       />
-      <HeaderTitle
+      <PageTitle
         title="Trainers"
         description="ゲームを通して確率を体感することができます。"
       />

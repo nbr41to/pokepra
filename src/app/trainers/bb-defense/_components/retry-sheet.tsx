@@ -4,9 +4,9 @@ import { Swords, X } from "lucide-react";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcn/button";
+import { Progress } from "@/components/shadcn/progress";
+import { ScrollArea } from "@/components/shadcn/scroll-area";
 import {
   Sheet,
   SheetClose,
@@ -16,7 +16,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
 import type { CombinedPayload, EquityPayload } from "@/lib/wasm/types";

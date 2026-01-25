@@ -4,6 +4,8 @@ import type {
   CombinedPayload,
   EquityPayload,
   MonteCarloTraceEntry,
+  MultiHandEquityParams,
+  MultiHandEquityPayload,
   OpenRangesParams,
   OpenRangesPayload,
   RangeVsRangeParams,
@@ -12,6 +14,7 @@ import type {
   RankDistributionParams,
   SimulateParams,
 } from "../types";
+import { runSimulateMultiHandEquity } from "./simulate-multi-hand-equity-core";
 import { runSimulateOpenRangesMonteCarlo } from "./simulate-open-ranges-monte-carlo-core";
 import {
   runSimulateRangeVsRangeEquity,
@@ -27,6 +30,7 @@ type SimulateResult =
   | EquityPayload
   | OpenRangesPayload
   | RangeVsRangePayload
+  | MultiHandEquityPayload
   | RankDistributionEntry[]
   | MonteCarloTraceEntry[];
 
@@ -39,6 +43,11 @@ type WorkerRequest =
     }
   | { id: number; type: "simulateVsListWithRanksTrace"; params: SimulateParams }
   | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
+  | {
+      id: number;
+      type: "simulateMultiHandEquity";
+      params: MultiHandEquityParams;
+    }
   | {
       id: number;
       type: "simulateVsListEquityWithProgress";
@@ -142,6 +151,16 @@ ctx.onmessage = async (event) => {
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
       const data = await runSimulateVsListEquity(params);
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateMultiHandEquity") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateMultiHandEquity(params);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;

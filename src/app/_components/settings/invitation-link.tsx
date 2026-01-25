@@ -3,15 +3,15 @@
 import { Copy, QrCode, X } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/shadcn/dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 export const InvitationLink = () => {
   const [lightLoaded, setLightLoaded] = useState(false);

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/shadcn/button";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { NavigationSection } from "../navigation-section";
 import { SuitConfettiOverlay } from "../suit-confetti-overlay";
 import { SwitchSuitIcon } from "../switch-suit-icon";

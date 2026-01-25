@@ -9,7 +9,7 @@ import {
   SelectLabel,
   SelectSeparator,
   SelectTrigger,
-} from "@/components/ui/select";
+} from "@/components/shadcn/select";
 import { type BoardCondition, generateBoardByConditions } from "@/utils/board";
 import { toCardsString } from "@/utils/card";
 import { InputCards } from "./input-cards";

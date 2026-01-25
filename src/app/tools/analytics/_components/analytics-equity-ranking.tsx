@@ -1,6 +1,6 @@
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
-import { TabsContent } from "@/components/ui/tabs";
+import { TabsContent } from "@/components/shadcn/tabs";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/types";
 

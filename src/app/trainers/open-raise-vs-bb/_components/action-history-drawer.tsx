@@ -1,5 +1,5 @@
 import { ScrollText, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn/button";
 import {
   Drawer,
   DrawerClose,
@@ -9,7 +9,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/components/shadcn/drawer";
 import { cn } from "@/lib/utils";
 
 export type ActionHistoryEntry = {

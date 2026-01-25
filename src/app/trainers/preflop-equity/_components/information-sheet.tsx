@@ -3,8 +3,8 @@
 import { CircleQuestionMark, X } from "lucide-react";
 import Link from "next/link";
 import { Combo } from "@/components/combo";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcn/button";
+import { ScrollArea } from "@/components/shadcn/scroll-area";
 import {
   Sheet,
   SheetClose,
@@ -14,7 +14,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import { VillainHands } from "./villain-hands";
 

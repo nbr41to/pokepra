@@ -1,8 +1,8 @@
 import { BookText, Club } from "lucide-react";
 import Link from "next/link";
-import { HeaderTitle } from "@/components/header-title";
-import { Button } from "@/components/ui/button";
-import { TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/shadcn/button";
+import { TabsContent } from "@/components/shadcn/tabs";
+import { PageTitle } from "@/components/ui/page-title";
 import { NavigationSection } from "../navigation-section";
 
 export function TipsContent() {
@@ -21,7 +21,7 @@ export function TipsContent() {
         strokeWidth={3}
         className="fixed bottom-20 left-2/5 -z-10 rotate-12 text-green-400 dark:text-green-950"
       />
-      <HeaderTitle
+      <PageTitle
         title="Tips"
         description="このアプリとポーカーに関する知識をまとめました。"
       />

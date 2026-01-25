@@ -5,9 +5,9 @@ import { useState } from "react";
 import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
 import { SelectPosition } from "@/components/select-position";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcn/button";
+import { Label } from "@/components/shadcn/label";
+import { ScrollArea } from "@/components/shadcn/scroll-area";
 import {
   Sheet,
   SheetClose,
@@ -17,7 +17,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
 import { toCardsArray, toCardsString } from "@/utils/card";
 import { useHoldemStore } from "./_utils/state";
