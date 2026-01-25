@@ -1,8 +1,8 @@
 import { ChartColumnStacked, ChartSpline, Crown, Grid3X3 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { EquityChartSkeleton } from "@/components/analytics-sheet/equity-chart.skeleton";
 import { Spinner } from "@/components/shadcn/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
+import { EquityReportSkeleton } from "@/features/analytics/reports/equity-report.skeleton";
 import { cn } from "@/lib/utils";
 import type {
   CombinedPayload,
@@ -60,7 +60,7 @@ export const AnalyticsArea = ({ className }: Props) => {
       >
         <div className="min-h-0 flex-1 overflow-y-scroll">
           <div className="flex min-h-full flex-col justify-end">
-            <EquityChartSkeleton />
+            <EquityReportSkeleton />
           </div>
         </div>
 

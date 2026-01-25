@@ -2,8 +2,6 @@
 
 import { ChevronDown, GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 import { useState } from "react";
-import { Combo } from "@/components/combo";
-import { HandProbability } from "@/components/hand-probability";
 import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
 import { InputHands } from "@/components/input-hands";
@@ -17,6 +15,10 @@ import {
 } from "@/components/shadcn/collapsible";
 import { Label } from "@/components/shadcn/label";
 import { Progress } from "@/components/shadcn/progress";
+import { ComboRankingReport } from "@/features/analytics/reports/combo-ranking-report";
+import { EquityDistributionReport } from "@/features/analytics/reports/equity-distribution-report";
+import { EquityReport } from "@/features/analytics/reports/equity-report";
+import { RangeEquitiesReport } from "@/features/analytics/reports/range-equities-report";
 import { cn } from "@/lib/utils";
 import {
   evaluateHandsRanking,
@@ -29,7 +31,6 @@ import {
   getRangeStrengthByPosition,
   toHandSymbol,
 } from "@/utils/hand-range";
-import { getPositionLabel } from "@/utils/position";
 import { getSettingOpenRange } from "@/utils/setting";
 
 const splitCards = (val: string) => {
@@ -59,13 +60,12 @@ export function Main({
   const [result, setResult] = useState<Awaited<
     ReturnType<typeof simulateVsListWithRanks>
   > | null>(null);
+  const [rankingResult, setRankingResult] = useState<Awaited<
+    ReturnType<typeof evaluateHandsRanking>
+  > | null>(null);
   const [rangeResult, setRangeResult] = useState<Awaited<
     ReturnType<typeof simulateRangeVsRangeEquityWithProgress>
   > | null>(null);
-  const [rangeLabel, setRangeLabel] = useState<{
-    hero: string;
-    villain: string;
-  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
 
@@ -97,7 +97,6 @@ export function Main({
     setLoading(true);
     setProgress(0);
     setRangeResult(null);
-    setRangeLabel(null);
 
     try {
       const heroHands = hero.split(" ");
@@ -142,21 +141,8 @@ export function Main({
         : result;
 
       setResult(sortedResult);
+      setRankingResult(ranking);
       setRangeResult(rangeAnalysis);
-
-      if (rangeAnalysis) {
-        const heroRange = resolveHeroRange(heroHands, heroPosition);
-        const heroLabel =
-          heroPosition > 0
-            ? `Hero: ${getPositionLabel(heroPosition, 9)}`
-            : "Hero: Auto";
-        setRangeLabel({
-          hero: heroRange ? `${heroLabel} (${heroRange})` : heroLabel,
-          villain: "Villain: Custom",
-        });
-      } else {
-        setRangeLabel(null);
-      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -279,99 +265,31 @@ export function Main({
       ) : null}
 
       {/* Results */}
-      {result && (
-        <div className="space-y-1">
-          {rangeResult && (
-            <div className="space-y-1 rounded-lg border border-muted-foreground/20 bg-muted/30 p-3 text-sm">
-              <p className="font-semibold">Range Analysis</p>
-              {rangeLabel && (
-                <div className="text-muted-foreground text-xs">
-                  <div>{rangeLabel.hero}</div>
-                  <div>{rangeLabel.villain}</div>
-                </div>
-              )}
-              <div>
-                Range EQ:{" "}
-                {(
-                  rangeResult.hero.reduce((sum, r) => sum + r.equity * 100, 0) /
-                  (rangeResult.hero.length || 1)
-                ).toFixed(2)}
-                %
-              </div>
-              <div>
-                勝率が50%を上回っている割合:{" "}
-                {(
-                  (rangeResult.hero.filter((r) => r.equity > 0.5).length /
-                    (rangeResult.hero.length || 1)) *
-                  100
-                ).toFixed(2)}
-                %
-              </div>
-            </div>
-          )}
-          <div>{result.data.length} combos</div>
-          <div className="divide-y">
-            {result.data.map(
-              ({ hand, win, tie, lose, count, results }, index) => {
-                const equity = ((win + tie / 2) / count) * 100;
-
-                return (
-                  <div
-                    key={hand}
-                    id={hand}
-                    className={cn(
-                      "space-y-1 px-2 py-1",
-                      result.hand === hand &&
-                        "bg-orange-200 dark:bg-orange-900",
-                    )}
-                  >
-                    <div className="flex items-center gap-x-4">
-                      <div>
-                        {index + 1}.
-                        <span className="text-xs">
-                          (
-                          {(((index + 1) / result.data.length) * 100).toFixed(
-                            1,
-                          )}
-                          %)
-                        </span>
-                      </div>
-                      <Combo className="scale-80" hand={hand.split(" ")} />
-                      <div className="text-lg/[1]">
-                        {equity.toFixed(2)}%
-                        <br />
-                        <p className="text-sm">
-                          (win: {win}, tie: {tie}, lose: {lose})
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1">
-                      {Object.keys(results)
-                        .filter((name) => {
-                          const outcome = results[name as keyof typeof results];
-                          return outcome.win + outcome.tie > 0;
-                        })
-                        .map((name) => {
-                          const outcome = results[name as keyof typeof results];
-                          const total = outcome.win + outcome.tie;
-                          const probability = (total / count) * 100;
-
-                          return (
-                            <HandProbability
-                              key={name}
-                              className=""
-                              handName={name}
-                              probability={probability}
-                            />
-                          );
-                        })}
-                    </div>
-                  </div>
-                );
-              },
-            )}
+      {result && rankingResult && rangeResult && (
+        <div className="mt-8 space-y-8">
+          <EquityReport result={result} />
+          <EquityDistributionReport
+            heroEquity={result}
+            rangeEquity={rangeResult}
+          />
+          <div>
+            <div>Hero range</div>
+            <RangeEquitiesReport
+              className="flex-col-reverse gap-y-2"
+              rangeEquity={rangeResult.villain}
+              hero={result.hand}
+            />
           </div>
+          <div>
+            <div>Villain range</div>
+            <RangeEquitiesReport
+              className="flex-col-reverse gap-y-2"
+              rangeEquity={rangeResult.hero}
+              hero={result.hand}
+            />
+          </div>
+          <div>{result.data.length} combos</div>
+          <ComboRankingReport result={result} ranking={rankingResult} />
 
           <div className="fixed right-4 bottom-4 flex flex-col gap-y-2 opacity-80">
             <Button

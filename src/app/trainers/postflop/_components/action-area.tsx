@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { SituationCopyButton } from "@/components/situation-copy-button";
-import {
-  simulateVsListEquity,
-  simulateVsListWithRanks,
-} from "@/lib/wasm/simulation";
+import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
+import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import {
   getHandsByStrength,
   getRangeStrengthByPosition,
@@ -57,16 +54,6 @@ export const ActionArea = () => {
     }
     setLoading(false);
   };
-
-  const rankPromise = simulateVsListWithRanks({
-    hero,
-    board,
-    compare: getHandsByStrength(getRangeStrengthByPosition(9), [
-      ...hero,
-      ...board,
-    ]),
-    trials: 1000,
-  });
 
   const disabled =
     (street === "flop" && !!flop) ||
@@ -120,8 +107,9 @@ export const ActionArea = () => {
       <div className="flex justify-center gap-4 px-2 py-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet
+          hero={hero}
           board={board}
-          rankPromise={rankPromise}
+          comparePosition={2} // BB
           disabled={disabledAnalysis}
         />
         <SituationCopyButton hero={hero} board={board} />

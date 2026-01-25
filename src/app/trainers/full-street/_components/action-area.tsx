@@ -1,17 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AnalyticsSheet } from "@/components/analytics-sheet";
+import { useState } from "react";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import {
-  getHandsByStrength,
-  getRangeStrengthByPosition,
-  toHandSymbol,
-} from "@/utils/hand-range";
-import { SituationCopyButton } from "../../../../components/situation-copy-button";
+import { SituationCopyButton } from "@/components/situation-copy-button";
+import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
+import { toHandSymbol } from "@/utils/hand-range";
 import { useHoldemStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 
@@ -29,10 +23,6 @@ export const ActionArea = () => {
   } = useHoldemStore();
 
   const [loading, setLoading] = useState(false);
-  const [analyticsOpen, setAnalyticsOpen] = useState(false);
-  const [rankPromise, setRankPromise] =
-    useState<Promise<CombinedPayload> | null>(null);
-  const rankPromiseCache = useRef(new Map<string, Promise<CombinedPayload>>());
 
   const handleOnFold = async () => {
     if (street === "preflop") {
@@ -53,30 +43,6 @@ export const ActionArea = () => {
       setLoading(false);
     }
   };
-
-  const compareHands = useMemo(
-    () =>
-      getHandsByStrength(getRangeStrengthByPosition(2), [...hero, ...board]),
-    [hero, board],
-  );
-
-  useEffect(() => {
-    if (!analyticsOpen) return;
-    const cacheKey = `${hero.join("-")}|${board.join("-")}`;
-    const cached = rankPromiseCache.current.get(cacheKey);
-    if (cached) {
-      setRankPromise(cached);
-      return;
-    }
-    const nextPromise = simulateVsListWithRanks({
-      hero,
-      board,
-      compare: compareHands,
-      trials: 1000,
-    });
-    rankPromiseCache.current.set(cacheKey, nextPromise);
-    setRankPromise(nextPromise);
-  }, [analyticsOpen, hero, board, compareHands]);
 
   return (
     <div className="">
@@ -111,10 +77,10 @@ export const ActionArea = () => {
       <div className="flex justify-end gap-4 p-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
         <AnalyticsSheet
+          hero={hero}
           board={board}
-          rankPromise={rankPromise}
+          comparePosition={2} // BB想定
           disabled={street === "preflop" || board.length < 3}
-          onOpenChange={setAnalyticsOpen}
         />
         <SituationCopyButton hero={hero} board={board} />
         <InformationSheet />

@@ -1,14 +1,14 @@
-import { Skeleton } from "../shadcn/skeleton";
+import { Skeleton } from "@/components/shadcn/skeleton";
 
 type Props = {
   step?: number;
 };
 
-export const EquityChartSkeleton = ({ step = 10 }: Props) => {
+export const EquityReportSkeleton = ({ step = 10 }: Props) => {
   return (
-    <div>
+    <div className="w-full">
       <Skeleton className="mx-auto h-5 w-28 rounded-xs" />
-      <div className="mx-auto flex w-fit pt-4 pb-12">
+      <div className="mx-auto flex w-fit pt-4 pb-6">
         <Skeleton className="relative h-72 w-10 rounded-[3px] border border-gray-300 dark:border-gray-600" />
         <div className="relative -z-10 w-8">
           {Array.from({ length: 100 / step + 1 }).map((_, i) => (
@@ -27,6 +27,7 @@ export const EquityChartSkeleton = ({ step = 10 }: Props) => {
           ))}
         </div>
       </div>
+      <Skeleton className="mr-2 ml-auto h-4 w-40 rounded-xs" />
     </div>
   );
 };

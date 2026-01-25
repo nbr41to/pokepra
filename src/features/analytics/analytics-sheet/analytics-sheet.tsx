@@ -2,7 +2,8 @@
 
 import { ChartColumn } from "lucide-react";
 import { Suspense } from "react";
-
+import { PlayCard } from "@/components/play-card";
+import { Button } from "@/components/shadcn/button";
 import {
   Sheet,
   SheetContent,
@@ -11,35 +12,48 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/shadcn/sheet";
+import { EquityReportSkeleton } from "@/features/analytics/reports/equity-report.skeleton";
 import { cn } from "@/lib/utils";
 import {
-  type CombinedPayload,
   evaluateHandsRanking,
+  simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
 import { getAllCombos } from "@/utils/dealer";
-import { PlayCard } from "../play-card";
-import { Button } from "../shadcn/button";
+import {
+  getHandsByStrength,
+  getRangeStrengthByPosition,
+} from "@/utils/hand-range";
 import { AnalyticsReport } from "./analytics-report";
-import { EquityChartSkeleton } from "./equity-chart.skeleton";
 
 type Props = {
+  hero: string[];
   board: string[];
+  comparePosition: number;
   disabled?: boolean;
-  rankPromise?: Promise<CombinedPayload> | null;
   onOpenChange?: (open: boolean) => void;
   className?: string;
 };
 
 export const AnalyticsSheet = ({
+  hero,
   board,
+  comparePosition,
   disabled = false,
-  rankPromise,
   onOpenChange,
   className,
 }: Props) => {
   const evaluationPromise = evaluateHandsRanking({
     hands: getAllCombos(board),
     board: board,
+  });
+  const rankPromise = simulateVsListWithRanks({
+    hero,
+    board,
+    compare: getHandsByStrength(getRangeStrengthByPosition(comparePosition), [
+      ...hero,
+      ...board,
+    ]),
+    trials: 1000,
   });
 
   return (
@@ -73,7 +87,7 @@ export const AnalyticsSheet = ({
           <Suspense
             fallback={
               <div className="grid h-[calc(100dvh-120px)] place-content-center">
-                <EquityChartSkeleton />
+                <EquityReportSkeleton />
               </div>
             }
           >
@@ -84,7 +98,7 @@ export const AnalyticsSheet = ({
           </Suspense>
         ) : (
           <div className="grid h-[calc(100dvh-120px)] place-content-center">
-            <EquityChartSkeleton />
+            <EquityReportSkeleton />
           </div>
         )}
       </SheetContent>

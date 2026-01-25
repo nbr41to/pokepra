@@ -38,7 +38,7 @@ export function ToolsContent() {
         <RichLinkCard
           href="/tools/calc-vs-range-equity"
           title="Calculate Equity"
-          description="あなたのハンド・レンジと相手1人のレンジに対する勝率を計算できます。"
+          description="あなたのハンド・レンジと相手1人のレンジに対する分析ができます。"
           icon={<Percent />}
         />
         <RichLinkCard

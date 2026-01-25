@@ -1,5 +1,5 @@
-import { EquityChart } from "@/components/analytics-sheet/equity-chart";
 import { TabsContent } from "@/components/shadcn/tabs";
+import { EquityReport } from "@/features/analytics/reports/equity-report";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
 
 type Props = {
@@ -11,7 +11,7 @@ export const AnalyticsHeroVsVillainRange = ({ heroEquity }: Props) => {
       value="hero-equity"
       className="flex min-h-full flex-col justify-end"
     >
-      <EquityChart result={heroEquity} />
+      <EquityReport result={heroEquity} />
     </TabsContent>
   );
 };

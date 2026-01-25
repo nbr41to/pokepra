@@ -21,7 +21,11 @@ export default function Page() {
 
   return (
     <>
-      <PageTitle title="ベットサイズと必要勝率" description="ポーカーは" />
+      <PageTitle
+        title="ベットサイズと必要勝率"
+        description="ポットに対してどれくらいのベットをしたときに、どれくらいの勝率が必要になるかを計算します。これは、相手のベットに対して自分の勝率が足りているかや、自分がベットするときに相手に突きつける必要勝率の計算に使用できます。また、ついでにそのときのEVも計算します。"
+        hidable
+      />
 
       <div className="space-y-2">
         <Label>ポットサイズ</Label>

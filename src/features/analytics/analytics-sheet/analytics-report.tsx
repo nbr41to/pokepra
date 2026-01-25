@@ -8,6 +8,9 @@ import {
   X,
 } from "lucide-react";
 import { use, useCallback, useRef, useState } from "react";
+import { SelectPosition } from "@/components/select-position";
+import { Button } from "@/components/shadcn/button";
+import { ScrollArea } from "@/components/shadcn/scroll-area";
 import { SheetClose, SheetFooter } from "@/components/shadcn/sheet";
 import {
   Tabs,
@@ -15,14 +18,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn/tabs";
+import { ComboRankingReport } from "@/features/analytics/reports/combo-ranking-report";
+import { EquityReport } from "@/features/analytics/reports/equity-report";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
 import { expandStartingHands, toHandSymbol } from "@/utils/hand-range";
 import { getSettingOpenRange } from "@/utils/setting";
-import { SelectPosition } from "../select-position";
-import { Button } from "../shadcn/button";
-import { ScrollArea } from "../shadcn/scroll-area";
-import { ComboRanking } from "./combo-ranking";
-import { EquityChart } from "./equity-chart";
 
 type Props = {
   rankPromise: Promise<CombinedPayload>;
@@ -85,14 +85,15 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
         />
       </div>
       <TabsContent value="equity" className="grid place-items-center">
-        <EquityChart result={filteredResult} />
+        <EquityReport result={filteredResult} />
       </TabsContent>
       <TabsContent value="ranking">
         <ScrollArea
           ref={scrollAreaRef}
           className="h-[calc(100dvh-140px)] w-full"
         >
-          <ComboRanking
+          <ComboRankingReport
+            className="pt-12 pb-24"
             result={filteredResult}
             ranking={ranking}
             onScroll={scrollToMyHand}

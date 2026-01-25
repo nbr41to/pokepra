@@ -1,8 +1,8 @@
 import { Eye, EyeClosed } from "lucide-react";
-import { AnalyticsSheet2 } from "@/components/analytics-sheet-2";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
+import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
 import { toHandSymbol } from "@/utils/hand-range";
 import { useActionStore } from "./_utils/state";
 
@@ -52,7 +52,7 @@ export const ActionArea = () => {
 
       <div className="flex justify-end gap-4 px-2 py-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
-        <AnalyticsSheet2
+        <AnalyticsSheet
           hero={hero}
           board={board}
           comparePosition={villainPosition}

@@ -1,15 +1,18 @@
 import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
+import { Combo } from "@/components/combo";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload } from "@/lib/wasm/simulation";
-import { Combo } from "../combo";
 
+/**
+ * hero vs range の勝率の分布チャート
+ */
 type Props = {
   result: CombinedPayload;
   step?: number;
 };
 
-export const EquityChart = ({ result, step = 10 }: Props) => {
+export const EquityReport = ({ result, step = 10 }: Props) => {
   const buckets = useMemo(
     () =>
       Array.from(

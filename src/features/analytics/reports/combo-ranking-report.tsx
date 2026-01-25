@@ -1,22 +1,30 @@
 import { useEffect } from "react";
 import { Combo } from "@/components/combo";
+import { HandProbability } from "@/components/hand-probability";
 import { cn } from "@/lib/utils";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
-import { HandProbability } from "../hand-probability";
 
 type Props = {
   result: CombinedPayload;
   ranking: HandRankingEntry[];
-  onScroll: () => void;
+  onScroll?: () => void;
+  className?: string;
 };
 
-export const ComboRanking = ({ result, ranking, onScroll }: Props) => {
+export const ComboRankingReport = ({
+  result,
+  ranking,
+  onScroll,
+  className,
+}: Props) => {
   useEffect(() => {
-    onScroll();
+    if (onScroll) {
+      onScroll();
+    }
   }, [onScroll]);
 
   return (
-    <div className="divide-y pt-12 pb-24">
+    <div className={cn("divide-y", className)}>
       {result.data
         .sort(
           (a, b) =>

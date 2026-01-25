@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Suspense } from "react";
-import { EquityChart } from "./equity-chart";
-import { EquityChartSkeleton } from "./equity-chart.skeleton";
-import example from "./example.json";
+import example from "../__mocks__/equity-report.json";
+import { EquityReport } from "./equity-report";
+import { EquityReportSkeleton } from "./equity-report.skeleton";
 
 const meta = {
-  component: EquityChart,
+  component: EquityReport,
   parameters: {
     layout: "centered",
   },
@@ -14,23 +14,23 @@ const meta = {
   args: {
     result: example,
   },
-} satisfies Meta<typeof EquityChart>;
+} satisfies Meta<typeof EquityReport>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <Suspense fallback={<EquityChartSkeleton />}>
-      <EquityChart result={example} />
+    <Suspense fallback={<EquityReportSkeleton />}>
+      <EquityReport result={example} />
     </Suspense>
   ),
 };
 
 export const Threshold20: Story = {
   render: () => (
-    <Suspense fallback={<EquityChartSkeleton step={20} />}>
-      <EquityChart result={example} step={20} />
+    <Suspense fallback={<EquityReportSkeleton step={20} />}>
+      <EquityReport result={example} step={20} />
     </Suspense>
   ),
 };

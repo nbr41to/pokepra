@@ -18,7 +18,7 @@ export const SituationCopyButton = ({ hero, board }: Props) => {
       disabled={board.length === 0}
     >
       <a
-        href={`/tools/calc-equities?board=${encodedBoard}&hero=${encodedHero}`}
+        href={`/tools/calc-vs-range-equity?hero=${encodedHero}&board=${encodedBoard}`}
         target="_blank"
         rel="noreferrer"
       >

@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { BetSlider } from "@/app/trainers/postflop/_components/bet-slider";
-import { AnalyticsSheet } from "@/components/analytics-sheet";
 import { HandRangeDrawer } from "@/components/hand-range-drawer/hand-range-drawer";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import {
-  getHandsByStrength,
-  getRangeStrengthByPosition,
-  toHandSymbol,
-} from "@/utils/hand-range";
+import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
+import { toHandSymbol } from "@/utils/hand-range";
 import { useOpenRaiseVsBbStore } from "./_utils/state";
 import { ActionHistoryDrawer } from "./action-history-drawer";
 import { SituationCopyButton } from "./situation-copy-button";
@@ -108,16 +103,6 @@ export const ActionArea = () => {
     setVillainLoading(false);
   };
 
-  const resultPromise = simulateVsListWithRanks({
-    hero,
-    board,
-    compare: getHandsByStrength(getRangeStrengthByPosition(9), [
-      ...hero,
-      ...board,
-    ]),
-    trials: 1000,
-  });
-
   return (
     <div className="">
       <div className="flex items-center justify-between px-3 text-muted-foreground text-xs">
@@ -184,8 +169,9 @@ export const ActionArea = () => {
           disabled={actionHistory.length === 0}
         />
         <AnalyticsSheet
+          hero={hero}
           board={board}
-          rankPromise={resultPromise}
+          comparePosition={2}
           disabled={street === "preflop" || board.length < 3}
         />
         <SituationCopyButton hero={hero} board={board} />
