@@ -42,6 +42,16 @@ export type WasmExports = {
     outPtr: number,
     outLen: number,
   ) => number;
+  simulate_multi_hand_equity_with_progress?: (
+    handsPtr: number,
+    handsLen: number,
+    boardPtr: number,
+    boardLen: number,
+    trials: number,
+    seed: bigint,
+    outPtr: number,
+    outLen: number,
+  ) => number;
   simulate_rank_distribution?: (
     handsPtr: number,
     handsLen: number,
@@ -263,6 +273,10 @@ export type MultiHandEquityParams = {
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
+};
+
+export type MultiHandEquityWithProgressParams = MultiHandEquityParams & {
+  onProgress?: (pct: number) => void;
 };
 
 export type RankDistributionWithProgressParams = RankDistributionParams & {

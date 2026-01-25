@@ -1,5 +1,5 @@
 import { DEFAULT_WASM_URL } from "../constants";
-import { createHeap, loadWasm } from "../loader";
+import { createHeap, loadWasm, setProgressListener } from "../loader";
 import type {
   MultiHandEquityEntry,
   MultiHandEquityParams,
@@ -8,26 +8,38 @@ import type {
 
 const SCALE = 1_000_000;
 
-export async function runSimulateMultiHandEquity({
-  hands,
-  board,
-  trials,
-  seed = 123456789n,
-  wasmUrl = DEFAULT_WASM_URL,
-}: MultiHandEquityParams): Promise<MultiHandEquityPayload> {
+export async function runSimulateMultiHandEquity(
+  {
+    hands,
+    board,
+    trials,
+    seed = 123456789n,
+    wasmUrl = DEFAULT_WASM_URL,
+  }: MultiHandEquityParams,
+  {
+    onProgress,
+    useProgressExport = false,
+  }: { onProgress?: (pct: number) => void; useProgressExport?: boolean } = {},
+): Promise<MultiHandEquityPayload> {
   const handsTrimmed = hands
     .map((hand) => hand.join(" ").trim())
     .filter(Boolean);
   const boardStr = board.join(" ");
 
-  if (handsTrimmed.length < 3 || handsTrimmed.length > 6 || board.length > 5) {
+  if (handsTrimmed.length < 2 || handsTrimmed.length > 6 || board.length > 5) {
     return { data: [] };
   }
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const simulate = exports.simulate_multi_hand_equity;
+  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const simulate = wantsProgress
+    ? exports.simulate_multi_hand_equity_with_progress
+    : exports.simulate_multi_hand_equity;
   if (typeof simulate !== "function") {
-    throw new Error("WASM export 'simulate_multi_hand_equity' not found");
+    const missing = wantsProgress
+      ? "simulate_multi_hand_equity_with_progress"
+      : "simulate_multi_hand_equity";
+    throw new Error(`WASM export '${missing}' not found`);
   }
 
   const { writeString, allocU32 } = createHeap(memory);
@@ -37,18 +49,28 @@ export async function runSimulateMultiHandEquity({
   const outLen = handsTrimmed.length * 3;
   const outPtr = allocU32(outLen);
 
-  const rc = simulate(
-    handsBuf.ptr,
-    handsBuf.len,
-    boardBuf.ptr,
-    boardBuf.len,
-    trials,
-    seed,
-    outPtr,
-    outLen,
-  );
+  let rc: number;
+  setProgressListener(onProgress ?? null);
+  try {
+    rc = simulate(
+      handsBuf.ptr,
+      handsBuf.len,
+      boardBuf.ptr,
+      boardBuf.len,
+      trials,
+      seed,
+      outPtr,
+      outLen,
+    );
+  } finally {
+    setProgressListener(null);
+  }
   if (rc < 0) {
-    throw new Error(`simulate_multi_hand_equity failed with code ${rc}`);
+    throw new Error(
+      wantsProgress
+        ? `simulate_multi_hand_equity_with_progress failed with code ${rc}`
+        : `simulate_multi_hand_equity failed with code ${rc}`,
+    );
   }
   if (rc === 0) {
     return { data: [] };

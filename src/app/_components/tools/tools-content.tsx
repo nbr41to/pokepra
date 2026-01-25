@@ -3,7 +3,6 @@ import {
   ChartSpline,
   Coins,
   Diamond,
-  Grid3X3,
   Percent,
   UsersRound,
 } from "lucide-react";
@@ -31,28 +30,22 @@ export function ToolsContent() {
 
       <div className="w-full space-y-3 px-2 py-8">
         <RichLinkCard
+          href="/tools/analytics"
+          title="Analytics"
+          description="分析のオールインワンツールです。"
+          icon={<ChartSpline />}
+        />
+        <RichLinkCard
           href="/tools/calc-vs-range-equity"
           title="Calculate Equity"
           description="あなたのハンド・レンジと相手1人のレンジに対する勝率を計算できます。"
           icon={<Percent />}
         />
         <RichLinkCard
-          href="/tools/calc-multi-equity"
+          href="/tools/calc-multi-equities"
           title="Calculate Multi Equity"
           description="あなたのハンドと相手複数人のハンドに対する勝率を計算できます。"
           icon={<UsersRound />}
-        />
-        <RichLinkCard
-          href="/tools/calc-range-equity"
-          title="Range Equity"
-          description="指定したボードに対してレンジ単位の勝率を計算します。"
-          icon={<Grid3X3 />}
-        />
-        <RichLinkCard
-          href="/tools/analytics"
-          title="Analytics"
-          description="分析のオールインワンツールです。"
-          icon={<ChartSpline />}
         />
         <RichLinkCard
           href="/tools/calc-bet-size"

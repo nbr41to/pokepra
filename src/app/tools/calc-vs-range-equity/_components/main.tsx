@@ -1,22 +1,36 @@
 "use client";
 
-import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
+import { ChevronDown, GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 import { useState } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
 import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
 import { InputHands } from "@/components/input-hands";
+import { SelectPosition } from "@/components/select-position";
 import { SetRangeHands } from "@/components/set-range-hands";
 import { Button } from "@/components/shadcn/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/shadcn/collapsible";
 import { Label } from "@/components/shadcn/label";
 import { Progress } from "@/components/shadcn/progress";
 import { cn } from "@/lib/utils";
 import {
   evaluateHandsRanking,
+  simulateRangeVsRangeEquityWithProgress,
   type simulateVsListWithRanks,
   simulateVsListWithRanksWithProgress,
 } from "@/lib/wasm/simulation";
+import {
+  expandStartingHands,
+  getRangeStrengthByPosition,
+  toHandSymbol,
+} from "@/utils/hand-range";
+import { getPositionLabel } from "@/utils/position";
+import { getSettingOpenRange } from "@/utils/setting";
 
 const splitCards = (val: string) => {
   if (!val) return [] as string[];
@@ -37,6 +51,7 @@ export function Main({
   board: initialBoard = "",
 }: Props) {
   const [hero, setHero] = useState(initialHero);
+  const [heroPosition, setHeroPosition] = useState<number>(0);
   const [board, setBoard] = useState(initialBoard);
   const [compare, setCompare] = useState(""); // 想定する相手のハンド ;区切り
 
@@ -44,40 +59,104 @@ export function Main({
   const [result, setResult] = useState<Awaited<
     ReturnType<typeof simulateVsListWithRanks>
   > | null>(null);
+  const [rangeResult, setRangeResult] = useState<Awaited<
+    ReturnType<typeof simulateRangeVsRangeEquityWithProgress>
+  > | null>(null);
+  const [rangeLabel, setRangeLabel] = useState<{
+    hero: string;
+    villain: string;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+
+  const resolveHeroRange = (heroHands: string[], position: number) => {
+    const ranges = getSettingOpenRange();
+    if (!ranges.length) return "";
+
+    if (position > 0) {
+      const strength = getRangeStrengthByPosition(position, 9);
+      if (strength > 0 && strength <= ranges.length) {
+        return ranges[strength - 1];
+      }
+    }
+
+    const heroSymbol = toHandSymbol(heroHands);
+    const expanded = ranges.map(expandStartingHands);
+    const index = expanded.findIndex((range) => range.includes(heroSymbol));
+    return index >= 0 ? ranges[index] : (ranges[0] ?? "");
+  };
+
+  const resolveCompareRange = (hands: string[][]) =>
+    hands
+      .filter((hand) => hand.length === 2)
+      .map((hand) => hand.join(""))
+      .join(",");
 
   const runSimulation = async () => {
     setError(null);
     setLoading(true);
     setProgress(0);
+    setRangeResult(null);
+    setRangeLabel(null);
 
     try {
       const heroHands = hero.split(" ");
       const compareHands = compare.split("; ").map((hand) => hand.split(" "));
-      const [result, ranking] = await Promise.all([
+
+      const boardCards = board.split(" ").filter(Boolean);
+      const [result, ranking, rangeAnalysis] = await Promise.all([
         simulateVsListWithRanksWithProgress({
           hero: heroHands,
-          board: board.split(" "),
+          board: boardCards,
           compare: compareHands,
           trials: 1000,
           onProgress: (pct) => setProgress(pct),
         }),
-        evaluateHandsRanking({
-          hands: [heroHands, ...compareHands],
-          board: board.split(" "),
-        }),
+        boardCards.length >= 3
+          ? evaluateHandsRanking({
+              hands: [heroHands, ...compareHands],
+              board: boardCards,
+            })
+          : Promise.resolve(null),
+        (async () => {
+          const heroRange = resolveHeroRange(heroHands, heroPosition);
+          const villainRange = resolveCompareRange(compareHands);
+          if (!heroRange || !villainRange) return null;
+          return simulateRangeVsRangeEquityWithProgress({
+            heroRange,
+            villainRange,
+            board: boardCards,
+            trials: 100,
+          });
+        })(),
       ]);
-      const sortedResult = {
-        ...result,
-        data: result.data.sort(
-          (a, b) =>
-            ranking.findIndex((r) => r.hand === a.hand) -
-            ranking.findIndex((r) => r.hand === b.hand),
-        ),
-      };
+      const sortedResult = ranking
+        ? {
+            ...result,
+            data: result.data.sort(
+              (a, b) =>
+                ranking.findIndex((r) => r.hand === a.hand) -
+                ranking.findIndex((r) => r.hand === b.hand),
+            ),
+          }
+        : result;
 
       setResult(sortedResult);
+      setRangeResult(rangeAnalysis);
+
+      if (rangeAnalysis) {
+        const heroRange = resolveHeroRange(heroHands, heroPosition);
+        const heroLabel =
+          heroPosition > 0
+            ? `Hero: ${getPositionLabel(heroPosition, 9)}`
+            : "Hero: Auto";
+        setRangeLabel({
+          hero: heroRange ? `${heroLabel} (${heroRange})` : heroLabel,
+          villain: "Villain: Custom",
+        });
+      } else {
+        setRangeLabel(null);
+      }
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -112,7 +191,7 @@ export function Main({
   return (
     <div className="w-full space-y-3">
       <div className="space-y-2 pb-6">
-        <div className="space-y-2">
+        <div className="space-y-3">
           <Label className="font-bold">
             <span>
               あなたのハンド<span className="text-muted-foreground">*</span>
@@ -125,6 +204,19 @@ export function Main({
             limit={2}
             banCards={usedCards}
           />
+          <Collapsible className="">
+            <CollapsibleTrigger className="flex w-full items-center justify-end text-muted-foreground text-xs data-[state=open]:[&>svg]:rotate-180">
+              自分のポジションハンドを設定
+              <ChevronDown className={cn("size-4 transition-transform")} />
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <SelectPosition
+                total={9}
+                value={heroPosition}
+                setValue={setHeroPosition}
+              />
+            </CollapsibleContent>
+          </Collapsible>
           <Label className="font-bold">ボード（0 ~ 5枚）</Label>
           <InputBoard
             value={board}
@@ -134,7 +226,7 @@ export function Main({
           />
           <Label className="font-bold">
             <span>
-              相手のハンド
+              相手のレンジ
               <span className="text-muted-foreground">*</span>（2枚以上）
             </span>
           </Label>
@@ -157,26 +249,24 @@ export function Main({
         />
       </div>
 
-      <div className="flex">
-        <Button
-          className="w-full rounded-full"
-          size="lg"
-          onClick={runSimulation}
-          disabled={
-            loading ||
-            splitCards(hero).length !== 2 ||
-            splitCards(compare).length < 1
-          }
-        >
-          {loading ? "Running..." : "Run Simulation"}
-        </Button>
+      <Button
+        className="w-full rounded-full"
+        size="lg"
+        onClick={runSimulation}
+        disabled={
+          loading ||
+          splitCards(hero).length !== 2 ||
+          splitCards(compare).length < 1
+        }
+      >
+        {loading ? "Running..." : "Run Simulation"}
+      </Button>
 
-        {error && (
-          <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
-            {error}
-          </div>
-        )}
-      </div>
+      {error && (
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 px-3 py-2 text-destructive text-sm">
+          {error}
+        </div>
+      )}
 
       {/* Progress */}
       {loading ? (
@@ -191,6 +281,34 @@ export function Main({
       {/* Results */}
       {result && (
         <div className="space-y-1">
+          {rangeResult && (
+            <div className="space-y-1 rounded-lg border border-muted-foreground/20 bg-muted/30 p-3 text-sm">
+              <p className="font-semibold">Range Analysis</p>
+              {rangeLabel && (
+                <div className="text-muted-foreground text-xs">
+                  <div>{rangeLabel.hero}</div>
+                  <div>{rangeLabel.villain}</div>
+                </div>
+              )}
+              <div>
+                Range EQ:{" "}
+                {(
+                  rangeResult.hero.reduce((sum, r) => sum + r.equity * 100, 0) /
+                  (rangeResult.hero.length || 1)
+                ).toFixed(2)}
+                %
+              </div>
+              <div>
+                勝率が50%を上回っている割合:{" "}
+                {(
+                  (rangeResult.hero.filter((r) => r.equity > 0.5).length /
+                    (rangeResult.hero.length || 1)) *
+                  100
+                ).toFixed(2)}
+                %
+              </div>
+            </div>
+          )}
           <div>{result.data.length} combos</div>
           <div className="divide-y">
             {result.data.map(

@@ -39,9 +39,29 @@ pub fn simulate_multi_hand_equity(
   trials: u32,
   seed: u64,
 ) -> Result<Vec<(u32, u32, u32)>, String> {
+  simulate_multi_hand_equity_inner::<fn(u32)>(hands_str, board_str, trials, seed, None)
+}
+
+pub fn simulate_multi_hand_equity_with_progress<F: FnMut(u32)>(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32)>, String> {
+  simulate_multi_hand_equity_inner(hands_str, board_str, trials, seed, progress)
+}
+
+fn simulate_multi_hand_equity_inner<F: FnMut(u32)>(
+  hands_str: &str,
+  board_str: &str,
+  trials: u32,
+  seed: u64,
+  mut progress: Option<F>,
+) -> Result<Vec<(u32, u32, u32)>, String> {
   let hands = parse_hands_min1(hands_str).ok_or("failed to parse hands")?;
-  if hands.len() < 3 || hands.len() > 6 {
-    return Err("hands must be between 3 and 6".into());
+  if hands.len() < 2 || hands.len() > 6 {
+    return Err("hands must be between 2 and 6".into());
   }
   let board = parse_board(board_str).ok_or("failed to parse board")?;
   if board.len() > 5 {
@@ -68,6 +88,20 @@ pub fn simulate_multi_hand_equity(
   let missing_board = 5usize.saturating_sub(board.len());
   let mut rng = Lcg64::new(seed);
   let trials = trials.max(1);
+  let total_work = trials as u64;
+  let mut completed = 0u64;
+  let mut last_progress: Option<u32> = None;
+  let mut update_progress = |done: u64| {
+    if let Some(cb) = progress.as_mut() {
+      let pct = ((done.saturating_mul(100)) / total_work.max(1)) as u32;
+      let clamped = pct.min(100);
+      if last_progress != Some(clamped) {
+        last_progress = Some(clamped);
+        cb(clamped);
+      }
+    }
+  };
+  update_progress(0);
 
   let mut equity_shares = vec![0f64; hands.len()];
   let mut plays = vec![0u32; hands.len()];
@@ -124,6 +158,9 @@ pub fn simulate_multi_hand_equity(
     for winner in winners {
       equity_shares[winner] += share;
     }
+
+    completed = completed.saturating_add(1);
+    update_progress(completed);
   }
 
   let mut out = Vec::with_capacity(hands.len());
@@ -139,6 +176,7 @@ pub fn simulate_multi_hand_equity(
     out.push((encoded.0, encoded.1, equity_scaled));
   }
 
+  update_progress(total_work);
   Ok(out)
 }
 

@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <PageLayout>
       {children}
-      <FooterLayout menuName="tips" className="fixed bottom-6 left-4" />
+      <FooterLayout menuName="tips" className="fixed bottom-6 left-4 z-10" />
     </PageLayout>
   );
 }

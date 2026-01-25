@@ -8,6 +8,7 @@ mod sim;
 use rs_poker_native::{
   parse_range_to_hands as parse_range_to_hands_internal,
   simulate_multi_hand_equity as simulate_multi_hand_equity_internal,
+  simulate_multi_hand_equity_with_progress as simulate_multi_hand_equity_with_progress_internal,
   simulate_open_ranges_monte_carlo as simulate_open_ranges_monte_carlo_internal,
   simulate_range_vs_range_equity as simulate_range_vs_range_equity_internal,
   simulate_range_vs_range_equity_with_progress as simulate_range_vs_range_equity_with_progress_internal,
@@ -781,6 +782,40 @@ pub extern "C" fn simulate_multi_hand_equity(
     out_len,
     |hands_str, board_str| {
       simulate_multi_hand_equity_internal(hands_str, board_str, trials, seed).map_err(|_| -5)
+    },
+  )
+}
+
+/// Multi-hand equity with progress. Emits progress via `report_progress`.
+#[no_mangle]
+pub extern "C" fn simulate_multi_hand_equity_with_progress(
+  hands_ptr: *const u8,
+  hands_len: usize,
+  board_ptr: *const u8,
+  board_len: usize,
+  trials: u32,
+  seed: u64,
+  out_ptr: *mut u32,
+  out_len: usize,
+) -> i32 {
+  run_multi_equity(
+    hands_ptr,
+    hands_len,
+    board_ptr,
+    board_len,
+    trials,
+    seed,
+    out_ptr,
+    out_len,
+    |hands_str, board_str| {
+      simulate_multi_hand_equity_with_progress_internal(
+        hands_str,
+        board_str,
+        trials,
+        seed,
+        Some(|p| emit_progress(p)),
+      )
+      .map_err(|_| -5)
     },
   )
 }

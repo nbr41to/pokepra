@@ -1,5 +1,9 @@
 export { DEFAULT_WASM_URL } from "./constants";
 export {
+  simulateMultiHandEquity,
+  simulateMultiHandEquityWithProgress,
+} from "./simulation/simulate-multi-hand-equity";
+export {
   simulateOpenRangesMonteCarlo,
   simulateOpenRangesMonteCarloWithProgress,
 } from "./simulation/simulate-open-ranges-monte-carlo";
@@ -28,6 +32,10 @@ export type {
   EvaluateHandsRankingParams,
   HandRankingEntry,
   MonteCarloTraceEntry,
+  MultiHandEquityEntry,
+  MultiHandEquityParams,
+  MultiHandEquityPayload,
+  MultiHandEquityWithProgressParams,
   OpenRangesParams,
   OpenRangesPayload,
   OpenRangesWithProgressParams,

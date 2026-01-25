@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Info, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "../shadcn/button";
@@ -14,7 +14,17 @@ type Props = {
 export const PageTitle = ({ title, description, hidable = false }: Props) => {
   const [hidden, setHidden] = useState(false);
 
-  if (hidden) return <div className="size-0" />;
+  if (hidden)
+    return (
+      <Button
+        className="fixed top-0 left-0 z-10"
+        size="icon-sm"
+        variant="ghost"
+        onClick={() => setHidden(false)}
+      >
+        <Info />
+      </Button>
+    );
 
   return (
     <div className="grid w-full place-content-center p-2">

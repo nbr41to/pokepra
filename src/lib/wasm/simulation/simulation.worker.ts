@@ -50,6 +50,11 @@ type WorkerRequest =
     }
   | {
       id: number;
+      type: "simulateMultiHandEquityWithProgress";
+      params: MultiHandEquityParams;
+    }
+  | {
+      id: number;
       type: "simulateVsListEquityWithProgress";
       params: SimulateParams;
     }
@@ -161,6 +166,26 @@ ctx.onmessage = async (event) => {
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
       const data = await runSimulateMultiHandEquity(params);
+      const response: WorkerResponse = { id: message.id, type: "result", data };
+      ctx.postMessage(response);
+      return;
+    }
+    if (message.type === "simulateMultiHandEquityWithProgress") {
+      const params =
+        message.params.seed === undefined
+          ? { ...message.params, seed: createRandomSeed() }
+          : message.params;
+      const data = await runSimulateMultiHandEquity(params, {
+        useProgressExport: true,
+        onProgress: (pct) => {
+          const response: WorkerResponse = {
+            id: message.id,
+            type: "progress",
+            pct,
+          };
+          ctx.postMessage(response);
+        },
+      });
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
