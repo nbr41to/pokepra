@@ -31,7 +31,8 @@ export async function runSimulateMultiHandEquity(
   }
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const wantsProgress =
+    typeof onProgress === "function" && useProgressExport !== false;
   const simulate = wantsProgress
     ? exports.simulate_multi_hand_equity_with_progress
     : exports.simulate_multi_hand_equity;
@@ -50,7 +51,7 @@ export async function runSimulateMultiHandEquity(
   const outPtr = allocU32(outLen);
 
   let rc: number;
-  setProgressListener(onProgress ?? null);
+  setProgressListener(wantsProgress ? (onProgress ?? null) : null);
   try {
     rc = simulate(
       handsBuf.ptr,

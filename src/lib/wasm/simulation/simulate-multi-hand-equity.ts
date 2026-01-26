@@ -3,37 +3,35 @@ import {
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
 import { DEFAULT_WASM_URL } from "../constants";
-import type {
-  MultiHandEquityParams,
-  MultiHandEquityPayload,
-  MultiHandEquityWithProgressParams,
-} from "../types";
+import type { MultiHandEquityParams, MultiHandEquityPayload } from "../types";
 
-export async function simulateMultiHandEquity(
-  params: MultiHandEquityParams,
-): Promise<MultiHandEquityPayload> {
+type MultiHandEquityParamsWithOptionalProgress = MultiHandEquityParams & {
+  onProgress?: (pct: number) => void;
+};
+
+const runSimulateMultiHandEquity = async (
+  params: MultiHandEquityParamsWithOptionalProgress,
+): Promise<MultiHandEquityPayload> => {
+  const { onProgress, wasmUrl, ...rest } = params;
+  const wantsProgress = typeof onProgress === "function";
   const request = {
-    type: "simulateMultiHandEquity",
-    params: {
-      ...params,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
-    },
-  };
-
-  return runWorkerRequest<MultiHandEquityPayload>(request);
-}
-
-export async function simulateMultiHandEquityWithProgress(
-  params: MultiHandEquityWithProgressParams,
-): Promise<MultiHandEquityPayload> {
-  const { onProgress, ...rest } = params;
-  const request = {
-    type: "simulateMultiHandEquityWithProgress",
+    type: wantsProgress
+      ? "simulateMultiHandEquityWithProgress"
+      : "simulateMultiHandEquity",
     params: {
       ...rest,
-      wasmUrl: resolveWorkerWasmUrl(rest.wasmUrl, DEFAULT_WASM_URL),
+      wasmUrl: resolveWorkerWasmUrl(wasmUrl, DEFAULT_WASM_URL),
     },
   };
 
-  return runWorkerRequest<MultiHandEquityPayload>(request, { onProgress });
+  return runWorkerRequest<MultiHandEquityPayload>(
+    request,
+    wantsProgress ? { onProgress } : undefined,
+  );
+};
+
+export async function simulateMultiHandEquity(
+  params: MultiHandEquityParamsWithOptionalProgress,
+): Promise<MultiHandEquityPayload> {
+  return runSimulateMultiHandEquity(params);
 }

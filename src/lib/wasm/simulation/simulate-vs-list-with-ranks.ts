@@ -7,32 +7,36 @@ import type {
   CombinedPayload,
   MonteCarloTraceEntry,
   SimulateParams,
-  SimulateWithProgressParams,
 } from "../types";
 
-export async function simulateVsListWithRanks(params: SimulateParams) {
-  const request = {
-    type: "simulateVsListWithRanks",
-    params: {
-      ...params,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
-    },
-  };
-  return runWorkerRequest<CombinedPayload>(request);
-}
+type SimulateParamsWithOptionalProgress = SimulateParams & {
+  onProgress?: (pct: number) => void;
+};
 
-export async function simulateVsListWithRanksWithProgress(
-  params: SimulateWithProgressParams,
-): Promise<CombinedPayload> {
-  const { onProgress, ...rest } = params;
+const runSimulateVsListWithRanks = async (
+  params: SimulateParamsWithOptionalProgress,
+): Promise<CombinedPayload> => {
+  const { onProgress, wasmUrl, ...rest } = params;
+  const wantsProgress = typeof onProgress === "function";
   const request = {
-    type: "simulateVsListWithRanksWithProgress",
+    type: wantsProgress
+      ? "simulateVsListWithRanksWithProgress"
+      : "simulateVsListWithRanks",
     params: {
       ...rest,
-      wasmUrl: resolveWorkerWasmUrl(rest.wasmUrl, DEFAULT_WASM_URL),
+      wasmUrl: resolveWorkerWasmUrl(wasmUrl, DEFAULT_WASM_URL),
     },
   };
-  return runWorkerRequest<CombinedPayload>(request, { onProgress });
+  return runWorkerRequest<CombinedPayload>(
+    request,
+    wantsProgress ? { onProgress } : undefined,
+  );
+};
+
+export async function simulateVsListWithRanks(
+  params: SimulateParamsWithOptionalProgress,
+) {
+  return runSimulateVsListWithRanks(params);
 }
 
 export async function simulateVsListWithRanksTrace(

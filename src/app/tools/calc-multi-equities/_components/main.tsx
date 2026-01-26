@@ -7,7 +7,7 @@ import { InputHands } from "@/components/input-hands";
 import { Button } from "@/components/shadcn/button";
 import { Label } from "@/components/shadcn/label";
 import { Progress } from "@/components/shadcn/progress";
-import { simulateMultiHandEquityWithProgress } from "@/lib/wasm/simulation";
+import { simulateMultiHandEquity } from "@/lib/wasm/simulation";
 import { ResultsPieChart } from "./results-pie-chart";
 
 const splitCards = (val: string) => {
@@ -27,7 +27,7 @@ export function Main() {
 
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<Awaited<
-    ReturnType<typeof simulateMultiHandEquityWithProgress>
+    ReturnType<typeof simulateMultiHandEquity>
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -40,7 +40,7 @@ export function Main() {
     try {
       const heroHands = hero.split(" ");
       const compareHands = compare.split("; ").map((hand) => hand.split(" "));
-      const result = await simulateMultiHandEquityWithProgress({
+      const result = await simulateMultiHandEquity({
         hands: [heroHands, ...compareHands],
         board: board.split(" "),
         trials: 10000,

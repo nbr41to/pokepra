@@ -3,37 +3,35 @@ import {
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
 import { DEFAULT_WASM_URL } from "../constants";
-import type {
-  RangeVsRangeParams,
-  RangeVsRangePayload,
-  RangeVsRangeWithProgressParams,
-} from "../types";
+import type { RangeVsRangeParams, RangeVsRangePayload } from "../types";
 
-export async function simulateRangeVsRangeEquity(
-  params: RangeVsRangeParams,
-): Promise<RangeVsRangePayload> {
+type RangeVsRangeParamsWithOptionalProgress = RangeVsRangeParams & {
+  onProgress?: (pct: number) => void;
+};
+
+const runSimulateRangeVsRangeEquity = async (
+  params: RangeVsRangeParamsWithOptionalProgress,
+): Promise<RangeVsRangePayload> => {
+  const { onProgress, wasmUrl, ...rest } = params;
+  const wantsProgress = typeof onProgress === "function";
   const request = {
-    type: "simulateRangeVsRangeEquity",
-    params: {
-      ...params,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
-    },
-  } as const;
-
-  return runWorkerRequest<RangeVsRangePayload>(request);
-}
-
-export async function simulateRangeVsRangeEquityWithProgress(
-  params: RangeVsRangeWithProgressParams,
-): Promise<RangeVsRangePayload> {
-  const { onProgress, ...rest } = params;
-  const request = {
-    type: "simulateRangeVsRangeEquityWithProgress",
+    type: wantsProgress
+      ? "simulateRangeVsRangeEquityWithProgress"
+      : "simulateRangeVsRangeEquity",
     params: {
       ...rest,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
+      wasmUrl: resolveWorkerWasmUrl(wasmUrl, DEFAULT_WASM_URL),
     },
   } as const;
 
-  return runWorkerRequest<RangeVsRangePayload>(request, { onProgress });
+  return runWorkerRequest<RangeVsRangePayload>(
+    request,
+    wantsProgress ? { onProgress } : undefined,
+  );
+};
+
+export async function simulateRangeVsRangeEquity(
+  params: RangeVsRangeParamsWithOptionalProgress,
+): Promise<RangeVsRangePayload> {
+  return runSimulateRangeVsRangeEquity(params);
 }

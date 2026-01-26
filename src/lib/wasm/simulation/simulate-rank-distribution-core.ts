@@ -32,7 +32,8 @@ export async function runSimulateRankDistribution(
   }
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const wantsProgress =
+    typeof onProgress === "function" && useProgressExport !== false;
   const simulate = wantsProgress
     ? exports.simulate_rank_distribution_with_progress
     : exports.simulate_rank_distribution;
@@ -51,7 +52,7 @@ export async function runSimulateRankDistribution(
   const outPtr = allocU32(outLen);
 
   let rc: number;
-  setProgressListener(onProgress ?? null);
+  setProgressListener(wantsProgress ? (onProgress ?? null) : null);
   try {
     rc = simulate(
       handsBuf.ptr,

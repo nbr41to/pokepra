@@ -43,7 +43,8 @@ export async function runSimulateVsListWithRanks(
   const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const wantsProgress =
+    typeof onProgress === "function" && useProgressExport !== false;
   const simulate = wantsProgress
     ? exports.simulate_vs_list_with_ranks_with_progress
     : exports.simulate_vs_list_with_ranks;
@@ -72,7 +73,7 @@ export async function runSimulateVsListWithRanks(
   const outPtr = allocU32(outLen);
 
   let rc: number;
-  setProgressListener(onProgress ?? null);
+  setProgressListener(wantsProgress ? (onProgress ?? null) : null);
   try {
     rc = simulate(
       heroBuf.ptr,

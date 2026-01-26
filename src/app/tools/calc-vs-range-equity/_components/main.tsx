@@ -22,9 +22,8 @@ import { RangeEquitiesReport } from "@/features/analytics/reports/range-equities
 import { cn } from "@/lib/utils";
 import {
   evaluateHandsRanking,
-  simulateRangeVsRangeEquityWithProgress,
-  type simulateVsListWithRanks,
-  simulateVsListWithRanksWithProgress,
+  simulateRangeVsRangeEquity,
+  simulateVsListWithRanks,
 } from "@/lib/wasm/simulation";
 import {
   expandStartingHands,
@@ -64,7 +63,7 @@ export function Main({
     ReturnType<typeof evaluateHandsRanking>
   > | null>(null);
   const [rangeResult, setRangeResult] = useState<Awaited<
-    ReturnType<typeof simulateRangeVsRangeEquityWithProgress>
+    ReturnType<typeof simulateRangeVsRangeEquity>
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
@@ -104,7 +103,7 @@ export function Main({
 
       const boardCards = board.split(" ").filter(Boolean);
       const [result, ranking, rangeAnalysis] = await Promise.all([
-        simulateVsListWithRanksWithProgress({
+        simulateVsListWithRanks({
           hero: heroHands,
           board: boardCards,
           compare: compareHands,
@@ -121,7 +120,7 @@ export function Main({
           const heroRange = resolveHeroRange(heroHands, heroPosition);
           const villainRange = resolveCompareRange(compareHands);
           if (!heroRange || !villainRange) return null;
-          return simulateRangeVsRangeEquityWithProgress({
+          return simulateRangeVsRangeEquity({
             heroRange,
             villainRange,
             board: boardCards,

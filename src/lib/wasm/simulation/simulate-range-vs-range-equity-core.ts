@@ -5,10 +5,13 @@ import type {
   RangeEquityEntry,
   RangeVsRangeParams,
   RangeVsRangePayload,
-  RangeVsRangeWithProgressParams,
 } from "../types";
 
 const MAX_STARTING_HANDS = 1326;
+
+type RangeVsRangeParamsWithOptionalProgress = RangeVsRangeParams & {
+  onProgress?: (pct: number) => void;
+};
 
 export async function runSimulateRangeVsRangeEquity({
   heroRange,
@@ -17,26 +20,8 @@ export async function runSimulateRangeVsRangeEquity({
   trials,
   seed = 123456789n,
   wasmUrl = DEFAULT_WASM_URL,
-}: RangeVsRangeParams): Promise<RangeVsRangePayload> {
-  return runRangeVsRange({
-    heroRange,
-    villainRange,
-    board,
-    trials,
-    seed,
-    wasmUrl,
-  });
-}
-
-export async function runSimulateRangeVsRangeEquityWithProgress({
-  heroRange,
-  villainRange,
-  board,
-  trials,
-  seed = 123456789n,
-  wasmUrl = DEFAULT_WASM_URL,
   onProgress,
-}: RangeVsRangeWithProgressParams): Promise<RangeVsRangePayload> {
+}: RangeVsRangeParamsWithOptionalProgress): Promise<RangeVsRangePayload> {
   return runRangeVsRange(
     {
       heroRange,
@@ -46,7 +31,7 @@ export async function runSimulateRangeVsRangeEquityWithProgress({
       seed,
       wasmUrl,
     },
-    { onProgress, useProgressExport: true },
+    onProgress ? { onProgress, useProgressExport: true } : undefined,
   );
 }
 
@@ -74,7 +59,8 @@ async function runRangeVsRange(
   }
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const wantsProgress =
+    typeof onProgress === "function" && useProgressExport !== false;
   const simulate = wantsProgress
     ? exports.simulate_range_vs_range_equity_with_progress
     : exports.simulate_range_vs_range_equity;
@@ -94,7 +80,7 @@ async function runRangeVsRange(
   const outPtr = allocU32(outLen);
 
   let rc: number;
-  setProgressListener(onProgress ?? null);
+  setProgressListener(wantsProgress ? (onProgress ?? null) : null);
   try {
     rc = simulate(
       heroBuf.ptr,

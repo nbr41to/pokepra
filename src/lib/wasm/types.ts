@@ -263,10 +263,6 @@ export type SimulateParams = {
   };
 };
 
-export type SimulateWithProgressParams = SimulateParams & {
-  onProgress?: (pct: number) => void;
-};
-
 export type RankDistributionParams = {
   hands: string[][];
   board: string[];
@@ -283,14 +279,6 @@ export type MultiHandEquityParams = {
   wasmUrl?: string;
 };
 
-export type MultiHandEquityWithProgressParams = MultiHandEquityParams & {
-  onProgress?: (pct: number) => void;
-};
-
-export type RankDistributionWithProgressParams = RankDistributionParams & {
-  onProgress?: (pct: number) => void;
-};
-
 export type RangeVsRangeParams = {
   heroRange: string;
   villainRange: string;
@@ -298,10 +286,6 @@ export type RangeVsRangeParams = {
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
-};
-
-export type RangeVsRangeWithProgressParams = RangeVsRangeParams & {
-  onProgress?: (pct: number) => void;
 };
 
 export type ParseRangeParams = {
@@ -335,10 +319,6 @@ export type OpenRangesParams = {
   trials: number;
   seed?: bigint;
   wasmUrl?: string;
-};
-
-export type OpenRangesWithProgressParams = OpenRangesParams & {
-  onProgress?: (pct: number) => void;
 };
 
 export type OpenRangesPayload = {

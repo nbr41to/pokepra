@@ -3,33 +3,34 @@ import {
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
 import { DEFAULT_WASM_URL } from "../constants";
-import type {
-  RankDistributionEntry,
-  RankDistributionParams,
-  RankDistributionWithProgressParams,
-} from "../types";
+import type { RankDistributionEntry, RankDistributionParams } from "../types";
 
-export async function simulateRankDistribution(params: RankDistributionParams) {
-  const request = {
-    type: "simulateRankDistribution",
-    params: {
-      ...params,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
-    },
-  };
-  return runWorkerRequest<RankDistributionEntry[]>(request);
-}
+type RankDistributionParamsWithOptionalProgress = RankDistributionParams & {
+  onProgress?: (pct: number) => void;
+};
 
-export async function simulateRankDistributionWithProgress(
-  params: RankDistributionWithProgressParams,
-): Promise<RankDistributionEntry[]> {
-  const { onProgress, ...rest } = params;
+const runSimulateRankDistribution = async (
+  params: RankDistributionParamsWithOptionalProgress,
+): Promise<RankDistributionEntry[]> => {
+  const { onProgress, wasmUrl, ...rest } = params;
+  const wantsProgress = typeof onProgress === "function";
   const request = {
-    type: "simulateRankDistributionWithProgress",
+    type: wantsProgress
+      ? "simulateRankDistributionWithProgress"
+      : "simulateRankDistribution",
     params: {
       ...rest,
-      wasmUrl: resolveWorkerWasmUrl(rest.wasmUrl, DEFAULT_WASM_URL),
+      wasmUrl: resolveWorkerWasmUrl(wasmUrl, DEFAULT_WASM_URL),
     },
   };
-  return runWorkerRequest<RankDistributionEntry[]>(request, { onProgress });
+  return runWorkerRequest<RankDistributionEntry[]>(
+    request,
+    wantsProgress ? { onProgress } : undefined,
+  );
+};
+
+export async function simulateRankDistribution(
+  params: RankDistributionParamsWithOptionalProgress,
+) {
+  return runSimulateRankDistribution(params);
 }

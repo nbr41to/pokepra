@@ -16,10 +16,7 @@ import type {
 } from "../types";
 import { runSimulateMultiHandEquity } from "./simulate-multi-hand-equity-core";
 import { runSimulateOpenRangesMonteCarlo } from "./simulate-open-ranges-monte-carlo-core";
-import {
-  runSimulateRangeVsRangeEquity,
-  runSimulateRangeVsRangeEquityWithProgress,
-} from "./simulate-range-vs-range-equity-core";
+import { runSimulateRangeVsRangeEquity } from "./simulate-range-vs-range-equity-core";
 import { runSimulateRankDistribution } from "./simulate-rank-distribution-core";
 import { runSimulateVsListEquity } from "./simulate-vs-list-equity-core";
 import { runSimulateVsListWithRanks } from "./simulate-vs-list-with-ranks-core";
@@ -262,7 +259,7 @@ ctx.onmessage = async (event) => {
         message.params.seed === undefined
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
-      const data = await runSimulateRangeVsRangeEquityWithProgress({
+      const data = await runSimulateRangeVsRangeEquity({
         ...params,
         onProgress: (pct) => {
           const response: WorkerResponse = {

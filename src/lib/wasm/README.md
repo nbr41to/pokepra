@@ -6,15 +6,12 @@
 
 Equity / ranks:
 - `simulateVsListEquity`: hero vs list の勝率（`onProgress` がある時のみ進捗 / `include.data: true` で詳細データ）
-- `simulateVsListWithRanks`: hero vs list の役内訳つき（進捗なし）
-- `simulateVsListWithRanksWithProgress`: hero vs list の役内訳つき（進捗あり）
+- `simulateVsListWithRanks`: hero vs list の役内訳つき（`onProgress` がある時のみ進捗）
 - `simulateVsListWithRanksTrace`: hero vs list のトレース出力（モンテカルロ）
-- `simulateRangeVsRangeEquity`: range vs range の勝率（進捗なし）
-- `simulateRangeVsRangeEquityWithProgress`: range vs range の勝率（進捗あり）
+- `simulateRangeVsRangeEquity`: range vs range の勝率（`onProgress` がある時のみ進捗）
 
 Distribution:
-- `simulateRankDistribution`: 複数ハンドの役分布（進捗なし）
-- `simulateRankDistributionWithProgress`: 複数ハンドの役分布（進捗あり）
+- `simulateRankDistribution`: 複数ハンドの役分布（`onProgress` がある時のみ進捗）
 
 ## Main-thread 直叩き API (`loadWasm` で直接呼ぶ)
 
