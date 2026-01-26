@@ -6,7 +6,7 @@ import { Progress } from "@/components/shadcn/progress";
 import preflopHandRanking from "@/data/preflop-hand-ranking.json";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
-import { simulateVsListEquityWithProgress } from "@/lib/wasm/simulation";
+import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import { getAllCombos } from "@/utils/dealer";
 
 const TRIALS = 100;
@@ -65,7 +65,7 @@ export const Main = () => {
           (combo) => !combo.includes(hero[0]) && !combo.includes(hero[1]),
         );
 
-        const result = await simulateVsListEquityWithProgress({
+        const result = await simulateVsListEquity({
           hero,
           board: [],
           compare,

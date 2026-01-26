@@ -39,6 +39,7 @@ export const ActionArea = () => {
         ...board,
       ]),
       trials: 1000,
+      include: { data: true },
     });
     postflopAction(street, answer, result);
     setLoading(false);

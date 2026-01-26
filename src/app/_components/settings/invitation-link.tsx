@@ -24,12 +24,13 @@ export const InvitationLink = () => {
     <div className="flex w-full items-center justify-between rounded-lg border p-4 shadow-sm backdrop-blur-xs">
       <div className="">アプリを友達に紹介する</div>
 
-      <Dialog>
+      <Dialog modal={false}>
         <DialogTrigger asChild>
           <Button className="font-bold" size="lg">
             開く <QrCode />
           </Button>
         </DialogTrigger>
+
         <DialogContent
           className="flex h-dvh max-w-screen flex-col items-center justify-center gap-1 rounded-none"
           showCloseButton={false}
@@ -63,7 +64,7 @@ export const InvitationLink = () => {
               <Copy />
             </Button>
           </div>
-          <div className="relative dark:hidden">
+          <div className="relative size-90 dark:hidden">
             <Image
               className={`transition-opacity duration-300 ${
                 lightLoaded ? "opacity-100" : "opacity-0"
@@ -82,7 +83,7 @@ export const InvitationLink = () => {
               </div>
             )}
           </div>
-          <div className="relative hidden dark:block">
+          <div className="relative hidden size-90 dark:block">
             <Image
               className={`transition-opacity duration-300 ${
                 darkLoaded ? "opacity-100" : "opacity-0"
@@ -90,7 +91,7 @@ export const InvitationLink = () => {
               src="/qr-dark.png"
               alt="Invitation QR Code"
               width={360}
-              height={400}
+              height={360}
               onLoadingComplete={() => setDarkLoaded(true)}
             />
             {!darkLoaded && (

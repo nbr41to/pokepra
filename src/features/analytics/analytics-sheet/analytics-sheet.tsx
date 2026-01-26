@@ -68,7 +68,7 @@ export const AnalyticsSheet = ({
         </Button>
       </SheetTrigger>
 
-      <SheetContent className="h-dvh gap-0 px-1" side="bottom">
+      <SheetContent className="h-dvh w-full gap-0 px-1" side="bottom">
         <SheetHeader>
           <SheetTitle>Hand Analytics</SheetTitle>
           <div className="flex items-center gap-x-4 py-1">
@@ -83,24 +83,18 @@ export const AnalyticsSheet = ({
           </div>
         </SheetHeader>
 
-        {rankPromise ? (
-          <Suspense
-            fallback={
-              <div className="grid h-[calc(100dvh-120px)] place-content-center">
-                <EquityReportSkeleton />
-              </div>
-            }
-          >
-            <AnalyticsReport
-              rankPromise={rankPromise}
-              evaluationPromise={evaluationPromise}
-            />
-          </Suspense>
-        ) : (
-          <div className="grid h-[calc(100dvh-120px)] place-content-center">
-            <EquityReportSkeleton />
-          </div>
-        )}
+        <Suspense
+          fallback={
+            <div className="grid h-[calc(100dvh-120px)] place-items-center">
+              <EquityReportSkeleton />
+            </div>
+          }
+        >
+          <AnalyticsReport
+            rankPromise={rankPromise}
+            evaluationPromise={evaluationPromise}
+          />
+        </Suspense>
       </SheetContent>
     </Sheet>
   );

@@ -330,6 +330,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
         [...hero, ...board],
       ),
       trials: 100,
+      include: { data: true },
     });
 
     const { action, bet } = getVillainOpenActionFromEquity(result.equity);
@@ -427,6 +428,7 @@ const useOpenRaiseVsBbStore = create<Store>((set, get) => ({
         ]),
       ),
       trials: 100,
+      include: { data: true },
     });
 
     const STREET_W = { preflop: 0, flop: 0.9, turn: 1.1, river: 1.5 } as const;

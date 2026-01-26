@@ -137,7 +137,7 @@ const useActionStore = create<Store>((set, get) => ({
     }
 
     // 必要勝率の計算
-    const requiredEquity = bet / (pot + bet);
+    const requiredEquity = bet / (pot + bet * 2);
     const delta = heroEquity - requiredEquity;
 
     if (action === "fold") {

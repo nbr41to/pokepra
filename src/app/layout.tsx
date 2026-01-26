@@ -11,8 +11,7 @@ export const metadata: Metadata = {
     default: "MCPT",
   },
   applicationName: "Monte Carlo Poker Trainer",
-  description:
-    "A poker training tool using Monte Carlo simulations to improve your skills.",
+  description: "初心者と感覚派のための楽しいポーカートレーナー",
   keywords: ["poker"],
   icons: {
     icon: "/favicon.ico",

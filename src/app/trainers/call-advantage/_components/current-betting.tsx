@@ -35,7 +35,7 @@ export const CurrentBetting = () => {
         >
           <span>必要勝率:</span>
           <span className="w-12">
-            {((bet / (pot + bet)) * 100).toFixed(2)}%
+            {((bet / (pot + bet * 2)) * 100).toFixed(2)}%
           </span>
         </div>
 

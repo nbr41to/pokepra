@@ -18,6 +18,7 @@ export type WasmExports = {
     opponentsCount: number,
     trials: number,
     seed: bigint,
+    includeData: number,
     outPtr: number,
     outLen: number,
   ) => number;
@@ -31,6 +32,7 @@ export type WasmExports = {
     opponentsCount: number,
     trials: number,
     seed: bigint,
+    includeData: number,
     outPtr: number,
     outLen: number,
   ) => number;
@@ -256,6 +258,9 @@ export type SimulateParams = {
   opponentsCount?: number;
   seed?: bigint;
   wasmUrl?: string;
+  include?: {
+    data?: boolean;
+  };
 };
 
 export type SimulateWithProgressParams = SimulateParams & {

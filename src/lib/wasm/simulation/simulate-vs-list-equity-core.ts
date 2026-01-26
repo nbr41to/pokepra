@@ -11,6 +11,7 @@ export async function runSimulateVsListEquity(
     opponentsCount = 1,
     seed = 123456789n,
     wasmUrl = DEFAULT_WASM_URL,
+    include,
   }: SimulateParams,
   {
     onProgress,
@@ -18,11 +19,13 @@ export async function runSimulateVsListEquity(
   }: { onProgress?: (pct: number) => void; useProgressExport?: boolean } = {},
 ): Promise<EquityPayload> {
   const start = performance.now(); // For performance measurement
-  const [heroStr, boardStr, compareStr] = [
-    hero.join(" "),
-    board.join(" "),
-    compare.join("; ").replaceAll(",", " "),
-  ];
+  const includeData = include?.data === true;
+  const heroStr = hero.join(" ");
+  const boardStr = board.join(" ");
+  const compareHands = compare
+    .map((hand) => hand.join(" ").replaceAll(",", " ").trim())
+    .filter(Boolean);
+  const compareStr = compareHands.join("; ");
 
   if (heroStr.trim().length < 4 || compareStr.trim().length < 2) {
     return {
@@ -37,7 +40,8 @@ export async function runSimulateVsListEquity(
   const compareTrimmed = compareStr.trim();
 
   const { exports, memory } = await loadWasm(wasmUrl);
-  const wantsProgress = useProgressExport || typeof onProgress === "function";
+  const wantsProgress =
+    typeof onProgress === "function" && useProgressExport !== false;
   const simulate = wantsProgress
     ? exports.simulate_vs_list_equity_with_progress
     : exports.simulate_vs_list_equity;
@@ -53,11 +57,7 @@ export async function runSimulateVsListEquity(
   const boardBuf = writeString(boardTrimmed);
   const compareBuf = writeString(compareTrimmed);
 
-  const handList = compareTrimmed
-    .split(";")
-    .map((h) => h.trim())
-    .filter(Boolean);
-  const compareCount = handList.length;
+  const compareCount = compareHands.length;
   if (compareCount === 0) {
     throw new Error("No compare hands provided");
   }
@@ -65,11 +65,12 @@ export async function runSimulateVsListEquity(
     throw new Error("Not enough compare hands for opponents count");
   }
 
-  const outLen = (compareCount + 1) * 5;
+  const handList = includeData ? compareHands : [];
+  const outLen = (includeData ? compareCount + 1 : 1) * 5;
   const outPtr = allocU32(outLen);
 
   let rc: number;
-  setProgressListener(onProgress ?? null);
+  setProgressListener(wantsProgress ? (onProgress ?? null) : null);
   try {
     rc = simulate(
       heroBuf.ptr,
@@ -81,6 +82,7 @@ export async function runSimulateVsListEquity(
       Math.max(1, Math.min(5, opponentsCount)),
       trials,
       seed,
+      includeData ? 1 : 0,
       outPtr,
       outLen,
     );
@@ -120,15 +122,19 @@ export async function runSimulateVsListEquity(
       heroEquity = (heroWins + ties * 0.5) / plays;
       continue;
     }
-    const oppWins = Math.max(0, plays - heroWins - ties);
-    const equity = (oppWins + ties * 0.5) / plays;
-    data.push({
-      hand: handList[i] ?? "",
-      equity,
-    });
+    if (includeData) {
+      const oppWins = Math.max(0, plays - heroWins - ties);
+      const equity = (oppWins + ties * 0.5) / plays;
+      data.push({
+        hand: handList[i] ?? "",
+        equity,
+      });
+    }
   }
 
-  data.sort((a, b) => b.equity - a.equity);
+  if (includeData) {
+    data.sort((a, b) => b.equity - a.equity);
+  }
 
   const end = performance.now();
   console.info(

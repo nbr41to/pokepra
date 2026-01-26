@@ -99,6 +99,7 @@ const useActionStore = create<Store>((set, get) => ({
       board: [],
       compare: villains,
       trials: 1000,
+      include: { data: true },
     });
 
     set(() => ({

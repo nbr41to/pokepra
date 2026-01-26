@@ -34,6 +34,8 @@ type SimulateResult =
   | RankDistributionEntry[]
   | MonteCarloTraceEntry[];
 
+type SimulateWorkerParams = SimulateParams & { useProgressExport?: boolean };
+
 type WorkerRequest =
   | { id: number; type: "simulateVsListWithRanks"; params: SimulateParams }
   | {
@@ -42,7 +44,7 @@ type WorkerRequest =
       params: SimulateParams;
     }
   | { id: number; type: "simulateVsListWithRanksTrace"; params: SimulateParams }
-  | { id: number; type: "simulateVsListEquity"; params: SimulateParams }
+  | { id: number; type: "simulateVsListEquity"; params: SimulateWorkerParams }
   | {
       id: number;
       type: "simulateMultiHandEquity";
@@ -56,7 +58,7 @@ type WorkerRequest =
   | {
       id: number;
       type: "simulateVsListEquityWithProgress";
-      params: SimulateParams;
+      params: SimulateWorkerParams;
     }
   | {
       id: number;
@@ -155,7 +157,8 @@ ctx.onmessage = async (event) => {
         message.params.seed === undefined
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
-      const data = await runSimulateVsListEquity(params);
+      const { useProgressExport: _ignored, ...rest } = params;
+      const data = await runSimulateVsListEquity(rest);
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);
       return;
@@ -195,16 +198,20 @@ ctx.onmessage = async (event) => {
         message.params.seed === undefined
           ? { ...message.params, seed: createRandomSeed() }
           : message.params;
-      const data = await runSimulateVsListEquity(params, {
-        useProgressExport: true,
-        onProgress: (pct) => {
-          const response: WorkerResponse = {
-            id: message.id,
-            type: "progress",
-            pct,
-          };
-          ctx.postMessage(response);
-        },
+      const { useProgressExport, ...rest } = params;
+      const progressEnabled = Boolean(useProgressExport);
+      const data = await runSimulateVsListEquity(rest, {
+        useProgressExport: progressEnabled,
+        onProgress: progressEnabled
+          ? (pct) => {
+              const response: WorkerResponse = {
+                id: message.id,
+                type: "progress",
+                pct,
+              };
+              ctx.postMessage(response);
+            }
+          : undefined,
       });
       const response: WorkerResponse = { id: message.id, type: "result", data };
       ctx.postMessage(response);

@@ -5,8 +5,7 @@
 ## Worker 経由 API (`simulation/simulation.worker.ts` を `wasm-worker-client` から呼ぶ)
 
 Equity / ranks:
-- `simulateVsListEquity`: hero vs list の勝率（進捗なし）
-- `simulateVsListEquityWithProgress`: hero vs list の勝率（進捗あり）
+- `simulateVsListEquity`: hero vs list の勝率（`onProgress` がある時のみ進捗 / `include.data: true` で詳細データ）
 - `simulateVsListWithRanks`: hero vs list の役内訳つき（進捗なし）
 - `simulateVsListWithRanksWithProgress`: hero vs list の役内訳つき（進捗あり）
 - `simulateVsListWithRanksTrace`: hero vs list のトレース出力（モンテカルロ）

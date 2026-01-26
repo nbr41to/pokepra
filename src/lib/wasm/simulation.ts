@@ -16,10 +16,7 @@ export {
   simulateRankDistribution,
   simulateRankDistributionWithProgress,
 } from "./simulation/simulate-rank-distribution";
-export {
-  simulateVsListEquity,
-  simulateVsListEquityWithProgress,
-} from "./simulation/simulate-vs-list-equity";
+export { simulateVsListEquity } from "./simulation/simulate-vs-list-equity";
 export {
   simulateVsListWithRanks,
   simulateVsListWithRanksTrace,

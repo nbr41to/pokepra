@@ -725,8 +725,10 @@ pub extern "C" fn simulate_open_ranges_monte_carlo(
 }
 
 /// Hero vs provided opponent list, returning equity-only stats (wins/ties/plays).
-/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays]
-/// out_len must be >= records * 5 (compareCount * 5). Returns record count or negative error.
+/// Output per record: [oppCard1, oppCard2, heroWins, ties, plays].
+/// When include_data == 0, returns only the hero aggregate record.
+/// out_len must be >= records * 5 (compareCount * 5 when include_data == 1).
+/// Returns record count or negative error.
 #[no_mangle]
 pub extern "C" fn simulate_vs_list_equity(
   hero_ptr: *const u8,
@@ -738,6 +740,7 @@ pub extern "C" fn simulate_vs_list_equity(
   opponents_count: u32,
   trials: u32,
   seed: u64,
+  include_data: u32,
   out_ptr: *mut u32,
   out_len: usize,
 ) -> i32 {
@@ -761,6 +764,7 @@ pub extern "C" fn simulate_vs_list_equity(
         opponents_count,
         trials,
         seed,
+        include_data != 0,
       )
       .map_err(|_| -5)
     },
@@ -831,6 +835,7 @@ pub extern "C" fn simulate_multi_hand_equity_with_progress(
 }
 
 /// Equity variant with progress. Emits progress via `report_progress`.
+/// When include_data == 0, returns only the hero aggregate record.
 #[no_mangle]
 pub extern "C" fn simulate_vs_list_equity_with_progress(
   hero_ptr: *const u8,
@@ -842,6 +847,7 @@ pub extern "C" fn simulate_vs_list_equity_with_progress(
   opponents_count: u32,
   trials: u32,
   seed: u64,
+  include_data: u32,
   out_ptr: *mut u32,
   out_len: usize,
 ) -> i32 {
@@ -866,6 +872,7 @@ pub extern "C" fn simulate_vs_list_equity_with_progress(
         trials,
         seed,
         Some(|p| emit_progress(p)),
+        include_data != 0,
       )
       .map_err(|_| -5)
     },

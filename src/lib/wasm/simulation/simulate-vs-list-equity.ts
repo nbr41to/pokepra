@@ -3,37 +3,36 @@ import {
   runWorkerRequest,
 } from "@/lib/worker/wasm-worker-client";
 import { DEFAULT_WASM_URL } from "../constants";
-import type {
-  EquityPayload,
-  SimulateParams,
-  SimulateWithProgressParams,
-} from "../types";
+import type { EquityPayload, SimulateParams } from "../types";
 
-export async function simulateVsListEquity(
-  params: SimulateParams,
-): Promise<EquityPayload> {
+type SimulateParamsWithOptionalProgress = SimulateParams & {
+  onProgress?: (pct: number) => void;
+};
+
+const runSimulateVsListEquity = async (
+  params: SimulateParamsWithOptionalProgress,
+): Promise<EquityPayload> => {
+  const { onProgress, wasmUrl, ...rest } = params;
+  const wantsProgress = typeof onProgress === "function";
   const request = {
-    type: "simulateVsListEquity",
-    params: {
-      ...params,
-      wasmUrl: resolveWorkerWasmUrl(params.wasmUrl, DEFAULT_WASM_URL),
-    },
-  };
-
-  return runWorkerRequest<EquityPayload>(request);
-}
-
-export async function simulateVsListEquityWithProgress(
-  params: SimulateWithProgressParams,
-): Promise<EquityPayload> {
-  const { onProgress, ...rest } = params;
-  const request = {
-    type: "simulateVsListEquityWithProgress",
+    type: wantsProgress
+      ? "simulateVsListEquityWithProgress"
+      : "simulateVsListEquity",
     params: {
       ...rest,
-      wasmUrl: resolveWorkerWasmUrl(rest.wasmUrl, DEFAULT_WASM_URL),
+      ...(wantsProgress ? { useProgressExport: true } : {}),
+      wasmUrl: resolveWorkerWasmUrl(wasmUrl, DEFAULT_WASM_URL),
     },
   };
 
-  return runWorkerRequest<EquityPayload>(request, { onProgress });
+  return runWorkerRequest<EquityPayload>(
+    request,
+    wantsProgress ? { onProgress } : undefined,
+  );
+};
+
+export async function simulateVsListEquity(
+  params: SimulateParamsWithOptionalProgress,
+): Promise<EquityPayload> {
+  return runSimulateVsListEquity(params);
 }

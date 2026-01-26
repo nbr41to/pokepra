@@ -13,7 +13,8 @@ use crate::sim::{
 use crate::sim::{build_deck, eval::best_of, shuffle_slice, Lcg64};
 use std::collections::HashSet;
 
-/// Hero vs provided opponent list, returning wins/ties/plays per opponent and hero aggregate.
+/// Hero vs provided opponent list, returning wins/ties/plays per opponent and hero aggregate
+/// (or hero aggregate only when include_data is false).
 pub fn simulate_vs_list_equity(
   hero_hand_str: &str,
   board_str: &str,
@@ -21,6 +22,7 @@ pub fn simulate_vs_list_equity(
   opponents_count: u32,
   trials: u32,
   seed: u64,
+  include_data: bool,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
   simulate_vs_list_equity_inner::<fn(u32)>(
     hero_hand_str,
@@ -30,6 +32,7 @@ pub fn simulate_vs_list_equity(
     trials,
     seed,
     None,
+    include_data,
   )
 }
 
@@ -344,6 +347,7 @@ pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   progress: Option<F>,
+  include_data: bool,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
   simulate_vs_list_equity_inner(
     hero_hand_str,
@@ -353,6 +357,7 @@ pub fn simulate_vs_list_equity_with_progress<F: FnMut(u32)>(
     trials,
     seed,
     progress,
+    include_data,
   )
 }
 
@@ -364,6 +369,7 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
   trials: u32,
   seed: u64,
   mut progress: Option<F>,
+  include_data: bool,
 ) -> Result<Vec<(u32, u32, u32, u32, u32)>, String> {
   let hero_hand = parse_hand_two(hero_hand_str).ok_or("hero hand must have 2 cards")?;
 
@@ -411,12 +417,20 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
   let mut rng = Lcg64::new(seed);
 
   let mut stats: Vec<(u32, u32, u32, u32, u32)> =
-    vec![(0, 0, 0, 0, 0); opponents.len()];
+    Vec::with_capacity(if include_data { opponents.len() + 1 } else { 1 });
   let mut hero_wins_total = 0u32;
   let mut hero_ties_total = 0u32;
   let mut hero_plays_total = 0u32;
 
-  let opp_encoded: Vec<(u32, u32)> = opponents.iter().map(|h| decode_hand_pair(h)).collect();
+  if include_data {
+    stats.resize(opponents.len(), (0, 0, 0, 0, 0));
+  }
+
+  let opp_encoded: Vec<(u32, u32)> = if include_data {
+    opponents.iter().map(|h| decode_hand_pair(h)).collect()
+  } else {
+    Vec::new()
+  };
 
   for (idx, opp) in opponents.iter().enumerate() {
     let mut wins = 0u32;
@@ -508,11 +522,13 @@ fn simulate_vs_list_equity_inner<F: FnMut(u32)>(
       update_progress(completed);
     }
 
-    stats[idx].0 = opp_encoded[idx].0;
-    stats[idx].1 = opp_encoded[idx].1;
-    stats[idx].2 = wins;
-    stats[idx].3 = ties;
-    stats[idx].4 = plays;
+    if include_data {
+      stats[idx].0 = opp_encoded[idx].0;
+      stats[idx].1 = opp_encoded[idx].1;
+      stats[idx].2 = wins;
+      stats[idx].3 = ties;
+      stats[idx].4 = plays;
+    }
 
     hero_wins_total = hero_wins_total.saturating_add(wins);
     hero_ties_total = hero_ties_total.saturating_add(ties);

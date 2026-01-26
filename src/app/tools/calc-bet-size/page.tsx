@@ -52,22 +52,22 @@ export default function Page() {
       <div className="text-sm">
         ポットサイズ:{" "}
         <strong>
-          {pot + betSize}（{pot} + {betSize}）
+          {pot + betSize * 2}（{pot} + {betSize} × 2）
         </strong>
       </div>
 
       <div className="space-y-2">
         <Label>要求する勝率</Label>
         <div className="flex items-center gap-x-2">
-          <strong>{((betSize / (pot + betSize)) * 100).toFixed(1)}%</strong>
+          <strong>{((betSize / (pot + betSize * 2)) * 100).toFixed(1)}%</strong>
           <Slider
-            value={[(betSize / (pot + betSize)) * 100]}
+            value={[(betSize / (pot + betSize * 2)) * 100]}
             max={100}
             step={0.1}
             className="w-full max-w-xs sm:w-48"
           />
         </div>
-        <p className="text-sm">必要勝率 = ベット / (ポット + ベット)</p>
+        <p className="text-sm">必要勝率 = ベット / (ポット + ベット × 2)</p>
       </div>
 
       <Separator />
@@ -98,7 +98,7 @@ export default function Page() {
           EV: <strong>{ev.toFixed(2)}</strong>
         </div>
         <p className="text-muted-foreground text-xs">
-          EV = 自分の勝率 × (ポット + ベット) - 相手の勝率 × ベット
+          EV = 自分の勝率 × (ポット + ベット × 2) - 相手の勝率 × ベット
         </p>
       </div>
     </>
