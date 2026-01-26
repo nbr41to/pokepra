@@ -280,8 +280,8 @@ export type MultiHandEquityParams = {
 };
 
 export type RangeVsRangeParams = {
-  heroRange: string;
-  villainRange: string;
+  heroRange: string | string[][];
+  villainRange: string | string[][];
   board: string[];
   trials: number;
   seed?: bigint;

@@ -30,7 +30,6 @@ type Props = {
   board: string[];
   comparePosition: number;
   disabled?: boolean;
-  onOpenChange?: (open: boolean) => void;
   className?: string;
 };
 
@@ -39,7 +38,6 @@ export const AnalyticsSheet = ({
   board,
   comparePosition,
   disabled = false,
-  onOpenChange,
   className,
 }: Props) => {
   const evaluationPromise = evaluateHandsRanking({
@@ -57,7 +55,7 @@ export const AnalyticsSheet = ({
   });
 
   return (
-    <Sheet onOpenChange={onOpenChange}>
+    <Sheet>
       <SheetTrigger asChild>
         <Button
           className={cn("rounded-full", className)}

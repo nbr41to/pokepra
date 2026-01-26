@@ -13,6 +13,16 @@ type RangeVsRangeParamsWithOptionalProgress = RangeVsRangeParams & {
   onProgress?: (pct: number) => void;
 };
 
+const normalizeRangeInput = (range: RangeVsRangeParams["heroRange"]) => {
+  if (Array.isArray(range)) {
+    return range
+      .map((hand) => hand.join("").trim())
+      .filter(Boolean)
+      .join(",");
+  }
+  return range;
+};
+
 export async function runSimulateRangeVsRangeEquity({
   heroRange,
   villainRange,
@@ -22,10 +32,12 @@ export async function runSimulateRangeVsRangeEquity({
   wasmUrl = DEFAULT_WASM_URL,
   onProgress,
 }: RangeVsRangeParamsWithOptionalProgress): Promise<RangeVsRangePayload> {
+  const heroRangeNormalized = normalizeRangeInput(heroRange);
+  const villainRangeNormalized = normalizeRangeInput(villainRange);
   return runRangeVsRange(
     {
-      heroRange,
-      villainRange,
+      heroRange: heroRangeNormalized,
+      villainRange: villainRangeNormalized,
       board,
       trials,
       seed,
@@ -43,7 +55,14 @@ async function runRangeVsRange(
     trials,
     seed = 123456789n,
     wasmUrl = DEFAULT_WASM_URL,
-  }: RangeVsRangeParams,
+  }: {
+    heroRange: string;
+    villainRange: string;
+    board: string[];
+    trials: number;
+    seed?: bigint;
+    wasmUrl?: string;
+  },
   {
     onProgress,
     useProgressExport = false,

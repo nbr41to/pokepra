@@ -5,6 +5,7 @@ import { useActionStore } from "./_utils/state";
 import { ActionArea } from "./action-area";
 import { CommunityBoard } from "./community-board";
 import { ConfirmPosition } from "./confirm-position";
+import { CurrentPot } from "./current-pot";
 
 export function Main() {
   const { initialized, shuffleAndDeal, clear } = useActionStore();
@@ -18,7 +19,8 @@ export function Main() {
   if (!initialized) return null;
 
   return (
-    <div className="mt-auto w-full space-y-1">
+    <div className="mt-auto w-full space-y-2">
+      <CurrentPot />
       <CommunityBoard />
       <ConfirmPosition />
       <ActionArea />

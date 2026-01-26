@@ -5,19 +5,20 @@ import {
   simulateVsListEquity,
 } from "@/lib/wasm/simulation";
 import { genHand, getShuffledDeck } from "@/utils/dealer";
-import { getRangeStrengthByPosition, toHandSymbol } from "@/utils/hand-range";
+import { getRangeStrengthByPosition } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";
 import { getSettingOpenRange } from "@/utils/setting";
+import { calcExpectedValue } from "./calc";
 
 const PEOPLE = 9;
 const DEFAULT_STRENGTH = 6;
+const BET_SIZE_RATES = [0.33, 0.5, 0.67, 1.0, 1.25, 1.5, 2.0, 3.0];
 
 type Street = "flop" | "turn" | "river";
 type State = {
   initialized: boolean;
   finished: boolean;
   confirmedHand: boolean; // ハンドを見たかどうか
-  equityHidden: boolean; // 勝率を隠すかどうか
 
   street: Street; // ストリート
   stack: number; // 持ち点
@@ -38,6 +39,7 @@ type State = {
   turn: "call" | "fold" | null;
   river: "call" | "fold" | null;
 
+  results: number[];
   // payloads
   rangePromises: Promise<RangeVsRangePayload>[];
 };
@@ -46,8 +48,7 @@ type Actions = {
   clear: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => void;
   confirmHand: () => void;
-  toggleEquityHidden: () => void;
-  heroAction: (action: number | "fold") => void;
+  heroAction: (action: (typeof BET_SIZE_RATES)[number] | "fold") => void;
 };
 
 type Store = State & Actions;
@@ -57,10 +58,9 @@ const INITIAL_STATE: State = {
   initialized: false,
   finished: false,
   confirmedHand: false,
-  equityHidden: true,
 
   street: "flop",
-  stack: 100,
+  stack: 10,
   delta: 0,
   deck: [],
   hero: [],
@@ -68,12 +68,13 @@ const INITIAL_STATE: State = {
   continueVillainRange: [],
   position: 0,
   board: [],
-  pot: 20,
+  pot: 10,
 
   flop: null,
   turn: null,
   river: null,
 
+  results: [],
   rangePromises: [],
 };
 
@@ -85,7 +86,7 @@ const useActionStore = create<Store>((set, get) => ({
   shuffleAndDeal: async (options?: { strength?: number; people?: number }) => {
     const strength = options?.strength ?? DEFAULT_STRENGTH;
 
-    const { stack, equityHidden } = get();
+    const { stack } = get();
     const hero = genHand(strength);
     const position = genPositionNumber(options?.people ?? PEOPLE, [1, 2]); // SB, BBを除く
     const deck = getShuffledDeck([...hero]);
@@ -102,7 +103,6 @@ const useActionStore = create<Store>((set, get) => ({
     set(() => ({
       ...INITIAL_STATE,
       initialized: true,
-      equityHidden,
       stack,
       deck,
       hero,
@@ -115,10 +115,6 @@ const useActionStore = create<Store>((set, get) => ({
   confirmHand: () => {
     set({ confirmedHand: true });
   },
-  // 勝率の表示/非表示切り替え
-  toggleEquityHidden: () => {
-    set((state) => ({ equityHidden: !state.equityHidden }));
-  },
   heroAction: async (action) => {
     const { street, stack, deck, board, pot, hero, position, rangePromises } =
       get();
@@ -127,60 +123,62 @@ const useActionStore = create<Store>((set, get) => ({
       set({ street: ROUND[ROUND.indexOf(street) + 1] });
     }
 
+    const promiseIndex = ROUND.indexOf(street);
+    const rangePayload = await rangePromises[promiseIndex];
+    const villainHands = rangePayload.villain.filter(
+      (r) => !r.hand.split(" ").find((r) => [...hero, ...board].includes(r)),
+    ); // hero と board に被らないハンドのみ
+
+    const betPatterns = BET_SIZE_RATES.map((rate) => pot * rate);
+
+    // 相手に突きつける必要勝率
+    const requiredEquities = betPatterns.map((betSize) => {
+      return betSize / (pot + betSize * 2);
+    });
+
+    const continueVillainRanges = requiredEquities.map((reqEq) => {
+      const continueHands = villainHands.filter((r) => r.equity >= reqEq);
+
+      return continueHands.map((r) => r.hand.split(" "));
+    });
+
+    const results = await Promise.all([
+      ...continueVillainRanges.map(async (range, index) => {
+        const { equity: continueHeroEquity } = await simulateVsListEquity({
+          hero,
+          board,
+          compare: range,
+          trials: 1000,
+        });
+        const foldEquity =
+          (villainHands.length - range.length) / villainHands.length;
+
+        return calcExpectedValue({
+          pot,
+          fe: foldEquity,
+          ce: continueHeroEquity,
+          bet: betPatterns[index],
+        });
+      }),
+    ]);
+
     if (action === "fold") {
       set(() => ({
         finished: true,
+        results,
       }));
 
       return;
     }
 
-    const promiseIndex = ROUND.indexOf(street);
-    const rangePayload = await rangePromises[promiseIndex];
-
-    const bet = 10;
-
-    // 相手に突きつける必要勝率
-    const requiredEquity = bet / (pot + bet * 2);
-
-    const continueVillainHands = rangePayload.villain.filter(
-      (r) => r.equity >= requiredEquity,
-    );
-    // 狭まった相手のレンジ
-    const continueVillainRange = new Set(
-      continueVillainHands.map((r) => toHandSymbol(r.hand)),
-    );
-    // フォールドエクイティ（フォールドする確率）
-    const foldEquity =
-      (rangePayload.villain.length - continueVillainHands.length) /
-      rangePayload.villain.length;
-
-    // 継続した場合の自分のエクイティ
-    const continueHeroEquityPayload = await simulateVsListEquity({
-      hero,
-      board,
-      compare: continueVillainHands
-        .filter(
-          (r) =>
-            !r.hand.split(" ").find((r) => [...hero, ...board].includes(r)),
-        ) // 前からやる？
-        .map((r) => r.hand.split(" ")),
-      trials: 1000,
-    });
-
-    const expectedValue =
-      pot * foldEquity +
-      (1 - foldEquity) * continueHeroEquityPayload.equity * (pot + bet * 2) -
-      bet; // continueVillainRangeとのEQが必要
-
-    console.log(continueHeroEquityPayload);
-    console.log(expectedValue);
+    const actionIndex = BET_SIZE_RATES.indexOf(action);
+    const delta = Math.floor(results[actionIndex]);
 
     // river
     if (street === "river") {
       set(() => ({
         finished: true,
-        delta: expectedValue,
+        delta,
       }));
 
       return;
@@ -189,21 +187,23 @@ const useActionStore = create<Store>((set, get) => ({
     // flop or turnの次のストリートの準備
     const newBoard = [...board];
     newBoard.push(...deck.splice(0, 1));
-    const configRanges = getSettingOpenRange();
+    const bet = Math.floor(pot * BET_SIZE_RATES[actionIndex]);
 
-    const rangePromise = simulateRangeEquity({
+    const configRanges = getSettingOpenRange();
+    const newRangePromise = simulateRangeEquity({
       heroRange: configRanges[getRangeStrengthByPosition(position)],
-      villainRange: Array.from(continueVillainRange).join(","),
+      villainRange: continueVillainRanges[actionIndex],
       board: newBoard,
     });
 
     set(() => ({
-      stack: stack - bet,
+      stack: stack + delta,
       pot: pot + bet * 2,
       board: newBoard,
       deck,
-      delta: expectedValue,
-      rangePromises: [...rangePromises, rangePromise],
+      delta,
+      results,
+      rangePromises: [...rangePromises, newRangePromise],
     }));
   },
   clear: () => {
@@ -217,8 +217,8 @@ const simulateRangeEquity = async ({
   villainRange,
   board,
 }: {
-  heroRange: string;
-  villainRange: string;
+  heroRange: string | string[][];
+  villainRange: string | string[][];
   board: string[];
 }) => {
   return simulateRangeVsRangeEquity({
@@ -229,4 +229,4 @@ const simulateRangeEquity = async ({
   });
 };
 
-export { useActionStore };
+export { BET_SIZE_RATES, useActionStore };

@@ -21,7 +21,7 @@ type Props = {
 
 export const InformationSheet = ({ className }: Props) => {
   return (
-    <Sheet>
+    <Sheet modal={false}>
       <SheetTrigger asChild>
         <Button
           className={cn("rounded-full", className)}

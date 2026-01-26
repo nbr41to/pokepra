@@ -1,6 +1,7 @@
 import {
   BookCheck,
   CheckCircle,
+  ChessKnight,
   ChessRook,
   ChevronRight,
   CircleStar,
@@ -69,6 +70,32 @@ export function TrainersContent() {
           </div>
         </RichLinkCard>
         <RichLinkCard
+          href="/trainers/bet-advantage"
+          title="Bet Advantage"
+          description="ポジションがあるときの期待値の高くなるベット額を鍛えます。"
+          isNew
+          icon={<ChessKnight />}
+        />
+        <RichLinkCard
+          href="/trainers/call-advantage"
+          title="Call Advantage"
+          description="勝率に応じたCallの判断を鍛えます。"
+          isNew
+          icon={<ChessRook />}
+        />
+        <RichLinkCard
+          href="/trainers/bb-defense"
+          title="BB Defense"
+          description="BBでのディフェンスを体感できます。"
+          icon={<ShieldPlus />}
+        >
+          <div className="flex items-center justify-center text-suit-diamond">
+            <Combo className="origin-bottom scale-70" hand={["3d", "2d"]} />
+            <MessageCircleQuestion className="mt-2" size={20} />
+            <Percent className="mt-4 ml-1" size={12} />
+          </div>
+        </RichLinkCard>
+        <RichLinkCard
           href="/trainers/full-street"
           title="Full Street"
           description="様々なシチュエーションにおける勝率を体感できます。"
@@ -83,26 +110,6 @@ export function TrainersContent() {
                 className="origin-bottom scale-75"
               />
             ))}
-          </div>
-        </RichLinkCard>
-        <RichLinkCard
-          href="/trainers/call-advantage"
-          title="Call Advantage"
-          description="勝率に応じたCallの判断を鍛えます。"
-          isNew
-          icon={<ChessRook />}
-        />
-
-        <RichLinkCard
-          href="/trainers/bb-defense"
-          title="BB Defense"
-          description="BBでのディフェンスを体感できます。"
-          icon={<ShieldPlus />}
-        >
-          <div className="flex items-center justify-center text-suit-diamond">
-            <Combo className="origin-bottom scale-70" hand={["3d", "2d"]} />
-            <MessageCircleQuestion className="mt-2" size={20} />
-            <Percent className="mt-4 ml-1" size={12} />
           </div>
         </RichLinkCard>
         <RichLinkCard

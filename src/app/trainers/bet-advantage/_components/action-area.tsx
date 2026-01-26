@@ -1,24 +1,21 @@
-import { Eye, EyeClosed } from "lucide-react";
-import { useState } from "react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
-import { useActionStore } from "./_utils/state";
-import { BetSlider } from "./bet-slider";
+import { cn } from "@/lib/utils";
+import { BET_SIZE_RATES, useActionStore } from "./_utils/state";
+import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
     finished,
     hero,
     board,
+    results,
     confirmedHand,
     confirmHand,
-    equityHidden,
-    toggleEquityHidden,
     heroAction,
     shuffleAndDeal,
   } = useActionStore();
-  const [betSize, setBetSize] = useState(10);
   const handleOnAction = (action: number | "fold") => {
     heroAction(action);
   };
@@ -30,14 +27,31 @@ export const ActionArea = () => {
           key={hero.join("-")}
           hand={hero}
           onOpenHand={confirmHand}
-          onDoubleTap={() => handleOnAction(betSize)}
-          doubleTapActionName="Bet"
+          // onDoubleTap={() => handleOnAction(betSize)}
+          // doubleTapActionName="Bet"
           onFold={() => handleOnAction("fold")}
           className="bg bg-green-50 dark:bg-green-950/60"
         />
         {confirmedHand && (
-          <div className="absolute bottom-0 left-4">
-            <BetSlider step={5} value={betSize} onChange={setBetSize} />
+          <div className="absolute top-1/2 left-4 flex w-1/2 -translate-y-1/2 flex-wrap gap-2">
+            {BET_SIZE_RATES.map((rate) => (
+              <Button
+                key={rate}
+                variant="outline"
+                className="relative w-1/3"
+                onClick={() => handleOnAction(rate)}
+              >
+                {Math.round(rate * 100)}%
+                <div
+                  className={cn(
+                    "absolute right-0 -bottom-1 text-muted-foreground text-xs",
+                    results[BET_SIZE_RATES.indexOf(rate)] < 0 && "text-red-500",
+                  )}
+                >
+                  {results[BET_SIZE_RATES.indexOf(rate)]?.toFixed(2)}
+                </div>
+              </Button>
+            ))}
           </div>
         )}
         {finished && (
@@ -60,16 +74,7 @@ export const ActionArea = () => {
           comparePosition={2} // BB 想定
           disabled={!confirmedHand}
         />
-        <Button
-          data-state={equityHidden ? "closed" : "open"}
-          className="group rounded-full"
-          size="icon-lg"
-          variant="outline"
-          onClick={toggleEquityHidden}
-        >
-          <Eye className='group-data-[state="open"]:block group-data-[state="closed"]:hidden' />
-          <EyeClosed className='group-data-[state="closed"]:block group-data-[state="open"]:hidden' />
-        </Button>
+        <InformationSheet />
       </div>
     </div>
   );
