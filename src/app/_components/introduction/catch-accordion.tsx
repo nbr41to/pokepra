@@ -68,7 +68,7 @@ export function CatchAccordion() {
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="for-beginners">
+      <AccordionItem value="for-intermediate-and-advanced-players">
         <AccordionTrigger>中・上級者でも使えますか？</AccordionTrigger>
         <AccordionContent className="gap-2 space-y-3 text-balance font-noto-sans-jp leading-relaxed">
           <p>もちろん大歓迎です。</p>

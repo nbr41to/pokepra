@@ -6,7 +6,7 @@ export const CurrentPot = () => {
 
   return (
     <div className="flex items-end justify-between px-4">
-      <div className="flex w-fit items-center gap-x-2 rounded-full border border-yellow-500 bg-yellow-200 px-3 py-1">
+      <div className="flex w-fit items-center gap-x-2 rounded-full border border-yellow-500 bg-yellow-200 px-3 py-1 dark:bg-yellow-800">
         <PiggyBank />
         <span className="font-bold text-xl">{pot}</span>
       </div>
