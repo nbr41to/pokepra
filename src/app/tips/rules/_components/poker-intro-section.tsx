@@ -4,7 +4,7 @@ import { TipsText } from "@/features/tips/tips-text";
 
 export function PokerIntroSection() {
   return (
-    <TipsCard asChild size="sm" className="space-y-2">
+    <TipsCard asChild className="space-y-2">
       <section>
         <h2 className="font-semibold">ポーカーとは</h2>
         <TipsText>

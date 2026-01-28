@@ -13,7 +13,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/shadcn/chart";
-import type { CombinedPayload, RangeVsRangePayload } from "@/lib/wasm/types";
+import { cn } from "@/lib/utils";
+import type { RangeVsRangePayload } from "@/lib/wasm/types";
 
 const chartConfig = {
   hero: {
@@ -42,12 +43,14 @@ const getEquityAtPercentile = (pct: number, equities: number[]) => {
  * hero vs range の勝率付き
  */
 type Props = {
-  heroEquity: CombinedPayload;
+  heroEquity: number;
   rangeEquity: RangeVsRangePayload;
+  className?: string;
 };
 export const EquityDistributionReport = ({
   heroEquity,
   rangeEquity,
+  className,
 }: Props) => {
   // 勝率だけ抽出
   const heroRangeEquity =
@@ -62,7 +65,10 @@ export const EquityDistributionReport = ({
     .sort();
 
   return (
-    <ChartContainer config={chartConfig} className="h-60 w-[calc(100%-16px)]">
+    <ChartContainer
+      config={chartConfig}
+      className={cn("h-60 w-[calc(100%-16px)]", className)}
+    >
       <LineChart
         margin={{
           top: 32,
@@ -112,7 +118,7 @@ export const EquityDistributionReport = ({
           }
         />
         <ReferenceLine
-          y={heroEquity.equity * 100}
+          y={heroEquity * 100}
           stroke="var(--color-hero)"
           strokeDasharray="6 4"
           ifOverflow="extendDomain"

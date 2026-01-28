@@ -6,7 +6,7 @@ import { TipsText } from "@/features/tips/tips-text";
 export const Main = () => {
   return (
     <div className="space-y-4">
-      <TipsCard variant="glass" size="lg" className="space-y-2">
+      <TipsCard className="space-y-2">
         <h2 className="font-bold text-base">ホーム画面に追加して使う</h2>
         <TipsText className="text-slate-700 dark:text-slate-200">
           本ツールはブラウザで動作するのでダウンロード不要ですが、通常のブラウザだと狭くてUIが崩れることがあります。iPhoneであれば、Safariの
@@ -19,13 +19,13 @@ export const Main = () => {
           」でホームに追加してから開くことで、ネイティブアプリのように使用できます。
         </TipsText>
       </TipsCard>
-      <TipsCard variant="glass" size="lg" className="space-y-2">
+      <TipsCard className="space-y-2">
         <h2 className="font-bold text-base">暗い場所ではダークモード</h2>
         <TipsText className="text-slate-700 dark:text-slate-200">
           アミューズメントポーカーなどの暗いところではダークモードにして使用することをおすすめします。右上の歯車のアイコンからいつでも切り替え可能です。
         </TipsText>
       </TipsCard>
-      <TipsCard variant="glass" size="lg" className="space-y-2">
+      <TipsCard className="space-y-2">
         <h2 className="font-bold text-base">はじめの一歩</h2>
         <TipsText className="text-slate-700 dark:text-slate-200">
           はじめの一歩はモンテカルロ法の説明と体験のページから。

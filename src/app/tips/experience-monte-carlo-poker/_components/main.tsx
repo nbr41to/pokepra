@@ -80,7 +80,7 @@ export const Main = () => {
 
   return (
     <div className="space-y-8">
-      <TipsCard variant="glass" asChild className="space-y-6">
+      <TipsCard asChild className="space-y-6">
         <section>
           <TipsText className="text-slate-700 dark:text-slate-200">
             今回は実際のポーカープレイ中のとある状況に固定して、そこから先（ターン・リバー）をシミュレーションするモンテカルロ法を体験します。
@@ -133,7 +133,7 @@ export const Main = () => {
               実際に引かれたターン・リバーと完成した役を確認した後、勝率をまとめています。
             </p>
           </div>
-          <TipsCard variant="glass" asChild size="sm" className="h-92">
+          <TipsCard asChild className="h-92">
             <ScrollArea>
               <div className="space-y-3">
                 {trace.map((entry, index) => {
@@ -208,7 +208,7 @@ export const Main = () => {
             </ScrollArea>
           </TipsCard>
           {resultSummary && (
-            <TipsCard variant="glass" className="text-sm">
+            <TipsCard className="text-sm">
               <div className="text-slate-500 text-xs uppercase tracking-[0.3em] dark:text-slate-300">
                 Equity Summary
               </div>

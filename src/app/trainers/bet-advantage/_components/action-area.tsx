@@ -1,23 +1,37 @@
+import { useState } from "react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
+import { Spinner } from "@/components/shadcn/spinner";
 import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
+import { RangeAnalyticsSheet } from "@/features/analytics/range-analytics-sheet";
 import { cn } from "@/lib/utils";
+import {
+  getHandsByStrength,
+  getRangeStrengthByPosition,
+} from "@/utils/hand-range";
 import { BET_SIZE_RATES, useActionStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 
 export const ActionArea = () => {
   const {
     finished,
+    position,
     hero,
     board,
+    continueVillainRange,
     results,
     confirmedHand,
     confirmHand,
     heroAction,
     shuffleAndDeal,
   } = useActionStore();
-  const handleOnAction = (action: number | "fold") => {
-    heroAction(action);
+
+  const [loading, setLoading] = useState(false);
+
+  const handleOnAction = async (action: number | "fold") => {
+    setLoading(true);
+    await heroAction(action);
+    setLoading(false);
   };
 
   return (
@@ -27,8 +41,6 @@ export const ActionArea = () => {
           key={hero.join("-")}
           hand={hero}
           onOpenHand={confirmHand}
-          // onDoubleTap={() => handleOnAction(betSize)}
-          // doubleTapActionName="Bet"
           onFold={() => handleOnAction("fold")}
           className="bg bg-green-50 dark:bg-green-950/60"
         />
@@ -65,6 +77,11 @@ export const ActionArea = () => {
             </Button>
           </div>
         )}
+        {loading && (
+          <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/30">
+            <Spinner className="size-16 text-blue-500" />
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end gap-4 px-2 py-2">
@@ -72,6 +89,16 @@ export const ActionArea = () => {
           hero={hero}
           board={board}
           comparePosition={2} // BB 想定
+          disabled={!confirmedHand}
+        />
+        <RangeAnalyticsSheet
+          hero={hero}
+          heroRange={getHandsByStrength(getRangeStrengthByPosition(position), [
+            ...hero,
+            ...board,
+          ])}
+          board={board}
+          compareRange={continueVillainRange}
           disabled={!confirmedHand}
         />
         <InformationSheet />

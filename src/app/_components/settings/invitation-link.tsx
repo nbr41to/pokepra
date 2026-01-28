@@ -55,11 +55,11 @@ export const InvitationLink = () => {
             </DialogTitle>
           </div>
           <div className="flex items-center justify-center gap-x-2">
-            <p className="text-sm">https://pokepra.vercel.app</p>
+            <p className="text-sm">https://mcpt.tokyo/</p>
             <Button
               size="icon-sm"
               variant="outline"
-              onClick={() => copy("https://pokepra.vercel.app")}
+              onClick={() => copy("https://mcpt.tokyo/")}
             >
               <Copy />
             </Button>

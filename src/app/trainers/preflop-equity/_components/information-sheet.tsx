@@ -15,6 +15,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/shadcn/sheet";
+import { TipsCard } from "@/features/tips/tips-card";
 import { cn } from "@/lib/utils";
 import { VillainHands } from "./villain-hands";
 
@@ -39,13 +40,24 @@ export const InformationSheet = ({ className }: Props) => {
         <ScrollArea className="h-dvh">
           <SheetHeader>
             <SheetTitle>Preflop Equity Simulator</SheetTitle>
-            <SheetDescription className="">
+            <SheetDescription>
               プリフロップ参加時の勝率を計算します。
             </SheetDescription>
           </SheetHeader>
 
-          <div className="space-y-3 px-5 font-noto-sans-jp">
-            <h2 className="font-bold">これはなんですか？</h2>
+          <div className="px-5">
+            <TipsCard>
+              <h2 className="font-bold">
+                Preflop（プリフロップ）とはなんですか？
+              </h2>
+              <p>
+                ポーカーにおけるプリフロップとは、各プレイヤーに2枚のホールカードが配られた後、コミュニティカードがまだ配られていない状態のことを指します。プリフロップは、ポーカーのゲームにおいて最初のベッティングラウンドであり、プレイヤーは自分のホールカードとポジションに基づいてアクションを決定します。
+              </p>
+            </TipsCard>
+          </div>
+
+          <div className="my-6 space-y-3 px-8 text-sm/normal">
+            <h2 className="font-bold text-base">これはなんですか？</h2>
             <p>
               これは、任意のポジション・ハンドにおいて参加した場合の後ろのポジションのプレイヤー全員との対戦をシュミレーションします。
             </p>
@@ -67,53 +79,62 @@ export const InformationSheet = ({ className }: Props) => {
             <p className="font-noto-sans-jp text-xs">自分のハンド</p>
           </div>
 
-          <div className="space-y-3 px-5 font-noto-sans-jp">
+          <div className="mt-6 space-y-3 px-8 text-sm/normal">
             <p>
               相手のハンドには1000回シュミレーションした結果から勝率を計算して表示しています。あくまでの自分のハンドとの勝率であることに注意してください。（全員参加しているわけではない）
             </p>
           </div>
 
-          <div className="mt-16 space-y-3 px-5 pb-32 font-noto-sans-jp">
-            <h2 className="font-bold">得点について</h2>
-            <p>
-              このトレーナーでは期待値（EV）を簡略化して学べます。POTの
-              <span className="px-px text-suit-heart">120</span>
-              点をを
-              <span className="px-px text-suit-spade">100</span>
-              点を支払って獲りにいくと仮定しています。つまり、勝てば120点を獲得し、負ければ100点を失います。これをEVに表すと
-              <span className="block py-2 text-center font-bold">
-                EV = (勝つ確率) ×
-                <span className="px-px text-suit-heart">120</span>- (負ける確率)
-                ×<span className="px-px text-suit-spade">100</span>
-              </span>
-              となります。例えばあなたのハンドの勝率が60%だった場合、
-              <span className="block py-2 text-right font-bold">
-                EV = 0.6 × <span className="px-px text-suit-heart">120</span> -
-                0.4 × <span className="px-px text-suit-spade">100</span> = +32
-              </span>
-              となり、期待値は+32点となります。この場合は参加することが正しい選択となります。逆に勝率が30%だった場合は、
-              <span className="block py-2 text-right font-bold">
-                EV = 0.3 × <span className="px-px text-suit-heart">120</span> -
-                0.7 × <span className="px-px text-suit-spade">100</span> = -34
-              </span>
-              となり、期待値は-34点となります。この場合はフォールドすることが正しい選択となります。
-            </p>
-            <p>
-              実際の場面では、1回負ければ100点を失いますが、この期待値の値は、長期的に見た（これをたくさん繰り返した）場合の平均的な得点の増減を示しています。
-            </p>
-            <p>
-              また、フォールドした場合は、何も失っていないため点数の変動はありません。
-            </p>
-            <p>
-              ※このシュミレーションは、プリフロップ時点での勝率を計算して表示しているだけであり、よく使用されているプリフロップのハンドレンジ表との厳密な関連性はありません。
-              <Link
-                className="px-1 font-bold underline"
-                href="/tips/starting-hand-equity"
-              >
-                スターティングハンドの勝率
-              </Link>
-              を把握する目的程度のものになります。
-            </p>
+          <div className="mt-16 px-5 pb-32">
+            <TipsCard>
+              <h2 className="font-bold">得点について</h2>
+              <p>
+                このトレーナーでは期待値（EV）を簡略化して学べます。POTの
+                <span className="px-px text-suit-heart">150</span>
+                点を
+                <span className="px-px text-suit-spade">100</span>
+                点を支払って獲りにいくと仮定しています。つまり、勝てば
+                <span className="px-px text-suit-heart">150</span>
+                点を獲得し、負ければ
+                <span className="px-px text-suit-spade">100</span>
+                点を失います。これをEVに表すと
+                <span className="block py-4 text-right font-bold">
+                  EV = (勝つ確率) ×
+                  <span className="px-px text-suit-heart">150</span>-
+                  (負ける確率) ×
+                  <span className="px-px text-suit-spade">100</span>
+                </span>
+                となります。例えばあなたのハンドの勝率が60%だった場合、
+                <span className="block py-4 text-right font-bold">
+                  EV = 0.6 × <span className="px-px text-suit-heart">150</span>{" "}
+                  - 0.4 × <span className="px-px text-suit-spade">100</span> =
+                  +50
+                </span>
+                となり、期待値は+50点となります。この場合は参加することが正しい選択となります。逆に勝率が30%だった場合は、
+                <span className="block py-4 text-right font-bold">
+                  EV = 0.3 × <span className="px-px text-suit-heart">150</span>{" "}
+                  - 0.7 × <span className="px-px text-suit-spade">100</span> =
+                  -25
+                </span>
+                となり、期待値は-25点となります。この場合はフォールドすることが正しい選択となります。
+              </p>
+              <p>
+                実際の場面では、1回負ければ100点を失いますが、この期待値の値は、長期的に見た（同じ選択をたくさん繰り返した）場合の平均的な得点の増減を示しています。
+              </p>
+              <p>
+                また、フォールドした場合は、何も失っていないため点数の変動はありません。
+              </p>
+              <p>
+                ※このシュミレーションは、プリフロップ時点での勝率を計算して表示しているだけであり、よく使用されているプリフロップのハンドレンジ表との厳密な関連性はありません。
+                <Link
+                  className="px-1 font-bold underline"
+                  href="/tips/starting-hand-equity"
+                >
+                  スターティングハンドの勝率
+                </Link>
+                を把握する目的程度のものになります。
+              </p>
+            </TipsCard>
           </div>
 
           <SheetFooter className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">

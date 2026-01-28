@@ -38,7 +38,7 @@ export function TexasHoldemSection() {
     players.find((player) => player.id === selectedPlayerId) ?? players[0];
 
   return (
-    <TipsCard asChild size="sm" className="space-y-2">
+    <TipsCard asChild className="space-y-2">
       <section>
         <h2 className="font-semibold">テキサスホールデム</h2>
         <TipsText>

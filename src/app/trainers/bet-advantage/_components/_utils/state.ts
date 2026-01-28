@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import {
+  parseRangeToHands,
   type RangeVsRangePayload,
   simulateRangeVsRangeEquity,
   simulateVsListEquity,
@@ -29,7 +30,7 @@ type State = {
   hero: string[]; // 自分のハンド
   position: number;
   villain: string[];
-  continueVillainRange: string[]; // 相手の継続レンジ
+  continueVillainRange: string[][]; // 相手の継続レンジ
   board: string[]; // ボード
 
   pot: number;
@@ -46,9 +47,11 @@ type State = {
 
 type Actions = {
   clear: () => void;
-  shuffleAndDeal: (options?: { tier: number; people: number }) => void;
+  shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
   confirmHand: () => void;
-  heroAction: (action: (typeof BET_SIZE_RATES)[number] | "fold") => void;
+  heroAction: (
+    action: (typeof BET_SIZE_RATES)[number] | "fold",
+  ) => Promise<void>;
 };
 
 type Store = State & Actions;
@@ -99,6 +102,10 @@ const useActionStore = create<Store>((set, get) => ({
       villainRange: configRanges[2], // BB 想定
       board,
     });
+    const continueVillainRange = await parseRangeToHands({
+      range: configRanges[2],
+      excludedCards: [...hero, ...board],
+    });
 
     set(() => ({
       ...INITIAL_STATE,
@@ -108,6 +115,7 @@ const useActionStore = create<Store>((set, get) => ({
       hero,
       position,
       board,
+      continueVillainRange,
       rangePromises: [rangePromise],
     }));
   },
@@ -188,11 +196,15 @@ const useActionStore = create<Store>((set, get) => ({
     const newBoard = [...board];
     newBoard.push(...deck.splice(0, 1));
     const bet = Math.floor(pot * BET_SIZE_RATES[actionIndex]);
+    const newContinueVillainRange = continueVillainRanges[actionIndex].filter(
+      (r) =>
+        !r.find((card) => card.split(" ").find((c) => newBoard.includes(c))),
+    ); // ボードに被らないハンドのみ
 
     const configRanges = getSettingOpenRange();
     const newRangePromise = simulateRangeEquity({
       heroRange: configRanges[getRangeStrengthByPosition(position)],
-      villainRange: continueVillainRanges[actionIndex],
+      villainRange: newContinueVillainRange,
       board: newBoard,
     });
 
@@ -203,6 +215,7 @@ const useActionStore = create<Store>((set, get) => ({
       deck,
       delta,
       results,
+      continueVillainRange: newContinueVillainRange,
       rangePromises: [...rangePromises, newRangePromise],
     }));
   },

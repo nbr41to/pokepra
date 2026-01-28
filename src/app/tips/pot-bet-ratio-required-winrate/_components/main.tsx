@@ -41,7 +41,7 @@ export const Main = () => {
         ベット額が大きいほど、相手に要求する必要勝率は高くなります。
       </TipsText>
 
-      <TipsCard size="sm" className="space-y-4">
+      <TipsCard className="space-y-4">
         <div>
           <h2 className="font-semibold">インタラクティブ計算</h2>
           <p className="text-muted-foreground text-xs">
@@ -107,7 +107,7 @@ export const Main = () => {
         </div>
       </TipsCard>
 
-      <TipsCard size="sm" className="space-y-3">
+      <TipsCard className="space-y-3">
         <div>
           <h2 className="font-semibold">ベット割合と必要勝率</h2>
           <p className="text-muted-foreground text-xs">

@@ -3,7 +3,7 @@ import { TipsText } from "@/features/tips/tips-text";
 
 export function PositionSection() {
   return (
-    <TipsCard asChild size="sm" className="space-y-2">
+    <TipsCard asChild className="space-y-2">
       <section>
         <h2 className="font-semibold">アクションの順番とポジション</h2>
         <TipsText>

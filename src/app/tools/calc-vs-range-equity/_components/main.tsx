@@ -15,7 +15,7 @@ import {
 } from "@/components/shadcn/collapsible";
 import { Label } from "@/components/shadcn/label";
 import { Progress } from "@/components/shadcn/progress";
-import { ComboRankingReport } from "@/features/analytics/reports/combo-ranking-report";
+import { ComboRankingWithRanksReport } from "@/features/analytics/reports/combo-ranking-with-ranks-report";
 import { EquityDistributionReport } from "@/features/analytics/reports/equity-distribution-report";
 import { EquityReport } from "@/features/analytics/reports/equity-report";
 import { RangeEquitiesReport } from "@/features/analytics/reports/range-equities-report";
@@ -266,9 +266,9 @@ export function Main({
       {/* Results */}
       {result && rankingResult && rangeResult && (
         <div className="mt-8 space-y-8">
-          <EquityReport result={result} />
+          <EquityReport payload={result} />
           <EquityDistributionReport
-            heroEquity={result}
+            heroEquity={result.equity}
             rangeEquity={rangeResult}
           />
           <div>
@@ -288,7 +288,10 @@ export function Main({
             />
           </div>
           <div>{result.data.length} combos</div>
-          <ComboRankingReport result={result} ranking={rankingResult} />
+          <ComboRankingWithRanksReport
+            result={result}
+            ranking={rankingResult}
+          />
 
           <div className="fixed right-4 bottom-4 flex flex-col gap-y-2 opacity-80">
             <Button

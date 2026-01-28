@@ -12,7 +12,7 @@ const meta = {
   tags: ["autodocs"],
   argTypes: {},
   args: {
-    result: example,
+    payload: example,
   },
 } satisfies Meta<typeof EquityReport>;
 
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: () => (
     <Suspense fallback={<EquityReportSkeleton />}>
-      <EquityReport result={example} />
+      <EquityReport payload={example} />
     </Suspense>
   ),
 };
@@ -30,7 +30,7 @@ export const Default: Story = {
 export const Threshold20: Story = {
   render: () => (
     <Suspense fallback={<EquityReportSkeleton step={20} />}>
-      <EquityReport result={example} step={20} />
+      <EquityReport payload={example} step={20} />
     </Suspense>
   ),
 };

@@ -2,7 +2,7 @@ import { TipsCard } from "@/features/tips/tips-card";
 
 export function FlowSection() {
   return (
-    <TipsCard asChild size="sm" className="space-y-2">
+    <TipsCard asChild className="space-y-2">
       <section>
         <h2 className="font-semibold">ゲームの流れ</h2>
         <ol className="list-decimal space-y-1 pl-5 text-muted-foreground text-sm">

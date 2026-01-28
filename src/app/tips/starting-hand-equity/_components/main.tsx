@@ -8,6 +8,7 @@ import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import { getAllCombos } from "@/utils/dealer";
+import { EquitiesTable } from "./equities-table";
 
 const TRIALS = 100;
 const SUITS = ["s", "h", "d", "c"] as const;
@@ -91,16 +92,17 @@ export const Main = () => {
   return (
     <section className="space-y-4">
       <TipsText>
-        preflop-hand-ranking.json を元にしたプリフロップ勝率の一覧です。 2 人
-        (HU)、6-max、フルリングの勝率を確認できます。
+        プリフロップの（自分のハンドが2枚配られた）時点での勝率の一覧です。
+        参加人数が、2 人 、6人、10 人のときの勝率をそれぞれ確認できます。
       </TipsText>
-      <TipsCard size="sm" className="space-y-3">
+
+      <TipsCard className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-semibold">モンテカルロで比較する</h2>
             <p className="text-muted-foreground text-xs">
-              代表的なスートを使って HU の勝率を 100
-              回シミュレーションし、誤差の小ささを確認します。
+              実際にすべてのハンドに対してヘッズアップを100
+              回シミュレーションして、勝率を求めてみます。
             </p>
           </div>
           <Button size="sm" onClick={runSimulation} disabled={running}>
@@ -129,19 +131,19 @@ export const Main = () => {
           </div>
         ) : null}
       </TipsCard>
-      <TipsCard size="sm" className="space-y-3">
+      <TipsCard className="space-y-3">
         <h2 className="font-semibold">勝率テーブル (全ハンド)</h2>
-        <div className="overflow-x-auto">
+        <div className="max-h-100 overflow-y-auto bg-muted px-2">
           <table className="w-full text-left text-sm">
-            <thead className="border-b text-muted-foreground text-xs uppercase">
+            <thead className="sticky top-0 border-b bg-muted text-muted-foreground text-xs uppercase">
               <tr>
-                <th className="py-2 pr-3">Rank</th>
-                <th className="py-2 pr-3">Hand</th>
-                <th className="py-2 pr-3">HU</th>
-                <th className="py-2 pr-3">Monte Carlo</th>
-                <th className="py-2 pr-3">Diff</th>
-                <th className="py-2 pr-3">6-max</th>
-                <th className="py-2 pr-3">Full ring</th>
+                <th className="py-2 pr-3">位</th>
+                <th className="whitespace-nowrap py-2 pr-3">ハンド</th>
+                <th className="py-2 pr-3">2人</th>
+                <th className="py-2 pr-3">実行結果</th>
+                <th className="py-2 pr-3">差</th>
+                <th className="py-2 pr-3">6人</th>
+                <th className="py-2 pr-3">10人</th>
               </tr>
             </thead>
             <tbody>
@@ -175,6 +177,10 @@ export const Main = () => {
         <p className="text-muted-foreground text-xs">
           引用元: https://mpj-portal.jp/forbeginners/technique-pokertable/
         </p>
+      </TipsCard>
+      <TipsCard className="space-y-3">
+        <h2 className="font-semibold">レンジ表で確認する（2 人）</h2>
+        <EquitiesTable equities={allHands} />
       </TipsCard>
     </section>
   );

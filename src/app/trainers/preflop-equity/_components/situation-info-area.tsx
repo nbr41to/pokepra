@@ -2,7 +2,7 @@ export const SituationInfoArea = () => {
   return (
     <div className="flex">
       <div className="text-muted-foreground text-xs">
-        POTの100点に対して100点を賭けて参加する場合の期待値
+        120点を手に入れるために100点を支払う場合の期待値が得点
       </div>
     </div>
   );

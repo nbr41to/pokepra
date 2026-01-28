@@ -1,5 +1,5 @@
 import { TabsContent } from "@/components/shadcn/tabs";
-import { ComboRankingReport } from "@/features/analytics/reports/combo-ranking-report";
+import { ComboRankingWithRanksReport } from "@/features/analytics/reports/combo-ranking-with-ranks-report";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/types";
 
 type Props = {
@@ -11,7 +11,7 @@ export const AnalyticsEquityRanking = ({ ranking, heroEquity }: Props) => {
 
   return (
     <TabsContent value="equity-ranking" className="pt-12 pb-24">
-      <ComboRankingReport result={result} ranking={ranking} />
+      <ComboRankingWithRanksReport result={result} ranking={ranking} />
     </TabsContent>
   );
 };

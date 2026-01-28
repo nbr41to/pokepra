@@ -11,7 +11,7 @@ export const AnalyticsHeroVsVillainRange = ({ heroEquity }: Props) => {
       value="hero-equity"
       className="flex min-h-full flex-col justify-end"
     >
-      <EquityReport result={heroEquity} />
+      <EquityReport payload={heroEquity} />
     </TabsContent>
   );
 };

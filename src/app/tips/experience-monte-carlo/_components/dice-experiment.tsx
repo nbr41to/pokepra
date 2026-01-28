@@ -45,7 +45,7 @@ export const DiceExperiment = () => {
           🎲
         </TipsText>
 
-        <TipsCard size="sm" className="rounded-xl bg-card/80">
+        <TipsCard className="rounded-xl bg-card/80">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-semibold text-sm">試行回数を選ぶ</p>

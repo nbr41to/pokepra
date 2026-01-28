@@ -213,7 +213,7 @@ export const PokerHandProbabilitySection = () => {
         </TipsText>
       </div>
       <div className="space-y-6">
-        <TipsCard size="sm">
+        <TipsCard>
           <div className="flex flex-wrap items-center gap-3">
             <Button onClick={run} disabled={running}>
               100万回シミュレーションする
@@ -233,7 +233,7 @@ export const PokerHandProbabilitySection = () => {
           </div>
         </TipsCard>
 
-        <TipsCard size="sm">
+        <TipsCard>
           <h2 className="mb-3 font-semibold">役の出現回数（強い順）</h2>
           <div className="grid gap-2 text-xs">
             <div className="grid grid-cols-[1fr_90px_70px_70px] items-center gap-2 border-b pb-2 text-[11px] text-muted-foreground">

@@ -110,7 +110,7 @@ export const Main = () => {
 
   return (
     <section className="space-y-4">
-      <TipsCard size="sm" className="space-y-2 shadow-none">
+      <TipsCard className="space-y-2 shadow-none">
         <TipsText>
           ドライはドローが少なく読みやすいボード、ウェットはドローが多く
           変化が起きやすいボードを指します。ウェットではサイズ管理や
@@ -130,7 +130,7 @@ export const Main = () => {
         {BOARD_TYPES.map((boardType) => {
           const cards = examples[boardType.id] ?? [];
           return (
-            <TipsCard key={boardType.id} size="sm" className="space-y-3">
+            <TipsCard key={boardType.id} className="space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <h2 className="font-semibold">{boardType.title}</h2>
                 <span

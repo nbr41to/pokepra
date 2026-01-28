@@ -8,7 +8,7 @@ export const Main = () => {
         フロップ以降に特定の役を完成させるおおまかな確率のメモです。
         実戦ではアウト数を数えて「ターン・リバーで届くか」を目安にしてください。
       </TipsText>
-      <TipsCard size="sm" className="space-y-3">
+      <TipsCard className="space-y-3">
         <h2 className="font-semibold">
           7枚見たときの役の完成確率（初心者向け）
         </h2>
@@ -27,7 +27,7 @@ export const Main = () => {
           <li>ストレートフラッシュ: 約 0.031%</li>
         </ul>
       </TipsCard>
-      <TipsCard size="sm" className="space-y-3">
+      <TipsCard className="space-y-3">
         <h2 className="font-semibold">代表的なアウト数と確率</h2>
         <ul className="list-disc space-y-1 pl-5 text-sm">
           <li>4 枚ストレート (8 outs): ターン+リバーで約 31.5%</li>
@@ -37,7 +37,7 @@ export const Main = () => {
           <li>ガットショット (4 outs): ターン+リバーで約 16.5%</li>
         </ul>
       </TipsCard>
-      <TipsCard size="sm" className="space-y-3">
+      <TipsCard className="space-y-3">
         <h2 className="font-semibold">ワンカードでの目安</h2>
         <ul className="list-disc space-y-1 pl-5 text-sm">
           <li>9 outs: 1 枚で約 19.6%</li>

@@ -2,17 +2,17 @@ import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Combo } from "@/components/combo";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload } from "@/lib/wasm/simulation";
+import type { CombinedPayload, EquityPayload } from "@/lib/wasm/simulation";
 
 /**
  * hero vs range の勝率の分布チャート
  */
 type Props = {
-  result: CombinedPayload;
+  payload: CombinedPayload | EquityPayload;
   step?: number;
 };
 
-export const EquityReport = ({ result, step = 10 }: Props) => {
+export const EquityReport = ({ payload, step = 10 }: Props) => {
   const buckets = useMemo(
     () =>
       Array.from(
@@ -21,20 +21,21 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
       ),
     [step],
   ); // 90,80,...0 (high → low)
-  const heroEntry = result.data.find((data) => data.hand === result.hand);
-  const heroEq =
-    heroEntry && heroEntry.count > 0
-      ? ((heroEntry.win + heroEntry.tie / 2) / heroEntry.count) * 100
-      : 0;
+  const heroEq = payload.equity * 100;
   const heroBucketStart = Math.min(
     100 - step,
     Math.max(0, Math.floor(heroEq / step) * step),
   );
   const eqThresholds = useMemo(
     () =>
-      result.data.reduce<Record<number, { count: number; eq: number[] }>>(
+      payload.data.reduce<Record<number, { count: number; eq: number[] }>>(
         (acc, cur) => {
-          const eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
+          let eq: number;
+          if ("equity" in cur) {
+            eq = cur.equity * 100;
+          } else {
+            eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
+          }
           const key = Math.min(100 - step, Math.floor(eq / step) * step);
           acc[key].count = acc[key].count + 1;
           acc[key].eq.push(eq);
@@ -44,31 +45,36 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
           buckets.map((b) => [b, { count: 0, eq: [] }]),
         ) as Record<number, { count: number; eq: number[] }>,
       ),
-    [buckets, result.data, step],
+    [buckets, payload.data, step],
   );
   const eqAve = useMemo(() => {
-    const totalEntries = result.data.length;
+    const totalEntries = payload.data.length;
     if (totalEntries === 0) return 0;
-    const totalEq = result.data.reduce((sum, cur) => {
-      const eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
+    const totalEq = payload.data.reduce((sum, cur) => {
+      let eq: number;
+      if ("equity" in cur) {
+        eq = cur.equity * 100;
+      } else {
+        eq = ((cur.win + cur.tie / 2) / cur.count) * 100;
+      }
       return sum + eq;
     }, 0);
 
     return totalEq / totalEntries;
-  }, [result.data]);
+  }, [payload.data]);
 
   const [heroOffsetPct, setHeroOffsetPct] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
 
   useEffect(() => {
-    if (result.data.length === 0) {
+    if (payload.data.length === 0) {
       setHeroOffsetPct(0);
       return;
     }
     let offset = 0;
     for (const bucket of buckets) {
       const value = eqThresholds[bucket]?.count ?? 0;
-      const percent = (value / result.data.length) * 100;
+      const percent = (value / payload.data.length) * 100;
       if (bucket === heroBucketStart) {
         const intraHeight = ((bucket + step - heroEq) / step) * percent;
         offset += intraHeight;
@@ -82,17 +88,17 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
     eqThresholds,
     heroBucketStart,
     heroEq,
-    result.data.length,
+    payload.data.length,
     step,
   ]);
 
   useEffect(() => {
-    if (hasAnimated || result.data.length === 0) return;
+    if (hasAnimated || payload.data.length === 0) return;
     const timer = setTimeout(() => {
       setHasAnimated(true);
     }, 1100);
     return () => clearTimeout(timer);
-  }, [hasAnimated, result.data.length]);
+  }, [hasAnimated, payload.data.length]);
 
   const maxBetSize = (heroEq / (100 - heroEq)) * 100;
 
@@ -104,7 +110,9 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
           {buckets.map((bucket, idx) => {
             const value = eqThresholds[bucket].count;
             const percent =
-              result.data.length === 0 ? 0 : (value / result.data.length) * 100;
+              payload.data.length === 0
+                ? 0
+                : (value / payload.data.length) * 100;
 
             return (
               <div
@@ -132,28 +140,25 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
               </div>
             );
           })}
-          {heroEntry && (
-            <div
-              className={cn(
-                "absolute -right-28 flex items-center gap-1 text-foreground text-sm transition-[top] duration-500 ease-out",
-                !hasAnimated && "hero-eq-indicator",
-              )}
-              style={
-                {
-                  "--hero-target": `${heroOffsetPct}%`,
-                  top: `${heroOffsetPct}%`,
-                } as CSSProperties
-              }
-            >
-              <div className="absolute -left-16 pt-4">
-                <Combo className="" hand={result.hand.split(" ")} />
-                <div className="text-center font-bold">
-                  {heroEq.toFixed(1)}%
-                </div>
-              </div>
-              <span className="h-px w-52 bg-pink-400 dark:bg-pink-700" />
+          {/* Hero Equity */}
+          <div
+            className={cn(
+              "absolute -right-28 flex items-center gap-1 text-foreground text-sm transition-[top] duration-500 ease-out",
+              !hasAnimated && "hero-eq-indicator",
+            )}
+            style={
+              {
+                "--hero-target": `${heroOffsetPct}%`,
+                top: `${heroOffsetPct}%`,
+              } as CSSProperties
+            }
+          >
+            <div className="absolute -left-16 pt-4">
+              <Combo className="" hand={payload.hand.split(" ")} />
+              <div className="text-center font-bold">{heroEq.toFixed(1)}%</div>
             </div>
-          )}
+            <span className="h-px w-52 bg-pink-400 dark:bg-pink-700" />
+          </div>
           {/* Ave */}
         </div>
         <div className="relative -z-10 w-8">
@@ -168,7 +173,7 @@ export const EquityReport = ({ result, step = 10 }: Props) => {
             >
               <p className="absolute -top-2 left-9 whitespace-nowrap text-xs">
                 {step * i}%{" "}
-                {i === 100 / step && `(${result.data.length} hands)`}
+                {i === 100 / step && `(${payload.data.length} hands)`}
               </p>
             </div>
           ))}

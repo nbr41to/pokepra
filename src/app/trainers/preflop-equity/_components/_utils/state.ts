@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { simulateVsListEquity } from "@/lib/wasm/simulation";
 import type { EquityPayload } from "@/lib/wasm/types";
-import { genHand, getShuffledDeck } from "@/utils/dealer";
+import { genHand } from "@/utils/dealer";
 import { genPositionNumber } from "@/utils/position";
 
 const PEOPLE = 9;
@@ -85,12 +85,11 @@ const useActionStore = create<Store>((set, get) => ({
     const { stack } = get();
     const position = genPositionNumber(people, [2]); // BBは除外
     const afterPeople = position === 1 ? 1 : people + 2 - position;
-    const deck = getShuffledDeck();
 
-    const hero = deck.splice(0, 2);
+    const hero = genHand();
     const villains: string[][] = [];
     for (let i = 1; i < afterPeople + 1; i++) {
-      const hands = deck.splice(0, 2);
+      const hands = genHand(0, [...hero, ...villains.flat()]);
       villains.push(hands);
     }
 
@@ -119,7 +118,7 @@ const useActionStore = create<Store>((set, get) => ({
   },
   // プリフロップのアクション
   preflopAction: (action: PreflopAction) => {
-    const POT = 100;
+    const POT = 120;
 
     const { stack, result } = get();
     const heroEq = result?.equity ?? 0;

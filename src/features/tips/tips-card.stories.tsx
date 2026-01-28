@@ -20,30 +20,8 @@ export const Default: Story = {
         <h3 className="font-semibold">Tips Card</h3>
         <TipsText>Default card surface for tips pages.</TipsText>
       </TipsCard>
-      <TipsCard size="sm">
+      <TipsCard>
         <TipsText>Compact size</TipsText>
-      </TipsCard>
-    </div>
-  ),
-};
-
-export const Large: Story = {
-  render: () => (
-    <div className="w-[320px]">
-      <TipsCard size="lg">
-        <h3 className="font-semibold">Large card</h3>
-        <TipsText>Extra padding for dense content.</TipsText>
-      </TipsCard>
-    </div>
-  ),
-};
-
-export const Glass: Story = {
-  render: () => (
-    <div className="w-[320px]">
-      <TipsCard variant="glass" size="lg">
-        <h3 className="font-semibold">Glass card</h3>
-        <TipsText>Soft glass surface for tips content.</TipsText>
       </TipsCard>
     </div>
   ),

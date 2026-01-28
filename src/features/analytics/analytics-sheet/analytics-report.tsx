@@ -18,11 +18,11 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/shadcn/tabs";
-import { ComboRankingReport } from "@/features/analytics/reports/combo-ranking-report";
 import { EquityReport } from "@/features/analytics/reports/equity-report";
 import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
 import { expandStartingHands, toHandSymbol } from "@/utils/hand-range";
 import { getSettingOpenRange } from "@/utils/setting";
+import { ComboRankingWithRanksReport } from "../reports/combo-ranking-with-ranks-report";
 
 type Props = {
   rankPromise: Promise<CombinedPayload>;
@@ -30,28 +30,35 @@ type Props = {
 };
 
 export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
-  const result = use(rankPromise);
   const ranking = use(evaluationPromise);
+  const result = use(rankPromise);
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const [selectedRange, setSelectedRange] = useState(7);
+  const filteredResultData = result.data.filter(({ hand }) => {
+    const selectedRangeHandStrings =
+      getSettingOpenRange()[
+        selectedRange < 3 ? selectedRange + 6 : selectedRange - 3
+      ];
+    const isHeroHand = hand === result.hand;
+
+    return (
+      isHeroHand ||
+      expandStartingHands(selectedRangeHandStrings).includes(toHandSymbol(hand))
+    );
+  });
+
   const filteredResult = {
     ...result,
-    data: result.data.filter(({ hand }) => {
-      const selectedRangeHandStrings =
-        getSettingOpenRange()[
-          selectedRange < 3 ? selectedRange + 6 : selectedRange - 3
-        ];
-      const isHeroHand = hand === result.hand;
-
-      return (
-        isHeroHand ||
-        expandStartingHands(selectedRangeHandStrings).includes(
-          toHandSymbol(hand),
-        )
-      );
-    }),
+    equity:
+      1 -
+      filteredResultData.reduce(
+        (acc, entry) => acc + (entry.win + entry.tie / 2) / entry.count,
+        0,
+      ) /
+        filteredResultData.length,
+    data: filteredResultData,
   };
 
   const scrollToMyHand = (smooth = false) => {
@@ -85,14 +92,14 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
         />
       </div>
       <TabsContent value="equity" className="grid place-items-center">
-        <EquityReport result={filteredResult} />
+        <EquityReport payload={filteredResult} />
       </TabsContent>
       <TabsContent value="ranking">
         <ScrollArea
           ref={scrollAreaRef}
           className="h-[calc(100dvh-140px)] w-full"
         >
-          <ComboRankingReport
+          <ComboRankingWithRanksReport
             className="pt-12 pb-24"
             result={filteredResult}
             ranking={ranking}
