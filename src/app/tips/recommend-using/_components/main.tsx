@@ -31,7 +31,7 @@ export const Main = () => {
           はじめの一歩はモンテカルロ法の説明と体験のページから。
         </TipsText>
         <Link
-          href="/tips/experience-monte-carlo-poker"
+          href="/tips/experience-monte-carlo"
           className="inline-flex items-center text-slate-700 text-sm underline decoration-slate-300 underline-offset-4 transition hover:text-slate-900 dark:text-slate-200 dark:hover:text-white"
         >
           モンテカルロ法の説明と体験へ
