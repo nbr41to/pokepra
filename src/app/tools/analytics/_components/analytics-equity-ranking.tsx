@@ -10,7 +10,7 @@ export const AnalyticsEquityRanking = ({ ranking, heroEquity }: Props) => {
   const result = heroEquity;
 
   return (
-    <TabsContent value="equity-ranking" className="pt-12 pb-24">
+    <TabsContent value="equity-ranking">
       <ComboRankingWithRanksReport result={result} ranking={ranking} />
     </TabsContent>
   );
