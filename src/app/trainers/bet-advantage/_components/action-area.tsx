@@ -1,3 +1,4 @@
+import { Coins, Percent } from "lucide-react";
 import { useState } from "react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
@@ -16,12 +17,15 @@ export const ActionArea = () => {
   const {
     finished,
     position,
+    pot,
     hero,
     board,
     continueVillainRange,
     results,
     confirmedHand,
+    betActionLabelType,
     confirmHand,
+    toggleBetActionLabelType,
     heroAction,
     shuffleAndDeal,
   } = useActionStore();
@@ -45,25 +49,41 @@ export const ActionArea = () => {
           className="bg bg-green-50 dark:bg-green-950/60"
         />
         {confirmedHand && (
-          <div className="absolute top-1/2 left-4 flex w-1/2 -translate-y-1/2 flex-wrap gap-2">
-            {BET_SIZE_RATES.map((rate) => (
-              <Button
-                key={rate}
-                variant="outline"
-                className="relative w-1/3"
-                onClick={() => handleOnAction(rate)}
-              >
-                {Math.round(rate * 100)}%
-                <div
-                  className={cn(
-                    "absolute right-0 -bottom-1 text-muted-foreground text-xs",
-                    results[BET_SIZE_RATES.indexOf(rate)] < 0 && "text-red-500",
-                  )}
-                >
-                  {results[BET_SIZE_RATES.indexOf(rate)]?.toFixed(2)}
-                </div>
-              </Button>
-            ))}
+          <div className="absolute top-1/2 left-4 w-1/2 -translate-y-1/2 space-y-1">
+            <div className="text-muted-foreground text-xs">
+              {betActionLabelType === "size"
+                ? "ベットサイズ（POT比率）"
+                : "相手に要求する必要勝率"}
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {BET_SIZE_RATES.map((rate) => {
+                const betSize = Math.round(rate * 100);
+                const label =
+                  betActionLabelType === "size"
+                    ? `${betSize}%`
+                    : `${((betSize * 100) / (pot + betSize * 2)).toFixed(1)}%`;
+
+                return (
+                  <Button
+                    key={rate}
+                    variant="outline"
+                    className="relative w-1/3"
+                    onClick={() => handleOnAction(rate)}
+                  >
+                    {label}
+                    <div
+                      className={cn(
+                        "absolute right-0 -bottom-1 text-muted-foreground text-xs",
+                        results[BET_SIZE_RATES.indexOf(rate)] < 0 &&
+                          "text-red-500",
+                      )}
+                    >
+                      {results[BET_SIZE_RATES.indexOf(rate)]?.toFixed(2)}
+                    </div>
+                  </Button>
+                );
+              })}
+            </div>
           </div>
         )}
         {finished && (
@@ -101,6 +121,16 @@ export const ActionArea = () => {
           compareRange={continueVillainRange}
           disabled={!confirmedHand}
         />
+        <Button
+          data-state={betActionLabelType}
+          className="group rounded-full"
+          size="icon-lg"
+          variant="outline"
+          onClick={toggleBetActionLabelType}
+        >
+          <Coins className='group-data-[state="size"]:block group-data-[state="equity"]:hidden' />
+          <Percent className='group-data-[state="equity"]:block group-data-[state="size"]:hidden' />
+        </Button>
         <InformationSheet />
       </div>
     </div>

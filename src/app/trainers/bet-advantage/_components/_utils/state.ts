@@ -16,10 +16,12 @@ const DEFAULT_STRENGTH = 6;
 const BET_SIZE_RATES = [0.33, 0.5, 0.67, 1.0, 1.25, 1.5, 2.0, 3.0];
 
 type Street = "flop" | "turn" | "river";
+type BetActionLabelType = "size" | "equity";
 type State = {
   initialized: boolean;
   finished: boolean;
   confirmedHand: boolean; // ハンドを見たかどうか
+  betActionLabelType: BetActionLabelType;
 
   street: Street; // ストリート
   stack: number; // 持ち点
@@ -49,6 +51,7 @@ type Actions = {
   clear: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
   confirmHand: () => void;
+  toggleBetActionLabelType: () => void;
   heroAction: (
     action: (typeof BET_SIZE_RATES)[number] | "fold",
   ) => Promise<void>;
@@ -61,6 +64,7 @@ const INITIAL_STATE: State = {
   initialized: false,
   finished: false,
   confirmedHand: false,
+  betActionLabelType: "size",
 
   street: "flop",
   stack: 10,
@@ -123,6 +127,13 @@ const useActionStore = create<Store>((set, get) => ({
   confirmHand: () => {
     set({ confirmedHand: true });
   },
+  toggleBetActionLabelType: () => {
+    const { betActionLabelType } = get();
+    set({
+      betActionLabelType: betActionLabelType === "size" ? "equity" : "size",
+    });
+  },
+  // ヒーローのアクション
   heroAction: async (action) => {
     const { street, stack, deck, board, pot, hero, position, rangePromises } =
       get();
