@@ -1,4 +1,4 @@
-import { User, Users } from "lucide-react";
+import { Eye, EyeClosed, User, Users } from "lucide-react";
 import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { useActionStore } from "./_utils/state";
@@ -7,7 +7,9 @@ import { InformationSheet } from "./information-sheet";
 export const ActionArea = () => {
   const {
     hero,
+    hiddenRequiredEquity,
     confirmHand,
+    toggleHiddenRequiredEquity,
     action,
     calcResult,
     shuffleAndDeal,
@@ -53,6 +55,16 @@ export const ActionArea = () => {
         >
           <Users className='group-data-[state="open"]:block group-data-[state="closed"]:hidden' />
           <User className='group-data-[state="closed"]:block group-data-[state="open"]:hidden' />
+        </Button>
+        <Button
+          data-state={hiddenRequiredEquity ? "closed" : "open"}
+          className="group rounded-full"
+          size="icon-lg"
+          variant="outline"
+          onClick={toggleHiddenRequiredEquity}
+        >
+          <Eye className='group-data-[state="open"]:block group-data-[state="closed"]:hidden' />
+          <EyeClosed className='group-data-[state="closed"]:block group-data-[state="open"]:hidden' />
         </Button>
         <InformationSheet />
       </div>

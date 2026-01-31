@@ -14,7 +14,7 @@ const BB = 1;
 const BB_ANTE = 1;
 const RAKE = 0.05;
 const MIN_OPEN_RAISE = 2;
-const MAX_OPEN_RAISE = 5;
+const MAX_OPEN_RAISE = 10;
 const OPEN_RAISE_STEP = 0.5;
 const MIN_OPPONENTS = 1;
 
@@ -23,6 +23,7 @@ type PreflopAction = "call" | "fold";
 type State = {
   initialized: boolean;
   confirmedHand: boolean; // ハンドを見たかどうか
+  hiddenRequiredEquity: boolean;
 
   delta: number; // 変動点数
   stack: number; // 持ち点
@@ -39,7 +40,8 @@ type State = {
 
   action: PreflopAction | null;
 
-  result: MultiHandEquityPayload | null;
+  heroEquity: number;
+  results: MultiHandEquityPayload[];
 };
 
 type Actions = {
@@ -47,6 +49,7 @@ type Actions = {
   retry: () => void;
   shuffleAndDeal: (options?: { tier: number; people: number }) => Promise<void>;
   confirmHand: () => void;
+  toggleHiddenRequiredEquity: () => void;
   calcResult: (action: PreflopAction) => void;
   toggleMulti: () => void;
 };
@@ -55,6 +58,9 @@ type Store = State & Actions;
 
 const INITIAL_STATE: State = {
   initialized: false,
+  confirmedHand: false,
+  hiddenRequiredEquity: false,
+
   delta: 0,
   stack: 50,
   villainPosition: 0,
@@ -66,9 +72,9 @@ const INITIAL_STATE: State = {
   pot: 0,
   rakeAmount: 0,
   requiredEquity: 0,
-  confirmedHand: false,
   action: null,
-  result: null,
+  heroEquity: 0,
+  results: [],
 };
 
 const getRandomOpenRaise = () => {
@@ -79,8 +85,8 @@ const getRandomOpenRaise = () => {
 
 const getRandomOpponentsCount = () => {
   const roll = genRandomInt(10);
-  if (roll < 6) return 1;
-  if (roll < 9) return 2;
+  if (roll < 5) return 1;
+  if (roll < 8) return 2;
   return 3;
 };
 
@@ -114,14 +120,12 @@ const calcPreflopMeta = (
   raiserPosition: number,
 ) => {
   const callAmount = Math.max(openRaise - BB, 0);
-  const playersCount = opponentsCount + 1;
-  const raiserIsSb = raiserPosition === 1;
+  const includeSB =
+    raiserPosition === 1 ||
+    (raiserPosition === 9 && opponentsCount === 2) ||
+    (raiserPosition === 6 && opponentsCount === 3);
   const potBeforeCall =
-    SB +
-    BB +
-    BB_ANTE * playersCount +
-    openRaise * opponentsCount -
-    (raiserIsSb ? SB : 0);
+    SB + BB + BB_ANTE + openRaise * opponentsCount - (includeSB ? SB : 0);
   const pot = potBeforeCall + callAmount;
   const rakeAmount = pot * RAKE;
   const effectivePot = pot - rakeAmount;
@@ -216,7 +220,8 @@ const useActionStore = create<Store>((set, get) => ({
     set(() => ({
       ...INITIAL_STATE,
       initialized: true,
-      stack,
+      delta: -(BB + BB_ANTE),
+      stack: stack - BB - BB_ANTE,
       hero,
       villainPosition,
       openRaise,
@@ -233,6 +238,11 @@ const useActionStore = create<Store>((set, get) => ({
   confirmHand: () => {
     set(() => ({ confirmedHand: true }));
   },
+  // 必要勝率の表示切替
+  toggleHiddenRequiredEquity: () => {
+    const { hiddenRequiredEquity } = get();
+    set({ hiddenRequiredEquity: !hiddenRequiredEquity });
+  },
 
   // アクション時の計算
   calcResult: async (action: PreflopAction) => {
@@ -241,45 +251,58 @@ const useActionStore = create<Store>((set, get) => ({
       hero,
       stack,
       opponentsCount,
-      callAmount,
       pot,
+      callAmount,
       rakeAmount,
-      requiredEquity,
     } = get();
 
     const compareCandidates = getHandsByStrength(
       getRangeStrengthByPosition(villainPosition),
       hero,
     );
-    const opponents = pickOpponents(compareCandidates, opponentsCount);
-    const result = await simulateMultiHandEquity({
-      hands: [hero, ...opponents],
-      board: [],
-      trials: 1000,
-    });
+
+    const results = await Promise.all(
+      Array.from({ length: 200 }, async () => {
+        const opponents = pickOpponents(compareCandidates, opponentsCount);
+        const result = await simulateMultiHandEquity({
+          hands: [hero, ...opponents],
+          board: [],
+          trials: 100,
+        });
+
+        return result;
+      }),
+    );
+
+    // 平均を取る
     const heroKey = hero.join(" ");
     const heroEquity =
-      result.data.find((entry) => entry.hand === heroKey)?.equity ?? 0;
+      results.reduce(
+        (acc, result) =>
+          acc +
+          (result.data.find((entry) => entry.hand === heroKey)?.equity ?? 0),
+        0,
+      ) / results.length;
 
-    const winDelta = pot - rakeAmount - (BB + BB_ANTE + callAmount);
-    const loseDelta = -(BB + BB_ANTE + callAmount);
-    const rawDelta = heroEquity >= requiredEquity ? winDelta : loseDelta;
-    const delta = Math.floor(rawDelta);
+    if (action === "fold") {
+      set({
+        delta: 0,
+        action,
+        results,
+        heroEquity,
+      });
+    }
 
     if (action === "call") {
+      const expectedValue = (pot - rakeAmount) * heroEquity - callAmount;
+      const delta = Math.round(expectedValue);
+
       set({
         delta,
         stack: stack + delta,
         action,
-        result,
-      });
-    }
-    if (action === "fold") {
-      set({
-        delta: -(BB + BB_ANTE),
-        stack: stack - (BB + BB_ANTE),
-        action,
-        result,
+        results,
+        heroEquity,
       });
     }
   },

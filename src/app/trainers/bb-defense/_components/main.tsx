@@ -10,7 +10,7 @@ import { FailureOverlay } from "./failure-overlay";
 import { ResultArea } from "./result-area";
 
 export function Main() {
-  const { initialized, stack, delta, action, shuffleAndDeal, reset, retry } =
+  const { initialized, stack, delta, shuffleAndDeal, reset, retry } =
     useActionStore();
   const [loading, setLoading] = useState(false);
 
@@ -35,7 +35,6 @@ export function Main() {
         <div
           className={cn(
             "w-15 font-bold text-sm tabular-nums transition-opacity",
-            action ? "opacity-100" : "opacity-0",
             delta >= 0 ? "text-green-500" : "text-red-500",
           )}
         >
