@@ -45,6 +45,8 @@ export const ActionArea = () => {
           key={hero.join("-")}
           hand={hero}
           onOpenHand={confirmHand}
+          doubleTapActionName="Check"
+          onDoubleTap={() => handleOnAction(0)}
           onFold={() => handleOnAction("fold")}
           className="bg bg-green-50 dark:bg-green-950/60"
         />
@@ -56,7 +58,7 @@ export const ActionArea = () => {
                 : "相手に要求する必要勝率"}
             </div>
             <div className="flex flex-wrap gap-1">
-              {BET_SIZE_RATES.map((rate) => {
+              {BET_SIZE_RATES.slice(1).map((rate) => {
                 const betSize = Math.round(rate * 100);
                 const label =
                   betActionLabelType === "size"
@@ -83,6 +85,9 @@ export const ActionArea = () => {
                   </Button>
                 );
               })}
+            </div>
+            <div className="absolute bottom-0 left-full -translate-x-full text-muted-foreground text-xs">
+              {results[0]?.toFixed(2)}
             </div>
           </div>
         )}

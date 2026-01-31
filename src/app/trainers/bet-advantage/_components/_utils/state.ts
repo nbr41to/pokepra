@@ -13,7 +13,7 @@ import { calcExpectedValue } from "./calc";
 
 const PEOPLE = 9;
 const DEFAULT_STRENGTH = 6;
-const BET_SIZE_RATES = [0.33, 0.5, 0.67, 1.0, 1.25, 1.5, 2.0, 3.0];
+const BET_SIZE_RATES = [0, 0.33, 0.5, 0.67, 1.0, 1.25, 1.5, 2.0, 3.0];
 
 type Street = "flop" | "turn" | "river";
 type BetActionLabelType = "size" | "equity";
@@ -191,12 +191,14 @@ const useActionStore = create<Store>((set, get) => ({
     }
 
     const actionIndex = BET_SIZE_RATES.indexOf(action);
+    // const maxEV = Math.max(...results); // 最適EV TODO: checkのほうがEVが高くなっている原因を探りたい
     const delta = Math.floor(results[actionIndex]);
 
     // river
     if (street === "river") {
       set(() => ({
         finished: true,
+        results,
         delta,
       }));
 
