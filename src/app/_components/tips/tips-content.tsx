@@ -19,7 +19,7 @@ export function TipsContent() {
         size={320}
         fill="currentColor"
         strokeWidth={3}
-        className="fixed bottom-20 left-2/5 -z-10 rotate-12 text-green-400 dark:text-green-950"
+        className="fixed right-0 bottom-20 -z-10 translate-x-1/5 rotate-12 text-green-400 dark:text-green-950"
       />
       <PageTitle
         title="Tips"

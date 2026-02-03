@@ -21,7 +21,7 @@ export function ToolsContent() {
         size={320}
         fill="currentColor"
         strokeWidth={3}
-        className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-orange-400 dark:text-orange-950"
+        className="fixed right-0 bottom-20 -z-20 translate-x-1/5 rotate-12 text-orange-400 dark:text-orange-950"
       />
       <PageTitle
         title="Tools"

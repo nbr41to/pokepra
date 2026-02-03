@@ -35,7 +35,7 @@ export function TrainersContent() {
         size={320}
         fill="currentColor"
         strokeWidth={3}
-        className="fixed bottom-20 left-2/5 -z-20 rotate-12 text-blue-400 dark:text-blue-950"
+        className="fixed right-0 bottom-20 -z-20 translate-x-1/5 rotate-12 text-blue-400 dark:text-blue-950"
       />
       <PageTitle
         title="Trainers"
@@ -116,6 +116,12 @@ export function TrainersContent() {
           href="/trainers/equity-quiz"
           title="Equity Quiz"
           description="フロップにおける勝率のクイズができます。"
+          icon={<BookCheck />}
+        />
+        <RichLinkCard
+          href="/trainers/turn-equity-quiz"
+          title="Turn Equity Quiz"
+          description="ターンにおける勝率のクイズができます。"
           icon={<BookCheck />}
         />
       </div>

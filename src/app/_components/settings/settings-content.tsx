@@ -17,7 +17,7 @@ export function SettingsContent() {
         size={320}
         fill="currentColor"
         strokeWidth={3}
-        className="fixed bottom-20 left-2/5 -z-10 rotate-12 text-pink-400 dark:text-pink-950"
+        className="fixed right-0 bottom-20 -z-10 translate-x-1/5 rotate-12 text-pink-400 dark:text-pink-950"
       />
 
       <div className="w-full space-y-3">
