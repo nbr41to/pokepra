@@ -5,7 +5,12 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { SituationCopyButton } from "@/components/situation-copy-button";
 import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
-import { toHandSymbol } from "@/utils/hand-range";
+import { RangeAnalyticsSheet } from "@/features/analytics/range-analytics-sheet";
+import {
+  getHandsByStrength,
+  getRangeStrengthByPosition,
+  toHandSymbol,
+} from "@/utils/hand-range";
 import { useHoldemStore } from "./_utils/state";
 import { InformationSheet } from "./information-sheet";
 
@@ -14,6 +19,7 @@ export const ActionArea = () => {
     gameId,
     finished,
     street,
+    position,
     hero,
     board,
     confirmHand,
@@ -76,6 +82,16 @@ export const ActionArea = () => {
 
       <div className="flex justify-end gap-4 p-2">
         <HandRangeDrawer mark={toHandSymbol(hero)} />
+        <RangeAnalyticsSheet
+          hero={hero}
+          heroRange={getHandsByStrength(getRangeStrengthByPosition(position))}
+          board={board}
+          compareRange={getHandsByStrength(getRangeStrengthByPosition(2), [
+            ...hero,
+            ...board,
+          ])}
+          disabled={street === "preflop" || board.length < 3}
+        />
         <AnalyticsSheet
           hero={hero}
           board={board}
