@@ -14,37 +14,45 @@ export function PokerIntroSection() {
         <div className="space-y-3 rounded-md border bg-muted/30 p-3 text-sm">
           <p className="font-semibold">役の例</p>
           <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-20 text-muted-foreground text-xs">
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="w-16 text-muted-foreground text-xs">
                 ツーペア
               </span>
-              {["Ah", "Ad", "Ks", "Kc", "7d"].map((card) => (
-                <PlayCard key={`two-pair-${card}`} rs={card} size="sm" />
-              ))}
+              <div className="flex gap-1">
+                {["Ah", "Ad", "Ks", "Kc", "7d"].map((card) => (
+                  <PlayCard key={`two-pair-${card}`} rs={card} size="sm" />
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-20 text-muted-foreground text-xs">
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="w-16 text-muted-foreground text-xs">
                 ストレート
               </span>
-              {["9s", "Td", "Jh", "Qc", "Kd"].map((card) => (
-                <PlayCard key={`straight-${card}`} rs={card} size="sm" />
-              ))}
+              <div className="flex gap-1">
+                {["9s", "Td", "Jh", "Qc", "Kd"].map((card) => (
+                  <PlayCard key={`straight-${card}`} rs={card} size="sm" />
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-20 text-muted-foreground text-xs">
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="w-16 text-muted-foreground text-xs">
                 フラッシュ
               </span>
-              {["Ah", "Qh", "9h", "5h", "2h"].map((card) => (
-                <PlayCard key={`flush-${card}`} rs={card} size="sm" />
-              ))}
+              <div className="flex gap-1">
+                {["Ah", "Qh", "9h", "5h", "2h"].map((card) => (
+                  <PlayCard key={`flush-${card}`} rs={card} size="sm" />
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="w-20 text-muted-foreground text-xs">
+            <div className="flex flex-wrap items-center gap-1">
+              <span className="w-16 text-muted-foreground text-xs">
                 フルハウス
               </span>
-              {["Qs", "Qd", "Qh", "7c", "7s"].map((card) => (
-                <PlayCard key={`full-house-${card}`} rs={card} size="sm" />
-              ))}
+              <div className="flex gap-1">
+                {["Qs", "Qd", "Qh", "7c", "7s"].map((card) => (
+                  <PlayCard key={`full-house-${card}`} rs={card} size="sm" />
+                ))}
+              </div>
             </div>
           </div>
         </div>

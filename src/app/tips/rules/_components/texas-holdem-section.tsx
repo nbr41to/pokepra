@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { PlayCard } from "@/components/play-card";
 import { Button } from "@/components/shadcn/button";
+import { ButtonGroup } from "@/components/shadcn/button-group";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 
@@ -86,10 +87,11 @@ export function TexasHoldemSection() {
               </div>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <ButtonGroup>
             {players.map((player) => (
               <Button
                 key={`button-${player.id}`}
+                className="px-1 text-xs"
                 size="sm"
                 variant={selectedPlayerId === player.id ? "default" : "outline"}
                 onClick={() => setSelectedPlayerId(player.id)}
@@ -97,18 +99,20 @@ export function TexasHoldemSection() {
                 {player.label}の役
               </Button>
             ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {selectedPlayer.best.map((card) => (
-              <PlayCard
-                key={`best-${selectedPlayer.id}-${card}`}
-                rs={card}
-                size="sm"
-              />
-            ))}
-            <span className="text-muted-foreground text-xs">
+          </ButtonGroup>
+          <div className="flex flex-wrap items-center gap-1">
+            <span className="w-16 text-muted-foreground text-xs">
               {selectedPlayer.role}
             </span>
+            <div className="flex gap-1">
+              {selectedPlayer.best.map((card) => (
+                <PlayCard
+                  key={`best-${selectedPlayer.id}-${card}`}
+                  rs={card}
+                  size="sm"
+                />
+              ))}
+            </div>
           </div>
         </div>
         <TipsText>
