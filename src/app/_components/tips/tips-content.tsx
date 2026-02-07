@@ -53,6 +53,9 @@ export function TipsContent() {
       <NavigationSection title="Knowledge" description="用語・基本知識">
         <div className="flex flex-col items-center justify-center gap-y-3">
           <Button className="w-60" variant="outline" size="lg" asChild>
+            <Link href="/tips/hand-ranking">役一覧とキッカー</Link>
+          </Button>
+          <Button className="w-60" variant="outline" size="lg" asChild>
             <Link href="/tips/hand-probability">役が完成する確率</Link>
           </Button>
           <Button className="w-60" variant="outline" size="lg" asChild>
