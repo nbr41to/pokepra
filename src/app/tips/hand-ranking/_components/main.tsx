@@ -1,6 +1,7 @@
 import { PlayCard } from "@/components/play-card";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
+import { cn } from "@/lib/utils";
 
 const HAND_RANKINGS: { name: string; cards: string[]; summary: string }[] = [
   {
@@ -99,13 +100,13 @@ const ShowdownExample = ({
         <CardRow cards={board} />
       </div>
       <div
-        className={
-          winner === "hero"
-            ? "rounded border border-emerald-500/60 bg-emerald-50/60 p-1 dark:bg-emerald-950/30"
-            : winner === "split"
-              ? "rounded border border-sky-500/60 bg-sky-50/60 p-1 dark:bg-sky-950/30"
-              : "px-1.5"
-        }
+        className={cn(
+          "px-1.5",
+          winner === "hero" &&
+            "rounded border border-emerald-500/60 bg-emerald-50/60 p-1 dark:bg-emerald-950/30",
+          winner === "split" &&
+            "rounded border border-sky-500/60 bg-sky-50/60 p-1 dark:bg-sky-950/30",
+        )}
       >
         <div className="flex items-center gap-2">
           <span className="w-16 text-muted-foreground">あなた</span>
@@ -123,13 +124,13 @@ const ShowdownExample = ({
         </div>
       </div>
       <div
-        className={
-          winner === "villain"
-            ? "rounded border border-rose-500/60 bg-rose-50/60 p-1 dark:bg-rose-950/30"
-            : winner === "split"
-              ? "rounded border border-sky-500/60 bg-sky-50/60 p-1 dark:bg-sky-950/30"
-              : "px-1.5"
-        }
+        className={cn(
+          "px-1.5",
+          winner === "villain" &&
+            "rounded border border-rose-500/60 bg-rose-50/60 p-1 dark:bg-rose-950/30",
+          winner === "split" &&
+            "rounded border border-sky-500/60 bg-sky-50/60 p-1 dark:bg-sky-950/30",
+        )}
       >
         <div className="flex items-center gap-2">
           <span className="w-16 text-muted-foreground">相手</span>
