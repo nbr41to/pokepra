@@ -113,6 +113,13 @@ export function TrainersContent() {
           </div>
         </RichLinkCard>
         <RichLinkCard
+          href="/trainers/full-street-defense"
+          title="Full Street Defense"
+          description="100BBを守るフルストリートのディフェンス判断を鍛えます。"
+          isNew
+          icon={<ShieldPlus />}
+        />
+        <RichLinkCard
           href="/trainers/equity-quiz"
           title="Equity Quiz"
           description="フロップにおける勝率のクイズができます。"
