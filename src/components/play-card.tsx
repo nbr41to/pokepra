@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { SuitIcon } from "./suit-icon";
 
 const variants = cva(
-  "flex flex-col items-center justify-center bg-background border data-[suit=s]:text-suit-spade data-[suit=h]:text-suit-heart data-[suit=d]:text-suit-diamond data-[suit=c]:text-suit-club",
+  "flex flex-col select-none items-center justify-center bg-background border data-[suit=s]:text-suit-spade data-[suit=h]:text-suit-heart data-[suit=d]:text-suit-diamond data-[suit=c]:text-suit-club data-[suit=s]:fill-suit-spade data-[suit=h]:fill-suit-heart data-[suit=d]:fill-suit-diamond data-[suit=c]:fill-suit-club",
   {
     variants: {
       variant: {
@@ -73,6 +73,7 @@ export const PlayCard = ({
             suppressHydrationWarning
             suit={suit}
             strokeWidth={strokeWidth}
+            fill="fill"
           />
           <span
             suppressHydrationWarning

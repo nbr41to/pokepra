@@ -90,10 +90,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --suit-spade: #60a5fa;
-  --suit-heart: #f472b6;
-  --suit-diamond: #fb923c;
-  --suit-club: #4ade80;
+  --suit-spade: var(--color-slate-700);
+  --suit-heart: var(--color-pink-400);
+  --suit-diamond: var(--color-cyan-400);
+  --suit-club: var(--color-green-400);
 }
 
 .dark {
@@ -128,10 +128,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-  --suit-spade: #2563eb;
-  --suit-heart: #db2777;
-  --suit-diamond: #ea580c;
-  --suit-club: #16a34a;
+  --suit-spade: var(--color-slate-400);
+  --suit-heart: var(--color-pink-600);
+  --suit-diamond: var(--color-cyan-600);
+  --suit-club: var(--color-green-600);
 }
 
 @layer base {
