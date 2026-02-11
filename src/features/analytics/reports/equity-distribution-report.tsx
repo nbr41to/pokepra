@@ -14,7 +14,7 @@ import {
   ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import { cn } from "@/lib/utils";
-import type { RangeVsRangePayload } from "@/lib/wasm/types";
+import type { RangeVsRangePayload } from "@/lib/wasm-v1/types";
 
 const chartConfig = {
   hero: {

@@ -1,6 +1,6 @@
 import { TabsContent } from "@/components/shadcn/tabs";
 import { ComboRankingWithRanksReport } from "@/features/analytics/reports/combo-ranking-with-ranks-report";
-import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/types";
+import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm-v1/types";
 
 type Props = {
   ranking: HandRankingEntry[];

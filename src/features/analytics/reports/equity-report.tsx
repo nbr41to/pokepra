@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { Combo } from "@/components/combo";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload, EquityPayload } from "@/lib/wasm/simulation";
+import type { CombinedPayload, EquityPayload } from "@/lib/wasm-v1/simulation";
 
 /**
  * hero vs range の勝率の分布チャート

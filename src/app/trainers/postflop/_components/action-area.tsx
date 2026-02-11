@@ -5,7 +5,7 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { SituationCopyButton } from "@/components/situation-copy-button";
 import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
-import { simulateVsListEquity } from "@/lib/wasm/simulation";
+import { simulateVsListEquity } from "@/lib/wasm-v1/simulation";
 import {
   getHandsByStrength,
   getRangeStrengthByPosition,

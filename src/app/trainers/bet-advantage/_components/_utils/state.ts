@@ -4,7 +4,7 @@ import {
   type RangeVsRangePayload,
   simulateRangeVsRangeEquity,
   simulateVsListEquity,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { genHand, getShuffledDeck } from "@/utils/dealer";
 import { getRangeStrengthByPosition } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";

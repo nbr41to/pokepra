@@ -6,7 +6,7 @@ import { Progress } from "@/components/shadcn/progress";
 import preflopHandRanking from "@/data/preflop-hand-ranking.json";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
-import { simulateVsListEquity } from "@/lib/wasm/simulation";
+import { simulateVsListEquity } from "@/lib/wasm-v1/simulation";
 import { getAllCombos } from "@/utils/dealer";
 import { EquitiesTable } from "./equities-table";
 

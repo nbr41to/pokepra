@@ -8,7 +8,7 @@ import { Button } from "@/components/shadcn/button";
 import {
   simulateRankDistribution,
   simulateVsListEquity,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { getShuffledDeck } from "@/utils/dealer";
 import { shuffleArray } from "@/utils/general";
 import {

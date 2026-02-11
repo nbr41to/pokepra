@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { parseRangeToHands } from "@/lib/wasm/simulation";
+import { parseRangeToHands } from "@/lib/wasm-v1/simulation";
 import { genHand } from "@/utils/dealer";
 import { getRangeStrengthByPosition } from "@/utils/hand-range";
 import { genPositionNumber } from "@/utils/position";

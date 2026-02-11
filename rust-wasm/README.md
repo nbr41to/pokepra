@@ -37,7 +37,7 @@ pub extern "C" fn compare_hands(
 1. ターゲット追加（初回のみ）: `rustup target add wasm32-unknown-unknown`
 2. ビルド: `cargo build --release --target wasm32-unknown-unknown`
 3. アーティファクトコピー:  
-   `cp target/wasm32-unknown-unknown/release/rust_wasm_demo.wasm ../public/wasm/rust_wasm_bg.wasm`
+   `cp target/wasm32-unknown-unknown/release/rust_wasm_demo.wasm ../public/wasm-v1/rust_wasm_bg.wasm`
 
 `public/` 配下に置くことで Next.js からそのまま `fetch` できます。
 

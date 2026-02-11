@@ -18,8 +18,8 @@ import {
   SheetTrigger,
 } from "@/components/shadcn/sheet";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanks } from "@/lib/wasm/simulation";
-import type { CombinedPayload, EquityPayload } from "@/lib/wasm/types";
+import { simulateVsListWithRanks } from "@/lib/wasm-v1/simulation";
+import type { CombinedPayload, EquityPayload } from "@/lib/wasm-v1/types";
 
 const TRIAL_ITERATIONS = 100000;
 

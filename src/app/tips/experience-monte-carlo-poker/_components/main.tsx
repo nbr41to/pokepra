@@ -7,8 +7,8 @@ import { ScrollArea } from "@/components/shadcn/scroll-area";
 import { TipsCard } from "@/features/tips/tips-card";
 import { TipsText } from "@/features/tips/tips-text";
 import { cn } from "@/lib/utils";
-import { simulateVsListWithRanksTrace } from "@/lib/wasm/simulation";
-import type { MonteCarloTraceEntry } from "@/lib/wasm/types";
+import { simulateVsListWithRanksTrace } from "@/lib/wasm-v1/simulation";
+import type { MonteCarloTraceEntry } from "@/lib/wasm-v1/types";
 import { getAllCombos } from "@/utils/dealer";
 import { shuffleArray } from "@/utils/general";
 

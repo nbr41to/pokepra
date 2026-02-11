@@ -14,7 +14,7 @@ import type {
   EquityPayload,
   HandRankingEntry,
   RangeVsRangePayload,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { ComboRankingContent } from "./combo-ranking-content";
 import { EquityDistributionContent } from "./equity-distribution-content";
 import { EquityReportContent } from "./equity-report-content";

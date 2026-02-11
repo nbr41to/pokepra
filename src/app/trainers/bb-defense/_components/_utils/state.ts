@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import type { MultiHandEquityPayload } from "@/lib/wasm/simulation";
-import { simulateMultiHandEquity } from "@/lib/wasm/simulation";
+import type { MultiHandEquityPayload } from "@/lib/wasm-v1/simulation";
+import { simulateMultiHandEquity } from "@/lib/wasm-v1/simulation";
 import { genHand } from "@/utils/dealer";
 import { genRandomInt } from "@/utils/general";
 import {

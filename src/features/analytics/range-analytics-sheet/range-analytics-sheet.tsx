@@ -16,7 +16,7 @@ import {
   evaluateHandsRanking,
   simulateRangeVsRangeEquity,
   simulateVsListEquity,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { getAllCombos } from "@/utils/dealer";
 import { RangeAnalyticsReport } from "./range-analytics-report";
 

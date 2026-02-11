@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import {
   evaluateHandsRanking,
   simulateVsListWithRanks,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { getAllCombos } from "@/utils/dealer";
 import {
   getHandsByStrength,

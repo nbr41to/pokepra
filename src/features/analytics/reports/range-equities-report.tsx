@@ -4,7 +4,7 @@ import { useState } from "react";
 import { RangeTable } from "@/components/range-table";
 import { Slider } from "@/components/shadcn/slider";
 import { cn } from "@/lib/utils";
-import type { RangeEquityEntry } from "@/lib/wasm/types";
+import type { RangeEquityEntry } from "@/lib/wasm-v1/types";
 import { toHandSymbol } from "@/utils/hand-range";
 
 type Props = {

@@ -1,5 +1,5 @@
 import { use } from "react";
-import type { EquityPayload } from "@/lib/wasm/types";
+import type { EquityPayload } from "@/lib/wasm-v1/types";
 import { EquityReport } from "../reports/equity-report";
 
 type Props = {

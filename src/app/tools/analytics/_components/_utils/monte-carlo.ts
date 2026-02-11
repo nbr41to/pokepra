@@ -8,7 +8,7 @@ import {
   simulateRangeVsRangeEquity,
   simulateVsListEquity,
   simulateVsListWithRanks,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 
 const ITERATIONS = 1000;
 /**

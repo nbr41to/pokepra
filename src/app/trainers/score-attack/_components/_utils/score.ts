@@ -1,4 +1,4 @@
-import type { CombinedPayload } from "@/lib/wasm/simulation";
+import type { CombinedPayload } from "@/lib/wasm-v1/simulation";
 
 const _calcScore = ({
   street,

@@ -3,7 +3,7 @@ import type {
   CombinedPayload,
   HandRankingEntry,
   RangeVsRangePayload,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import {
   genHand,
   getAllCombos,

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Combo } from "@/components/combo";
 import { cn } from "@/lib/utils";
-import type { EquityPayload, HandRankingEntry } from "@/lib/wasm/simulation";
+import type { EquityPayload, HandRankingEntry } from "@/lib/wasm-v1/simulation";
 
 type Props = {
   payload: EquityPayload;

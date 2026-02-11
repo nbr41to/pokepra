@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { Combo } from "@/components/combo";
 import { HandProbability } from "@/components/hand-probability";
 import { cn } from "@/lib/utils";
-import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
+import type {
+  CombinedPayload,
+  HandRankingEntry,
+} from "@/lib/wasm-v1/simulation";
 
 type Props = {
   result: CombinedPayload;

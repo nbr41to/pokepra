@@ -8,7 +8,7 @@ import type {
   CombinedPayload,
   HandRankingEntry,
   RangeVsRangePayload,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import { getSettingOpenRange } from "@/utils/setting";
 import { useHoldemStore } from "./_utils/state";
 import { AnalyticsEquityRanking } from "./analytics-equity-ranking";

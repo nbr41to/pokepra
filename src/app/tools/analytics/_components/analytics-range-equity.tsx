@@ -1,6 +1,6 @@
 import { TabsContent } from "@/components/shadcn/tabs";
 import { RangeEquitiesReport } from "@/features/analytics/reports/range-equities-report";
-import type { RangeEquityEntry } from "@/lib/wasm/types";
+import type { RangeEquityEntry } from "@/lib/wasm-v1/types";
 
 type Props = {
   tabValue: "hero-range" | "villain-range";

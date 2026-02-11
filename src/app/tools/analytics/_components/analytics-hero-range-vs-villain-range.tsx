@@ -1,6 +1,6 @@
 import { TabsContent } from "@/components/shadcn/tabs";
 import { EquityDistributionReport } from "@/features/analytics/reports/equity-distribution-report";
-import type { CombinedPayload, RangeVsRangePayload } from "@/lib/wasm/types";
+import type { CombinedPayload, RangeVsRangePayload } from "@/lib/wasm-v1/types";
 
 type Props = {
   heroEquity: CombinedPayload;

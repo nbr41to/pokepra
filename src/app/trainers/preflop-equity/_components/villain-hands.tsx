@@ -1,7 +1,7 @@
 import { Redo } from "lucide-react";
 import { OtherHand } from "@/components/other-hand";
 import { cn } from "@/lib/utils";
-import type { EquityPayload } from "@/lib/wasm/types";
+import type { EquityPayload } from "@/lib/wasm-v1/types";
 import { getPositionLabel } from "@/utils/position";
 
 type Props = {

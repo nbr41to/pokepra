@@ -46,7 +46,7 @@ export const getWasmWorker = () => {
   }
   if (!worker) {
     worker = new Worker(
-      new URL("../wasm/simulation/simulation.worker.ts", import.meta.url),
+      new URL("../wasm-v1/simulation/simulation.worker.ts", import.meta.url),
       {
         type: "module",
       },

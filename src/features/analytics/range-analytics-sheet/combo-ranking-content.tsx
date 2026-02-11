@@ -2,7 +2,7 @@ import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 import { use, useCallback, useRef } from "react";
 import { Button } from "@/components/shadcn/button";
 import { ScrollArea } from "@/components/shadcn/scroll-area";
-import type { EquityPayload, HandRankingEntry } from "@/lib/wasm/types";
+import type { EquityPayload, HandRankingEntry } from "@/lib/wasm-v1/types";
 import { ComboRankingReport } from "../reports/combo-ranking-report";
 
 type Props = {

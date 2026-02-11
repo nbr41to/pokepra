@@ -24,7 +24,7 @@ import {
   evaluateHandsRanking,
   simulateRangeVsRangeEquity,
   simulateVsListWithRanks,
-} from "@/lib/wasm/simulation";
+} from "@/lib/wasm-v1/simulation";
 import {
   expandStartingHands,
   getRangeStrengthByPosition,

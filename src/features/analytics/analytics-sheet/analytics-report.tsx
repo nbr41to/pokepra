@@ -19,7 +19,10 @@ import {
   TabsTrigger,
 } from "@/components/shadcn/tabs";
 import { EquityReport } from "@/features/analytics/reports/equity-report";
-import type { CombinedPayload, HandRankingEntry } from "@/lib/wasm/simulation";
+import type {
+  CombinedPayload,
+  HandRankingEntry,
+} from "@/lib/wasm-v1/simulation";
 import { expandStartingHands, toHandSymbol } from "@/utils/hand-range";
 import { getSettingOpenRange } from "@/utils/setting";
 import { ComboRankingWithRanksReport } from "../reports/combo-ranking-with-ranks-report";

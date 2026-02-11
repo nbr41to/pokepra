@@ -4,7 +4,7 @@ import { HeroActionArea } from "@/components/hero-action-area";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { AnalyticsSheet } from "@/features/analytics/analytics-sheet";
-import { simulateVsListEquity } from "@/lib/wasm/simulation";
+import { simulateVsListEquity } from "@/lib/wasm-v1/simulation";
 import {
   getHandsByStrength,
   getRangeStrengthByPosition,

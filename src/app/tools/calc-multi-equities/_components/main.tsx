@@ -7,7 +7,7 @@ import { InputHands } from "@/components/input-hands";
 import { Button } from "@/components/shadcn/button";
 import { Label } from "@/components/shadcn/label";
 import { Progress } from "@/components/shadcn/progress";
-import { simulateMultiHandEquity } from "@/lib/wasm/simulation";
+import { simulateMultiHandEquity } from "@/lib/wasm-v1/simulation";
 import { ResultsPieChart } from "./results-pie-chart";
 
 const splitCards = (val: string) => {
