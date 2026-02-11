@@ -230,7 +230,7 @@ const useOffenseStore = create<Store>((set, get) => ({
       const callers = villains.filter(
         (villain) => villain.villainEquity >= requiredEquity,
       );
-      const villainsWithDecision = villains.map((villain) => ({
+      const villainsWithDecision: Villain[] = villains.map((villain) => ({
         ...villain,
         decision: callers.some((caller) => caller.id === villain.id)
           ? "call"
