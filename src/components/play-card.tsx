@@ -12,9 +12,9 @@ const variants = cva(
         grape: "",
       },
       size: {
-        sm: "h-11 w-8 min-w-8 p-px rounded border [&_span]:text-base/[1] [&>div>svg]:size-5 [&>svg]:size-6",
-        md: "h-20 w-15 min-w-15 p-1 rounded-md border-2 [&_span]:text-3xl [&>div>svg]:size-8 [&>svg]:size-[48px]",
-        lg: "h-36 w-28 min-w-28 p-1 rounded-md border-2 relative [&_span]:text-4xl [&>div>svg]:size-8 [&>svg]:size-22 [&_div]:absolute [&_div]:right-1 [&_div]:bottom-1",
+        sm: "h-11 w-8 min-w-8 p-px rounded border [&_span]:text-base/[1] [&>div>svg]:size-4 [&>svg]:size-6",
+        md: "h-20 w-15 min-w-15 p-1 rounded-md border-2 [&_span]:text-3xl [&>div>svg]:size-7 [&>svg]:size-12",
+        lg: "h-36 w-28 min-w-28 p-1 rounded-md border-2 relative [&_span]:text-4xl [&>div>svg]:size-7 [&>svg]:size-22 [&_div]:absolute [&_div]:right-1 [&_div]:bottom-1",
       },
     },
 

@@ -13,8 +13,8 @@ type Props = {
 
 const BASE_DELAY_MS = 200;
 const STEP_DELAY_MS = 220;
-const FLIP_DURATION_MS = 300;
-const FLOP_SLIDE_DURATION_MS = 240;
+const FLIP_DURATION_MS = 500;
+const FLOP_SLIDE_DURATION_MS = 300;
 const FLOP_FLIP_DELAY_MS = 0;
 const CARD_WIDTH_PX = 60;
 const CARD_GAP_PX = 6;
@@ -204,11 +204,11 @@ const BoardCard = ({
     const initialTranslate = instant ? 0 : slideFromPx;
     const slideAnimation = instant
       ? undefined
-      : `slide-to-position 240ms ease-out ${slideDelayMs}ms forwards`;
+      : `slide-to-position ${FLOP_SLIDE_DURATION_MS}ms ease-out ${slideDelayMs}ms forwards`;
     const initialRotation = instant ? 0 : 180;
     const flipAnimation = instant
       ? undefined
-      : `flip 300ms ease-out ${delayMs}ms forwards`;
+      : `flip ${FLIP_DURATION_MS}ms ease-out ${delayMs}ms forwards`;
 
     return (
       <div
