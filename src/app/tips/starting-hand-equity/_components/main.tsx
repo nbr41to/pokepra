@@ -9,6 +9,7 @@ import { TipsText } from "@/features/tips/tips-text";
 import { simulateVsListEquity } from "@/lib/wasm-v1/simulation";
 import { getAllCombos } from "@/utils/dealer";
 import { EquitiesTable } from "./equities-table";
+import { StartingHandEquityTable } from "./starting-hand-equity-table";
 
 const TRIALS = 100;
 const SUITS = ["s", "h", "d", "c"] as const;
@@ -133,44 +134,7 @@ export const Main = () => {
       </TipsCard>
       <TipsCard className="space-y-3">
         <h2 className="font-semibold">勝率テーブル (全ハンド)</h2>
-        <div className="max-h-100 overflow-y-auto bg-muted px-2">
-          <table className="w-full text-left text-sm">
-            <thead className="sticky top-0 border-b bg-muted text-muted-foreground text-xs uppercase">
-              <tr>
-                <th className="py-2 pr-3">位</th>
-                <th className="whitespace-nowrap py-2 pr-3">ハンド</th>
-                <th className="py-2 pr-3">2人</th>
-                <th className="py-2 pr-3">実行結果</th>
-                <th className="py-2 pr-3">差</th>
-                <th className="py-2 pr-3">6人</th>
-                <th className="py-2 pr-3">10人</th>
-              </tr>
-            </thead>
-            <tbody>
-              {allHands.map((row) => {
-                const sim = simulated?.[row.hand];
-                const diff = typeof sim === "number" ? sim - row.player2 : null;
-                return (
-                  <tr key={row.hand} className="border-b last:border-0">
-                    <td className="py-2 pr-3 font-mono text-xs">{row.rank}</td>
-                    <td className="py-2 pr-3 font-semibold">{row.hand}</td>
-                    <td className="py-2 pr-3">{formatPct(row.player2)}</td>
-                    <td className="py-2 pr-3">
-                      {typeof sim === "number" ? formatPct(sim) : "-"}
-                    </td>
-                    <td className="py-2 pr-3">
-                      {typeof diff === "number"
-                        ? formatPct(Math.abs(diff))
-                        : "-"}
-                    </td>
-                    <td className="py-2 pr-3">{row.player6}%</td>
-                    <td className="py-2 pr-3">{row.player10}%</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <StartingHandEquityTable rows={allHands} simulated={simulated} />
         <p className="text-muted-foreground text-xs">
           s=スーテッド, o=オフスート。
         </p>
@@ -179,8 +143,14 @@ export const Main = () => {
         </p>
       </TipsCard>
       <TipsCard className="space-y-3">
-        <h2 className="font-semibold">レンジ表で確認する（2 人）</h2>
+        <h2 className="font-semibold">レンジ表で確認する（人数切替）</h2>
         <EquitiesTable equities={allHands} />
+      </TipsCard>
+      <TipsCard className="space-y-3">
+        <h2 className="font-semibold">ヘッズアップとマルチウェイの違い</h2>
+        <TipsText>
+          上の勝率テーブルとレンジ表を人数ごとに見比べると、参加人数が増えるほど、フラッシュやストレートを作りやすいスーテッド系ハンドやコネクターの相対的な強みが上がることがわかります。
+        </TipsText>
       </TipsCard>
     </section>
   );
