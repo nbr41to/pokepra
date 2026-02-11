@@ -188,6 +188,18 @@
     animation: flip 300ms ease-out forwards;
   }
 
+  @keyframes slide-to-position {
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes show-card {
+    to {
+      opacity: 1;
+    }
+  }
+
   @keyframes heroEqIndicator {
     0% {
       top: 100%;
