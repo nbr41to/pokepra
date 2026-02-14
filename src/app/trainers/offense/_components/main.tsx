@@ -1,17 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Board } from "@/components/board";
 import { OtherHand } from "@/components/other-hand";
 import { Spinner } from "@/components/shadcn/spinner";
 import { cn } from "@/lib/utils";
 import { useOffenseStore } from "./_utils/state";
 import { ActionArea } from "./action-area";
-import { GameInfo } from "./game-info";
-import { ResultArea } from "./result-area";
 
 export function Main() {
-  const { initialized, processing, villains, finished, shuffleAndDeal, reset } =
-    useOffenseStore();
+  const {
+    initialized,
+    processing,
+    villains,
+    finished,
+    board,
+    street,
+    winnerVillainIds,
+    shuffleAndDeal,
+    reset,
+  } = useOffenseStore();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -33,34 +41,46 @@ export function Main() {
   }
 
   return (
-    <div className="relative mt-auto w-full space-y-2">
-      <GameInfo />
-      <ResultArea />
+    <div className="relative mt-auto w-full space-y-3">
+      <div className="space-y-2 px-2">
+        <div className="text-center text-muted-foreground text-xs uppercase tracking-wide">
+          {street} street
+        </div>
+        <div className="grid place-content-center">
+          <Board cards={board} />
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center justify-center gap-2 px-2">
         {villains.map((villain) => (
           <div
             key={villain.id}
             className={cn(
-              "flex min-w-24 flex-col items-center gap-1 rounded border bg-card/60 px-2 py-2 transition-opacity",
-              finished && villain.decision === "fold" && "opacity-30",
+              "flex flex-col items-center gap-1 transition-opacity",
+              !villain.active && "opacity-30",
+              finished &&
+                winnerVillainIds.includes(villain.id) &&
+                "rounded border border-yellow-400/70 bg-yellow-50/60 px-1 py-1 dark:bg-yellow-950/20",
             )}
           >
-            <span className="text-muted-foreground text-xs">
-              Villain {villain.id}
-            </span>
-            <OtherHand hand={villain.hand} reversed={finished} />
-            {finished && villain.decision && (
+            {finished && winnerVillainIds.includes(villain.id) && (
+              <span className="rounded bg-yellow-100 px-2 py-0.5 font-bold text-[10px] text-yellow-700 tracking-wide dark:bg-yellow-900/70 dark:text-yellow-200">
+                WINNER
+              </span>
+            )}
+            {villain.reaction && (
               <span
                 className={cn(
                   "rounded px-2 py-0.5 font-semibold text-[11px] tracking-wide",
-                  villain.decision === "call"
+                  villain.reaction === "call"
                     ? "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300"
                     : "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
                 )}
               >
-                {villain.decision.toUpperCase()}
+                {villain.reaction.toUpperCase()}
               </span>
             )}
+            <OtherHand hand={villain.hand} reversed={finished} />
           </div>
         ))}
       </div>

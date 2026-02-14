@@ -6,10 +6,15 @@ import { BET_SIZE_RATES, useOffenseStore } from "./_utils/state";
 export const ActionArea = () => {
   const {
     hero,
+    street,
     finished,
     confirmedHand,
     processing,
     pot,
+    villains,
+    resultText,
+    heroWinner,
+    winnerVillainIds,
     betActionLabelType,
     confirmHand,
     toggleBetActionLabelType,
@@ -18,6 +23,16 @@ export const ActionArea = () => {
     heroBet,
     shuffleAndDeal,
   } = useOffenseStore();
+  const activeVillainsCount = villains.filter(
+    (villain) => villain.active,
+  ).length;
+  const winnerText = heroWinner
+    ? winnerVillainIds.length > 0
+      ? "Winner: HERO & VILLAIN (Split)"
+      : "Winner: HERO"
+    : winnerVillainIds.length > 0
+      ? `Winner: VILLAIN ${winnerVillainIds.join(", ")}`
+      : "";
 
   const runAsyncAction = async (action: () => Promise<void> | void) => {
     if (processing || finished) return;
@@ -45,6 +60,9 @@ export const ActionArea = () => {
         {confirmedHand && !finished && (
           <div className="absolute top-1/2 left-4 w-1/2 -translate-y-1/2 space-y-1">
             <div className="text-muted-foreground text-xs">
+              {street.toUpperCase()} / 残り {activeVillainsCount} 人
+            </div>
+            <div className="text-muted-foreground text-xs">
               {betActionLabelType === "size"
                 ? "ベットサイズ（POT比率）"
                 : "相手に要求する必要勝率"}
@@ -61,7 +79,7 @@ export const ActionArea = () => {
                   <Button
                     key={rate}
                     variant="outline"
-                    className="w-[31%] px-0"
+                    className="relative w-1/3"
                     onClick={() => void runAsyncAction(() => heroBet(rate))}
                     disabled={processing}
                   >
@@ -78,6 +96,14 @@ export const ActionArea = () => {
 
         {finished && (
           <div className="absolute top-0 left-0 grid h-full w-full place-content-center bg-background/30">
+            <div className="mb-2 rounded bg-background/90 px-3 py-1 text-muted-foreground text-xs shadow-sm">
+              {resultText}
+            </div>
+            {winnerText && (
+              <div className="mb-2 rounded bg-yellow-100 px-3 py-1 font-semibold text-xs text-yellow-800 shadow-sm dark:bg-yellow-900/70 dark:text-yellow-100">
+                {winnerText}
+              </div>
+            )}
             <Button
               size="lg"
               className="rounded-lg text-base shadow"
@@ -101,34 +127,7 @@ export const ActionArea = () => {
           <Coins className='group-data-[state="size"]:block group-data-[state="equity"]:hidden' />
           <Percent className='group-data-[state="equity"]:block group-data-[state="size"]:hidden' />
         </Button>
-
-        <Button
-          variant="outline"
-          className="rounded-full px-4"
-          onClick={() => void runAsyncAction(heroCheck)}
-          disabled={finished || processing}
-        >
-          Check
-        </Button>
-        <Button
-          variant="outline"
-          className="rounded-full px-4"
-          onClick={heroFold}
-          disabled={finished || processing}
-        >
-          Fold
-        </Button>
       </div>
-
-      {!finished && (
-        <div className="px-2 pb-2">
-          {!confirmedHand && (
-            <p className="text-center text-[11px] text-muted-foreground">
-              カードをオープンすると BET ボタンが表示されます
-            </p>
-          )}
-        </div>
-      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import {
+  evaluateHandsRanking,
   simulateMultiHandEquity,
   simulateVsListEquity,
 } from "@/lib/wasm-v1/simulation";
@@ -13,16 +14,17 @@ import { genRandomInt } from "@/utils/general";
 const DEFAULT_POT = 10;
 const BET_SIZE_RATES = [0.33, 0.5, 0.67, 1.0, 1.25, 1.5, 2.0] as const;
 
+export type Street = "flop" | "turn" | "river";
 export type BetActionLabelType = "size" | "equity";
 export type HeroAction = "check" | "fold" | "bet" | null;
-export type VillainDecision = "call" | "fold" | null;
 
 export type Villain = {
   id: number;
   hand: string[];
   heroEquity: number;
   villainEquity: number;
-  decision: VillainDecision;
+  active: boolean;
+  reaction: "call" | "fold" | null;
 };
 
 type State = {
@@ -31,9 +33,12 @@ type State = {
   confirmedHand: boolean;
   processing: boolean;
   betActionLabelType: BetActionLabelType;
+  street: Street;
 
   hero: string[];
   villains: Villain[];
+  board: string[];
+  deck: string[];
 
   pot: number;
   stack: number;
@@ -45,6 +50,8 @@ type State = {
   requiredEquity: number;
   showdownEquity: number;
   resultText: string;
+  heroWinner: boolean;
+  winnerVillainIds: number[];
 };
 
 type Actions = {
@@ -59,15 +66,24 @@ type Actions = {
 
 type Store = State & Actions;
 
+const STREET_LABEL: Record<Street, string> = {
+  flop: "Flop",
+  turn: "Turn",
+  river: "River",
+};
+
 const INITIAL_STATE: State = {
   initialized: false,
   finished: false,
   confirmedHand: false,
   processing: false,
   betActionLabelType: "size",
+  street: "flop",
 
   hero: [],
   villains: [],
+  board: [],
+  deck: [],
 
   pot: DEFAULT_POT,
   stack: 0,
@@ -79,6 +95,8 @@ const INITIAL_STATE: State = {
   requiredEquity: 0,
   showdownEquity: 0,
   resultText: "",
+  heroWinner: false,
+  winnerVillainIds: [],
 };
 
 const calcRequiredEquity = (rate: number) => rate / (1 + rate * 2);
@@ -94,150 +112,139 @@ const pickHeroEquityFromPayload = (
 };
 
 const withRoundedDelta = (value: number) => Math.round(value);
+const toHandKey = (hand: string[]) => [...hand].sort().join(" ");
 
-const useOffenseStore = create<Store>((set, get) => ({
-  ...INITIAL_STATE,
+const buildNextStreet = ({
+  street,
+  board,
+  deck,
+}: {
+  street: Street;
+  board: string[];
+  deck: string[];
+}) => {
+  const nextDeck = [...deck];
 
-  reset: () => {
-    set((state) => ({
-      ...INITIAL_STATE,
-      stack: state.stack,
-      betActionLabelType: state.betActionLabelType,
-    }));
-  },
+  if (street === "flop") {
+    return {
+      nextStreet: "turn" as const,
+      nextBoard: [...board, ...nextDeck.splice(0, 3)],
+      nextDeck,
+      showdown: false,
+    };
+  }
 
-  shuffleAndDeal: async () => {
-    const { stack, betActionLabelType } = get();
-    if (get().processing) return;
-    set(() => ({ processing: true }));
-    const hero = genHand();
-    const villainCount = 2 + genRandomInt(3);
-    const deck = getShuffledDeck(hero);
-    const villainHands = Array.from({ length: villainCount }, (_, index) => {
-      const first = deck[index * 2] ?? "";
-      const second = deck[index * 2 + 1] ?? "";
-      return sortCardsByRankAndSuit([first, second]);
-    });
+  if (street === "turn") {
+    return {
+      nextStreet: "river" as const,
+      nextBoard: [...board, ...nextDeck.splice(0, 1)],
+      nextDeck,
+      showdown: false,
+    };
+  }
 
-    try {
-      const heroEquities = await Promise.all(
-        villainHands.map(async (hand) => {
-          const payload = await simulateVsListEquity({
-            hero,
-            board: [],
-            compare: [hand],
-            trials: 1200,
-          });
+  return {
+    nextStreet: "river" as const,
+    nextBoard: [...board, ...nextDeck.splice(0, 1)],
+    nextDeck,
+    showdown: true,
+  };
+};
 
-          return payload.equity;
-        }),
-      );
-
-      const villains: Villain[] = villainHands.map((hand, index) => {
-        const heroEquity = heroEquities[index] ?? 0;
-        return {
-          id: index + 1,
-          hand,
-          heroEquity,
-          villainEquity: 1 - heroEquity,
-          decision: null,
-        };
-      });
-
-      set(() => ({
-        ...INITIAL_STATE,
-        initialized: true,
-        processing: false,
-        stack,
+const updateVillainEquities = async ({
+  hero,
+  villains,
+  board,
+}: {
+  hero: string[];
+  villains: Villain[];
+  board: string[];
+}) => {
+  return Promise.all(
+    villains.map(async (villain) => {
+      const payload = await simulateVsListEquity({
         hero,
-        villains,
-        betActionLabelType,
-      }));
-    } catch (_error) {
-      set(() => ({ processing: false }));
-    }
-  },
-
-  confirmHand: () => {
-    set(() => ({ confirmedHand: true }));
-  },
-
-  toggleBetActionLabelType: () => {
-    set((state) => ({
-      betActionLabelType:
-        state.betActionLabelType === "size" ? "equity" : "size",
-    }));
-  },
-
-  heroCheck: async () => {
-    const { finished, hero, villains, pot, stack, processing } = get();
-    if (finished || processing || hero.length !== 2 || villains.length === 0)
-      return;
-    set(() => ({ processing: true }));
-
-    try {
-      const payload = await simulateMultiHandEquity({
-        hands: [hero, ...villains.map((villain) => villain.hand)],
-        board: [],
-        trials: 1500,
+        board,
+        compare: [villain.hand],
+        trials: 1200,
       });
-      const heroEquity = pickHeroEquityFromPayload(payload, hero);
-      const expectedValue = heroEquity * pot;
-      const delta = withRoundedDelta(expectedValue);
 
-      set(() => ({
-        processing: false,
-        finished: true,
-        action: "check",
-        villains: villains.map((villain) => ({ ...villain, decision: "call" })),
-        showdownEquity: heroEquity,
-        delta,
-        stack: stack + delta,
-        resultText: `Check: ${villains.length}人でショーダウン`,
-        selectedBetRate: null,
-        selectedBetSize: 0,
-        requiredEquity: 0,
-      }));
-    } catch (_error) {
-      set(() => ({ processing: false }));
+      return {
+        ...villain,
+        heroEquity: payload.equity,
+        villainEquity: 1 - payload.equity,
+      };
+    }),
+  );
+};
+
+const applyVillainReactions = ({
+  villains,
+  callerIds,
+}: {
+  villains: Villain[];
+  callerIds: Set<number>;
+}) => {
+  return villains.map((villain): Villain => {
+    if (!villain.active) {
+      return villain;
     }
-  },
 
-  heroFold: () => {
-    const { finished } = get();
-    if (finished) return;
+    const called = callerIds.has(villain.id);
+    return {
+      ...villain,
+      active: called,
+      reaction: called ? ("call" as const) : ("fold" as const),
+    };
+  });
+};
 
-    set(() => ({
-      finished: true,
-      action: "fold",
-      delta: 0,
-      showdownEquity: 0,
-      resultText: "Fold",
-      selectedBetRate: null,
-      selectedBetSize: 0,
-      requiredEquity: 0,
-    }));
-  },
+const useOffenseStore = create<Store>((set, get) => {
+  const resolveHeroAction = async (
+    action:
+      | { type: "check" }
+      | { type: "bet"; rate: (typeof BET_SIZE_RATES)[number] },
+  ) => {
+    const {
+      finished,
+      hero,
+      villains,
+      pot,
+      stack,
+      processing,
+      street,
+      board,
+      deck,
+    } = get();
+    const activeVillains = villains.filter((villain) => villain.active);
 
-  heroBet: async (rate) => {
-    const { finished, hero, villains, pot, stack, processing } = get();
-    if (finished || processing || hero.length !== 2 || villains.length === 0)
+    if (
+      finished ||
+      processing ||
+      hero.length !== 2 ||
+      activeVillains.length === 0
+    )
       return;
+
+    const requiredEquity =
+      action.type === "bet" ? calcRequiredEquity(action.rate) : 0;
+    const selectedBetRate = action.type === "bet" ? action.rate : null;
+    const selectedBetSize =
+      action.type === "bet" && selectedBetRate !== null
+        ? pot * selectedBetRate
+        : 0;
+
     set(() => ({ processing: true }));
 
     try {
-      const requiredEquity = calcRequiredEquity(rate);
-      const callers = villains.filter(
+      const callers = activeVillains.filter(
         (villain) => villain.villainEquity >= requiredEquity,
       );
-      const villainsWithDecision: Villain[] = villains.map((villain) => ({
-        ...villain,
-        decision: callers.some((caller) => caller.id === villain.id)
-          ? "call"
-          : "fold",
-      }));
-
-      const betSize = pot * rate;
+      const callerIds = new Set(callers.map((villain) => villain.id));
+      const reactedVillains = applyVillainReactions({
+        villains,
+        callerIds,
+      });
 
       if (callers.length === 0) {
         const delta = withRoundedDelta(pot);
@@ -245,46 +252,226 @@ const useOffenseStore = create<Store>((set, get) => ({
         set(() => ({
           processing: false,
           finished: true,
-          action: "bet",
-          villains: villainsWithDecision,
-          selectedBetRate: rate,
-          selectedBetSize: betSize,
+          action: action.type,
+          villains: reactedVillains,
+          selectedBetRate,
+          selectedBetSize,
           requiredEquity,
           showdownEquity: 1,
           delta,
           stack: stack + delta,
-          resultText: "Bet: 全員Fold",
+          resultText: `${STREET_LABEL[street]}: 全員Fold`,
+          heroWinner: true,
+          winnerVillainIds: [],
         }));
+
+        return;
+      }
+
+      const { nextStreet, nextBoard, nextDeck, showdown } = buildNextStreet({
+        street,
+        board,
+        deck,
+      });
+      const refreshedCallers = await updateVillainEquities({
+        hero,
+        villains: callers,
+        board: nextBoard,
+      });
+      const refreshedById = new Map(
+        refreshedCallers.map((villain) => [villain.id, villain]),
+      );
+      const nextVillains = reactedVillains.map((villain) => {
+        const refreshed = refreshedById.get(villain.id);
+        return refreshed ?? villain;
+      });
+      const survivingCount = refreshedCallers.length;
+      const nextPot =
+        action.type === "bet"
+          ? pot + selectedBetSize * (1 + survivingCount)
+          : pot;
+
+      if (!showdown) {
+        set(() => ({
+          processing: false,
+          finished: false,
+          street: nextStreet,
+          board: nextBoard,
+          deck: nextDeck,
+          villains: nextVillains,
+          pot: nextPot,
+          action: action.type,
+          selectedBetRate,
+          selectedBetSize,
+          requiredEquity,
+          showdownEquity: 0,
+          delta: 0,
+          resultText: `${STREET_LABEL[street]}: ${survivingCount}人が継続`,
+          heroWinner: false,
+          winnerVillainIds: [],
+        }));
+
         return;
       }
 
       const payload = await simulateMultiHandEquity({
-        hands: [hero, ...callers.map((caller) => caller.hand)],
-        board: [],
+        hands: [hero, ...refreshedCallers.map((villain) => villain.hand)],
+        board: nextBoard,
         trials: 1500,
       });
       const heroEquity = pickHeroEquityFromPayload(payload, hero);
-      const finalPot = pot + betSize * (1 + callers.length);
-      const expectedValue = heroEquity * finalPot - betSize;
+      const expectedValue =
+        action.type === "bet"
+          ? heroEquity * nextPot - selectedBetSize
+          : heroEquity * nextPot;
       const delta = withRoundedDelta(expectedValue);
+      const ranking = await evaluateHandsRanking({
+        hands: [hero, ...refreshedCallers.map((villain) => villain.hand)],
+        board: nextBoard,
+      });
+      const maxEncoded = ranking.reduce(
+        (max, entry) => (entry.encoded > max ? entry.encoded : max),
+        Number.MIN_SAFE_INTEGER,
+      );
+      const winnerHandKeys = new Set(
+        ranking
+          .filter((entry) => entry.encoded === maxEncoded)
+          .map((entry) => toHandKey(entry.hand.split(" "))),
+      );
+      const heroWinner = winnerHandKeys.has(toHandKey(hero));
+      const winnerVillainIds = refreshedCallers
+        .filter((villain) => winnerHandKeys.has(toHandKey(villain.hand)))
+        .map((villain) => villain.id);
 
       set(() => ({
         processing: false,
         finished: true,
-        action: "bet",
-        villains: villainsWithDecision,
-        selectedBetRate: rate,
-        selectedBetSize: betSize,
+        street: nextStreet,
+        board: nextBoard,
+        deck: nextDeck,
+        villains: nextVillains,
+        pot: nextPot,
+        action: action.type,
+        selectedBetRate,
+        selectedBetSize,
         requiredEquity,
         showdownEquity: heroEquity,
         delta,
         stack: stack + delta,
-        resultText: `Bet: ${callers.length}/${villains.length}人がCall`,
+        resultText: `${STREET_LABEL[street]}: ${survivingCount}人でショーダウン`,
+        heroWinner,
+        winnerVillainIds,
       }));
     } catch (_error) {
       set(() => ({ processing: false }));
     }
-  },
-}));
+  };
 
-export { BET_SIZE_RATES, useOffenseStore };
+  return {
+    ...INITIAL_STATE,
+
+    reset: () => {
+      set((state) => ({
+        ...INITIAL_STATE,
+        stack: state.stack,
+        betActionLabelType: state.betActionLabelType,
+      }));
+    },
+
+    shuffleAndDeal: async () => {
+      const { stack, betActionLabelType } = get();
+      if (get().processing) return;
+      set(() => ({ processing: true }));
+
+      const hero = genHand();
+      const villainCount = 2 + genRandomInt(3);
+      const deck = getShuffledDeck(hero);
+      const villainHands = Array.from({ length: villainCount }, () => {
+        const first = deck.shift() ?? "";
+        const second = deck.shift() ?? "";
+        return sortCardsByRankAndSuit([first, second]);
+      });
+
+      try {
+        const heroEquities = await Promise.all(
+          villainHands.map(async (hand) => {
+            const payload = await simulateVsListEquity({
+              hero,
+              board: [],
+              compare: [hand],
+              trials: 1200,
+            });
+
+            return payload.equity;
+          }),
+        );
+
+        const villains: Villain[] = villainHands.map((hand, index) => {
+          const heroEquity = heroEquities[index] ?? 0;
+          return {
+            id: index + 1,
+            hand,
+            heroEquity,
+            villainEquity: 1 - heroEquity,
+            active: true,
+            reaction: null,
+          };
+        });
+
+        set(() => ({
+          ...INITIAL_STATE,
+          initialized: true,
+          processing: false,
+          stack,
+          hero,
+          villains,
+          deck,
+          betActionLabelType,
+        }));
+      } catch (_error) {
+        set(() => ({ processing: false }));
+      }
+    },
+
+    confirmHand: () => {
+      set(() => ({ confirmedHand: true }));
+    },
+
+    toggleBetActionLabelType: () => {
+      set((state) => ({
+        betActionLabelType:
+          state.betActionLabelType === "size" ? "equity" : "size",
+      }));
+    },
+
+    heroCheck: async () => {
+      await resolveHeroAction({ type: "check" });
+    },
+
+    heroFold: () => {
+      const { finished } = get();
+      if (finished) return;
+
+      set(() => ({
+        finished: true,
+        action: "fold",
+        delta: 0,
+        showdownEquity: 0,
+        resultText: "Fold",
+        selectedBetRate: null,
+        selectedBetSize: 0,
+        requiredEquity: 0,
+        heroWinner: false,
+        winnerVillainIds: get()
+          .villains.filter((villain) => villain.active)
+          .map((villain) => villain.id),
+      }));
+    },
+
+    heroBet: async (rate) => {
+      await resolveHeroAction({ type: "bet", rate });
+    },
+  };
+});
+
+export { BET_SIZE_RATES, STREET_LABEL, useOffenseStore };

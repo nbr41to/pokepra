@@ -131,20 +131,14 @@ export function TrainersContent() {
 
       <NavigationSection title="Experimental" description="開発中・試作">
         <div className="flex w-60 flex-col items-center justify-center gap-y-3">
-          <RichLinkCard
-            href="/trainers/full-street-defense"
-            title="Full Street Defense"
-            description="100BBを守るフルストリートのディフェンス判断を鍛えます。"
-            isNew
-            icon={<ShieldPlus />}
-          />
-          <RichLinkCard
-            href="/trainers/offense"
-            title="Offense"
-            description="フルストリートの攻撃側でベット判断を鍛えます。"
-            isNew
-            icon={<ChessKnight />}
-          />
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/trainers/full-street-defense">
+              Full Street Defense
+            </Link>
+          </Button>
+          <Button className="w-full" variant="outline" size="lg" asChild>
+            <Link href="/trainers/offense">Offense</Link>
+          </Button>
           <Button className="w-full" variant="outline" size="lg" asChild>
             <Link href="/trainers/postflop">Postflop</Link>
           </Button>
