@@ -20,6 +20,7 @@ export function Main() {
     shuffleAndDeal,
     reset,
   } = useOffenseStore();
+  const showWinner = finished && street === "river";
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -58,12 +59,12 @@ export function Main() {
             className={cn(
               "flex flex-col items-center gap-1 transition-opacity",
               !villain.active && "opacity-30",
-              finished &&
+              showWinner &&
                 winnerVillainIds.includes(villain.id) &&
                 "rounded border border-yellow-400/70 bg-yellow-50/60 px-1 py-1 dark:bg-yellow-950/20",
             )}
           >
-            {finished && winnerVillainIds.includes(villain.id) && (
+            {showWinner && winnerVillainIds.includes(villain.id) && (
               <span className="rounded bg-yellow-100 px-2 py-0.5 font-bold text-[10px] text-yellow-700 tracking-wide dark:bg-yellow-900/70 dark:text-yellow-200">
                 WINNER
               </span>

@@ -128,7 +128,7 @@ const buildNextStreet = ({
   if (street === "flop") {
     return {
       nextStreet: "turn" as const,
-      nextBoard: [...board, ...nextDeck.splice(0, 3)],
+      nextBoard: [...board, ...nextDeck.splice(0, 1)],
       nextDeck,
       showdown: false,
     };
@@ -145,7 +145,7 @@ const buildNextStreet = ({
 
   return {
     nextStreet: "river" as const,
-    nextBoard: [...board, ...nextDeck.splice(0, 1)],
+    nextBoard: [...board],
     nextDeck,
     showdown: true,
   };
@@ -248,6 +248,7 @@ const useOffenseStore = create<Store>((set, get) => {
 
       if (callers.length === 0) {
         const delta = withRoundedDelta(pot);
+        const riverResolved = street === "river";
 
         set(() => ({
           processing: false,
@@ -261,7 +262,7 @@ const useOffenseStore = create<Store>((set, get) => {
           delta,
           stack: stack + delta,
           resultText: `${STREET_LABEL[street]}: 全員Fold`,
-          heroWinner: true,
+          heroWinner: riverResolved,
           winnerVillainIds: [],
         }));
 
@@ -391,6 +392,7 @@ const useOffenseStore = create<Store>((set, get) => {
         const second = deck.shift() ?? "";
         return sortCardsByRankAndSuit([first, second]);
       });
+      const board = deck.splice(0, 3);
 
       try {
         const heroEquities = await Promise.all(
@@ -425,6 +427,7 @@ const useOffenseStore = create<Store>((set, get) => {
           stack,
           hero,
           villains,
+          board,
           deck,
           betActionLabelType,
         }));
@@ -462,9 +465,7 @@ const useOffenseStore = create<Store>((set, get) => {
         selectedBetSize: 0,
         requiredEquity: 0,
         heroWinner: false,
-        winnerVillainIds: get()
-          .villains.filter((villain) => villain.active)
-          .map((villain) => villain.id),
+        winnerVillainIds: [],
       }));
     },
 

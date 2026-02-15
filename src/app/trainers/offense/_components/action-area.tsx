@@ -33,6 +33,7 @@ export const ActionArea = () => {
     : winnerVillainIds.length > 0
       ? `Winner: VILLAIN ${winnerVillainIds.join(", ")}`
       : "";
+  const showWinner = finished && street === "river";
 
   const runAsyncAction = async (action: () => Promise<void> | void) => {
     if (processing || finished) return;
@@ -99,7 +100,7 @@ export const ActionArea = () => {
             <div className="mb-2 rounded bg-background/90 px-3 py-1 text-muted-foreground text-xs shadow-sm">
               {resultText}
             </div>
-            {winnerText && (
+            {showWinner && winnerText && (
               <div className="mb-2 rounded bg-yellow-100 px-3 py-1 font-semibold text-xs text-yellow-800 shadow-sm dark:bg-yellow-900/70 dark:text-yellow-100">
                 {winnerText}
               </div>
