@@ -21,6 +21,8 @@ const CARD_GAP_PX = 6;
 const CARD_PITCH_PX = CARD_WIDTH_PX + CARD_GAP_PX;
 const FLOP_FLIP_INDEX = 2;
 const FLOP_SLIDE_DELAY_MS = FLOP_FLIP_DELAY_MS + FLIP_DURATION_MS;
+const BOARD_CARD_BASE_Z_INDEX = 6;
+const BOARD_SLIDE_CARD_Z_INDEX = BOARD_CARD_BASE_Z_INDEX + 1;
 
 export const Board = ({
   cards,
@@ -182,7 +184,10 @@ const BoardCard = ({
   slideDelayMs: number;
   slotIndex: number;
 }) => {
-  const cardZIndex = animationType === "flip-and-slide" ? 100 : 30 - slotIndex;
+  const cardZIndex =
+    animationType === "flip-and-slide"
+      ? BOARD_SLIDE_CARD_Z_INDEX
+      : BOARD_CARD_BASE_Z_INDEX - slotIndex;
 
   if (animationType === "show") {
     const animation = instant
