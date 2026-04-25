@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import {
   Cell,
   Legend,
@@ -10,6 +9,7 @@ import {
   Tooltip,
 } from "recharts";
 import { Combo } from "@/components/combo";
+import { useTheme } from "@/features/setting";
 import { cn } from "@/lib/utils";
 
 type ResultEntry = {

@@ -1,2 +1,2 @@
 export * from "./settings";
-export * from "./thema-provider";
+export * from "./theme-provider";

@@ -1,6 +1,5 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import {
   DropdownMenuItem,
   DropdownMenuPortal,
@@ -8,6 +7,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
 } from "@/components/shadcn/dropdown-menu";
+import { useTheme } from "./theme-provider";
 
 export const SwitchMode = () => {
   const { setTheme } = useTheme();

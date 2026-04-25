@@ -1,8 +1,8 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Button } from "@/components/shadcn/button";
+import { useTheme } from "@/features/setting";
 import { cn } from "@/lib/utils";
 
 export function SwitchDarkMode() {
