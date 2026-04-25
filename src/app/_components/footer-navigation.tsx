@@ -2,6 +2,7 @@ import { BookText, Calculator, Gamepad2, Home, Settings2 } from "lucide-react";
 import { ViewTransition } from "react";
 import { TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { cn } from "@/lib/utils";
+import { useVibration } from "@/lib/web-haptics/vibration";
 
 type Props = {
   className?: string;
@@ -17,6 +18,8 @@ const TAB_LABELS: Record<string, string> = {
 };
 
 export const FooterTablist = ({ className, activeValue }: Props) => {
+  const { trigger } = useVibration();
+
   const activeIndex = Math.max(
     0,
     TAB_ORDER.indexOf(activeValue ?? "introduction"),
@@ -50,6 +53,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
       <TabsTrigger
         value="introduction"
         className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
+        onClick={() => trigger()}
       >
         <Home className="size-6!" />
       </TabsTrigger>
@@ -57,6 +61,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
         <TabsTrigger
           value="trainers"
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
+          onClick={() => trigger()}
         >
           <Gamepad2 className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -65,6 +70,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
         <TabsTrigger
           value="tools"
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
+          onClick={() => trigger()}
         >
           <Calculator className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -73,6 +79,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
         <TabsTrigger
           value="tips"
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
+          onClick={() => trigger()}
         >
           <BookText className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
@@ -81,6 +88,7 @@ export const FooterTablist = ({ className, activeValue }: Props) => {
         <TabsTrigger
           value="settings"
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
+          onClick={() => trigger()}
         >
           <Settings2 className="size-6! transition-transform duration-300 group-data-[state=active]:-translate-y-1.5" />
         </TabsTrigger>
