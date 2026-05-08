@@ -1,3 +1,5 @@
+"use client";
+
 import { BookText, Calculator, Gamepad2, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { ViewTransition } from "react";

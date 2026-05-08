@@ -1,3 +1,5 @@
+"use client";
+
 import { BookText, Calculator, Gamepad2, Home, Settings2 } from "lucide-react";
 import { ViewTransition } from "react";
 import { TabsList, TabsTrigger } from "@/components/shadcn/tabs";
