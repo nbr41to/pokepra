@@ -100,7 +100,11 @@ export const FooterTablist = ({
       Math.max(d.circleStartTranslateX + dx, 0),
       MAX_TRANSLATE_PX,
     );
-    const newHovered = valueAt(e.clientX, e.clientY) ?? d.hoveredValue;
+    const idx = Math.max(
+      0,
+      Math.min(TAB_ORDER.length - 1, Math.round(translateX / TAB_STEP_PX)),
+    );
+    const newHovered = TAB_ORDER[idx];
     if (newHovered !== d.hoveredValue) trigger();
     updateDrag({ ...d, translateX, hoveredValue: newHovered });
   };
