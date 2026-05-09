@@ -8,7 +8,6 @@ type Props = {
 
 export const EquityReportContent = ({ heroEquityPromise }: Props) => {
   const heroEquityPayload = use(heroEquityPromise);
-  console.log(heroEquityPayload);
 
   return <EquityReport payload={heroEquityPayload} />;
 };
