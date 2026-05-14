@@ -22,6 +22,7 @@ const TAB_LABELS: Record<string, string> = {
 // size-15 (60px) + gap-x-1 (4px)
 const TAB_STEP_PX = 64;
 const MAX_TRANSLATE_PX = (TAB_ORDER.length - 1) * TAB_STEP_PX;
+const DRAG_THRESHOLD_PX = 4;
 
 type DragState = {
   pointerId: number;
@@ -29,6 +30,7 @@ type DragState = {
   circleStartTranslateX: number;
   hoveredValue: string;
   translateX: number;
+  isMoving: boolean;
 };
 
 export const FooterTablist = ({
@@ -79,14 +81,17 @@ export const FooterTablist = ({
   const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
     const value = valueAt(e.clientX, e.clientY);
-    if (value === null || value !== activeValue) return;
-    const startTranslateX = activeIndex * TAB_STEP_PX;
+    if (value === null) return;
+    const startedIndex = TAB_ORDER.indexOf(value);
+    if (startedIndex < 0) return;
+    const startTranslateX = startedIndex * TAB_STEP_PX;
     updateDrag({
       pointerId: e.pointerId,
       fingerStartX: e.clientX,
       circleStartTranslateX: startTranslateX,
       hoveredValue: value,
       translateX: startTranslateX,
+      isMoving: false,
     });
     e.currentTarget.setPointerCapture(e.pointerId);
     trigger();
@@ -96,6 +101,7 @@ export const FooterTablist = ({
     const d = dragRef.current;
     if (!d || d.pointerId !== e.pointerId) return;
     const dx = e.clientX - d.fingerStartX;
+    if (!d.isMoving && Math.abs(dx) < DRAG_THRESHOLD_PX) return;
     const translateX = Math.min(
       Math.max(d.circleStartTranslateX + dx, 0),
       MAX_TRANSLATE_PX,
@@ -106,7 +112,12 @@ export const FooterTablist = ({
     );
     const newHovered = TAB_ORDER[idx];
     if (newHovered !== d.hoveredValue) trigger();
-    updateDrag({ ...d, translateX, hoveredValue: newHovered });
+    updateDrag({
+      ...d,
+      translateX,
+      hoveredValue: newHovered,
+      isMoving: true,
+    });
   };
 
   const endSwipe = (e: PointerEvent<HTMLDivElement>, navigate: boolean) => {
@@ -137,7 +148,7 @@ export const FooterTablist = ({
       <div
         className={cn(
           "pointer-events-none absolute left-0.75 z-0 flex size-15 flex-col items-center justify-end rounded-full bg-muted pb-1 text-[10px] text-muted-foreground shadow-sm will-change-transform",
-          drag
+          drag?.isMoving
             ? "transition-none"
             : "transition-[transform,opacity] duration-300 ease-out",
         )}

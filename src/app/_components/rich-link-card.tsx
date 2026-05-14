@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PropsWithChildren, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useVibration } from "@/lib/web-haptics/vibration";
 
 type Props = {
   href: string;
@@ -19,6 +20,8 @@ export function RichLinkCard({
   className,
   children,
 }: PropsWithChildren<Props>) {
+  const { trigger } = useVibration();
+
   return (
     <Link
       href={href}
@@ -26,6 +29,7 @@ export function RichLinkCard({
         "relative flex min-h-24 w-full overflow-hidden rounded-xl border bg-background/60 px-4 py-3 font-noto-sans-jp text-card-foreground shadow-sm backdrop-blur-xs",
         className,
       )}
+      onClick={() => trigger()}
     >
       {isNew && (
         <span className="absolute top-0.5 left-2 animate-pulse font-bold text-[10px] text-green-500">
