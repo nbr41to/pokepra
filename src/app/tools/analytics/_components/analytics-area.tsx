@@ -56,7 +56,10 @@ export const AnalyticsArea = ({ className }: Props) => {
     return (
       <Tabs
         defaultValue="hero-equity"
-        className={cn("flex min-h-0 flex-col justify-between", className)}
+        className={cn(
+          "flex max-h-[calc(100vh-26rem)] min-h-0 flex-col justify-between",
+          className,
+        )}
       >
         <div className="min-h-0 flex-1 overflow-y-scroll">
           <div className="flex min-h-full flex-col justify-end">
