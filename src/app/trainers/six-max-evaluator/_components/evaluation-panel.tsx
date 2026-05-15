@@ -40,6 +40,7 @@ export const EvaluationPanel = ({ evaluation, className }: Props) => {
     choice,
     heroEquity,
     villainRangeSize,
+    numOpponents,
     pot,
     toCall,
     potOdds,
@@ -87,12 +88,18 @@ export const EvaluationPanel = ({ evaluation, className }: Props) => {
           <span className="font-medium">{actionLabelJp(bestChoice)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-muted-foreground">勝率</span>
+          <span className="text-muted-foreground">
+            勝率{numOpponents > 1 ? `(${numOpponents}人相手)` : ""}
+          </span>
           <span className="font-medium">{fmtPct(heroEquity)}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">相手レンジ</span>
           <span className="font-medium">{villainRangeSize}通り</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">残り相手</span>
+          <span className="font-medium">{numOpponents}人</span>
         </div>
         <div className="flex justify-between">
           <span className="text-muted-foreground">ポット</span>
