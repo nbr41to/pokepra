@@ -24,17 +24,13 @@ const TAB_STEP_PX = 64;
 const MAX_TRANSLATE_PX = (TAB_ORDER.length - 1) * TAB_STEP_PX;
 const DRAG_THRESHOLD_PX = 6;
 
-type TrackingState = {
-  pointerId: number;
-  startX: number;
-};
-
 type DragState = {
   pointerId: number;
   fingerStartX: number;
   circleStartTranslateX: number;
   hoveredValue: string;
   translateX: number;
+  isMoving: boolean;
 };
 
 export const FooterTablist = ({
@@ -43,7 +39,7 @@ export const FooterTablist = ({
   onValueChange,
 }: Props) => {
   const { trigger } = useVibration();
-  const trackingRef = useRef<TrackingState | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<DragState | null>(null);
   const [drag, setDrag] = useState<DragState | null>(null);
 
@@ -57,6 +53,26 @@ export const FooterTablist = ({
     ? drag.translateX
     : activeIndex * TAB_STEP_PX;
 
+  const valueAt = (clientX: number, clientY: number): string | null => {
+    const list = listRef.current;
+    if (!list) return null;
+    const triggers = list.querySelectorAll<HTMLElement>(
+      '[data-slot="tabs-trigger"]',
+    );
+    for (let i = 0; i < triggers.length && i < TAB_ORDER.length; i++) {
+      const r = triggers[i].getBoundingClientRect();
+      if (
+        clientX >= r.left &&
+        clientX <= r.right &&
+        clientY >= r.top &&
+        clientY <= r.bottom
+      ) {
+        return TAB_ORDER[i];
+      }
+    }
+    return null;
+  };
+
   const updateDrag = (next: DragState) => {
     dragRef.current = next;
     setDrag(next);
@@ -64,35 +80,32 @@ export const FooterTablist = ({
 
   const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
-    trackingRef.current = {
+    const value = valueAt(e.clientX, e.clientY);
+    if (value === null) return;
+    const startedIndex = TAB_ORDER.indexOf(value);
+    if (startedIndex < 0) return;
+
+    const startTranslateX = startedIndex * TAB_STEP_PX;
+    const newDrag: DragState = {
       pointerId: e.pointerId,
-      startX: e.clientX,
+      fingerStartX: e.clientX,
+      circleStartTranslateX: startTranslateX,
+      hoveredValue: value,
+      translateX: startTranslateX,
+      isMoving: false,
     };
+    dragRef.current = newDrag;
+    setDrag(newDrag);
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: PointerEvent<HTMLDivElement>) => {
-    const t = trackingRef.current;
-    if (!t || t.pointerId !== e.pointerId) return;
-    const dx = e.clientX - t.startX;
-
-    if (!dragRef.current) {
-      if (Math.abs(dx) < DRAG_THRESHOLD_PX) return;
-      const startTranslateX = activeIndex * TAB_STEP_PX;
-      const initialHovered = activeValue ?? TAB_ORDER[0];
-      const newDrag: DragState = {
-        pointerId: e.pointerId,
-        fingerStartX: t.startX,
-        circleStartTranslateX: startTranslateX,
-        hoveredValue: initialHovered,
-        translateX: startTranslateX,
-      };
-      dragRef.current = newDrag;
-      setDrag(newDrag);
-      e.currentTarget.setPointerCapture(e.pointerId);
-    }
-
     const d = dragRef.current;
-    if (!d) return;
+    if (!d || d.pointerId !== e.pointerId) return;
+    const dx = e.clientX - d.fingerStartX;
+
+    if (!d.isMoving && Math.abs(dx) < DRAG_THRESHOLD_PX) return;
+
     const translateX = Math.min(
       Math.max(d.circleStartTranslateX + dx, 0),
       MAX_TRANSLATE_PX,
@@ -102,16 +115,18 @@ export const FooterTablist = ({
       Math.min(TAB_ORDER.length - 1, Math.round(translateX / TAB_STEP_PX)),
     );
     const newHovered = TAB_ORDER[idx];
-    if (newHovered !== d.hoveredValue) trigger();
-    updateDrag({ ...d, translateX, hoveredValue: newHovered });
+    if (newHovered !== d.hoveredValue) trigger("selection");
+    updateDrag({
+      ...d,
+      translateX,
+      hoveredValue: newHovered,
+      isMoving: true,
+    });
   };
 
   const endSwipe = (e: PointerEvent<HTMLDivElement>, navigate: boolean) => {
-    const t = trackingRef.current;
-    if (!t || t.pointerId !== e.pointerId) return;
-    trackingRef.current = null;
     const d = dragRef.current;
-    if (!d) return;
+    if (!d || d.pointerId !== e.pointerId) return;
     dragRef.current = null;
     setDrag(null);
     if (e.currentTarget.hasPointerCapture(e.pointerId)) {
@@ -119,12 +134,13 @@ export const FooterTablist = ({
     }
     if (navigate && d.hoveredValue !== activeValue) {
       onValueChange?.(d.hoveredValue);
-      trigger();
+      trigger("selection");
     }
   };
 
   return (
     <TabsList
+      ref={listRef}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={(e) => endSwipe(e, true)}
@@ -137,7 +153,7 @@ export const FooterTablist = ({
       <div
         className={cn(
           "pointer-events-none absolute left-0.75 z-0 flex size-15 flex-col items-center justify-end rounded-full bg-muted pb-1 text-[10px] text-muted-foreground shadow-sm will-change-transform",
-          drag
+          drag?.isMoving
             ? "transition-none"
             : "transition-[transform,opacity] duration-300 ease-out",
         )}
@@ -161,7 +177,7 @@ export const FooterTablist = ({
         value="introduction"
         data-display-active={displayValue === "introduction"}
         className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
-        onClick={() => trigger()}
+        onClick={() => trigger("selection")}
       >
         <Home className="size-6!" />
       </TabsTrigger>
@@ -170,7 +186,7 @@ export const FooterTablist = ({
           value="trainers"
           data-display-active={displayValue === "trainers"}
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
-          onClick={() => trigger()}
+          onClick={() => trigger("selection")}
         >
           <Gamepad2 className="size-6! transition-transform duration-300 group-data-[display-active=true]:-translate-y-1.5" />
         </TabsTrigger>
@@ -180,7 +196,7 @@ export const FooterTablist = ({
           value="tools"
           data-display-active={displayValue === "tools"}
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
-          onClick={() => trigger()}
+          onClick={() => trigger("selection")}
         >
           <Calculator className="size-6! transition-transform duration-300 group-data-[display-active=true]:-translate-y-1.5" />
         </TabsTrigger>
@@ -190,7 +206,7 @@ export const FooterTablist = ({
           value="tips"
           data-display-active={displayValue === "tips"}
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
-          onClick={() => trigger()}
+          onClick={() => trigger("selection")}
         >
           <BookText className="size-6! transition-transform duration-300 group-data-[display-active=true]:-translate-y-1.5" />
         </TabsTrigger>
@@ -200,7 +216,7 @@ export const FooterTablist = ({
           value="settings"
           data-display-active={displayValue === "settings"}
           className="group relative z-10 size-15 rounded-full border-none! bg-transparent! shadow-none!"
-          onClick={() => trigger()}
+          onClick={() => trigger("selection")}
         >
           <Settings2 className="size-6! transition-transform duration-300 group-data-[display-active=true]:-translate-y-1.5" />
         </TabsTrigger>

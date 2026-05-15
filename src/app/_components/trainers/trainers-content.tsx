@@ -7,6 +7,7 @@ import {
   CircleStar,
   CircleX,
   Gamepad2,
+  Gauge,
   Grid3X3,
   MessageCircleQuestion,
   Percent,
@@ -95,6 +96,13 @@ export function TrainersContent() {
             <Percent className="mt-4 ml-1" size={12} />
           </div>
         </RichLinkCard>
+        <RichLinkCard
+          href="/trainers/six-max-evaluator"
+          title="Six Max Evaluator"
+          description="6max・100BBで各アクションのEV/エクイティ/ポットオッズ/MDFを評価しながら練習できます。"
+          isNew
+          icon={<Gauge />}
+        />
         <RichLinkCard
           href="/trainers/full-street"
           title="Full Street"
