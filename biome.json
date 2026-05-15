@@ -13,7 +13,8 @@
       "!.next",
       "!dist",
       "!build",
-      "!src/components/shadcn"
+      "!src/components/shadcn",
+      "!src/lib/wasm-v2/pkg"
     ]
   },
   "css": {

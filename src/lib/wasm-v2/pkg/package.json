@@ -1,0 +1,17 @@
+{
+  "name": "pokepra_wasm",
+  "type": "module",
+  "description": "rs-poker backed WASM bindings for pokepra",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "pokepra_wasm_bg.wasm",
+    "pokepra_wasm.js",
+    "pokepra_wasm.d.ts"
+  ],
+  "main": "pokepra_wasm.js",
+  "types": "pokepra_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

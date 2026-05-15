@@ -11,6 +11,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 wasm-bindgen = "0.2"
 rs_poker = { version = "4.1.0", default-features = false }
+rand = { version = "0.9", default-features = false, features = ["small_rng"] }
+rand_chacha = { version = "0.9", default-features = false }
 getrandom = { version = "0.3", features = ["wasm_js"] }
 serde = { version = "1", features = ["derive"] }
 serde-wasm-bindgen = "0.6"

@@ -1,60 +1,100 @@
 # pokepra wasm (v2)
 
-[`rs_poker`](https://crates.io/crates/rs_poker) を使ったポーカー処理の WASM ビルド基盤。
-バインディングは `wasm-bindgen` で生成し、成果物は `src/lib/wasm-v2/` に出力する。
+[`rs_poker`](https://crates.io/crates/rs_poker) を使ったポーカー処理の WASM 基盤。
+バインディングは `wasm-bindgen` で生成し、生成物は `src/lib/wasm-v2/pkg/` 配下に出る。
+フロントエンドからはその一段上 `src/lib/wasm-v2/simulation.ts` のラッパ経由で利用する。
+
+## レイヤ構成
+
+```
+rust/                          ← Rust ソース（このディレクトリ）
+src/lib/wasm-v2/
+├── simulation.ts              ← フロントエンドが呼ぶ手書きラッパ（v1 互換 API）
+└── pkg/                       ← wasm-pack 生成物（自動）
+    ├── pokepra_wasm.js
+    ├── pokepra_wasm.d.ts
+    └── pokepra_wasm_bg.wasm
+```
 
 ## ビルド
 
-プロジェクトルートで：
+プロジェクトルートで:
 
 ```sh
 bun run build:wasm-v2
 ```
 
-内部では以下を実行している：
+内部で実行している処理:
 
 ```sh
 cd rust
 rustup target add wasm32-unknown-unknown
-wasm-pack build --release --target web --out-dir ../src/lib/wasm-v2 --out-name pokepra_wasm
+wasm-pack build --release --target web --out-dir ../src/lib/wasm-v2/pkg --out-name pokepra_wasm
+rm -f ../src/lib/wasm-v2/pkg/.gitignore
 ```
 
-成果物：
+## Rust 側の構成
 
-- `src/lib/wasm-v2/pokepra_wasm.js` — ES module 形式のローダー
-- `src/lib/wasm-v2/pokepra_wasm.d.ts` — 型定義
-- `src/lib/wasm-v2/pokepra_wasm_bg.wasm` — WASM バイナリ
+```
+rust/src/
+├── lib.rs                # #[wasm_bindgen] エクスポートのみ
+├── parser.rs             # 入力文字列のパース
+├── cards.rs              # Card 表示・デッキ生成
+├── rank.rs               # Rank → カテゴリ index/encoded/ラベル
+├── rng.rs                # シード付き RNG
+├── dto.rs                # JS 境界の Serialize 構造体
+└── sim/
+    ├── mod.rs            # evaluate_seven 共通ヘルパ
+    ├── evaluate.rs       # evaluate_hands_ranking
+    ├── vs_list.rs        # simulate_vs_list_with_ranks
+    ├── vs_list_equity.rs # simulate_vs_list_equity
+    ├── range_vs_range.rs # simulate_range_vs_range_equity
+    └── parse_range.rs    # parse_range_to_hands
+```
 
-## TypeScript から使う例
+新しい機能を追加するときは「DTO を `dto.rs` に追加 → ロジックを `sim/foo.rs` に実装 →
+`lib.rs` にエクスポート 1 行 → `simulation.ts` にラッパ追加」の流れ。
+
+## エクスポート関数
+
+| WASM 関数 | フロントから呼ぶ場合 |
+| --- | --- |
+| `version()` | `version()` |
+| `evaluate_hands_ranking(hands, board)` | `evaluateHandsRanking({ hands, board })` |
+| `simulate_vs_list_with_ranks(...)` | `simulateVsListWithRanks({ ... })` |
+| `simulate_vs_list_equity(...)` | `simulateVsListEquity({ ... })` |
+| `simulate_range_vs_range_equity(...)` | `simulateRangeVsRangeEquity({ ... })` |
+| `parse_range_to_hands(range, excluded)` | `parseRangeToHands({ range, excludedCards })` |
+
+カード文字列はランク (`2-9, T, J, Q, K, A`) とスート (`s, h, d, c`) の連結。
+連結形 (`AsKsQsJsTs`)、空白区切り (`As Ks Qs Js Ts`) どちらも受ける。
+ハンドのリストはセミコロン区切り (`"AsKs; QdJd; ..."`)。
+
+## TypeScript から使う
+
+直接 `pkg/` を import せず、必ずラッパ経由で呼ぶ。
 
 ```ts
-import init, { version, evaluate_hand, compare_hands } from "@/lib/wasm-v2/pokepra_wasm";
+import {
+  evaluateHandsRanking,
+  simulateVsListWithRanks,
+} from "@/lib/wasm-v2/simulation";
 
-await init(); // モジュールのインスタンス化
-console.log(version());
-console.log(evaluate_hand("AsKsQsJsTs"));
-console.log(compare_hands("AsAhKsKhQs", "AsKsQsJsTs"));
+const ranking = await evaluateHandsRanking({
+  hands: [["As", "Ks"], ["Qd", "Jd"]],
+  board: ["7s", "8h", "9d"],
+});
 ```
-
-## エクスポート
-
-| 関数 | 概要 |
-| --- | --- |
-| `version()` | クレートのバージョン文字列 |
-| `evaluate_hand(cards)` | 5 枚以上のカード列から最良ハンドの Rank を Debug 表現で返す |
-| `compare_hands(a, b)` | `1` = a の勝ち / `-1` = b の勝ち / `0` = 引き分け |
-
-カード文字列はランク（`2-9, T, J, Q, K, A`）とスート（`s, h, d, c`）の連結。
-連結形（`AsKsQsJsTs`）、空白区切り（`As Ks Qs Js Ts`）どちらも受ける。
 
 ## 依存
 
-- `wasm-bindgen`
+- `wasm-bindgen` / `serde-wasm-bindgen`
 - `rs_poker` (default features off)
-- `getrandom` (`wasm_js` backend) — `.cargo/config.toml` で `getrandom_backend="wasm_js"` を設定
+- `rand` 0.9 + `rand_chacha` 0.9（シード付き MC 用）
+- `getrandom` 0.3 (`wasm_js` backend) — `.cargo/config.toml` で `getrandom_backend="wasm_js"` を設定
 
 ## 注意
 
 - `wasm-opt` のバージョンが古いと bulk memory ops でエラーになるため、
   `Cargo.toml` の `[package.metadata.wasm-pack.profile.release]` で `--enable-bulk-memory` を渡している。
-- `src/lib/wasm-v2/` 配下は `wasm-pack` 生成物。Git にはコミットせず、ビルド時に生成する想定。
+- `src/lib/wasm-v2/pkg/` 配下は `wasm-pack` 生成物。Git にはコミットせず、ビルド時に生成する想定。
