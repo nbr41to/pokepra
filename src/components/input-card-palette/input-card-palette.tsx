@@ -13,6 +13,7 @@ type Props = {
   separator?: string;
   handSeparator?: string | null;
   banCards?: string[];
+  type?: "A" | "B" | "C";
 };
 
 export const InputCardPalette = ({
@@ -23,6 +24,7 @@ export const InputCardPalette = ({
   separator = " ",
   handSeparator = null,
   banCards = [],
+  type = "A",
 }: Props) => {
   const parseCards = (val: string) => {
     if (!val) return [] as string[];
@@ -130,65 +132,172 @@ export const InputCardPalette = ({
       className="flex w-full justify-center border-t p-4"
       id="input-card-palette"
     >
-      <div className="grid grid-cols-5 gap-1">
-        {CARD_RANKS.slice(0, 1).map((rank) => (
-          <InputRankButton
-            key={rank}
-            rank={rank}
-            disabled={
-              isLimited || pending.rank === rank || getWillBun("rank", rank)
-            }
-            onClick={() => handleOnChange("rank", rank)}
-            pending={pending.rank === rank}
-          />
-        ))}
-        {CARD_SUITS.map((suit) => (
-          <InputSuitButton
-            key={suit}
-            suit={suit}
-            disabled={
-              isLimited || pending.suit === suit || getWillBun("suit", suit)
-            }
-            onClick={() => handleOnChange("suit", suit)}
-            pending={pending.suit === suit}
-          />
-        ))}
-        {CARD_RANKS.slice(1, 5).map((rank) => (
-          <InputRankButton
-            key={rank}
-            rank={rank}
-            disabled={
-              isLimited || pending.rank === rank || getWillBun("rank", rank)
-            }
-            onClick={() => handleOnChange("rank", rank)}
-            pending={pending.rank === rank}
-          />
-        ))}
-        <DeleteButton onClick={handleDelete} />
-        {CARD_RANKS.slice(5, 9).map((rank) => (
-          <InputRankButton
-            key={rank}
-            rank={rank}
-            disabled={
-              isLimited || pending.rank === rank || getWillBun("rank", rank)
-            }
-            onClick={() => handleOnChange("rank", rank)}
-            pending={pending.rank === rank}
-          />
-        ))}
-        <EnterButton className="row-span-2" onClick={onEnter} />
-        {CARD_RANKS.slice(9, 13).map((rank) => (
-          <InputRankButton
-            key={rank}
-            rank={rank}
-            disabled={
-              isLimited || pending.rank === rank || getWillBun("rank", rank)
-            }
-            onClick={() => handleOnChange("rank", rank)}
-            pending={pending.rank === rank}
-          />
-        ))}
-      </div>
+      {type === "A" && (
+        <div className="grid grid-cols-5 gap-1">
+          {CARD_SUITS.slice(0, 1).map((suit) => (
+            <InputSuitButton
+              key={suit}
+              suit={suit}
+              disabled={
+                isLimited || pending.suit === suit || getWillBun("suit", suit)
+              }
+              onClick={() => handleOnChange("suit", suit)}
+              pending={pending.suit === suit}
+            />
+          ))}
+          {CARD_RANKS.slice(1, 5).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          {CARD_SUITS.slice(1, 2).map((suit) => (
+            <InputSuitButton
+              key={suit}
+              suit={suit}
+              disabled={
+                isLimited || pending.suit === suit || getWillBun("suit", suit)
+              }
+              onClick={() => handleOnChange("suit", suit)}
+              pending={pending.suit === suit}
+            />
+          ))}
+          {CARD_RANKS.slice(5, 8).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          <DeleteButton onClick={handleDelete} />
+          {CARD_SUITS.slice(2, 3).map((suit) => (
+            <InputSuitButton
+              key={suit}
+              suit={suit}
+              disabled={
+                isLimited || pending.suit === suit || getWillBun("suit", suit)
+              }
+              onClick={() => handleOnChange("suit", suit)}
+              pending={pending.suit === suit}
+            />
+          ))}
+          {CARD_RANKS.slice(8, 11).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          <EnterButton className="row-span-2" onClick={onEnter} />
+          {CARD_SUITS.slice(3, 4).map((suit) => (
+            <InputSuitButton
+              key={suit}
+              suit={suit}
+              disabled={
+                isLimited || pending.suit === suit || getWillBun("suit", suit)
+              }
+              onClick={() => handleOnChange("suit", suit)}
+              pending={pending.suit === suit}
+            />
+          ))}
+          {CARD_RANKS.slice(11, 13).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          {CARD_RANKS.slice(0, 1).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+        </div>
+      )}
+      {type === "B" && (
+        <div className="grid grid-cols-5 gap-1">
+          {CARD_RANKS.slice(0, 1).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          {CARD_SUITS.map((suit) => (
+            <InputSuitButton
+              key={suit}
+              suit={suit}
+              disabled={
+                isLimited || pending.suit === suit || getWillBun("suit", suit)
+              }
+              onClick={() => handleOnChange("suit", suit)}
+              pending={pending.suit === suit}
+            />
+          ))}
+          {CARD_RANKS.slice(1, 5).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          <DeleteButton onClick={handleDelete} />
+          {CARD_RANKS.slice(5, 9).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+          <EnterButton className="row-span-2" onClick={onEnter} />
+          {CARD_RANKS.slice(9, 13).map((rank) => (
+            <InputRankButton
+              key={rank}
+              rank={rank}
+              disabled={
+                isLimited || pending.rank === rank || getWillBun("rank", rank)
+              }
+              onClick={() => handleOnChange("rank", rank)}
+              pending={pending.rank === rank}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
