@@ -77,7 +77,11 @@ pub fn pair_string(a: Card, b: Card) -> String {
 pub fn combo_key(a: Card, b: Card) -> (u8, u8) {
     let ai = card_index(a);
     let bi = card_index(b);
-    if ai >= bi { (ai, bi) } else { (bi, ai) }
+    if ai >= bi {
+        (ai, bi)
+    } else {
+        (bi, ai)
+    }
 }
 
 #[inline]

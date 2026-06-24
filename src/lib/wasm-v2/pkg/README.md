@@ -57,13 +57,13 @@ rust/src/
 
 ## エクスポート関数
 
-| WASM 関数 | フロントから呼ぶ場合 |
-| --- | --- |
-| `version()` | `version()` |
-| `evaluate_hands_ranking(hands, board)` | `evaluateHandsRanking({ hands, board })` |
-| `simulate_vs_list_with_ranks(...)` | `simulateVsListWithRanks({ ... })` |
-| `simulate_vs_list_equity(...)` | `simulateVsListEquity({ ... })` |
-| `simulate_range_vs_range_equity(...)` | `simulateRangeVsRangeEquity({ ... })` |
+| WASM 関数                               | フロントから呼ぶ場合                          |
+| --------------------------------------- | --------------------------------------------- |
+| `version()`                             | `version()`                                   |
+| `evaluate_hands_ranking(hands, board)`  | `evaluateHandsRanking({ hands, board })`      |
+| `simulate_vs_list_with_ranks(...)`      | `simulateVsListWithRanks({ ... })`            |
+| `simulate_vs_list_equity(...)`          | `simulateVsListEquity({ ... })`               |
+| `simulate_range_vs_range_equity(...)`   | `simulateRangeVsRangeEquity({ ... })`         |
 | `parse_range_to_hands(range, excluded)` | `parseRangeToHands({ range, excludedCards })` |
 
 カード文字列はランク (`2-9, T, J, Q, K, A`) とスート (`s, h, d, c`) の連結。
@@ -81,7 +81,10 @@ import {
 } from "@/lib/wasm-v2/simulation";
 
 const ranking = await evaluateHandsRanking({
-  hands: [["As", "Ks"], ["Qd", "Jd"]],
+  hands: [
+    ["As", "Ks"],
+    ["Qd", "Jd"],
+  ],
   board: ["7s", "8h", "9d"],
 });
 ```
@@ -90,8 +93,8 @@ const ranking = await evaluateHandsRanking({
 
 - `wasm-bindgen` / `serde-wasm-bindgen`
 - `rs_poker` (default features off)
-- `rand` 0.9 + `rand_chacha` 0.9（シード付き MC 用）
-- `getrandom` 0.3 (`wasm_js` backend) — `.cargo/config.toml` で `getrandom_backend="wasm_js"` を設定
+- `rand` 0.10 + `rand_chacha` 0.10（シード付き MC 用）
+- `getrandom` 0.4 (`wasm_js` feature)
 
 ## 注意
 

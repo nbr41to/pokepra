@@ -12,7 +12,7 @@
 
 use std::cmp::Ordering;
 
-use rand::seq::IndexedRandom;
+use rand::prelude::IndexedRandom;
 use rs_poker::core::Card;
 
 use crate::cards::{deck_minus, pair_string};
@@ -76,10 +76,7 @@ pub fn run(
             let deck = deck_minus(&all_used);
 
             for _ in 0..trials {
-                let extras: Vec<Card> = deck
-                    .choose_multiple(&mut rng, community_to_deal)
-                    .copied()
-                    .collect();
+                let extras: Vec<Card> = deck.sample(&mut rng, community_to_deal).copied().collect();
                 if extras.len() != community_to_deal {
                     break;
                 }

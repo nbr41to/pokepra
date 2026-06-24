@@ -21,8 +21,7 @@ pub fn parse_cards(s: &str) -> Result<Vec<Card>, String> {
     if cleaned.is_empty() {
         return Ok(Vec::new());
     }
-    let hand = Hand::new_from_str(&cleaned)
-        .map_err(|e| format!("parse error '{}': {:?}", s, e))?;
+    let hand = Hand::new_from_str(&cleaned).map_err(|e| format!("parse error '{}': {:?}", s, e))?;
     Ok(hand.iter().collect())
 }
 

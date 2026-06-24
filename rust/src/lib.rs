@@ -28,8 +28,7 @@ use wasm_bindgen::prelude::*;
 /// 成功時は serde で JS 値にシリアライズし、失敗時は文字列を JS の Error にする。
 fn to_js<T: Serialize>(result: Result<T, String>) -> Result<JsValue, JsValue> {
     match result {
-        Ok(v) => serde_wasm_bindgen::to_value(&v)
-            .map_err(|e| JsValue::from_str(&e.to_string())),
+        Ok(v) => serde_wasm_bindgen::to_value(&v).map_err(|e| JsValue::from_str(&e.to_string())),
         Err(e) => Err(JsValue::from_str(&e)),
     }
 }

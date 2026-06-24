@@ -1,6 +1,6 @@
 //! `rs_poker::Rank` をアプリ側で扱いやすい形に変換する。
 
-use rs_poker::core::Rank;
+use rs_poker::core::{CoreRank, Rank};
 
 /// 役カテゴリの表示名。配列のインデックスが [`rank_index`] と一致するよう保つこと。
 pub const RANK_LABELS: [&str; 9] = [
@@ -21,16 +21,16 @@ pub const RANK_LABELS: [&str; 9] = [
 /// あるが、JS 側では「役の種類だけで集計したい」場面が多いのでここで剥がす。
 #[inline]
 pub fn rank_index(r: &Rank) -> usize {
-    match r {
-        Rank::HighCard(_) => 0,
-        Rank::OnePair(_) => 1,
-        Rank::TwoPair(_) => 2,
-        Rank::ThreeOfAKind(_) => 3,
-        Rank::Straight(_) => 4,
-        Rank::Flush(_) => 5,
-        Rank::FullHouse(_) => 6,
-        Rank::FourOfAKind(_) => 7,
-        Rank::StraightFlush(_) => 8,
+    match r.category() {
+        CoreRank::HighCard => 0,
+        CoreRank::OnePair => 1,
+        CoreRank::TwoPair => 2,
+        CoreRank::ThreeOfAKind => 3,
+        CoreRank::Straight => 4,
+        CoreRank::Flush => 5,
+        CoreRank::FullHouse => 6,
+        CoreRank::FourOfAKind => 7,
+        CoreRank::StraightFlush => 8,
     }
 }
 
@@ -39,17 +39,9 @@ pub fn rank_index(r: &Rank) -> usize {
 /// JS 側で同カテゴリ内の優劣比較に使う。
 #[inline]
 pub fn rank_encoded(r: &Rank) -> u32 {
-    match r {
-        Rank::HighCard(v)
-        | Rank::OnePair(v)
-        | Rank::TwoPair(v)
-        | Rank::ThreeOfAKind(v)
-        | Rank::Straight(v)
-        | Rank::Flush(v)
-        | Rank::FullHouse(v)
-        | Rank::FourOfAKind(v)
-        | Rank::StraightFlush(v) => *v,
-    }
+    // rs_poker 5.x の Rank は `(category << 12) | subrank` の packed score。
+    // raw 値は公開されていないため、公開 API の category/value_bits から再構成する。
+    (((rank_index(r) as u32) + 1) << 12) | u32::from(r.value_bits())
 }
 
 /// 役カテゴリ別の集計バケット。win/tie/lose × 9 カテゴリ。

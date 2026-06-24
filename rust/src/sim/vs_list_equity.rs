@@ -7,7 +7,7 @@
 use std::cmp::Ordering;
 use std::collections::HashSet;
 
-use rand::seq::IndexedRandom;
+use rand::prelude::IndexedRandom;
 use rs_poker::core::Card;
 
 use crate::cards::{deck_minus, pair_string};
@@ -127,10 +127,7 @@ fn run_against_opponent(
     let mut ties = 0u32;
 
     for _ in 0..trials {
-        let extras: Vec<Card> = deck
-            .choose_multiple(rng, community_to_deal)
-            .copied()
-            .collect();
+        let extras: Vec<Card> = deck.sample(rng, community_to_deal).copied().collect();
         if extras.len() != community_to_deal {
             break;
         }

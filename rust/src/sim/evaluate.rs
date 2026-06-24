@@ -8,7 +8,7 @@ use rs_poker::core::Rank;
 use crate::cards::pair_string;
 use crate::dto::HandRankingEntry;
 use crate::parser::{parse_cards, parse_hands_list};
-use crate::rank::{RANK_LABELS, rank_encoded, rank_index};
+use crate::rank::{rank_encoded, rank_index, RANK_LABELS};
 use crate::sim::evaluate_seven;
 
 pub fn run(hands: &str, board: &str) -> Result<Vec<HandRankingEntry>, String> {

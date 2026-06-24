@@ -6,13 +6,13 @@
 use std::cmp::Ordering;
 use std::collections::HashSet;
 
-use rand::seq::IndexedRandom;
+use rand::prelude::IndexedRandom;
 use rs_poker::core::Card;
 
 use crate::cards::{deck_minus, pair_string};
 use crate::dto::{CombinedEntry, CombinedPayload};
 use crate::parser::{parse_cards, parse_hands_list, parse_two_cards};
-use crate::rank::{RankBuckets, rank_index};
+use crate::rank::{rank_index, RankBuckets};
 use crate::rng::seeded_rng;
 use crate::sim::evaluate_seven;
 
@@ -126,10 +126,7 @@ fn simulate_against_opponent(
     let mut plays = 0u32;
 
     for _ in 0..trials {
-        let extras: Vec<Card> = deck
-            .choose_multiple(rng, community_to_deal)
-            .copied()
-            .collect();
+        let extras: Vec<Card> = deck.sample(rng, community_to_deal).copied().collect();
         if extras.len() != community_to_deal {
             // 何らかの理由でサンプリングが失敗した場合は中断。
             break;
