@@ -12,10 +12,6 @@ export const Board = () => {
   const [disableAnimation, setDisableAnimation] = useState(false);
 
   useEffect(() => {
-    console.log(
-      currentBoard.slice(0, 3).toString() !==
-        openedBoard.slice(0, 3).toString(),
-    );
     if (
       currentBoard.slice(0, 3).toString() !== openedBoard.slice(0, 3).toString()
     ) {
