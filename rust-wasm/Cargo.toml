@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-rs_poker = { version = "4.1.0", default-features = false }
+rs_poker = { version = "5.0.0", default-features = false }
 getrandom = { version = "0.3", default-features = false }

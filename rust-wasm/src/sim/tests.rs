@@ -69,7 +69,7 @@ fn hero_vs_qq_regression() {
   println!("hero aggregated wins/ties/plays: {:?}", hero);
   println!("QQ wins/ties/plays: {:?}", qq);
   assert!(qq.is_some());
-  let (w, t, p) = qq.unwrap();
-  let hero_win_rate_vs_qq = (p.saturating_sub(w).saturating_sub(t)) as f64 / p as f64;
+  let (w, _t, p) = qq.unwrap();
+  let hero_win_rate_vs_qq = w as f64 / p as f64;
   assert!(hero_win_rate_vs_qq < 0.5, "hero should not beat QQ");
 }

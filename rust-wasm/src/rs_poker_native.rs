@@ -1,6 +1,6 @@
 //! rs_poker-based helpers for Monte Carlo simulations.
 
-use rs_poker::core::{Card, Hand, Rank, Rankable, Suit, Value};
+use rs_poker::core::{Card, CoreRank, Hand, Rank, Rankable, Suit, Value};
 use rs_poker::holdem::{MonteCarloGame, RangeParser};
 
 use crate::sim::{
@@ -1079,16 +1079,16 @@ fn to_rs_hand(hand: &[SimCard; 2]) -> Hand {
 }
 
 fn rank_index(rank: &Rank) -> usize {
-  match rank {
-    Rank::HighCard(_) => 0,
-    Rank::OnePair(_) => 1,
-    Rank::TwoPair(_) => 2,
-    Rank::ThreeOfAKind(_) => 3,
-    Rank::Straight(_) => 4,
-    Rank::Flush(_) => 5,
-    Rank::FullHouse(_) => 6,
-    Rank::FourOfAKind(_) => 7,
-    Rank::StraightFlush(_) => 8,
+  match rank.category() {
+    CoreRank::HighCard => 0,
+    CoreRank::OnePair => 1,
+    CoreRank::TwoPair => 2,
+    CoreRank::ThreeOfAKind => 3,
+    CoreRank::Straight => 4,
+    CoreRank::Flush => 5,
+    CoreRank::FullHouse => 6,
+    CoreRank::FourOfAKind => 7,
+    CoreRank::StraightFlush => 8,
   }
 }
 
