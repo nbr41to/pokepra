@@ -37,10 +37,12 @@ export type ActionChoice = {
 export type ActionEvaluation = {
   /** 選択されたアクション */
   choice: ActionChoice;
-  /** ヒーローのpotエクイティ (0..1) */
+  /** ヒーローのpotエクイティ (0..1) — 残り相手数を考慮した multi-way 勝率 */
   heroEquity: number;
   /** 相手側のレンジ (ハンド組数) */
   villainRangeSize: number;
+  /** 残り相手の人数 (1 = heads-up) */
+  numOpponents: number;
   /** 現在のポット (chips) */
   pot: number;
   /** コールに必要なchip */

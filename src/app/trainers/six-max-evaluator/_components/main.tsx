@@ -80,6 +80,7 @@ export default function Main() {
       <SixMaxTable
         heroPosition={position}
         openerPosition={preflopState.opener}
+        coldCallerPositions={preflopState.coldCallers}
         potLabel={potLabel}
       />
 

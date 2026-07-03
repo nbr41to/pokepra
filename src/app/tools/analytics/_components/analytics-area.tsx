@@ -1,5 +1,12 @@
-import { ChartColumnStacked, ChartSpline, Crown, Grid3X3 } from "lucide-react";
+import {
+  ChartColumnStacked,
+  ChartSpline,
+  Crown,
+  GalleryVertical,
+  Grid3X3,
+} from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import { EquityReportSkeleton } from "@/features/analytics/reports/equity-report.skeleton";
@@ -35,6 +42,7 @@ export const AnalyticsArea = ({ className }: Props) => {
     simulationLoading,
   } = useHoldemStore();
   const [data, setData] = useState<AnalysisResult | null>(null);
+  const [tabValue, setTabValue] = useState("hero-equity");
 
   const ranges = getSettingOpenRange();
 
@@ -52,12 +60,19 @@ export const AnalyticsArea = ({ className }: Props) => {
     };
   }, [board, hero, position, ranges, street, getAnalysisResult]);
 
+  const scrollToMyHand = () => {
+    if (!data) return;
+    const element = document.getElementById(data.heroEquity.hand);
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   if (!data) {
     return (
       <Tabs
-        defaultValue="hero-equity"
+        value={tabValue}
+        onValueChange={setTabValue}
         className={cn(
-          "flex max-h-[calc(100vh-26rem)] min-h-0 flex-col justify-between",
+          "relative flex max-h-[calc(100vh-26rem)] min-h-0 flex-col justify-between",
           className,
         )}
       >
@@ -93,9 +108,10 @@ export const AnalyticsArea = ({ className }: Props) => {
 
   return (
     <Tabs
-      defaultValue="hero-equity"
+      value={tabValue}
+      onValueChange={setTabValue}
       className={cn(
-        "flex max-h-[calc(100vh-26rem)] min-h-0 flex-col justify-between",
+        "relative flex max-h-[calc(100vh-26rem)] min-h-0 flex-col justify-between",
         className,
       )}
     >
@@ -125,6 +141,16 @@ export const AnalyticsArea = ({ className }: Props) => {
           rangeEquity={data.rangeEquity.villain}
         />
       </div>
+
+      {tabValue === "equity-ranking" && (
+        <Button
+          className="absolute right-4 bottom-4 z-10 rounded-full opacity-80"
+          size="icon-lg"
+          onClick={scrollToMyHand}
+        >
+          <GalleryVertical />
+        </Button>
+      )}
 
       <TabsList className="mx-auto h-12 w-fit rounded-full">
         <TabsTrigger value="hero-equity" className="size-12 rounded-full">

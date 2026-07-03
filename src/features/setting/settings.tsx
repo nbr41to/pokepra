@@ -1,6 +1,6 @@
 "use client";
 
-import { Settings } from "lucide-react";
+import { FlaskConical, Settings } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/shadcn/button";
 import {
@@ -38,6 +38,18 @@ export const Setting = () => {
           </DropdownMenuLabel>
           <DropdownMenuGroup>
             <SwitchMode />
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuLabel className="text-xs opacity-60">
+            Experimental
+          </DropdownMenuLabel>
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link href="/v2">
+                <FlaskConical />
+                V2へ
+              </Link>
+            </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenuPortal>

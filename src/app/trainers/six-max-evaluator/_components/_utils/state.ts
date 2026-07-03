@@ -42,10 +42,14 @@ export type SixMaxState = {
   toCall: number;
   /** villainの想定レンジ (実カードリスト) */
   villainRange: string[][];
+  /** ヒーローを除き、現時点でハンドに残っている相手の数 (>= 1) */
+  numOpponents: number;
   /** Preflopアクション状況: 既にopen-raiseがあったか */
   preflopState: {
     opener: number | null; // position
     threeBettor: number | null; // position
+    /** opener以外でcoldコールしたポジション一覧 */
+    coldCallers: number[];
   };
   /** 履歴 */
   history: HistoryEntry[];
@@ -79,17 +83,25 @@ const INITIAL: SixMaxState = {
   pot: 0,
   toCall: 0,
   villainRange: [],
-  preflopState: { opener: null, threeBettor: null },
+  numOpponents: 1,
+  preflopState: { opener: null, threeBettor: null, coldCallers: [] },
   history: [],
   lastEvaluation: null,
   totalEvLoss: 0,
   roundsPlayed: 0,
 };
 
+/** opener以外の各ポジションがcoldコールする確率 (簡易モデル) */
+const COLD_CALL_PROBABILITY = 0.15;
+/** opener不在時にHeroの後ろがcoldコールする確率 */
+const POST_HERO_CALL_PROBABILITY = 0.2;
+
 /**
  * Preflopの初期状態を構築
  * - ランダムにopener (Hero以前のポジションがopenする確率) をシミュレート
- * - Heroのアクション順を計算し、to call/pot/villainRangeを設定
+ * - opener以外でHero以前のポジションがcold-callする確率を考慮
+ * - opener不在時はHeroがopenする想定で、後続ポジション+BBの参加数を推定
+ * - Heroのアクション順を計算し、to call/pot/villainRange/numOpponentsを設定
  */
 function setupPreflop(
   hero: string[],
@@ -100,6 +112,7 @@ function setupPreflop(
   villainRange: string[][];
   preflopState: SixMaxState["preflopState"];
   villainStack: number;
+  numOpponents: number;
 } {
   const actionOrder = getSixMaxActionOrder();
   const heroIndex = actionOrder.indexOf(position);
@@ -113,6 +126,17 @@ function setupPreflop(
     if (Math.random() < openRate) {
       opener = pos;
       break;
+    }
+  }
+
+  // opener以外のcold-call判定
+  const coldCallers: number[] = [];
+  if (opener !== null) {
+    const openerIndex = actionOrder.indexOf(opener);
+    for (let i = openerIndex + 1; i < heroIndex; i++) {
+      if (Math.random() < COLD_CALL_PROBABILITY) {
+        coldCallers.push(actionOrder[i]);
+      }
     }
   }
 
@@ -135,36 +159,46 @@ function setupPreflop(
   // openerがいた場合、open size = 2.5BB
   const openSize = Math.round(BIG_BLIND * 2.5);
   let villainRange: string[][] = [];
+  let numOpponents = 1;
 
   if (opener !== null) {
     // モデル:
     //   SB(50) + BB(100) = 150 (blind)
     //   opener が openSize(250) 投入
-    //   -> pot = 50 + 100 + 250 = 400
-    //   Hero が BB なら toCall = openSize - BB = 150
-    //   Hero が SB なら toCall = openSize - SB = 200
-    //   Hero が それ以外 なら toCall = openSize = 250
-    pot = SMALL_BLIND + BIG_BLIND + openSize;
+    //   coldCallersも同額をcall (potに追加)
+    //   -> pot = 150 + openSize * (1 + coldCallers.length)
+    pot = SMALL_BLIND + BIG_BLIND + openSize * (1 + coldCallers.length);
     if (position === 1) toCall = openSize - SMALL_BLIND;
     else if (position === 2) toCall = openSize - BIG_BLIND;
     else toCall = openSize;
     villainStack = INITIAL_STACK - openSize;
 
-    // villainレンジ = opener のopenレンジ
+    // villainレンジ = opener のopenレンジ (主要vsで表示)
     villainRange = expandRange(getOpenRangeForPosition(opener), hero);
+    numOpponents = 1 + coldCallers.length;
   } else {
     // Heroが最初のアクター
     // villain想定はBB defense range (もしHeroがopenしたら戦う相手)
     villainRange = expandRange(getOpenRangeForPosition(2), hero);
     villainStack = INITIAL_STACK - BIG_BLIND;
+    // BB は基本残る + Hero後ろの各席が低確率でcold-call
+    let postHeroCallers = 0;
+    for (let i = heroIndex + 1; i < actionOrder.length; i++) {
+      const pos = actionOrder[i];
+      if (pos === 2) continue; // BBは別カウント
+      if (Math.random() < POST_HERO_CALL_PROBABILITY) postHeroCallers += 1;
+    }
+    // BB(1) + Hero後ろのcold-callers
+    numOpponents = 1 + postHeroCallers;
   }
 
   return {
     pot,
     toCall,
     villainRange,
-    preflopState: { opener, threeBettor: null },
+    preflopState: { opener, threeBettor: null, coldCallers },
     villainStack,
+    numOpponents,
   };
 }
 
@@ -196,6 +230,7 @@ export const useSixMaxStore = create<Store>((set, get) => ({
       toCall: preflopSetup.toCall,
       villainRange: preflopSetup.villainRange,
       villainStack: preflopSetup.villainStack,
+      numOpponents: preflopSetup.numOpponents,
       preflopState: preflopSetup.preflopState,
       lastEvaluation: null,
     });
@@ -221,6 +256,7 @@ export const useSixMaxStore = create<Store>((set, get) => ({
         toCall: state.toCall,
         heroStack: state.heroStack,
         villainStack: state.villainStack,
+        numOpponents: state.numOpponents,
       });
 
       const evaluation = buildEvaluation({

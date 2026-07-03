@@ -22,7 +22,10 @@
  * heroEquityVsCalledが下がる -> 一定サイズで最適点が出てくる。
  */
 
-import { simulateVsListWithRanks } from "@/lib/wasm-v1/simulation";
+import {
+  simulateVsListEquity,
+  simulateVsListWithRanks,
+} from "@/lib/wasm-v1/simulation";
 import type { CombinedEntry, CombinedPayload } from "@/lib/wasm-v1/types";
 import type {
   ActionChoice,
@@ -42,6 +45,8 @@ export type EvaluateActionsParams = {
   toCall: number;
   heroStack: number;
   villainStack: number;
+  /** 残っている相手の数 (1 = heads-up, 2+ = multi-way) */
+  numOpponents: number;
   trials?: number;
 };
 
@@ -50,7 +55,8 @@ export type EvaluatedActions = {
   pot: number;
   toCall: number;
   villainRangeSize: number;
-  /** villainレンジのper-hand生データ (デバッグ/Tips用) */
+  numOpponents: number;
+  /** villainレンジのper-hand生データ (デバッグ/Tips用、heads-up basis) */
   perHandData: CombinedEntry[];
   candidates: { choice: ActionChoice; evChips: number; meta?: ActionEvMeta }[];
 };
@@ -223,13 +229,30 @@ function calcActionEv(params: {
 
 /**
  * 候補アクション全部のEV計算
+ *
+ * 残り相手の数 (numOpponents) に応じて勝率を切り替える:
+ *  - numOpponents === 1 : heads-up の simulateVsListWithRanks の equity を使う
+ *  - numOpponents > 1   : simulateVsListEquity に opponentsCount を渡して
+ *                          multi-way の勝率を別途算出し、heroEquity に上書きする
+ *
+ * per-hand data (相手の継続レンジ推定用) は引き続き heads-up basis で計算する。
+ * 多人数戦における相手1人の継続判断は、その相手目線では実質 1v1 判断という近似。
  */
 export async function evaluateActions(
   params: EvaluateActionsParams,
 ): Promise<EvaluatedActions> {
-  const { hero, board, villainRange, pot, toCall, heroStack, villainStack } =
-    params;
+  const {
+    hero,
+    board,
+    villainRange,
+    pot,
+    toCall,
+    heroStack,
+    villainStack,
+    numOpponents,
+  } = params;
   const trials = params.trials ?? 800;
+  const opponents = Math.max(1, numOpponents);
 
   let heroEquity = 0.5;
   let perHandData: CombinedEntry[] = [];
@@ -242,6 +265,17 @@ export async function evaluateActions(
     });
     heroEquity = payload.equity;
     perHandData = payload.data;
+
+    if (opponents > 1) {
+      const multiWay = await simulateVsListEquity({
+        hero,
+        board,
+        compare: villainRange,
+        opponentsCount: opponents,
+        trials,
+      });
+      heroEquity = multiWay.equity;
+    }
   }
 
   const candidates = buildCandidateActions({
@@ -267,6 +301,7 @@ export async function evaluateActions(
     pot,
     toCall,
     villainRangeSize: villainRange.length,
+    numOpponents: opponents,
     perHandData,
     candidates: evaluated,
   };
@@ -291,7 +326,14 @@ export function buildEvaluation(params: {
   pickedChoice: ActionChoice;
 }): ActionEvaluation {
   const { evaluated, pickedChoice } = params;
-  const { heroEquity, pot, toCall, villainRangeSize, candidates } = evaluated;
+  const {
+    heroEquity,
+    pot,
+    toCall,
+    villainRangeSize,
+    numOpponents,
+    candidates,
+  } = evaluated;
 
   const best = candidates.reduce(
     (acc, cur) => (cur.evChips > acc.evChips ? cur : acc),
@@ -314,6 +356,7 @@ export function buildEvaluation(params: {
     choice: pickedChoice,
     heroEquity,
     villainRangeSize,
+    numOpponents,
     pot,
     toCall,
     potOdds,

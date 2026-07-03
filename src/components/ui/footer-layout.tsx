@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 import { useVibration } from "@/lib/web-haptics/vibration";
 import { Button } from "../shadcn/button";
 
+/**
+ * 各ページの戻るボタン
+ * ViewTransitionでFooterNavigationと連携
+ */
 type Props = {
   menuName: "trainers" | "tools" | "tips" | "settings";
   className?: string;
