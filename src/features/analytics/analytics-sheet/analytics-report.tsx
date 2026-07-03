@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  ChartColumnBig,
-  Crown,
-  GalleryVertical,
-  GalleryVerticalEnd,
-  X,
-} from "lucide-react";
+import { ChartColumnBig, Crown, GalleryVerticalEnd, X } from "lucide-react";
 import { use, useCallback, useRef, useState } from "react";
 import { SelectPosition } from "@/components/select-position";
 import { Button } from "@/components/shadcn/button";
@@ -109,20 +103,13 @@ export const AnalyticsReport = ({ rankPromise, evaluationPromise }: Props) => {
             onScroll={scrollToMyHand}
           />
         </ScrollArea>
-        <div className="absolute right-2 bottom-7 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
+        <div className="absolute right-2 bottom-20 z-10 flex flex-col gap-y-2 rounded-full opacity-80">
           <Button
             className="rounded-full"
             size="icon-lg"
             onClick={() => scrollToTop(true)}
           >
             <GalleryVerticalEnd className="rotate-180" />
-          </Button>
-          <Button
-            className="rounded-full"
-            size="icon-lg"
-            onClick={() => scrollToMyHand(true)}
-          >
-            <GalleryVertical />
           </Button>
         </div>
       </TabsContent>

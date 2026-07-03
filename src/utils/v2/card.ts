@@ -1,6 +1,6 @@
 /**
  * card.ts
- * トランプに関する定義。
+ * トランプ（カード）に関する定義。
  *
  * 設計方針:
  * - カードは CardId（0 ~ 51 の整数）を主表現とする。
@@ -25,6 +25,8 @@
  *   valueOfId(51);                        // → 12 (= VALUE.ACE)
  *   suitOfId(51);                         // → 3  (= SUIT.SPADE)
  */
+
+/* definition */
 
 /**
  * Value
@@ -103,6 +105,8 @@ export type CardId = number & { readonly _typename: "CardId" };
  * 高い方が value（大文字）、低い方が suit（小文字）。
  */
 export type CardString = `${ValueChar}${SuitChar}`;
+
+/* functions */
 
 /**
  * 任意の数値が有効な CardId（0 ~ 51 の整数）であることを検証する。

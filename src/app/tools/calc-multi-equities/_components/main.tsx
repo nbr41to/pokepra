@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
 import { InputHands } from "@/components/input-hands";
@@ -31,6 +31,11 @@ export function Main() {
   > | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  const scrollToResultHands = () => {
+    resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const runSimulation = async () => {
     setError(null);
@@ -130,7 +135,20 @@ export function Main() {
       ) : null}
 
       {/* Results */}
-      {result && <ResultsPieChart data={result.data} heroHand={hero} />}
+      {result && (
+        <>
+          <div ref={resultRef} className="scroll-mt-6">
+            <ResultsPieChart data={result.data} heroHand={hero} />
+          </div>
+          <Button
+            type="button"
+            className="fixed right-4 bottom-4 z-50 rounded-full shadow-lg"
+            onClick={scrollToResultHands}
+          >
+            結果へ
+          </Button>
+        </>
+      )}
     </div>
   );
 }

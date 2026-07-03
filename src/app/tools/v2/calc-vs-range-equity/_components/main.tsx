@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, GalleryVertical, GalleryVerticalEnd } from "lucide-react";
+import { ChevronDown, GalleryVerticalEnd } from "lucide-react";
 import { useState } from "react";
 import { InputBoard } from "@/components/input-board";
 import { InputCards } from "@/components/input-cards";
@@ -95,6 +95,8 @@ export function Main({
     setError(null);
     setLoading(true);
     setProgress(0);
+    setResult(null);
+    setRankingResult(null);
     setRangeResult(null);
 
     try {
@@ -157,15 +159,6 @@ export function Main({
   ];
   const rangeExcludes = [...splitCards(hero), ...splitCards(board)];
 
-  const scrollToMyHand = (smooth = false) => {
-    const element = document.getElementById(hero);
-    if (element) {
-      element.scrollIntoView({
-        behavior: smooth ? "smooth" : "auto",
-        block: "center",
-      });
-    }
-  };
   const scrollToTop = (smooth = false) => {
     window.scrollTo({
       top: 0,
@@ -264,49 +257,46 @@ export function Main({
       ) : null}
 
       {/* Results */}
-      {result && rankingResult && rangeResult && (
+      {result && (
         <div className="mt-8 space-y-8">
           <EquityReport payload={result} />
-          <EquityDistributionReport
-            heroEquity={result.equity}
-            rangeEquity={rangeResult}
-          />
-          <div>
-            <div>Hero range</div>
-            <RangeEquitiesReport
-              className="flex-col-reverse gap-y-2"
-              rangeEquity={rangeResult.villain}
-              hero={result.hand}
-            />
-          </div>
-          <div>
-            <div>Villain range</div>
-            <RangeEquitiesReport
-              className="flex-col-reverse gap-y-2"
-              rangeEquity={rangeResult.hero}
-              hero={result.hand}
-            />
-          </div>
+          {rangeResult && (
+            <>
+              <EquityDistributionReport
+                heroEquity={result.equity}
+                rangeEquity={rangeResult}
+              />
+              <div>
+                <div>Hero range</div>
+                <RangeEquitiesReport
+                  className="flex-col-reverse gap-y-2"
+                  rangeEquity={rangeResult.villain}
+                  hero={result.hand}
+                />
+              </div>
+              <div>
+                <div>Villain range</div>
+                <RangeEquitiesReport
+                  className="flex-col-reverse gap-y-2"
+                  rangeEquity={rangeResult.hero}
+                  hero={result.hand}
+                />
+              </div>
+            </>
+          )}
           <div>{result.data.length} combos</div>
           <ComboRankingWithRanksReport
             result={result}
-            ranking={rankingResult}
+            ranking={rankingResult ?? undefined}
           />
 
-          <div className="fixed right-4 bottom-4 flex flex-col gap-y-2 opacity-80">
+          <div className="fixed right-4 bottom-20 flex flex-col gap-y-2 opacity-80">
             <Button
               className="rounded-full"
               size="icon-lg"
               onClick={() => scrollToTop(true)}
             >
               <GalleryVerticalEnd className="rotate-180" />
-            </Button>
-            <Button
-              className="rounded-full"
-              size="icon-lg"
-              onClick={() => scrollToMyHand(true)}
-            >
-              <GalleryVertical />
             </Button>
           </div>
         </div>

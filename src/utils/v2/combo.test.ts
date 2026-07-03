@@ -4,6 +4,7 @@ import {
   buildComboClassGrid,
   COMBO_CLASS_RANKS,
   type Combo,
+  type ComboClass,
   comboClassToIndex,
   comboToRangeIndex,
   createRange,
@@ -195,7 +196,7 @@ describe("comboToRangeIndex", () => {
 describe("expandComboClasses", () => {
   it("plus 記法を展開する", () => {
     expect(expandComboClasses("QQ+")).toEqual(
-      ["Q", "K", "A"].map((r) => `${r}${r}`),
+      ["Q", "K", "A"].map((r) => `${r}${r}` as ComboClass),
     );
     expect(expandComboClasses("A5s+")).toEqual([
       "AKs",

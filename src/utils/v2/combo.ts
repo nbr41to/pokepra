@@ -5,6 +5,11 @@ import {
   type ValueChar,
   valueOfId,
 } from "./card";
+import type {
+  COMBO_OFFSUIT_CLASSS,
+  COMBO_PAIR_CLASSS,
+  COMBO_SUITED_CLASSS,
+} from "./constants";
 /**
  * combo.ts
  * プレイヤーの手札（2枚のカードの組み合わせ）に関する定義。
@@ -34,9 +39,9 @@ export type Combo = readonly [CardId, CardId];
  *
  * 文字列上は「高い方の value を先に書く」慣習に従う（"AKs" であり "KAs" ではない）。
  */
-export type Pair = `${ValueChar}${ValueChar}`;
-export type Suited = `${ValueChar}${ValueChar}s`;
-export type Offsuit = `${ValueChar}${ValueChar}o`;
+export type Pair = (typeof COMBO_PAIR_CLASSS)[number];
+export type Suited = (typeof COMBO_SUITED_CLASSS)[number];
+export type Offsuit = (typeof COMBO_OFFSUIT_CLASSS)[number];
 export type ComboClass = Pair | Suited | Offsuit;
 
 /**
