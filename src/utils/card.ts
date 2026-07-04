@@ -118,14 +118,14 @@ function toHandsString(handsArray: string[][]): string {
 }
 
 export {
-  CARD_RANKS,
   CARD_RANK_ORDER,
+  CARD_RANKS,
   CARD_SUIT,
   CARD_SUIT_ORDER,
   CARD_SUITS,
   getAllCards,
   toCardsArray,
-  toHandsArray,
   toCardsString,
+  toHandsArray,
   toHandsString,
 };
